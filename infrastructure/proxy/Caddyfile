@@ -1,0 +1,81 @@
+{
+	email iam.anuragvishwakarma@gmail.com
+	auto_https disable_redirects
+	servers :443 {
+		protocols h1 h2 h3
+	}
+}
+
+(cloudflare) {
+	tls {
+		issuer acme {
+			dir https://acme-v02.api.letsencrypt.org/directory
+			dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+			resolvers 1.1.1.1 1.0.0.1
+		}
+	}
+}
+
+(private) {
+	@outside not remote_ip 10.1.1.0/24 100.64.0.0/10
+	handle @outside {
+		header {
+			Content-Type "text/html; charset=utf-8"
+			Cache-Control "no-store"
+		}
+		respond <<HTML
+			<!doctype html>
+			<html lang="en">
+			<head>
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1">
+				<title>403 - Access Denied</title>
+				<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#000;color:#fff;font-family:Arial,sans-serif;text-align:center}h1{margin:0;font-size:8rem;line-height:1}p{margin:1.5rem 0 0;font-size:1.25rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em}div{margin-top:2rem;font-family:monospace}</style>
+			</head>
+			<body>
+				<main>
+					<h1>403</h1>
+					<p>You don't have access.</p>
+					<div>Client IP: <strong>{http.request.remote.host}</strong></div>
+				</main>
+			</body>
+			</html>
+			HTML 403
+	}
+}
+
+(proxy) {
+	encode zstd gzip
+	header {
+		-Server
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+	}
+}
+
+(adguard) {
+	@dns host dns.l3b.cc.cd
+	handle @dns {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.2:3000
+	}
+}
+
+(argocd) {
+	@argo host argocd.l3b.cc.cd
+	handle @argo {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.171:80
+	}
+}
+
+l3b.cc.cd, *.l3b.cc.cd {
+	import cloudflare
+	import adguard
+	import argocd
+	handle {
+		abort
+	}
+}
