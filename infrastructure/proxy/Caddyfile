@@ -71,10 +71,59 @@
 	}
 }
 
+(pve) {
+	import private
+	import proxy
+	reverse_proxy {args[0]} {
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
+}
+
+(proxmox) {
+	@px10 host px10.l3b.cc.cd
+	handle @px10 {
+		import pve https://10.1.1.10:8006
+	}
+
+	@px20 host px20.l3b.cc.cd
+	handle @px20 {
+		import pve https://10.1.1.20:8006
+	}
+
+	@px30 host px30.l3b.cc.cd
+	handle @px30 {
+		import pve https://10.1.1.30:8006
+	}
+}
+
+(cluster) {
+	@cluster host px.l3b.cc.cd
+	handle @cluster {
+		import private
+		import proxy
+		reverse_proxy https://10.1.1.10:8006 https://10.1.1.20:8006 https://10.1.1.30:8006 {
+			lb_policy round_robin
+			health_uri /
+			health_interval 10s
+			health_timeout 3s
+			fail_duration 30s
+			max_fails 2
+			lb_try_duration 5s
+			transport http {
+				tls_insecure_skip_verify
+			}
+		}
+	}
+}
+
 l3b.cc.cd, *.l3b.cc.cd {
 	import cloudflare
 	import adguard
 	import argocd
+	import proxmox
+	import cluster
 	handle {
 		abort
 	}

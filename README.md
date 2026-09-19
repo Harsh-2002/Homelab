@@ -25,5 +25,9 @@ This repository is the reproducible configuration brain for the homelab. The Not
 | Cilium LoadBalancer pool | `10.1.1.170-10.1.1.190` |
 | Argo CD service | `10.1.1.171` |
 | Argo CD UI | `https://argocd.l3b.cc.cd` |
+| Proxmox cluster | `https://px.l3b.cc.cd` |
+| Proxmox px10 | `https://px10.l3b.cc.cd` |
+| Proxmox px20 | `https://px20.l3b.cc.cd` |
+| Proxmox px30 | `https://px30.l3b.cc.cd` |
 
 See [`talos-k8s/README.md`](talos-k8s/README.md) and [`gitops/README.md`](gitops/README.md) for operating procedures.

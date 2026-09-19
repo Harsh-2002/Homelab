@@ -14,6 +14,10 @@ Required local rewrites for the proxy-managed services:
 | --- | --- | --- |
 | `dns.l3b.cc.cd` | `10.1.1.3` | `10.1.1.2:3000` |
 | `argocd.l3b.cc.cd` | `10.1.1.3` | `10.1.1.171:80` |
+| `px.l3b.cc.cd` | `10.1.1.3` | Healthy Proxmox nodes on `:8006` |
+| `px10.l3b.cc.cd` | `10.1.1.3` | `10.1.1.10:8006` |
+| `px20.l3b.cc.cd` | `10.1.1.3` | `10.1.1.20:8006` |
+| `px30.l3b.cc.cd` | `10.1.1.3` | `10.1.1.30:8006` |
 
 Validation:
 
@@ -23,3 +27,5 @@ ssh dns 'systemctl is-enabled AdGuardHome unbound; systemctl is-active AdGuardHo
 ```
 
 Do not commit the active YAML, administrator hash, temporary reset files, or backups.
+
+`px.l3b.cc.cd` is the load-balanced cluster entry point. Caddy actively checks `/` every 10 seconds, excludes unhealthy backends, and also performs passive failure handling. The node-specific names remain available for deterministic maintenance access.
