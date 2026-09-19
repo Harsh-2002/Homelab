@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: homelab
+  name: platform
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/Harsh-2002/Homelab.git
     targetRevision: main
-    path: gitops/clusters/homelab/applications
+    path: gitops/clusters/platform/applications
     directory:
       recurse: true
   destination:

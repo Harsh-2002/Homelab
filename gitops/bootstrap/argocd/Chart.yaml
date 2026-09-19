@@ -1,6 +1,6 @@
 apiVersion: v2
-name: homelab-argocd
-description: Argo CD bootstrap chart for the homelab cluster
+name: platform-argocd
+description: Argo CD bootstrap chart for the primary cluster
 type: application
 version: 0.1.0
 dependencies:

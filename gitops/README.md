@@ -1,12 +1,12 @@
 # GitOps
 
-Argo CD manages the homelab cluster from the `main` branch of this repository.
+Argo CD manages the primary cluster from the `main` branch of this repository.
 
 ## Layout
 
-- `bootstrap/argocd/` — pinned Argo CD umbrella chart and homelab values.
+- `bootstrap/argocd/` — pinned Argo CD umbrella chart and cluster values.
 - `bootstrap/root.yaml` — one-time root Application bootstrap.
-- `clusters/homelab/applications/` — child Application definitions.
+- `clusters/platform/applications/` — child Application definitions.
 - `apps/` — workload manifests managed by those Applications.
 
 ## Bootstrap or recovery
@@ -23,7 +23,7 @@ kubectl --context k8s apply --server-side \
   --filename gitops/bootstrap/root.yaml
 ```
 
-The root Application discovers the child Applications. The `argocd` child then adopts and manages the bootstrap Helm release from Git.
+The `platform` root Application discovers the child Applications. The `argocd` child then adopts and manages the bootstrap Helm release from Git.
 
 ## Access
 
