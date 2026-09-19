@@ -28,4 +28,4 @@ ssh dns 'systemctl is-enabled AdGuardHome unbound; systemctl is-active AdGuardHo
 
 Do not commit the active YAML, administrator hash, temporary reset files, or backups.
 
-`px.l3b.cc.cd` is the load-balanced cluster entry point. Caddy actively checks `/` every 10 seconds, excludes unhealthy backends, and also performs passive failure handling. The node-specific names remain available for deterministic maintenance access.
+`px.l3b.cc.cd` is the load-balanced cluster entry point. Caddy uses the `pve_lb` cookie to keep a browser session on one healthy node, selects another node and replaces the cookie if that backend becomes unavailable, actively checks `/` every 10 seconds, and also performs passive failure handling. The node-specific names remain available for deterministic maintenance access.
