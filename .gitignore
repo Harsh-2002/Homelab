@@ -1,0 +1,26 @@
+# Talos and Kubernetes credentials
+talos-k8s/talosconfig
+talos-k8s/talosconfig.*
+talos-k8s/kubeconfig
+talos-k8s/kubeconfig.*
+talos-k8s/controlplane*.yaml
+talos-k8s/worker*.yaml
+talos-k8s/k8s-[0-9][0-9][0-9].yaml
+talos-k8s/*secret*
+talos-k8s/*.backup*
+
+# Local secret material
+*.env
+*.key
+*.pem
+*.agekey
+secrets/
+
+# Generated and local tooling files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Helm dependency archives
+**/charts/*.tgz

@@ -1,0 +1,9 @@
+apiVersion: v2
+name: homelab-argocd
+description: Argo CD bootstrap chart for the homelab cluster
+type: application
+version: 0.1.0
+dependencies:
+  - name: argo-cd
+    version: 10.9.2
+    repository: https://argoproj.github.io/argo-helm
