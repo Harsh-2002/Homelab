@@ -56,6 +56,20 @@ journalctl -u pocket-id -f
 systemctl restart pocket-id
 ```
 
+## Tinyauth
+
+Tinyauth v5.2.0 runs in the same container as a separate systemd service and provides Caddy forward authentication for applications without native OIDC. Its public endpoint is `https://login.l3b.cc.cd`; Longhorn and AdGuard Home are protected by the `infrastructure-admins` Pocket ID group.
+
+Because Pocket ID and Tinyauth share CT 103, `/etc/hosts` explicitly resolves `auth.l3b.cc.cd` to the Caddy proxy at `10.1.1.3`. This is required for Tinyauth's server-side OAuth token exchange; resolving the public name to CT 103 itself would connect to an unused local port 443.
+
+```bash
+systemctl status tinyauth
+journalctl -u tinyauth -f
+getent ahostsv4 auth.l3b.cc.cd
+```
+
+The final command must return `10.1.1.3`.
+
 ## Upgrade
 
 Read the release notes and migration guide, then pass an explicit release tag:
