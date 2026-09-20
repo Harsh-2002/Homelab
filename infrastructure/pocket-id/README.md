@@ -39,6 +39,7 @@ Register the primary passkey in 1Password and keep a second recovery passkey bef
 - Binary symlink: `/usr/local/bin/pocket-id`
 - Versioned binaries: `/opt/pocket-id/versions/`
 - Environment: `/etc/pocket-id/pocket-id.env`
+- Sanitized environment template: `pocket-id.env.example`
 - Encryption key: `/etc/pocket-id/encryption-key`
 - Database and uploads: `/var/lib/pocket-id/`
 - Unit: `/etc/systemd/system/pocket-id.service`
