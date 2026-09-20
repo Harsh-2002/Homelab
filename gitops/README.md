@@ -9,6 +9,8 @@ Argo CD manages the primary cluster from the `main` branch of this repository.
 - `clusters/platform/applications/` — child Application definitions.
 - `apps/` — workload manifests managed by those Applications.
 
+Longhorn is pinned under `apps/longhorn/`. It uses dedicated Talos mounts at `/var/mnt/longhorn`, the V1 data engine, and two replicas. The Longhorn Application intentionally disables automatic pruning because Argo CD cannot run Longhorn's required pre-delete uninstall workflow.
+
 ## Bootstrap or recovery
 
 ```bash
@@ -75,3 +77,15 @@ Passwords and password hashes must not be committed to Git or copied into docume
 5. Confirm the affected Application is `Synced` and `Healthy`.
 
 Do not commit plaintext secrets. SOPS with age must be introduced before the first secret-bearing workload is added.
+
+## Longhorn operations
+
+Validate the storage layer before assigning real workloads:
+
+```bash
+kubectl --context k8s -n longhorn-system get pods
+kubectl --context k8s -n longhorn-system get nodes.longhorn.io
+kubectl --context k8s get storageclass longhorn
+```
+
+Do not delete the Argo CD Application as an uninstall method. Follow Longhorn's uninstall job procedure after all Longhorn-backed workloads and volumes have been removed.

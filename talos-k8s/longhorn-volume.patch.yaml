@@ -1,0 +1,9 @@
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: longhorn
+provisioning:
+  diskSelector:
+    match: '!system_disk && disk.size >= 490u * GiB && disk.size <= 510u * GiB'
+  minSize: 490GiB
+  maxSize: 500GiB
+  grow: true

@@ -1,0 +1,33 @@
+longhorn:
+  preUpgradeChecker:
+    jobEnabled: false
+
+  persistence:
+    defaultClass: true
+    defaultClassReplicaCount: 2
+    defaultDataLocality: best-effort
+    defaultFsType: ext4
+    reclaimPolicy: Retain
+    dataEngine: v1
+
+  defaultSettings:
+    createDefaultDiskLabeledNodes: false
+    defaultDataPath: /var/mnt/longhorn
+    defaultDataLocality: best-effort
+    defaultReplicaCount: '{"v1":"2","v2":"2"}'
+    replicaSoftAntiAffinity: false
+    replicaAutoBalance: least-effort
+    storageOverProvisioningPercentage: 100
+    storageMinimalAvailablePercentage: 10
+    storageReservedPercentageForDefaultDisk: 0
+    allowVolumeCreationWithDegradedAvailability: false
+    nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+    kubernetesMetricsServerMetricsEnabled: false
+    v1DataEngine: true
+    v2DataEngine: false
+
+  service:
+    ui:
+      type: LoadBalancer
+      annotations:
+        lbipam.cilium.io/ips: 10.1.1.172

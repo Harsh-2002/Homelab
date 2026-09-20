@@ -26,6 +26,8 @@ This repository is the reproducible configuration brain for the homelab. The Not
 | Cilium LoadBalancer pool | `10.1.1.170-10.1.1.190` |
 | Argo CD service | `10.1.1.171` |
 | Argo CD UI | `https://argocd.l3b.cc.cd` |
+| Longhorn service | `10.1.1.172` |
+| Longhorn UI | `https://longhorn.l3b.cc.cd` |
 | Komodo UI | `https://komodo.l3b.cc.cd` |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |

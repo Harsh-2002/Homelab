@@ -1,0 +1,9 @@
+apiVersion: v2
+name: platform-longhorn
+description: Longhorn storage for the Kubernetes platform
+type: application
+version: 0.1.0
+dependencies:
+  - name: longhorn
+    version: 1.12.1
+    repository: https://charts.longhorn.io

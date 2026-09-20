@@ -21,6 +21,7 @@ Talos nodes use AdGuard Home `10.1.1.2` as their primary resolver and Cloudflare
 - `cilium-values.yaml` — currently deployed Cilium Helm values.
 - `lb-pool.yaml` — Cilium LoadBalancer IP pool.
 - `l2-policy.yaml` — Cilium L2 announcement policy.
+- `longhorn-volume.patch.yaml` — provisions the dedicated non-system disk as XFS at `/var/mnt/longhorn`.
 
 Generated Talos machine configurations, `talosconfig`, kubeconfigs, and backups are local secrets and are intentionally ignored by Git.
 
@@ -43,3 +44,20 @@ helm upgrade cilium cilium/cilium \
   --version 1.20.2 \
   --values talos-k8s/cilium-values.yaml
 ```
+
+## Longhorn node storage
+
+Each Talos VM has a dedicated 500 GiB VirtIO SCSI disk backed by its Proxmox host's node-local `data` ZFS pool. Talos owns the partition and XFS filesystem through `UserVolumeConfig`; do not format or mount these disks manually.
+
+```bash
+for node in 10.1.1.201 10.1.1.202 10.1.1.203; do
+  talosctl --talosconfig talos-k8s/talosconfig \
+    --nodes "$node" --endpoints "$node" \
+    get volumestatus u-longhorn
+  talosctl --talosconfig talos-k8s/talosconfig \
+    --nodes "$node" --endpoints "$node" \
+    get mountstatus u-longhorn
+done
+```
+
+The required `iscsi-tools` extension and `ext-iscsid` service must remain present for the Longhorn V1 data engine.
