@@ -5,9 +5,12 @@ base_url="${POCKET_ID_URL:-https://auth.l3b.cc.cd}"
 key_file="${POCKET_ID_API_KEY_FILE:-$HOME/.config/pocket-id/api-key}"
 output_dir="${POCKET_ID_CLIENT_DIR:-$HOME/.config/pocket-id/clients}"
 
-test -s "$key_file"
 install -d -m 0700 "$output_dir"
-api_key="$(cat "$key_file")"
+api_key="${POCKET_ID_API_KEY:-}"
+if test -z "$api_key"; then
+  test -s "$key_file"
+  api_key="$(cat "$key_file")"
+fi
 
 api() {
   method="$1"
@@ -37,13 +40,15 @@ create_client() {
   launch_url="$3"
   callbacks="$4"
   existing="$(api GET '/oidc/clients' | jq -r --arg id "$id" '.data[] | select(.id == $id) | .id' | head -n1)"
+  created=false
   if test -z "$existing"; then
     payload="$(jq -cn --arg id "$id" --arg name "$name" --arg launch "$launch_url" --argjson callbacks "$callbacks" '{id:$id,name:$name,description:"Homelab single sign-on",callbackURLs:$callbacks,logoutCallbackURLs:[$launch],isPublic:false,pkceEnabled:false,requiresReauthentication:false,requiresPushedAuthorizationRequests:false,skipConsent:true,credentials:{},launchURL:$launch,isGroupRestricted:true,accessTokenDurationMinutes:15,refreshTokenDurationMinutes:10080}')"
     api POST '/oidc/clients' "$payload" >/dev/null
+    created=true
   fi
   api PUT "/oidc/clients/$id/allowed-user-groups" "$(jq -cn --arg gid "$group_id" '{userGroupIds:[$gid]}')" >/dev/null
   secret_file="$output_dir/$id.json"
-  if ! test -s "$secret_file"; then
+  if test "$created" = true && ! test -s "$secret_file"; then
     api POST "/oidc/clients/$id/secrets" '{}' >"$secret_file"
     chmod 0600 "$secret_file"
   fi

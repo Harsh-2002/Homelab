@@ -1,6 +1,6 @@
 # 1Password homelab secrets
 
-The `Homelab` vault is the authoritative store for application credentials, API tokens, recovery material, and automation secrets. An isolated service account gives the automation agent `read_items` and `write_items` only in this vault. It must not have access to personal vaults, item sharing, or vault creation.
+The `HomeLab` vault is the authoritative store for application credentials, API tokens, recovery material, and automation secrets. An isolated service account gives the automation agent `read_items` and `write_items` only in this vault. It must not have access to personal vaults, item sharing, or vault creation.
 
 The service-account token is stored only on `dev` at `~/.config/op/service-account-token`, outside Git, with mode `0600`. Do not paste it into chat, commit it, export it globally, or add it to shell startup files.
 
@@ -10,9 +10,37 @@ Bootstrap once:
 cd ~/Homelab
 scripts/set-1password-service-token.sh
 scripts/op-sa whoami
-scripts/op-sa vault get Homelab
+scripts/op-sa vault get HomeLab
 ```
 
-Repository configuration may contain `op://Homelab/item/field` references. Resolve them only for the process that needs them with `op run`, `op read`, or `op inject`. Never print a resolved value during validation.
+Repository configuration may contain `op://HomeLab/item/field` references. Resolve them only for the process that needs them with `op run`, `op read`, or `op inject`. Never print a resolved value during validation.
+
+Run Pocket ID reconciliation without a plaintext API-key file:
+
+```bash
+POCKET_ID_API_KEY="$(scripts/op-sa read 'op://HomeLab/Pocket ID Automation API/credential')" \
+  scripts/configure-pocket-id-oidc.sh
+```
+
+Existing OIDC client secrets are stored as `Pocket ID OIDC - <client>` API Credential items. The reconciliation script creates a new secret file only when it creates an entirely new client; import that value into 1Password and remove the temporary file afterward.
+
+## Managed current-state items
+
+| Item | Purpose |
+| --- | --- |
+| `Beszel Monitoring` | Current user login and rotated break-glass password |
+| `Beszel PocketBase Superuser` | PocketBase database break-glass account |
+| `ArgoCD` | Local break-glass account; Pocket ID is normal access |
+| `Headlamp - K8s` | Permanent Kubernetes service-account token; Pocket ID is normal access |
+| `AdGuard Home - DNS` | Native AdGuard administrator login |
+| `Pocket ID` | Passkey identity metadata; no password stored |
+| `Pocket ID Automation API` | Administrator API key used by automation |
+| `Pocket ID OIDC - <client>` | Per-application OIDC client secret |
+| `Cloudflare DNS API Token` | Caddy ACME DNS-01 token |
+| `Longhorn - K8s`, `Komodo`, `Tinyauth` | Pocket ID access metadata; no application password stored |
+
+Beszel and Argo CD passwords were generated in 1Password, applied to the live services, and verified with fresh logins. AdGuard and Headlamp credentials were validated against their live APIs. Redundant Pocket ID and Beszel credential files were removed from `dev` after byte-for-byte comparison and successful 1Password-backed reconciliation.
+
+URLs formerly using the retired `*.ctl.qzz.io` domain were migrated to the equivalent `*.l3b.cc.cd` names. Credentials for inactive legacy applications are not rotated until the corresponding service is restored and can be verified.
 
 The service account is a privileged machine identity. Review its item-usage report, rotate its token periodically, and revoke it immediately if `dev` or an automation session is compromised. Creating a new account is required to change its immutable vault scope or permissions.
