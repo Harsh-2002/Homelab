@@ -71,6 +71,18 @@
 	}
 }
 
+(longhorn) {
+	@longhorn host longhorn.l3b.cc.cd
+	handle @longhorn {
+		import private
+		import proxy
+		basic_auth {
+			iam-anuragvishwakarma {env.LONGHORN_PASSWORD_HASH}
+		}
+		reverse_proxy 10.1.1.172:80
+	}
+}
+
 (komodo) {
 	@komodo host komodo.l3b.cc.cd
 	handle @komodo {
@@ -131,6 +143,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import cloudflare
 	import adguard
 	import argocd
+	import longhorn
 	import komodo
 	import proxmox
 	import cluster
