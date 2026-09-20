@@ -38,4 +38,4 @@ This repository is the reproducible configuration brain for the homelab. The Not
 
 See [`talos-k8s/README.md`](talos-k8s/README.md) and [`gitops/README.md`](gitops/README.md) for operating procedures.
 
-The next access-control improvement is a central authentication portal such as Authentik, with Caddy `forward_auth`, to replace per-service browser Basic Auth prompts and add session-based login and optional MFA.
+The planned identity layer is Pocket ID for passkey authentication, with passkeys synchronized through 1Password. Applications with native OIDC should connect directly to Pocket ID; Tinyauth will provide Caddy `forward_auth` only for services without native OIDC support.

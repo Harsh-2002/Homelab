@@ -20,7 +20,7 @@ Replication is availability, not backup. Configure an external backup target bef
 - LoadBalancer service: `10.1.1.172:80`
 - Caddy supplies TLS, LAN access control, and authentication.
 
-The initial Caddy password exists only in `~/.config/longhorn/initial-password` on `dev`. Remove that file after the password has been saved in the password manager. Never commit the password or its hash.
+The initial Caddy password exists only in `~/.config/longhorn/initial-password` on `dev`. Remove that file after the password has been saved in the password manager. Never commit the password or its hash. The planned replacement is Pocket ID plus Tinyauth forward authentication because Longhorn does not provide native OIDC login.
 
 ## Validation performed
 

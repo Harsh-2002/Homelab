@@ -33,4 +33,4 @@ kubectl -n headlamp get deployment,pods,service,poddisruptionbudget
 kubectl auth can-i --as=system:serviceaccount:headlamp:headlamp-admin '*' '*'
 ```
 
-Headlamp runs two stateless replicas distributed across nodes when possible. It has no persistent volume. Authentik/OIDC is the planned replacement for the permanent administrator token.
+Headlamp runs two stateless replicas distributed across nodes when possible. It has no persistent volume. Native OIDC through Pocket ID is the planned replacement for the permanent administrator token. The token remains the break-glass access method.
