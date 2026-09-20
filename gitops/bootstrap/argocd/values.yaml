@@ -3,7 +3,7 @@ argo-cd:
     cm:
       url: https://argocd.l3b.cc.cd
       accounts.iam-anuragvishwakarma: login
-      admin.enabled: true
+      admin.enabled: false
       exec.enabled: false
     params:
       server.insecure: true
