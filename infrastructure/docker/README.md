@@ -120,6 +120,8 @@ Temporary HA placement:       strict px20-only
 
 The archive listing command ended with status 141 only because `head` intentionally closed the diagnostic pipe after the first 20 entries; it is not an archive-read failure. The backup error log contains ignored Unix socket entries, which are expected because tar archives cannot store live socket objects. No recovery data has been extracted to `/data`.
 
+A temporary read-only ratarmount trial was stopped after its full-archive index projected roughly 70–85 minutes, offering little advantage over selective extraction for this one-time recovery. `/RECOVERY` was never mounted. The partial 286 MB index, ratarmount environment, FUSE packages installed for the trial, and empty temporary directories were removed. The source tar remained read-only with its exact size and timestamp unchanged. Use `tar -tf` to locate required paths, then extract only explicitly selected paths into `/data`.
+
 While the physical USB disk is present, the strict HA rule is temporarily restricted to `px20` so Proxmox cannot attempt recovery on `px10` without the device. After the import is complete:
 
 ```bash
