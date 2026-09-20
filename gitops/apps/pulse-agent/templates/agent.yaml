@@ -79,6 +79,21 @@ spec:
       securityContext:
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
+      initContainers:
+        - name: prepare-state
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/sh", "-c", "chown 1000:1000 /var/lib/pulse-agent && chmod 0700 /var/lib/pulse-agent"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+              add: ["CHOWN", "FOWNER"]
+            readOnlyRootFilesystem: true
+            runAsUser: 0
+          volumeMounts:
+            - name: state
+              mountPath: /var/lib/pulse-agent
       containers:
         - name: pulse-agent
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

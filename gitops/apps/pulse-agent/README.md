@@ -17,3 +17,5 @@ kubectl -n pulse get daemonset,pods
 kubectl -n pulse logs daemonset/pulse-agent --tail=100
 kubectl auth can-i --as=system:serviceaccount:pulse:pulse-agent list pods --all-namespaces
 ```
+
+The `prepare-state` init container only fixes ownership and mode on the ephemeral agent state directory. The main collector remains non-root with all Linux capabilities dropped and a read-only root filesystem.
