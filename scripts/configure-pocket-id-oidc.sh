@@ -52,8 +52,9 @@ create_client headlamp 'Headlamp' 'https://headlamp.l3b.cc.cd' '["https://headla
 create_client argocd 'Argo CD' 'https://argocd.l3b.cc.cd' '["https://argocd.l3b.cc.cd/auth/callback"]'
 create_client proxmox 'Proxmox' 'https://px.l3b.cc.cd' '["https://px.l3b.cc.cd","https://px10.l3b.cc.cd","https://px20.l3b.cc.cd","https://px30.l3b.cc.cd"]'
 create_client komodo 'Komodo' 'https://komodo.l3b.cc.cd' '["https://komodo.l3b.cc.cd/auth/oidc/callback"]'
+create_client tinyauth 'Tinyauth' 'https://login.l3b.cc.cd' '["https://login.l3b.cc.cd/api/oauth/callback/pocketid"]'
 
-client_ids='["headlamp","argocd","proxmox","komodo"]'
+client_ids='["headlamp","argocd","proxmox","komodo","tinyauth"]'
 api PUT "/user-groups/$group_id/allowed-oidc-clients" "$(jq -cn --argjson ids "$client_ids" '{oidcClientIds:$ids}')" >/dev/null
 
 printf 'Pocket ID group and OIDC clients configured.\n'

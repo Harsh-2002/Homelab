@@ -57,6 +57,7 @@
 	@dns host dns.l3b.cc.cd
 	handle @dns {
 		import private
+		import authenticate
 		import proxy
 		reverse_proxy 10.1.1.2:3000
 	}
@@ -75,10 +76,8 @@
 	@longhorn host longhorn.l3b.cc.cd
 	handle @longhorn {
 		import private
+		import authenticate
 		import proxy
-		basic_auth {
-			iam-anuragvishwakarma {env.LONGHORN_PASSWORD_HASH}
-		}
 		reverse_proxy 10.1.1.172:80
 	}
 }
@@ -98,6 +97,21 @@
 		import private
 		import proxy
 		reverse_proxy 10.1.1.6:1411
+	}
+}
+
+(tinyauth) {
+	@tinyauth host login.l3b.cc.cd
+	handle @tinyauth {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.6:3000
+	}
+}
+
+(authenticate) {
+	forward_auth 10.1.1.6:3000 {
+		uri /api/auth/caddy
 	}
 }
 
@@ -164,6 +178,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import longhorn
 	import headlamp
 	import pocketid
+	import tinyauth
 	import komodo
 	import proxmox
 	import cluster

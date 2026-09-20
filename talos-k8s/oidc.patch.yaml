@@ -16,7 +16,7 @@ configuration:
           - headlamp
       claimMappings:
         username:
-          claim: email
+          claim: preferred_username
           prefix: "oidc:"
         groups:
           claim: groups
