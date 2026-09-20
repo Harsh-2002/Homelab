@@ -14,6 +14,13 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
+  ignoreDifferences:
+    - group: ""
+      kind: Service
+      name: longhorn-frontend
+      namespace: longhorn-system
+      jsonPointers:
+        - /spec/ports/0/nodePort
   syncPolicy:
     automated:
       prune: false
@@ -25,3 +32,4 @@ spec:
         pod-security.kubernetes.io/warn: privileged
     syncOptions:
       - CreateNamespace=true
+      - RespectIgnoreDifferences=true
