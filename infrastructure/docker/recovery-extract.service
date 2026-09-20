@@ -1,0 +1,13 @@
+[Unit]
+Description=Extract the recovery archive into a browsable ext4 image
+RequiresMountsFor=/EX
+ConditionPathIsRegular=/EX/linux-recovery.tar
+ConditionPathIsRegular=/EX/linux-recovery.ext4
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/extract-recovery.sh
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=infinity
+RemainAfterExit=yes
