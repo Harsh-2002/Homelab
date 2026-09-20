@@ -7,6 +7,7 @@ This repository is the reproducible configuration brain for the homelab. The Not
 - `talos-k8s/` — safe Talos patches and Cilium networking configuration.
 - `gitops/` — Argo CD bootstrap, cluster applications, and workload manifests.
 - `infrastructure/` — reproducible proxy configuration and sanitized service runbooks.
+  - `infrastructure/proxmox/` — Proxmox host resolver baseline.
 - `scripts/` — administrative helper scripts.
 
 ## Safety rules
