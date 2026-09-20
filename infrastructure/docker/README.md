@@ -93,6 +93,19 @@ The source files are:
 /EX/linux-recovery-errors.log  2335 bytes
 ```
 
+The 500 GiB destination has approximately 492 GiB usable, so the archive fits but leaves little working space. Do not retain both the complete tar file and a full extracted copy on `/data`.
+
+Because exFAT cannot preserve Linux ownership, permissions, ACLs, extended attributes, hard links, and symlinks, the recovery archive must not be extracted directly into an exFAT directory. `extract-recovery.sh` creates and formats a separate 600 GiB ext4 image at `/EX/linux-recovery.ext4`, mounts it at `/RECOVERY`, and extracts the archive there with numeric ownership, ACLs, and extended attributes preserved. It verifies `2026-09-15/metadata/COMPLETED`, syncs all writes, and remounts `/RECOVERY` read-only when finished. The original `/EX/linux-recovery.tar` is never modified or removed.
+
+The one-time extraction runs as transient unit `linux-recovery-extract.service`. Monitor it with:
+
+```bash
+systemctl status linux-recovery-extract
+journalctl -fu linux-recovery-extract
+```
+
+Do not disconnect the USB SSD, reboot VM 204, or stop the extraction service while it is active. Use `/RECOVERY/2026-09-15/` to select data for restoration only after the service completes successfully and `/RECOVERY` is mounted read-only.
+
 While the physical USB disk is present, the strict HA rule is temporarily restricted to `px20` so Proxmox cannot attempt recovery on `px10` without the device. After the import is complete:
 
 ```bash
