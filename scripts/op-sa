@@ -1,0 +1,9 @@
+#!/bin/bash
+set -euo pipefail
+
+token_file="${OP_SERVICE_ACCOUNT_TOKEN_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/op/service-account-token}"
+test -r "$token_file"
+
+OP_SERVICE_ACCOUNT_TOKEN="$(<"$token_file")"
+export OP_SERVICE_ACCOUNT_TOKEN
+exec op "$@"

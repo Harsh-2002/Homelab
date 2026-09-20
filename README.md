@@ -9,6 +9,7 @@ This repository is the reproducible configuration brain for the homelab. The Not
 - `infrastructure/` — reproducible proxy configuration and sanitized service runbooks.
   - `infrastructure/proxmox/` — Proxmox host resolver baseline.
   - `infrastructure/pocket-id/` — Pocket ID systemd service, pinned upgrade helper, and runbook.
+  - `infrastructure/onepassword/` — scoped 1Password service-account and secret-handling runbook.
   - `infrastructure/pulse/` — archived Pulse evaluation and rebuild guide.
   - `infrastructure/beszel/` — Beszel hub and agent services, public key, HA, and operations runbook.
 - `scripts/` — administrative helper scripts.
