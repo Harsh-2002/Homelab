@@ -1,0 +1,17 @@
+image:
+  repository: rcourtman/pulse
+  tag: v6.4.1
+  pullPolicy: IfNotPresent
+
+pulse:
+  url: https://pulse.l3b.cc.cd
+  agentID: platform
+  tokenSecret: pulse-agent-token
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 512Mi
