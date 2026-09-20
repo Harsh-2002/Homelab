@@ -9,6 +9,10 @@ headlamp:
     oidc:
       secret:
         create: false
+      externalSecret:
+        enabled: true
+        name: headlamp-oidc
+        hasScopes: true
 
   serviceAccount:
     create: true
@@ -63,6 +67,18 @@ headlamp:
     minAvailable: 1
 
   extraManifests:
+    - |
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: ClusterRoleBinding
+      metadata:
+        name: pocket-id-infrastructure-admins
+      roleRef:
+        apiGroup: rbac.authorization.k8s.io
+        kind: ClusterRole
+        name: cluster-admin
+      subjects:
+        - kind: Group
+          name: oidc:infrastructure-admins
     - |
       apiVersion: v1
       kind: ServiceAccount

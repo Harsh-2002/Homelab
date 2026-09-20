@@ -2,6 +2,16 @@ argo-cd:
   configs:
     cm:
       url: https://argocd.l3b.cc.cd
+      oidc.config: |
+        name: Pocket ID
+        issuer: https://auth.l3b.cc.cd
+        clientID: argocd
+        clientSecret: $pocketid-oidc:clientSecret
+        requestedScopes:
+          - openid
+          - profile
+          - email
+          - groups
       accounts.iam-anuragvishwakarma: login
       admin.enabled: false
       exec.enabled: false
@@ -10,6 +20,7 @@ argo-cd:
     rbac:
       policy.csv: |
         g, iam-anuragvishwakarma, role:admin
+        g, infrastructure-admins, role:admin
 
   controller:
     resources:
