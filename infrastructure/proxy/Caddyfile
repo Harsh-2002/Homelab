@@ -124,6 +124,15 @@
 	}
 }
 
+(beszel) {
+	@beszel host beszel.l3b.cc.cd
+	handle @beszel {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.7:8090
+	}
+}
+
 (pve) {
 	import private
 	import proxy
@@ -180,6 +189,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import pocketid
 	import tinyauth
 	import komodo
+	import beszel
 	import proxmox
 	import cluster
 	handle {

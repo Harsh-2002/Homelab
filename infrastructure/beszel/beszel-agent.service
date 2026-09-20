@@ -1,0 +1,31 @@
+[Unit]
+Description=Beszel monitoring agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=beszel
+Group=beszel
+EnvironmentFile=/etc/beszel-agent/agent.env
+ExecStart=/usr/local/sbin/beszel-agent
+Restart=on-failure
+RestartSec=5s
+StateDirectory=beszel-agent
+UMask=0077
+AmbientCapabilities=CAP_SYS_RAWIO CAP_SYS_ADMIN
+CapabilityBoundingSet=CAP_SYS_RAWIO CAP_SYS_ADMIN
+KeyringMode=private
+LockPersonality=true
+NoNewPrivileges=true
+ProtectClock=true
+ProtectHome=read-only
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectSystem=strict
+RemoveIPC=true
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

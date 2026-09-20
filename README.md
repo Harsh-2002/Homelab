@@ -10,6 +10,7 @@ This repository is the reproducible configuration brain for the homelab. The Not
   - `infrastructure/proxmox/` — Proxmox host resolver baseline.
   - `infrastructure/pocket-id/` — Pocket ID systemd service, pinned upgrade helper, and runbook.
   - `infrastructure/pulse/` — archived Pulse evaluation and rebuild guide.
+  - `infrastructure/beszel/` — Beszel hub and agent services, public key, HA, and operations runbook.
 - `scripts/` — administrative helper scripts.
 
 ## Safety rules
@@ -36,6 +37,8 @@ This repository is the reproducible configuration brain for the homelab. The Not
 | Pocket ID UI | `https://auth.l3b.cc.cd` |
 | Tinyauth service | `10.1.1.6:3000` |
 | Tinyauth UI | `https://login.l3b.cc.cd` |
+| Beszel service | `10.1.1.7:8090` |
+| Beszel UI | `https://beszel.l3b.cc.cd` |
 | Komodo UI | `https://komodo.l3b.cc.cd` |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |

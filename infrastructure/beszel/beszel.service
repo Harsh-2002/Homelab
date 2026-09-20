@@ -1,0 +1,35 @@
+[Unit]
+Description=Beszel monitoring hub
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=beszel
+Group=beszel
+WorkingDirectory=/var/lib/beszel
+EnvironmentFile=/etc/beszel/beszel.env
+ExecStart=/usr/local/bin/beszel serve --http 0.0.0.0:8090
+Restart=on-failure
+RestartSec=5s
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/beszel
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target
