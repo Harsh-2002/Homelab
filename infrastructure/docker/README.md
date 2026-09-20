@@ -13,15 +13,16 @@ VM 204 `ctr` is the standalone Docker host.
 | Memory | 4–8 GiB ballooning |
 | OS disk | 50 GiB `local-zfs` volume |
 | Docker disk | 500 GiB `data` volume |
-| Docker data root | `/srv/docker/data` |
+| Persistent data mount | `/data` |
+| Docker data root | `/data/docker` |
 | Docker network pool | `172.20.0.0/14`, allocated as `/24` networks |
 | QEMU Guest Agent | installed and active |
 | Hardware acceleration | Intel UHD 630 at `/dev/dri/renderD128` |
 | Proxmox HA service | `vm:204`, started on `px20` |
 | Replication | job `204-0`, `px20` → `px10`, every 5 minutes |
-| HA placement | strict `vm204-replica-nodes`: `px20:2`, `px10:1` |
+| HA placement | normally strict `vm204-replica-nodes`: `px20:2`, `px10:1` |
 
-The data disk uses one GPT partition with an ext4 filesystem labeled `docker-data`. It mounts at `/srv/docker` by filesystem UUID. Docker has a systemd `RequiresMountsFor=/srv/docker` dependency, so it cannot silently start on the OS disk if the data filesystem is unavailable.
+The data disk uses one GPT partition with an ext4 filesystem labeled `docker-data`. It mounts at `/data` by filesystem UUID. Docker stores engine state in `/data/docker` and has a systemd `RequiresMountsFor=/data` dependency, so it cannot silently start on the OS disk if the data filesystem is unavailable. Application data such as Frigate recordings can use separate paths below `/data`.
 
 ## Tracked configuration
 
@@ -44,7 +45,7 @@ sudo systemctl restart docker
 Validate:
 
 ```bash
-findmnt /srv/docker
+findmnt /data
 docker info --format 'root={{.DockerRootDir}} driver={{.Driver}} logging={{.LoggingDriver}} live-restore={{.LiveRestoreEnabled}}'
 systemctl is-active docker qemu-guest-agent srv-docker.mount
 ```
@@ -52,7 +53,7 @@ systemctl is-active docker qemu-guest-agent srv-docker.mount
 Expected Docker configuration:
 
 ```plain text
-root=/srv/docker/data
+root=/data/docker
 driver=overlayfs
 logging=local
 live-restore=true
@@ -80,6 +81,30 @@ ha-manager status
 The initial full replication and a subsequent incremental replication were validated on 2026-09-20. The job reported `State OK` and `FailCount 0`; both target volumes and their replication snapshots were present on `px10`, while VM 204 and Docker remained active on `px20`.
 
 This provides automatic restart on `px10` after a confirmed `px20` failure. Replication is asynchronous, so the recovery-point objective is approximately five minutes and the newest writes can be lost during an unplanned failure. Replication is not a backup and does not protect against deletion or corruption replicated to the target.
+
+## Temporary Crucial X9 Pro import
+
+A 4 TB Crucial X9 Pro USB-C SSD is temporarily passed through from `px20` to VM 204 as `usb0`. Its exFAT partition has label `EX`, UUID `72FF-5AED`, and is mounted read-only inside the VM at `/EX`. It is intentionally absent from `/etc/fstab`.
+
+The source files are:
+
+```plain text
+/EX/linux-recovery.tar         502214830080 bytes, about 468 GiB
+/EX/linux-recovery-errors.log  2335 bytes
+```
+
+While the physical USB disk is present, the strict HA rule is temporarily restricted to `px20` so Proxmox cannot attempt recovery on `px10` without the device. After the import is complete:
+
+```bash
+# inside VM 204
+sudo umount /EX
+
+# on a Proxmox node
+qm set 204 --delete usb0
+ha-manager rules set node-affinity vm204-replica-nodes --nodes 'px20:2,px10:1'
+```
+
+Confirm `/EX` is unmounted before physically disconnecting the SSD. The tar file nearly fills the 500 GiB destination if copied intact, so do not retain both the archive and a full extracted copy on `/data` without checking space first.
 
 ## Intel iGPU passthrough
 

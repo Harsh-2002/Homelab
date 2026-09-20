@@ -1,5 +1,5 @@
 {
-  "data-root": "/srv/docker/data",
+  "data-root": "/data/docker",
   "default-address-pools": [
     {
       "base": "172.20.0.0/14",

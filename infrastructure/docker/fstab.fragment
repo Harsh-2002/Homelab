@@ -1,1 +1,1 @@
-UUID=7e4e761c-6d12-4352-9f17-8d13d5fc5729 /srv/docker ext4 defaults,noatime 0 2
+UUID=7e4e761c-6d12-4352-9f17-8d13d5fc5729 /data ext4 defaults,noatime 0 2
