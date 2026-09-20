@@ -1,8 +1,8 @@
 [Unit]
 Description=Extract the recovery archive into a browsable ext4 image
 RequiresMountsFor=/EX
-ConditionPathIsRegular=/EX/linux-recovery.tar
-ConditionPathIsRegular=/EX/linux-recovery.ext4
+ConditionPathExists=/EX/linux-recovery.tar
+ConditionPathExists=/EX/linux-recovery.ext4
 
 [Service]
 Type=oneshot
