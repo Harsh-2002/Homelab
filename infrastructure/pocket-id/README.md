@@ -88,7 +88,7 @@ Pocket ID emits the user-group friendly name in the OIDC `groups` claim. Both th
 Tinyauth's global ACL policy is `deny`. Provider-level OAuth whitelisting permits creation of a login session, while each application's `oauth.whitelist` and `oauth.groups` are independent authorization checks. A protected application needs both entries. The known-good session exposes:
 
 ```text
-Remote-User: iam.anuragvishwakarma
+Remote-User: iam-anuragvishwakarma
 Remote-Email: iam.anuragvishwakarma@gmail.com
 Remote-Groups: infrastructure-admins
 ```

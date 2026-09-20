@@ -2,6 +2,8 @@
 
 The `HomeLab` vault is the authoritative store for application credentials, API tokens, recovery material, and automation secrets. An isolated service account gives the automation agent `read_items` and `write_items` only in this vault. It must not have access to personal vaults, item sharing, or vault creation.
 
+Personal account items use one of two canonical identities: `iam.anuragvishwakarma@gmail.com` for email/OIDC logins and `iam-anuragvishwakarma` for username-only logins. Dotted and underscored username variants are retired. Machine identities such as `root`, `beszel`, and Kubernetes service accounts remain service-specific.
+
 The service-account token is stored only on `dev` at `~/.config/op/service-account-token`, outside Git, with mode `0600`. Do not paste it into chat, commit it, export it globally, or add it to shell startup files.
 
 Bootstrap once:
@@ -41,6 +43,6 @@ Existing OIDC client secrets are stored as `Pocket ID OIDC - <client>` API Crede
 
 Beszel and Argo CD passwords were generated in 1Password, applied to the live services, and verified with fresh logins. AdGuard and Headlamp credentials were validated against their live APIs. Redundant Pocket ID and Beszel credential files were removed from `dev` after byte-for-byte comparison and successful 1Password-backed reconciliation.
 
-URLs formerly using the retired `*.ctl.qzz.io` domain were migrated to the equivalent `*.l3b.cc.cd` names. Credentials for inactive legacy applications are not rotated until the corresponding service is restored and can be verified.
+URLs formerly using the retired `*.ctl.qzz.io` domain were migrated to the equivalent `*.l3b.cc.cd` names. Credentials and usernames for inactive legacy applications are not changed until the corresponding service is restored and the identity migration can be verified end to end.
 
 The service account is a privileged machine identity. Review its item-usage report, rotate its token periodically, and revoke it immediately if `dev` or an automation session is compromised. Creating a new account is required to change its immutable vault scope or permissions.

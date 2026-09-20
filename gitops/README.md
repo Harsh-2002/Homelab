@@ -48,9 +48,7 @@ argocd login argocd.l3b.cc.cd --grpc-web
 
 ## Authentication
 
-The permanent local administrator account is `iam-anuragvishwakarma`. It has the `login` capability and an explicit `role:admin` RBAC assignment. The built-in `admin` account is disabled after the replacement account was verified through Caddy.
-
-An email address cannot be used directly as an Argo CD local username: `@` is invalid in a ConfigMap data key, and dots are parsed as configuration separators. The hyphenated username is intentional.
+The permanent local administrator account is `iam-anuragvishwakarma`. It has the `login` capability and an explicit `role:admin` RBAC assignment. The built-in `admin` account is disabled after the replacement account was verified through Caddy. Argo CD splits local-account configuration keys on dots and Kubernetes ConfigMap data keys cannot contain `@`, so the canonical username form is required here.
 
 The one-time password is stored only on `dev` in a mode-600 file until the owner completes the interactive rotation:
 

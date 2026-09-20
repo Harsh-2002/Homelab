@@ -2,6 +2,10 @@
 
 This repository is the reproducible configuration brain for the homelab. The Notion runbook is the operational brain: topology, decisions, access procedures, validation results, and recovery instructions.
 
+## Administrator identity
+
+Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts an email address or OIDC identity. Use `iam-anuragvishwakarma` when a conventional username is required. Do not create new personal accounts with dotted or underscored username variants. Keep operating-system accounts, Kubernetes service accounts, and application service users distinct because they are machine identities.
+
 ## Repository layout
 
 - `talos-k8s/` — safe Talos patches and Cilium networking configuration.
