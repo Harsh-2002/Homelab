@@ -9,6 +9,8 @@ Argo CD manages the primary cluster from the `main` branch of this repository.
 - `clusters/platform/applications/` — child Application definitions.
 - `apps/` — workload manifests managed by those Applications.
 
+Headlamp is pinned under `apps/headlamp/` and provides the operational Kubernetes UI. Argo CD remains authoritative for declarative changes.
+
 Longhorn is pinned under `apps/longhorn/`. It uses dedicated Talos mounts at `/var/mnt/longhorn`, the V1 data engine, and two replicas. The Longhorn Application intentionally disables automatic pruning because Argo CD cannot run Longhorn's required pre-delete uninstall workflow.
 
 See [`apps/longhorn/README.md`](apps/longhorn/README.md) for capacity, validation results, maintenance, and recovery notes.

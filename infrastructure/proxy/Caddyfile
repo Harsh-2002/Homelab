@@ -83,6 +83,15 @@
 	}
 }
 
+(headlamp) {
+	@headlamp host headlamp.l3b.cc.cd
+	handle @headlamp {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.173:80
+	}
+}
+
 (komodo) {
 	@komodo host komodo.l3b.cc.cd
 	handle @komodo {
@@ -144,6 +153,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import adguard
 	import argocd
 	import longhorn
+	import headlamp
 	import komodo
 	import proxmox
 	import cluster

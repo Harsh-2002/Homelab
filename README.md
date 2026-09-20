@@ -28,6 +28,8 @@ This repository is the reproducible configuration brain for the homelab. The Not
 | Argo CD UI | `https://argocd.l3b.cc.cd` |
 | Longhorn service | `10.1.1.172` |
 | Longhorn UI | `https://longhorn.l3b.cc.cd` |
+| Headlamp service | `10.1.1.173` |
+| Headlamp UI | `https://headlamp.l3b.cc.cd` |
 | Komodo UI | `https://komodo.l3b.cc.cd` |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |
