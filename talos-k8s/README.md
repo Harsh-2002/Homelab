@@ -61,3 +61,14 @@ done
 ```
 
 The required `iscsi-tools` extension and `ext-iscsid` service must remain present for the Longhorn V1 data engine.
+
+## Kubernetes VM resources
+
+Each Kubernetes VM is configured in Proxmox with:
+
+- 4 vCPUs;
+- 16 GiB maximum RAM and an 8 GiB balloon minimum;
+- a 200 GiB system disk on `local-zfs`;
+- a separate 500 GiB Longhorn disk on the node-local `data` pool.
+
+Talos automatically grows the `EPHEMERAL` partition after the system disk is enlarged. The Longhorn disk must remain separate and unchanged during system-disk maintenance.
