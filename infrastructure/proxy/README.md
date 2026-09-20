@@ -18,3 +18,15 @@ Post-deployment checks:
 ssh proxy 'systemctl is-enabled caddy; systemctl is-active caddy'
 curl --resolve argocd.l3b.cc.cd:443:10.1.1.3 https://argocd.l3b.cc.cd/
 ```
+
+## Apple iCloud Private Relay
+
+Do not add Apple Private Relay address ranges to Caddy's private-source allowlist. Relay addresses are temporary, rotate between sessions, and are shared with other Private Relay customers. Allowing an Apple relay range would therefore grant access based on service membership rather than household identity.
+
+For private services, use one of these paths:
+
+- on the trusted home Wi-Fi, disable **Limit IP Address Tracking** for that network so Safari uses the household connection
+- use Tailscale and keep `100.64.0.0/10` in the private policy
+- temporarily choose **Reload and Show IP Address** for a specific site when appropriate
+
+Keep the existing LAN, Tailscale, and explicitly trusted household WAN/hairpin sources as the access boundary. Do not treat an observed Private Relay address as static.
