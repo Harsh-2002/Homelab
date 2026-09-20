@@ -9,7 +9,7 @@ This repository is the reproducible configuration brain for the homelab. The Not
 - `infrastructure/` — reproducible proxy configuration and sanitized service runbooks.
   - `infrastructure/proxmox/` — Proxmox host resolver baseline.
   - `infrastructure/pocket-id/` — Pocket ID systemd service, pinned upgrade helper, and runbook.
-  - `infrastructure/pulse/` — Pulse topology, operations, HA, backup, and upgrade runbook.
+  - `infrastructure/pulse/` — archived Pulse evaluation and rebuild guide.
 - `scripts/` — administrative helper scripts.
 
 ## Safety rules
@@ -36,8 +36,6 @@ This repository is the reproducible configuration brain for the homelab. The Not
 | Pocket ID UI | `https://auth.l3b.cc.cd` |
 | Tinyauth service | `10.1.1.6:3000` |
 | Tinyauth UI | `https://login.l3b.cc.cd` |
-| Pulse service | `10.1.1.7:7655` |
-| Pulse UI | `https://pulse.l3b.cc.cd` |
 | Komodo UI | `https://komodo.l3b.cc.cd` |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |
@@ -47,5 +45,3 @@ This repository is the reproducible configuration brain for the homelab. The Not
 See [`talos-k8s/README.md`](talos-k8s/README.md) and [`gitops/README.md`](gitops/README.md) for operating procedures.
 
 The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, and Proxmox use native OIDC; Komodo's native OIDC configuration is staged for its post-recovery startup. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home and Longhorn are protected this way. Identity endpoints and applications remain restricted to the LAN and Tailscale networks.
-
-Pulse provides centralized monitoring for the Proxmox cluster, Kubernetes, and the Docker host. It uses Pocket ID OIDC and is protected by the same private network policy. See [`infrastructure/pulse/README.md`](infrastructure/pulse/README.md) for operations and recovery.

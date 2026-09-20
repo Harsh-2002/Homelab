@@ -1,117 +1,24 @@
-# Pulse monitoring
+# Pulse evaluation archive
 
-Pulse is the centralized infrastructure dashboard for Proxmox, Kubernetes, and the Docker host. The server is a native systemd installation so it has no container runtime dependency.
+Pulse `v6.4.1` was evaluated on 2026-09-20 and then completely removed because its user interface was not a good fit. This file is historical guidance only: there is no active Pulse server, route, identity integration, agent, API credential, HA resource, replication job, or Kubernetes workload.
 
-## Topology
+## Evaluated architecture
 
-| Item | Value |
-| --- | --- |
-| Version | `v6.4.1` |
-| URL | `https://pulse.l3b.cc.cd` |
-| LXC | `104` (`pulse`) |
-| Address | `10.1.1.7:7655` |
-| Resources | 2 vCPU, 2 GiB RAM, 512 MiB swap, 25 GiB local ZFS |
-| Primary node | `px10` |
-| Replica node | `px30` |
-| Data directory | `/etc/pulse` |
-| Binary | `/opt/pulse/bin/pulse` |
-| Service | `pulse.service` |
+The evaluation used a native systemd server in an unprivileged Debian LXC with 2 vCPU, 2 GiB RAM, and a 25 GiB ZFS root disk. Caddy supplied private TLS access, Pocket ID supplied OIDC, Proxmox was queried with `PVEAuditor`, Kubernetes used a read-only DaemonSet, and the Docker host used a native agent with remote command execution disabled.
 
-Caddy terminates TLS, applies the private LAN/Tailscale source policy, and proxies the application. Pocket ID is the normal sign-in method. A local administrator remains available only as a break-glass path.
+The deployment worked technically, including retained metrics, alerts, Proxmox HA, and five-minute ZFS replication. It was removed by operator choice rather than because of a reliability failure.
 
-## Data sources
+## If evaluating again
 
-- **Proxmox Cluster** uses `pulse-monitor@pve!pulse`. Both the user and privilege-separated token have only `PVEAuditor` at `/`; Pulse can discover all three nodes but cannot change the cluster.
-- **Kubernetes** uses the Argo CD-managed `pulse-agent` DaemonSet. One pod runs on each node with read-only Kubernetes RBAC, no host mounts, no Docker socket, no privilege, and no command-execution scope.
-- **ctr** uses the native unified agent with host and Docker collectors enabled. Its API token can report and read agent configuration but cannot execute commands or manage containers.
+Treat a future deployment as new work rather than attempting to recover the removed instance:
 
-The Kubernetes token is held in the manually created `pulse-agent-token` Secret in namespace `pulse`. The token is intentionally absent from Git until encrypted secret management is introduced.
+1. Review the current Pulse release, license, security model, and documentation.
+2. Pin an explicit version and verify the signed installer.
+3. Create a new dedicated LXC and new IP; do not assume the former CT ID or address remains free.
+4. Create new least-privilege Proxmox and agent credentials.
+5. Create a new Pocket ID client and Caddy route.
+6. Put Kubernetes configuration in Git, but keep tokens out of Git and Notion.
+7. Validate the UI before investing in HA, retained history, and notification integrations.
+8. Add HA and replication only after the product is accepted.
 
-## Authentication
-
-Pocket ID client settings:
-
-```text
-client ID: pulse
-issuer: https://auth.l3b.cc.cd
-callback: https://pulse.l3b.cc.cd/api/oidc/callback
-allowed group: infrastructure-admins
-mapped role: admin
-```
-
-Use **Continue with Single Sign-On** for routine access. Store the break-glass credentials in 1Password; the initial local copy on `dev` is `~/.config/pulse/initial-admin.json` with mode `0600`. Never copy passwords, client secrets, or API tokens into Git or Notion.
-
-## Operations
-
-Check the server and public endpoint:
-
-```bash
-ssh root@10.1.1.7 'systemctl is-enabled pulse; systemctl is-active pulse; /opt/pulse/bin/pulse --version'
-curl -fsS https://pulse.l3b.cc.cd/api/health
-```
-
-Check the Kubernetes collector:
-
-```bash
-kubectl --context k8s -n pulse get daemonset,pods
-kubectl --context k8s -n pulse logs daemonset/pulse-agent --tail=100
-argocd app get pulse-agent --grpc-web
-```
-
-Check the Docker and host collector:
-
-```bash
-ssh ctr 'systemctl is-enabled pulse-agent; systemctl is-active pulse-agent'
-ssh ctr 'journalctl -u pulse-agent --since "10 minutes ago" --no-pager'
-```
-
-History is stored in `/etc/pulse/metrics.db`. Default infrastructure and Kubernetes alert rules are active. A delivery destination such as SMTP or a webhook must be configured separately before alerts can leave the Pulse UI.
-
-## High availability
-
-CT 104 is managed by Proxmox HA with failback enabled, two local restart attempts, and one relocation attempt. The `ct104-replica-nodes` rule limits placement to `px10` and `px30`; ZFS replication job `104-0` copies its disk from `px10` to `px30` every five minutes.
-
-Validate both layers:
-
-```bash
-ssh px10 'ha-manager status; ha-manager config | sed -n "/ct:104/,+8p"'
-ssh px10 'pvesr status | grep -E "(^Job|104-0)"'
-```
-
-HA is not a backup. A bad configuration or deletion can be replicated to the standby.
-
-## Backup and restore
-
-The complete application state is under `/etc/pulse`. Back it up before upgrades and after meaningful configuration changes. Preserve ownership, modes, extended attributes, and the encryption key.
-
-```bash
-ssh root@10.1.1.7 'systemctl stop pulse && tar --xattrs --acls -C / -czf /root/pulse-etc-backup.tgz etc/pulse && systemctl start pulse'
-scp root@10.1.1.7:/root/pulse-etc-backup.tgz ./
-```
-
-Store the archive in an encrypted backup location and remove the temporary LXC copy after verifying it. To restore, stop Pulse, replace `/etc/pulse` from the archive, confirm `pulse:pulse` ownership and restrictive permissions, then start the service and validate every data source.
-
-## Upgrade
-
-Review the release notes and take a backup first. Keep the version explicit and use the stable channel:
-
-```bash
-ssh root@10.1.1.7 '/bin/update --version vX.Y.Z'
-ssh root@10.1.1.7 'systemctl is-active pulse; /opt/pulse/bin/pulse --version'
-```
-
-Update `gitops/apps/pulse-agent/values.yaml` to the matching pinned image tag, lint and commit it, then let Argo CD roll the DaemonSet. Upgrade the `ctr` agent using the install command generated by Pulse under **Settings → Infrastructure → Install on a host**. Confirm history continuity, all connection-health indicators, and alert evaluation before removing the pre-upgrade backup.
-
-## Secret locations
-
-These mode-`0600` files are operational recovery records on `dev`, outside the repository:
-
-```text
-~/.config/pulse/initial-admin.json
-~/.config/pulse/proxmox-token.json
-~/.config/pulse/kubernetes-agent.json
-~/.config/pulse/docker-agent.json
-~/.config/pocket-id/clients/pulse.json
-```
-
-Move durable copies to 1Password. Rotate a credential in Pulse and at its source together, verify new collection, then delete obsolete local copies.
+Never reuse secrets from the former evaluation. They were revoked and securely removed as part of the uninstall.

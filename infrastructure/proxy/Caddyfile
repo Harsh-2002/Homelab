@@ -124,15 +124,6 @@
 	}
 }
 
-(pulse) {
-	@pulse host pulse.l3b.cc.cd
-	handle @pulse {
-		import private
-		import proxy
-		reverse_proxy 10.1.1.7:7655
-	}
-}
-
 (pve) {
 	import private
 	import proxy
@@ -189,7 +180,6 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import pocketid
 	import tinyauth
 	import komodo
-	import pulse
 	import proxmox
 	import cluster
 	handle {

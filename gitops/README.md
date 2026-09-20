@@ -17,8 +17,6 @@ Longhorn is pinned under `apps/longhorn/`. It uses dedicated Talos mounts at `/v
 
 See [`apps/longhorn/README.md`](apps/longhorn/README.md) for capacity, validation results, maintenance, and recovery notes.
 
-The Pulse collector is pinned under `apps/pulse-agent/`. Its read-only DaemonSet reports Kubernetes inventory and metrics to the external Pulse server. The `pulse-agent-token` Secret is deliberately created out of band and must not be committed as plaintext.
-
 ## Bootstrap or recovery
 
 ```bash

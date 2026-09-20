@@ -1,6 +1,0 @@
-apiVersion: v2
-name: pulse-agent
-description: Read-only Pulse collector for Kubernetes
-type: application
-version: 0.1.0
-appVersion: 6.4.1
