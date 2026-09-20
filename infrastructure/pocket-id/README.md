@@ -60,6 +60,8 @@ systemctl restart pocket-id
 
 Tinyauth v5.2.0 runs in the same container as a separate systemd service and provides Caddy forward authentication for applications without native OIDC. Its public endpoint is `https://login.l3b.cc.cd`; Longhorn and AdGuard Home are protected by the `infrastructure-admins` Pocket ID group.
 
+Tinyauth uses the global `deny` ACL policy. Each protected application therefore has both an explicit OAuth email whitelist and the required `infrastructure-admins` group. In Tinyauth v5 these are separate checks: the application whitelist must allow the user before the OAuth group rule is evaluated.
+
 Because Pocket ID and Tinyauth share CT 103, `/etc/hosts` explicitly resolves `auth.l3b.cc.cd` to the Caddy proxy at `10.1.1.3`. This is required for Tinyauth's server-side OAuth token exchange; resolving the public name to CT 103 itself would connect to an unused local port 443.
 
 ```bash
