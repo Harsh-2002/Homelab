@@ -76,6 +76,9 @@ spec:
         app.kubernetes.io/name: pulse-agent
     spec:
       serviceAccountName: pulse-agent
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: pulse-agent
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -114,6 +117,9 @@ spec:
             runAsGroup: 1000
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: state
+              mountPath: /var/lib/pulse-agent
           livenessProbe:
             httpGet:
               path: /healthz
@@ -132,3 +138,6 @@ spec:
             failureThreshold: 3
       tolerations:
         - operator: Exists
+      volumes:
+        - name: state
+          emptyDir: {}
