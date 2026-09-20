@@ -7,7 +7,14 @@ Headlamp is the operational Kubernetes UI. Argo CD remains the authoritative dep
 - URL: `https://headlamp.l3b.cc.cd`
 - Cilium LoadBalancer: `10.1.1.173:80`
 - Network access: private Caddy policy
-- Authentication: Kubernetes service-account token
+- Primary authentication: Pocket ID OIDC
+- Break-glass authentication: Kubernetes service-account token
+
+Pocket ID is the normal login path. The Kubernetes API server trusts issuer `https://auth.l3b.cc.cd` for the `headlamp` audience. It maps `preferred_username`, `groups`, and `sub`; the Pocket ID group `infrastructure-admins` becomes Kubernetes group `oidc:infrastructure-admins` and is bound to `cluster-admin`.
+
+The OIDC client secret lives only in the `headlamp-oidc` Kubernetes Secret. It is referenced as an external Secret by the chart and is not committed to Git.
+
+## Break-glass token
 
 Retrieve the permanent administrative login token on `dev`:
 
@@ -33,4 +40,4 @@ kubectl -n headlamp get deployment,pods,service,poddisruptionbudget
 kubectl auth can-i --as=system:serviceaccount:headlamp:headlamp-admin '*' '*'
 ```
 
-Headlamp runs two stateless replicas distributed across nodes when possible. It has no persistent volume. Native OIDC through Pocket ID is the planned replacement for the permanent administrator token. The token remains the break-glass access method.
+Headlamp runs two stateless replicas distributed across nodes when possible. It has no persistent volume. Pocket ID OIDC is the normal authentication method; the permanent token remains available only as the break-glass path.

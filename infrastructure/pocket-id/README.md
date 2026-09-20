@@ -72,6 +72,47 @@ getent ahostsv4 auth.l3b.cc.cd
 
 The final command must return `10.1.1.3`.
 
+### Identity integrations
+
+| Service | Integration | Authorization |
+| --- | --- | --- |
+| Headlamp | Native OIDC | Pocket ID group `infrastructure-admins` maps to Kubernetes `cluster-admin` |
+| Argo CD | Native OIDC | Pocket ID group `infrastructure-admins` maps to `role:admin`; local named account remains break-glass |
+| Proxmox | Native OIDC realm `pocketid` | PVE group `infrastructure-admins` has `Administrator` at `/`; PAM/local access remains break-glass |
+| Komodo | Native OIDC | Staged in the live Compose environment; validate after the recovery extraction and VM reboot |
+| AdGuard Home | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
+| Longhorn | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
+
+Pocket ID emits the user-group friendly name in the OIDC `groups` claim. Both the machine name and friendly name are therefore set to `infrastructure-admins`, matching every downstream RBAC rule. The idempotent client/group provisioning script is `scripts/configure-pocket-id-oidc.sh`. Generated client secrets remain outside Git and Notion.
+
+Tinyauth's global ACL policy is `deny`. Provider-level OAuth whitelisting permits creation of a login session, while each application's `oauth.whitelist` and `oauth.groups` are independent authorization checks. A protected application needs both entries. The known-good session exposes:
+
+```text
+Remote-User: iam.anuragvishwakarma
+Remote-Email: iam.anuragvishwakarma@gmail.com
+Remote-Groups: infrastructure-admins
+```
+
+### Kubernetes API OIDC
+
+Talos applies `talos-k8s/oidc.patch.yaml` as a `KubeAuthenticationConfig`. The API server trusts issuer `https://auth.l3b.cc.cd` for audience `headlamp`, maps `preferred_username` with prefix `oidc:`, maps groups with prefix `oidc:`, and maps `sub` as the UID. The `oidc:infrastructure-admins` ClusterRoleBinding grants `cluster-admin`.
+
+Structured API authentication no longer inherits the former `system:masters` behavior for `apiserver-kubelet-client`. A narrow binding to the built-in `system:kubelet-api-admin` role restores pod logs and node proxy access without granting unrelated cluster administration.
+
+### Troubleshooting history
+
+- Tinyauth token exchange initially failed because CT 103 resolved `auth.l3b.cc.cd` to itself at `10.1.1.6:443`. The container now resolves that public name through Caddy at `10.1.1.3`.
+- An empty provider whitelist rejected the Pocket ID email before a Tinyauth session could be created. The provider now explicitly permits the administrator email.
+- A group-friendly-name mismatch was removed by standardizing it to `infrastructure-admins`.
+- With ACL policy `deny`, per-app OAuth whitelists are mandatory even when the group claim matches. DNS and Longhorn now require both the exact email and group.
+
+Validate the two forward-auth applications with a browser session and confirm an unauthenticated CLI request receives `401`, not direct backend content:
+
+```bash
+curl -I https://dns.l3b.cc.cd
+curl -I https://longhorn.l3b.cc.cd
+```
+
 ## Upgrade
 
 Read the release notes and migration guide, then pass an explicit release tag:

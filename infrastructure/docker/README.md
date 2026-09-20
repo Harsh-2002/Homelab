@@ -101,7 +101,7 @@ The source files are:
 
 The 500 GiB destination has approximately 492 GiB usable, so the archive fits but leaves little working space. Do not retain both the complete tar file and a full extracted copy on `/data`.
 
-Because exFAT cannot preserve Linux ownership, permissions, ACLs, extended attributes, hard links, and symlinks, the recovery archive must not be extracted directly into an exFAT directory. `extract-recovery.sh` is retained as a reviewed extraction helper, but no extraction service is currently active.
+Because exFAT cannot preserve Linux ownership, permissions, ACLs, extended attributes, hard links, and symlinks, the extracted tree on exFAT is a browsable convenience copy only. The original tar remains untouched and is the authoritative full-fidelity backup.
 
 The first attempt created `/EX/linux-recovery.ext4`, but `px20` then lost its HA agent lock and self-rebooted while that new image was being initialized. After reboot, `fsck.exfat -n /dev/sdc2` reported the source filesystem clean, and `/EX/linux-recovery.tar` retained its exact size and modification timestamp. `/EX` was remounted read-only. The 600 GiB image is incomplete and must not be mounted or treated as recovered data.
 
@@ -114,24 +114,37 @@ The full-fidelity ext4-image extraction was stopped cleanly and its partial imag
 
 `recovery-extract.service` extracts the approximately 357.3 GB SSD dataset first. `recovery-srvr-extract.service` is ordered after it and extracts only `/opt/SRVR`, avoiding the rest of the old operating-system tree. Both write below `/EX/RECOVERY`; the second service remounts `/EX` read-only when complete. The original tar remains untouched. Because `/EX` is exFAT, the convenience copy cannot preserve Linux ownership, permissions, ACLs, xattrs, hard links, or symlinks; the tar remains the authoritative full-fidelity backup and the partial ext4 image remains available as a fallback.
 
-Status revalidated on 2026-09-20 after the node restart:
+Current recovery status revalidated on 2026-09-20:
 
 ```plain text
-/EX mount:                    /dev/sdc2, exFAT, read-only
+/EX mount:                    /dev/sdc2, exFAT, read-write during extraction
 Source archive:               502214830080 bytes, original timestamp unchanged
 Source readability:           archive header and initial entries readable
 Incomplete ext4 image:        644245094400 bytes / 600 GiB physically allocated
-Extraction process/service:   none
+SSD extraction:               completed successfully at 16:07:27 UTC
+SRVR extraction:              active under recovery-srvr-extract.service
+SRVR extraction start:        16:07:27 UTC
 Loop-device attachment:       none
-/data capacity:               492 GiB free
-/data contents:               empty Docker root plus lost+found only
-Docker state:                 active, 0 containers, 0 images
+/EX usage:                    2.5 TiB used, 1.3 TiB available
+/data capacity:               489 GiB free
+Docker state:                 active; 0 running / 3 stopped Komodo containers
+Docker images:                MongoDB 8.0, Komodo Core 2.3.3, Periphery 2.3.3
 VM 204 state:                 running on px20
 Replication job 204-0:        OK, FailCount 0
 Temporary HA placement:       strict px20-only
 ```
 
-The archive listing command ended with status 141 only because `head` intentionally closed the diagnostic pipe after the first 20 entries; it is not an archive-read failure. The backup error log contains ignored Unix socket entries, which are expected because tar archives cannot store live socket objects. No recovery data has been extracted to `/data`.
+The archive listing command ended with status 141 only because `head` intentionally closed the diagnostic pipe after the first 20 entries; it is not an archive-read failure. The backup error log contains ignored Unix socket entries, which are expected because tar archives cannot store live socket objects.
+
+The required `2026-09-15/SSD` tree is available below `/EX/RECOVERY`. The `2026-09-15/rootfs/opt/SRVR` tree is being populated there and already exposes its major application directories. Do not reboot VM 204, unmount `/EX`, detach the USB disk, or start Komodo until `recovery-srvr-extract.service` finishes successfully and the completion script remounts `/EX` read-only.
+
+Monitor without starting another extraction:
+
+```bash
+systemctl status recovery-srvr-extract.service
+journalctl -u recovery-srvr-extract.service -f
+findmnt /EX
+```
 
 A temporary read-only ratarmount trial was stopped after its full-archive index projected roughly 70–85 minutes, offering little advantage over selective extraction for this one-time recovery. `/RECOVERY` was never mounted. The partial 286 MB index, ratarmount environment, FUSE packages installed for the trial, and empty temporary directories were removed. The source tar remained read-only with its exact size and timestamp unchanged. Use `tar -tf` to locate required paths, then extract only explicitly selected paths into `/data`.
 
