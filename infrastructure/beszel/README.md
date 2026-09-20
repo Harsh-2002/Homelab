@@ -25,7 +25,7 @@ environment:  /etc/beszel/beszel.env
 service:      /etc/systemd/system/beszel.service
 ```
 
-The hub runs as the dedicated `beszel` system account. `USER_CREATION=true` is required for the first Pocket ID login to create/link the external OAuth identity. This is constrained by the Pocket ID client's `infrastructure-admins` allowlist and Caddy's private-source policy. Password login remains available as a break-glass path until the owner completes and verifies a Pocket ID login.
+The hub runs as the dedicated `beszel` system account. `USER_CREATION=true` is required for the first Pocket ID login to create/link the external OAuth identity. This is constrained by the Pocket ID client's `infrastructure-admins` allowlist and Caddy's private-source policy. Pocket ID must emit both `email` and `email_verified=true`: PocketBase deliberately ignores an unverified OIDC email, which makes Beszel reject the record as having a blank email. Verify each authorized user's email in Pocket ID rather than globally trusting every address. Password login remains available as a break-glass path until the owner completes and verifies a Pocket ID login.
 
 ## Agent design
 
