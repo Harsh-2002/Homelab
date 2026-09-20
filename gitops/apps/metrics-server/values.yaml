@@ -1,6 +1,9 @@
 metrics-server:
   replicas: 2
 
+  args:
+    - --kubelet-insecure-tls
+
   podDisruptionBudget:
     enabled: true
     minAvailable: 1
@@ -20,4 +23,3 @@ metrics-server:
       labelSelector:
         matchLabels:
           app.kubernetes.io/name: metrics-server
-
