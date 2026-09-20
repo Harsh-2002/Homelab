@@ -105,7 +105,14 @@ Because exFAT cannot preserve Linux ownership, permissions, ACLs, extended attri
 
 The first attempt created `/EX/linux-recovery.ext4`, but `px20` then lost its HA agent lock and self-rebooted while that new image was being initialized. After reboot, `fsck.exfat -n /dev/sdc2` reported the source filesystem clean, and `/EX/linux-recovery.tar` retained its exact size and modification timestamp. `/EX` was remounted read-only. The 600 GiB image is incomplete and must not be mounted or treated as recovered data.
 
-The full-fidelity ext4-image extraction was stopped cleanly and its partial image retained. A direct full extraction to exFAT was tested and stopped after measured throughput fell below 1 MiB/s in the old root filesystem's small-file tree. The optimized convenience extraction selects only `2026-09-15/SSD`, about 357.3 GB of application data, and writes it to `/EX/RECOVERY` on the Crucial SSD. The original tar remains untouched. Because `/EX` is exFAT, the convenience copy cannot preserve Linux ownership, permissions, ACLs, xattrs, hard links, or symlinks; the tar remains the authoritative full-fidelity backup and the partial ext4 image remains available as a fallback.
+The full-fidelity ext4-image extraction was stopped cleanly and its partial image retained. A direct full extraction to exFAT was tested and stopped after measured throughput fell below 1 MiB/s in the old root filesystem's small-file tree. Recovery is intentionally limited to the two datasets that contain the required application state:
+
+```plain text
+2026-09-15/SSD
+2026-09-15/rootfs/opt/SRVR
+```
+
+`recovery-extract.service` extracts the approximately 357.3 GB SSD dataset first. `recovery-srvr-extract.service` is ordered after it and extracts only `/opt/SRVR`, avoiding the rest of the old operating-system tree. Both write below `/EX/RECOVERY`; the second service remounts `/EX` read-only when complete. The original tar remains untouched. Because `/EX` is exFAT, the convenience copy cannot preserve Linux ownership, permissions, ACLs, xattrs, hard links, or symlinks; the tar remains the authoritative full-fidelity backup and the partial ext4 image remains available as a fallback.
 
 Status revalidated on 2026-09-20 after the node restart:
 
