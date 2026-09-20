@@ -102,6 +102,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
+            - name: PULSE_HEALTH_ADDR
+              value: ":9191"
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -116,7 +118,7 @@ spec:
             httpGet:
               path: /healthz
               port: 9191
-            initialDelaySeconds: 5
+            initialDelaySeconds: 15
             periodSeconds: 10
             timeoutSeconds: 3
             failureThreshold: 3
@@ -124,7 +126,7 @@ spec:
             httpGet:
               path: /readyz
               port: 9191
-            initialDelaySeconds: 5
+            initialDelaySeconds: 15
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 3
