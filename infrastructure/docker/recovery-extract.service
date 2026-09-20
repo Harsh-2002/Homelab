@@ -1,13 +1,13 @@
 [Unit]
-Description=Extract the recovery archive into a browsable ext4 image
+Description=Extract browsable application data directly onto the Crucial SSD
 RequiresMountsFor=/EX
 ConditionPathExists=/EX/linux-recovery.tar
-ConditionPathExists=/EX/linux-recovery.ext4
 
 [Service]
 Type=oneshot
 ExecStart=/usr/local/sbin/extract-recovery.sh
-Nice=10
-IOSchedulingClass=idle
+Nice=0
+IOSchedulingClass=best-effort
+IOSchedulingPriority=4
 TimeoutStartSec=infinity
 RemainAfterExit=yes

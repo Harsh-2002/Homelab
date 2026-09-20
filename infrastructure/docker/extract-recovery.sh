@@ -2,36 +2,26 @@
 set -euo pipefail
 
 archive=/EX/linux-recovery.tar
-image=/EX/linux-recovery.ext4
-target=/RECOVERY
-
-while pgrep -x mkfs.ext4 >/dev/null; do
-    sleep 10
-done
+target=/EX/RECOVERY
+member=./2026-09-15/SSD
+error_log=/EX/linux-recovery-direct-errors.log
+status_file=/EX/linux-recovery-direct-status.txt
 
 test -f "$archive"
-test -f "$image"
 test "$(stat -c %s "$archive")" = 502214830080
+findmnt -no OPTIONS /EX | grep -qw rw
+install -d -m 0755 "$target"
 
-while loopdev=$(losetup -j "$image" | cut -d: -f1 | head -n1) && [ -n "$loopdev" ]; do
-    if losetup --detach "$loopdev"; then
-        break
-    fi
-    sleep 10
-done
-
-mkfs.ext4 -F -E nodiscard,lazy_itable_init=1,lazy_journal_init=1 -m 0 -L linux-recovery "$image"
-loopdev=$(losetup --find --show "$image")
-install -d -o root -g root -m 0755 "$target"
-mount -o noatime "$loopdev" "$target"
-
+set +e
 pv -f -s 502214830080 "$archive" \
-    | tar --acls --xattrs --numeric-owner -xpf - -C "$target"
+    | tar --no-same-owner --no-same-permissions --no-acls --no-xattrs \
+        --overwrite -xf - -C "$target" "$member" 2>"$error_log"
+pipeline_status=("${PIPESTATUS[@]}")
+set -e
 
 sync
-test -f "$target/2026-09-15/metadata/COMPLETED"
-umount "$target"
-losetup --detach "$loopdev"
-mount -o remount,ro /EX
-loopdev=$(losetup --find --show --read-only "$image")
-mount -o ro,noatime "$loopdev" "$target"
+printf 'pv_status=%s\ntar_status=%s\ncompleted_at=%s\n' \
+    "${pipeline_status[0]}" "${pipeline_status[1]}" "$(date --iso-8601=seconds)" \
+    >"$status_file"
+
+test "${pipeline_status[0]}" -eq 0
