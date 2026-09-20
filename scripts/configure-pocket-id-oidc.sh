@@ -26,8 +26,9 @@ test -n "$user_id"
 groups="$(api GET '/user-groups')"
 group_id="$(printf '%s' "$groups" | jq -r '.data[] | select(.name == "infrastructure-admins") | .id' | head -n1)"
 if test -z "$group_id"; then
-  group_id="$(api POST '/user-groups' '{"friendlyName":"Infrastructure Administrators","name":"infrastructure-admins"}' | jq -r '.id')"
+  group_id="$(api POST '/user-groups' '{"friendlyName":"infrastructure-admins","name":"infrastructure-admins"}' | jq -r '.id')"
 fi
+api PUT "/user-groups/$group_id" '{"friendlyName":"infrastructure-admins","name":"infrastructure-admins","customClaims":[]}' >/dev/null
 api PUT "/user-groups/$group_id/users" "$(jq -cn --arg id "$user_id" '{userIds:[$id]}')" >/dev/null
 
 create_client() {
