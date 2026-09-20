@@ -92,6 +92,15 @@
 	}
 }
 
+(pocketid) {
+	@pocketid host auth.l3b.cc.cd
+	handle @pocketid {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.6:1411
+	}
+}
+
 (komodo) {
 	@komodo host komodo.l3b.cc.cd
 	handle @komodo {
@@ -154,6 +163,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import argocd
 	import longhorn
 	import headlamp
+	import pocketid
 	import komodo
 	import proxmox
 	import cluster

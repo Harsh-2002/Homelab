@@ -8,6 +8,7 @@ This repository is the reproducible configuration brain for the homelab. The Not
 - `gitops/` — Argo CD bootstrap, cluster applications, and workload manifests.
 - `infrastructure/` — reproducible proxy configuration and sanitized service runbooks.
   - `infrastructure/proxmox/` — Proxmox host resolver baseline.
+  - `infrastructure/pocket-id/` — Pocket ID systemd service, pinned upgrade helper, and runbook.
 - `scripts/` — administrative helper scripts.
 
 ## Safety rules
@@ -30,6 +31,8 @@ This repository is the reproducible configuration brain for the homelab. The Not
 | Longhorn UI | `https://longhorn.l3b.cc.cd` |
 | Headlamp service | `10.1.1.173` |
 | Headlamp UI | `https://headlamp.l3b.cc.cd` |
+| Pocket ID service | `10.1.1.6:1411` |
+| Pocket ID UI | `https://auth.l3b.cc.cd` |
 | Komodo UI | `https://komodo.l3b.cc.cd` |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |

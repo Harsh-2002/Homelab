@@ -1,0 +1,47 @@
+#!/bin/sh
+set -eu
+
+version="${1:-}"
+case "$version" in
+  v[0-9]*.[0-9]*.[0-9]*) ;;
+  *) echo "usage: pocket-id-upgrade vMAJOR.MINOR.PATCH" >&2; exit 2 ;;
+esac
+
+base_url="https://github.com/pocket-id/pocket-id/releases/download/$version"
+version_dir="/opt/pocket-id/versions/$version"
+staging_dir="$(mktemp -d)"
+previous_target="$(readlink -f /usr/local/bin/pocket-id 2>/dev/null || true)"
+trap 'rm -rf "$staging_dir"' EXIT INT TERM
+
+curl -fsSL "$base_url/checksums.txt" -o "$staging_dir/checksums.txt"
+curl -fsSL "$base_url/pocket-id_linux_amd64" -o "$staging_dir/pocket-id_linux_amd64"
+expected="$(awk '$2 == "pocket-id_linux_amd64" {print $1}' "$staging_dir/checksums.txt")"
+test -n "$expected"
+printf '%s  %s\n' "$expected" "$staging_dir/pocket-id_linux_amd64" | sha256sum --check --status
+
+install -d -m 0755 "$version_dir"
+install -m 0755 "$staging_dir/pocket-id_linux_amd64" "$version_dir/pocket-id"
+systemctl stop pocket-id.service 2>/dev/null || true
+ln -sfn "$version_dir/pocket-id" /usr/local/bin/pocket-id
+
+if systemctl start pocket-id.service; then
+  count=0
+  while test "$count" -lt 15; do
+    if systemctl is-active --quiet pocket-id.service; then
+      sleep 2
+      if systemctl is-active --quiet pocket-id.service; then
+        printf 'Pocket ID upgraded to %s\n' "$version"
+        exit 0
+      fi
+    fi
+    count=$((count + 1))
+    sleep 2
+  done
+fi
+
+if test -n "$previous_target" && test -x "$previous_target"; then
+  ln -sfn "$previous_target" /usr/local/bin/pocket-id
+  systemctl restart pocket-id.service
+fi
+echo "Pocket ID upgrade failed; previous binary restored" >&2
+exit 1
