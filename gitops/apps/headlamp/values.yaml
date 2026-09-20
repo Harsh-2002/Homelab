@@ -41,6 +41,16 @@ headlamp:
     seccompProfile:
       type: RuntimeDefault
 
+  volumeMounts:
+    - name: headlamp-config
+      mountPath: /home/headlamp/.config
+
+  volumes:
+    - name: headlamp-config
+      emptyDir:
+        medium: Memory
+        sizeLimit: 32Mi
+
   topologySpreadConstraints:
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
