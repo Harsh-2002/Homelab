@@ -95,16 +95,11 @@ The source files are:
 
 The 500 GiB destination has approximately 492 GiB usable, so the archive fits but leaves little working space. Do not retain both the complete tar file and a full extracted copy on `/data`.
 
-Because exFAT cannot preserve Linux ownership, permissions, ACLs, extended attributes, hard links, and symlinks, the recovery archive must not be extracted directly into an exFAT directory. `extract-recovery.sh` creates and formats a separate 600 GiB ext4 image at `/EX/linux-recovery.ext4`, mounts it at `/RECOVERY`, and extracts the archive there with numeric ownership, ACLs, and extended attributes preserved. It verifies `2026-09-15/metadata/COMPLETED`, syncs all writes, and remounts `/RECOVERY` read-only when finished. The original `/EX/linux-recovery.tar` is never modified or removed.
+Because exFAT cannot preserve Linux ownership, permissions, ACLs, extended attributes, hard links, and symlinks, the recovery archive must not be extracted directly into an exFAT directory. `extract-recovery.sh` is retained as a reviewed extraction helper, but no extraction service is currently active.
 
-The one-time extraction runs as transient unit `linux-recovery-extract.service`. Monitor it with:
+The first attempt created `/EX/linux-recovery.ext4`, but `px20` then lost its HA agent lock and self-rebooted while that new image was being initialized. After reboot, `fsck.exfat -n /dev/sdc2` reported the source filesystem clean, and `/EX/linux-recovery.tar` retained its exact size and modification timestamp. `/EX` was remounted read-only. The 600 GiB image is incomplete and must not be mounted or treated as recovered data.
 
-```bash
-systemctl status linux-recovery-extract
-journalctl -fu linux-recovery-extract
-```
-
-Do not disconnect the USB SSD, reboot VM 204, or stop the extraction service while it is active. Use `/RECOVERY/2026-09-15/` to select data for restoration only after the service completes successfully and `/RECOVERY` is mounted read-only.
+Recovery extraction is paused. The safest next operation is to identify the required archive paths and stream only those paths directly from the read-only tar into `/data`, avoiding further writes to the sole backup disk.
 
 While the physical USB disk is present, the strict HA rule is temporarily restricted to `px20` so Proxmox cannot attempt recovery on `px10` without the device. After the import is complete:
 
