@@ -17,6 +17,7 @@ Post-deployment checks:
 ```bash
 ssh proxy 'systemctl is-enabled caddy; systemctl is-active caddy'
 curl --resolve argocd.l3b.cc.cd:443:10.1.1.3 https://argocd.l3b.cc.cd/
+curl --resolve komodo.l3b.cc.cd:443:10.1.1.3 https://komodo.l3b.cc.cd/
 ```
 
 ## Apple iCloud Private Relay

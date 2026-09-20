@@ -15,5 +15,5 @@ routes:
 apiVersion: v1alpha1
 kind: ResolverConfig
 nameservers:
-  - address: 10.1.1.10
+  - address: 10.1.1.2
   - address: 1.1.1.1

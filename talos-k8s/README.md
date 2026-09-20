@@ -10,6 +10,8 @@ The cluster consists of three Talos control-plane nodes:
 
 The Kubernetes API uses the layer-2 VIP `10.1.1.200`. Cilium provides kube-proxy replacement, Kubernetes IPAM, and L2-announced LoadBalancer addresses from `10.1.1.170-10.1.1.190`.
 
+Talos nodes use AdGuard Home `10.1.1.2` as their primary resolver and Cloudflare `1.1.1.1` as the availability fallback. Kubernetes Service discovery remains on CoreDNS; CoreDNS forwards external lookups through the node resolver configuration.
+
 ## Tracked configuration
 
 - `cluster-name.patch.yaml` — cluster name.

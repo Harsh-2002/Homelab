@@ -1,0 +1,42 @@
+services:
+  mongo:
+    image: mongo:8.0
+    command: --quiet --wiredTigerCacheSizeGB 0.25
+    restart: unless-stopped
+    labels:
+      komodo.skip: ""
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${KOMODO_DATABASE_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${KOMODO_DATABASE_PASSWORD}
+    volumes:
+      - ${KOMODO_DATA_PATH}/mongo:/data/db
+      - ${KOMODO_DATA_PATH}/mongo-config:/data/configdb
+
+  core:
+    image: ghcr.io/moghtech/komodo-core:2.3.3
+    init: true
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - 10.1.1.4:9120:9120
+    env_file: compose.env
+    environment:
+      KOMODO_DATABASE_ADDRESS: mongo:27017
+    volumes:
+      - ${KOMODO_DATA_PATH}/keys:/config/keys
+      - ${KOMODO_DATA_PATH}/backups:/backups
+
+  periphery:
+    image: ghcr.io/moghtech/komodo-periphery:2.3.3
+    init: true
+    restart: unless-stopped
+    depends_on:
+      - core
+    env_file: compose.env
+    volumes:
+      - ${KOMODO_DATA_PATH}/keys:/config/keys
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/proc
+      - ${KOMODO_DATA_PATH}/workspace:${KOMODO_DATA_PATH}/workspace
+

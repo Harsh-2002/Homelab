@@ -71,6 +71,15 @@
 	}
 }
 
+(komodo) {
+	@komodo host komodo.l3b.cc.cd
+	handle @komodo {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.4:9120
+	}
+}
+
 (pve) {
 	import private
 	import proxy
@@ -122,6 +131,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import cloudflare
 	import adguard
 	import argocd
+	import komodo
 	import proxmox
 	import cluster
 	handle {

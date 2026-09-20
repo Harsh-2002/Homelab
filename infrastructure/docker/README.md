@@ -11,10 +11,12 @@ VM 204 `ctr` is the standalone Docker host.
 | Operating system | Debian 13 |
 | CPU | 2 vCPU |
 | Memory | 4–8 GiB ballooning |
+| CPU model | `host` configured; pending next safe reboot |
 | OS disk | 50 GiB `local-zfs` volume |
 | Docker disk | 500 GiB `data` volume |
 | Persistent data mount | `/data` |
-| Docker data root | `/data/docker` |
+| Docker metadata root | `/data/docker` |
+| Containerd image root | `/data/containerd` |
 | Docker network pool | `172.20.0.0/14`, allocated as `/24` networks |
 | QEMU Guest Agent | installed and active |
 | Hardware acceleration | Intel UHD 630 at `/dev/dri/renderD128` |
@@ -22,12 +24,14 @@ VM 204 `ctr` is the standalone Docker host.
 | Replication | job `204-0`, `px20` → `px10`, every 5 minutes |
 | HA placement | normally strict `vm204-replica-nodes`: `px20:2`, `px10:1` |
 
-The data disk uses one GPT partition with an ext4 filesystem labeled `docker-data`. It mounts at `/data` by filesystem UUID. Docker stores engine state in `/data/docker` and has a systemd `RequiresMountsFor=/data` dependency, so it cannot silently start on the OS disk if the data filesystem is unavailable. Application data such as Frigate recordings can use separate paths below `/data`.
+The data disk uses one GPT partition with an ext4 filesystem labeled `docker-data`. It mounts at `/data` by filesystem UUID. Docker stores engine metadata in `/data/docker`; Docker 29's containerd image store uses `/data/containerd`. Both services have a systemd `RequiresMountsFor=/data` dependency, so neither can silently start on the OS disk if the data filesystem is unavailable. Application data such as Frigate recordings can use separate paths below `/data`.
 
 ## Tracked configuration
 
 - `daemon.json` → `/etc/docker/daemon.json`
 - `10-data-root.conf` → `/etc/systemd/system/docker.service.d/10-data-root.conf`
+- `containerd.toml` → `/etc/containerd/config.toml`
+- `10-data-root-containerd.conf` → `/etc/systemd/system/containerd.service.d/10-data-root.conf`
 - `fstab.fragment` → append to `/etc/fstab`
 - `debian.sources` → `/etc/apt/sources.list.d/debian.sources`
 - `vfio.conf` → `/etc/modprobe.d/vfio.conf` on `px10` and `px20`
@@ -47,6 +51,7 @@ Validate:
 ```bash
 findmnt /data
 docker info --format 'root={{.DockerRootDir}} driver={{.Driver}} logging={{.LoggingDriver}} live-restore={{.LiveRestoreEnabled}}'
+containerd config dump | grep -E '^(root|state) ='
 systemctl is-active docker qemu-guest-agent srv-docker.mount
 ```
 
@@ -54,6 +59,7 @@ Expected Docker configuration:
 
 ```plain text
 root=/data/docker
+containerd root=/data/containerd
 driver=overlayfs
 logging=local
 live-restore=true
