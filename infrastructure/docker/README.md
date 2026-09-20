@@ -101,6 +101,25 @@ The first attempt created `/EX/linux-recovery.ext4`, but `px20` then lost its HA
 
 Recovery extraction is paused. The safest next operation is to identify the required archive paths and stream only those paths directly from the read-only tar into `/data`, avoiding further writes to the sole backup disk.
 
+Status revalidated on 2026-09-20 after the node restart:
+
+```plain text
+/EX mount:                    /dev/sdc2, exFAT, read-only
+Source archive:               502214830080 bytes, original timestamp unchanged
+Source readability:           archive header and initial entries readable
+Incomplete ext4 image:        644245094400 bytes / 600 GiB physically allocated
+Extraction process/service:   none
+Loop-device attachment:       none
+/data capacity:               492 GiB free
+/data contents:               empty Docker root plus lost+found only
+Docker state:                 active, 0 containers, 0 images
+VM 204 state:                 running on px20
+Replication job 204-0:        OK, FailCount 0
+Temporary HA placement:       strict px20-only
+```
+
+The archive listing command ended with status 141 only because `head` intentionally closed the diagnostic pipe after the first 20 entries; it is not an archive-read failure. The backup error log contains ignored Unix socket entries, which are expected because tar archives cannot store live socket objects. No recovery data has been extracted to `/data`.
+
 While the physical USB disk is present, the strict HA rule is temporarily restricted to `px20` so Proxmox cannot attempt recovery on `px10` without the device. After the import is complete:
 
 ```bash

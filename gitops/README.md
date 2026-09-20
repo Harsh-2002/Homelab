@@ -38,6 +38,34 @@ For CLI access through Caddy, use gRPC-Web:
 argocd login argocd.l3b.cc.cd --grpc-web
 ```
 
+## Authentication
+
+The permanent local administrator account is `iam-anuragvishwakarma`. It has the `login` capability and an explicit `role:admin` RBAC assignment. The built-in `admin` account is disabled after the replacement account was verified through Caddy.
+
+An email address cannot be used directly as an Argo CD local username: `@` is invalid in a ConfigMap data key, and dots are parsed as configuration separators. The hyphenated username is intentional.
+
+The one-time password is stored only on `dev` in a mode-600 file until the owner completes the interactive rotation:
+
+```bash
+argocd account update-password \
+  --current-password "$(tr -d '\n' < ~/.config/argocd/iam-anuragvishwakarma.initial-password)" \
+  --grpc-web \
+  --prompts-enabled
+```
+
+After changing the password, verify a fresh login and securely remove the one-time credential:
+
+```bash
+argocd logout argocd.l3b.cc.cd
+argocd login argocd.l3b.cc.cd \
+  --username iam-anuragvishwakarma \
+  --grpc-web \
+  --prompts-enabled
+shred --remove ~/.config/argocd/iam-anuragvishwakarma.initial-password
+```
+
+Passwords and password hashes must not be committed to Git or copied into documentation.
+
 ## Change workflow
 
 1. Modify manifests or pinned values in Git.
