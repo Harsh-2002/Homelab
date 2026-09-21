@@ -98,6 +98,11 @@ data:
             href: https://rustfs.l3b.cc.cd
             description: S3 storage
             ping: https://rustfs.l3b.cc.cd
+        - Immich:
+            icon: immich.png
+            href: https://photos.l3b.cc.cd
+            description: Photos
+            ping: https://photos.l3b.cc.cd
     - Compute:
         - Proxmox:
             icon: proxmox.png
