@@ -5,6 +5,7 @@ x-immich-env: &immich-env
   DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
   DB_USERNAME: ${DB_USERNAME:?DB_USERNAME is required}
   DB_DATABASE_NAME: ${DB_DATABASE_NAME:?DB_DATABASE_NAME is required}
+  DB_HOSTNAME: immich-postgres
 
 services:
   immich-server:
