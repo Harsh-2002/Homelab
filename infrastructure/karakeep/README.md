@@ -9,7 +9,8 @@ Karakeep is restored on Docker VM 204 `ctr` as Portainer Stack `karakeep` (ID `8
 | Application SQLite data | `/data/apps/karakeep/data` |
 | Meilisearch derived index | `/data/apps/karakeep/meilisearch` |
 | Asset store | RustFS bucket `karakeep` at `http://10.1.1.8:9000` |
-| Preserved source | `/EX/RECOVERY/2026-09-15/rootfs/opt/SRVR/Hoarder` and `/EX/RECOVERY/2026-09-15/SSD/karakeep` |
+| Restored source | `/EX/RECOVERY/2026-09-15/SSD/Karakeep/data` |
+| Preserved legacy rollback source | `/EX/RECOVERY/2026-09-15/rootfs/opt/SRVR/Hoarder` |
 
 The `karakeep` bucket was migrated from MinIO to RustFS before this application restore. The dedicated RustFS IAM identity is restricted to this bucket's listing and object read/write/delete operations; it has no access to other buckets and does not use the RustFS root credential.
 
@@ -17,7 +18,9 @@ Karakeep, Chrome, and Meilisearch run on the Compose-created `karakeep_default` 
 
 ## Restore and upgrade notes
 
-The original stack used the legacy Hoarder data-directory name. Karakeep is its successor, so the SQLite data is copied intact rather than exported/imported. The legacy Alpine Chrome image is replaced with Karakeep's maintained Chrome image; this does not change application data.
+The correct Portainer-mounted data source is `/EX/RECOVERY/2026-09-15/SSD/Karakeep/data`, not the older in-container Hoarder tree. It contains the current September 2026 SQLite snapshot and asset tree. The Hoarder database is a February 2025 rollback source only. Before the corrected restore, the mistaken live directory was preserved at `/data/apps/karakeep/data.pre-ssd-restore-20260921T211944Z`; do not remove it without an explicit retention decision.
+
+The original stack used the legacy Hoarder product name. Karakeep is its successor, so the correct SQLite data is copied intact rather than exported/imported. The legacy Alpine Chrome image is replaced with Karakeep's maintained Chrome image; this does not change application data.
 
 The preserved Meilisearch index was created by v1.16 while the supported current image is v1.41.0. The recovery copy is retained first. If v1.41 rejects its old `data.ms` directory, retain the original and recreate only the derived index by moving the copied `data.ms` aside, starting Meilisearch, then running **Admin Settings → Background Jobs → Reindex All Bookmarks** in Karakeep. Do not delete the preserved recovery source.
 
