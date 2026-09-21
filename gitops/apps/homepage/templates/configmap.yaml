@@ -186,6 +186,7 @@ data:
   custom.js: |
     (() => {
       const units = ["B", "KB", "MB", "GB", "TB", "PB"];
+      const binary = { KiB: 1024, MiB: 1024 ** 2, GiB: 1024 ** 3, TiB: 1024 ** 4 };
       const setText = (element, value) => {
         if (element && element.textContent !== value) element.textContent = value;
       };
@@ -198,6 +199,22 @@ data:
       const display = (value) => {
         const index = Math.min(units.length - 1, Math.floor(Math.log(value) / Math.log(1000)));
         return `${(value / 1000 ** index).toFixed(index ? 2 : 0)} ${units[index]}`;
+      };
+      const decimal = (value) => {
+        const match = value.trim().match(/^([\d,.]+)\s*(KiB|MiB|GiB|TiB)$/);
+        if (!match) return null;
+        const amount = Number(match[1].replace(/,/g, ""));
+        if (!Number.isFinite(amount)) return null;
+        const byteCount = amount * binary[match[2]];
+        const index = Math.min(units.length - 1, Math.floor(Math.log(byteCount) / Math.log(1000)));
+        return `${Math.round(byteCount / 1000 ** index)} ${units[index]}`;
+      };
+      const renderK8s = () => {
+        const label = Array.from(document.querySelectorAll("div.pt-1.text-center")).find((element) => element.textContent.trim() === "K8s");
+        const widget = label?.parentElement?.parentElement;
+        const memory = widget && Array.from(widget.querySelectorAll("div")).find((element) => element.children.length === 0 && /^(?:[\d,.]+)\s*(?:KiB|MiB|GiB|TiB)$/.test(element.textContent.trim()));
+        const value = memory && decimal(memory.textContent);
+        if (value) setText(memory, value);
       };
       const render = () => {
         document.querySelectorAll(".information-widget-longhorn-node").forEach((widget) => {
@@ -213,6 +230,7 @@ data:
           setText(rows[1].lastElementChild, "Used");
           setText(details.querySelector(".information-widget-label"), "Longhorn");
         });
+        renderK8s();
       };
       const start = () => {
         let queued = false;
