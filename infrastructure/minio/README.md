@@ -1,6 +1,6 @@
 # MinIO
 
-MinIO is a Docker Compose workload on VM 204 `ctr`, managed through Portainer when it is restored. Its preserved object data and MinIO metadata are restored into `/data/minio`; the Compose definition in this repository remains the source of truth.
+MinIO is a Docker Compose workload on VM 204 `ctr`, managed as the Portainer Stack `minio` (ID `111`) on the `Aether` endpoint. Its preserved object data and MinIO metadata are restored into `/data/minio`; the Compose definition in this repository remains the source of truth.
 
 ## Endpoints
 
