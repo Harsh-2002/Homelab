@@ -22,6 +22,8 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: IfNotPresent
           env:
+            - name: HOSTNAME
+              value: 0.0.0.0
             - name: MY_POD_IP
               valueFrom:
                 fieldRef:
