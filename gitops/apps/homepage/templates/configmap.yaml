@@ -142,6 +142,13 @@ data:
               node: px30
               fields: ["resources.cpu", "resources.mem"]
   widgets.yaml: |
+    - datetime:
+        text_size: md
+        locale: en-IN
+        format:
+          dateStyle: medium
+          timeStyle: short
+          hourCycle: h23
     - openmeteo:
         label: Bilalpada
         latitude: 19.4327622
@@ -151,13 +158,6 @@ data:
         cache: 15
         format:
           maximumFractionDigits: 0
-    - datetime:
-        text_size: md
-        locale: en-IN
-        format:
-          dateStyle: medium
-          timeStyle: short
-          hourCycle: h23
     - kubernetes:
         cluster:
           show: true
@@ -182,7 +182,8 @@ data:
 {{ .Files.Get "files/pve-root-ca.crt" | indent 4 }}
   bookmarks.yaml: "[]"
   docker.yaml: "{}"
-  custom.css: ""
+  custom.css: |
+    #information-widgets-right .information-widget-openmeteo { margin-left: 0.75rem; }
   custom.js: |
     (() => {
       const units = ["B", "KB", "MB", "GB", "TB", "PB"];
