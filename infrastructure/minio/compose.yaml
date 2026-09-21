@@ -14,7 +14,7 @@ services:
       CONSOLE_PBKDF_SALT: ${CONSOLE_PBKDF_SALT:?CONSOLE_PBKDF_SALT is required}
     ports:
       - 10.1.1.4:9002:9000
-      - 10.1.1.4:9003:9001
+      - 10.1.1.4:9003:9002
     volumes:
       - /data/minio:/data
     restart: unless-stopped

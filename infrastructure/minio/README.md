@@ -7,7 +7,7 @@ MinIO is a Docker Compose workload on VM 204 `ctr`, managed through Portainer wh
 | Purpose | Address | Upstream |
 | --- | --- | --- |
 | S3 API | `https://minio.l3b.cc.cd` | `10.1.1.4:9002` → container `9000` |
-| MinIO Console | `https://minio-console.l3b.cc.cd` | `10.1.1.4:9003` → container `9001` |
+| MinIO Console | `https://minio-console.l3b.cc.cd` | `10.1.1.4:9003` → container `9002` |
 
 Both endpoints are private to LAN and Tailscale at Caddy. MinIO has native authentication, so it does not use Tinyauth. The console redirect URL is fixed to its external Caddy hostname so console WebSocket origin checks succeed.
 
