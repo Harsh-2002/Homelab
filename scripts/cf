@@ -1,0 +1,140 @@
+#!/bin/sh
+# Minimal Cloudflare DNS CLI. Requires: sh, curl, jq.
+
+set -eu
+
+die() { printf '%s\n' "cf: $*" >&2; exit 1; }
+
+help() {
+  printf '%s\n' \
+    'Usage: cf list [type|name]' \
+    '       cf get <name>' \
+    '       cf add <type> <name> <value> [--proxy] [--ttl N]' \
+    '       cf set <type> <name> <value> [--proxy] [--ttl N]' \
+    '       cf rm <type> <name> [--yes]' \
+    '' \
+    'Environment: CF_API_TOKEN, CF_ZONE, CF_ENV_FILE (default /etc/caddy/cloudflare.env),' \
+    '             CF_CACHE_FILE (default ~/.cf-zone-id)'
+}
+
+load_config() {
+  [ -n "${CF_API_TOKEN:-}" ] && [ -n "${CF_ZONE:-}" ] && return
+  env_file=${CF_ENV_FILE:-/etc/caddy/cloudflare.env}
+  [ -r "$env_file" ] || return
+  while IFS='=' read -r key value || [ -n "$key" ]; do
+    case $key in
+      CF_API_TOKEN) [ -n "${CF_API_TOKEN:-}" ] || CF_API_TOKEN=$value ;;
+      CLOUDFLARE_API_TOKEN) [ -n "${CF_API_TOKEN:-}" ] || CF_API_TOKEN=$value ;;
+      CF_ZONE) [ -n "${CF_ZONE:-}" ] || CF_ZONE=$value ;;
+    esac
+  done < "$env_file"
+}
+
+api() {
+  if [ "$#" -eq 3 ]; then
+    response=$(curl -gsS --connect-timeout 10 --max-time 30 -X "$1" -H "Authorization: Bearer $CF_API_TOKEN" -H 'Content-Type: application/json' --data "$3" "$2") || die 'network request failed'
+  else
+    response=$(curl -gsS --connect-timeout 10 --max-time 30 -X "$1" -H "Authorization: Bearer $CF_API_TOKEN" -H 'Content-Type: application/json' "$2") || die 'network request failed'
+  fi
+  if ! printf '%s' "$response" | jq -e '.success == true' >/dev/null 2>&1; then
+    printf '%s' "$response" | jq -r '"Cloudflare: " + ([.errors[]? | ((.code|tostring) + ": " + .message)] | join("; "))' 2>/dev/null >&2 || true
+    exit 1
+  fi
+  printf '%s' "$response"
+}
+
+fqdn() {
+  name=${1%.}
+  case $name in @) printf '%s' "$CF_ZONE" ;; "$CF_ZONE"|*."$CF_ZONE") printf '%s' "$name" ;; *) printf '%s.%s' "$name" "$CF_ZONE" ;; esac
+}
+
+zone_id() {
+  cache=${CF_CACHE_FILE:-"$HOME/.cf-zone-id"}
+  if [ -r "$cache" ]; then
+    IFS='|' read -r id cached_zone < "$cache" || true
+    [ "${cached_zone:-}" = "$CF_ZONE" ] && [ -n "${id:-}" ] && { printf '%s' "$id"; return; }
+  fi
+  data=$(api GET "https://api.cloudflare.com/client/v4/zones?name=$CF_ZONE")
+  id=$(printf '%s' "$data" | jq -r '.result[0].id // empty')
+  [ -n "$id" ] || die "zone not found: $CF_ZONE"
+  (umask 077; printf '%s|%s\n' "$id" "$CF_ZONE" > "$cache") 2>/dev/null || true
+  printf '%s' "$id"
+}
+
+table() {
+  jq -r '
+    ([["TYPE","NAME","CONTENT","PROXY","TTL"]] +
+    [.result[] | [.type, .name, .content, (if .proxied then "yes" else "no" end), (if .ttl == 1 then "auto" else (.ttl|tostring) end)]]) as $rows |
+    [range(0; 5) as $i | [$rows[][$i] | length] | max] as $widths |
+    $rows[] | to_entries | map(.value + (" " * ($widths[.key] - (.value|length)))) | join("  ")'
+}
+
+records() { api GET "https://api.cloudflare.com/client/v4/zones/$zone/dns_records?per_page=100"; }
+
+options() {
+  proxied=false ttl=1
+  while [ "$#" -gt 0 ]; do
+    case $1 in
+      --proxy) proxied=true ;;
+      --ttl) shift; [ "${1:-}" ] || die '--ttl needs a value'; ttl=$1 ;;
+      *) die "unknown option: $1" ;;
+    esac
+    shift
+  done
+  case $ttl in ''|*[!0-9]*) die 'TTL must be a number' ;; esac
+}
+
+payload() {
+  jq -nc --arg type "$type" --arg name "$name" --arg content "$value" --argjson ttl "$ttl" --argjson proxied "$proxied" \
+    '{type:$type,name:$name,content:$content,ttl:$ttl} + (if $type == "A" or $type == "AAAA" or $type == "CNAME" then {proxied:$proxied} else {} end)'
+}
+
+command=${1:-help}
+[ "$command" = help ] && { help; exit 0; }
+load_config
+[ -n "${CF_API_TOKEN:-}" ] || die 'CF_API_TOKEN is required'
+[ -n "${CF_ZONE:-}" ] || die 'CF_ZONE is required'
+zone=$(zone_id)
+
+case $command in
+  list)
+    [ "$#" -le 2 ] || die 'usage: cf list [type|name]'
+    data=$(records)
+    if [ "${2:-}" ]; then
+      case $2 in A|AAAA|CAA|CNAME|MX|NS|PTR|SRV|TXT) data=$(printf '%s' "$data" | jq --arg type "$2" '.result |= map(select(.type == $type))') ;;
+        *) name=$(fqdn "$2"); data=$(printf '%s' "$data" | jq --arg name "$name" '.result |= map(select(.name == $name))') ;;
+      esac
+    fi
+    printf '%s' "$data" | table ;;
+  get)
+    [ "$#" -eq 2 ] || die 'usage: cf get <name>'
+    name=$(fqdn "$2"); records | jq --arg name "$name" '.result |= map(select(.name == $name))' | table ;;
+  add|set)
+    [ "$#" -ge 4 ] || die "usage: cf $command <type> <name> <value> [--proxy] [--ttl N]"
+    type=$2 name=$(fqdn "$3") value=$4; shift 4; options "$@"
+    body=$(payload)
+    if [ "$command" = add ]; then
+      api POST "https://api.cloudflare.com/client/v4/zones/$zone/dns_records" "$body" >/dev/null
+    else
+      existing=$(records | jq --arg type "$type" --arg name "$name" '.result | map(select(.type == $type and .name == $name)) | .[0].id // empty')
+      if [ -n "$existing" ]; then api PUT "https://api.cloudflare.com/client/v4/zones/$zone/dns_records/$existing" "$body" >/dev/null
+      else api POST "https://api.cloudflare.com/client/v4/zones/$zone/dns_records" "$body" >/dev/null; fi
+    fi
+    printf '%s %s -> %s\n' "$type" "$name" "$value" ;;
+  rm)
+    [ "$#" -ge 3 ] || die 'usage: cf rm <type> <name> [--yes]'
+    type=$2 name=$(fqdn "$3"); yes=false
+    [ "${4:-}" = --yes ] && yes=true
+    [ "$#" -le 4 ] || die 'usage: cf rm <type> <name> [--yes]'
+    data=$(records | jq --arg type "$type" --arg name "$name" '.result |= map(select(.type == $type and .name == $name))')
+    id=$(printf '%s' "$data" | jq -r '.result[0].id // empty')
+    [ -n "$id" ] || die 'record not found'
+    printf '%s' "$data" | table
+    if [ "$yes" = false ]; then
+      printf 'Delete this record? [y/N] ' >&2; IFS= read -r answer < /dev/tty || die 'use --yes in non-interactive scripts'
+      [ "$answer" = y ] || [ "$answer" = Y ] || exit 0
+    fi
+    api DELETE "https://api.cloudflare.com/client/v4/zones/$zone/dns_records/$id" >/dev/null
+    printf 'deleted %s %s\n' "$type" "$name" ;;
+  *) die "unknown command: $command" ;;
+esac

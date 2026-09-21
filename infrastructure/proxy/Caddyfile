@@ -63,6 +63,19 @@
 }
 
 (argocd) {
+	@webhook {
+		host argocd.l3b.cc.cd
+		path /api/webhook
+		method POST
+	}
+	handle @webhook {
+		request_body {
+			max_size 1MB
+		}
+		import proxy
+		reverse_proxy 10.1.1.171:80
+	}
+
 	@argo host argocd.l3b.cc.cd
 	handle @argo {
 		import private

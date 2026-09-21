@@ -17,6 +17,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/pulse/` — archived Pulse evaluation and rebuild guide.
   - `infrastructure/beszel/` — Beszel hub and agent services, public key, HA, and operations runbook.
 - `scripts/` — administrative helper scripts.
+  - `scripts/cf` — minimal POSIX Cloudflare DNS CLI; token and zone remain in the environment or the non-Git Cloudflare environment file.
 
 ## Safety rules
 

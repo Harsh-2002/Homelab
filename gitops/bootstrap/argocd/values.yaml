@@ -2,6 +2,7 @@ argo-cd:
   configs:
     cm:
       url: https://argocd.l3b.cc.cd
+      webhook.maxPayloadSizeMB: "1"
       oidc.config: |
         name: Pocket ID
         issuer: https://auth.l3b.cc.cd
@@ -15,6 +16,9 @@ argo-cd:
       accounts.iam-anuragvishwakarma: login
       admin.enabled: false
       exec.enabled: false
+    secret:
+      extra:
+        webhook.github.secret: $argocd-github-webhook:secret
     params:
       server.insecure: true
     rbac:
