@@ -155,24 +155,6 @@
 	}
 }
 
-(minio) {
-	@minioapi host minio.l3b.cc.cd
-	handle @minioapi {
-		import private
-		import proxy
-		reverse_proxy 10.1.1.4:9002
-	}
-
-	@minioconsole host minio-console.l3b.cc.cd
-	handle @minioconsole {
-		import private
-		import proxy
-		reverse_proxy 10.1.1.4:9003 {
-			flush_interval -1
-		}
-	}
-}
-
 (s3) {
 	@s3api host s3.l3b.cc.cd
 	handle @s3api {
@@ -275,7 +257,6 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import tinyauth
 	import immich
 	import portainer
-	import minio
 	import s3
 	import beszel
 	import proxmox
