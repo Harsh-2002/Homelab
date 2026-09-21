@@ -22,6 +22,8 @@ Each non-human metric integration has its own least-privilege identity:
 - Argo CD local `homepage` is API-key-only with `role:readonly`.
 - Komodo service user `homepage` has read access only to Servers and Stacks; it has no execute, inspect, terminal, or configuration permission.
 
+Beszel's own API requires a PocketBase superuser for this widget. Homepage therefore uses the pre-existing `Beszel PocketBase Superuser` credential from 1Password for that widget only; it is never stored in Git.
+
 The internal Proxmox API uses the tracked cluster root CA at `files/pve-root-ca.crt`, mounted with `NODE_EXTRA_CA_CERTS`. This keeps TLS verification enabled for all three direct `:8006` widget requests. Replace that file only if the Proxmox cluster CA is intentionally rotated.
 
 Validate after an Argo sync:
