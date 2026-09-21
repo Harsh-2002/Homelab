@@ -146,6 +146,15 @@
 	}
 }
 
+(immich) {
+	@immich host photos.l3b.cc.cd
+	handle @immich {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.4:2283
+	}
+}
+
 (beszel) {
 	@beszel host beszel.l3b.cc.cd
 	handle @beszel {
@@ -223,6 +232,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import pocketid
 	import tinyauth
 	import komodo
+	import immich
 	import beszel
 	import proxmox
 	import cluster
