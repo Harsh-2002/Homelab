@@ -38,12 +38,13 @@ Existing OIDC client secrets are stored as `Pocket ID OIDC - <client>` API Crede
 | `Pocket ID` | Passkey identity metadata; no password stored |
 | `Pocket ID Automation API` | Administrator API key used by automation |
 | `Pocket ID OIDC - <client>` | Per-application OIDC client secret |
+| `Pocket ID OIDC - portainer` | Portainer native Custom OAuth/OIDC client secret |
 | `Cloudflare DNS API Token` | Caddy ACME DNS-01 token |
 | `Komodo` | Local break-glass super-administrator; Pocket ID is normal access |
 | `Proxmox` | Normal administrator login, plus the dedicated `Homepage` PVEAuditor API token |
 | `Longhorn - K8s`, `Tinyauth` | Pocket ID access metadata; no application password stored |
 
-Beszel, Argo CD, and Komodo break-glass passwords were generated in 1Password, applied to the live services, and verified with fresh logins. AdGuard and Headlamp credentials were validated against their live APIs. Redundant Pocket ID and Beszel credential files were removed from `dev` after byte-for-byte comparison and successful 1Password-backed reconciliation.
+Beszel, Argo CD, and Komodo break-glass passwords were generated in 1Password, applied to the live services, and verified with fresh logins. Portainer's restored local administrator remains a break-glass account while Pocket ID is its normal sign-in path. AdGuard and Headlamp credentials were validated against their live APIs. Redundant Pocket ID and Beszel credential files were removed from `dev` after byte-for-byte comparison and successful 1Password-backed reconciliation.
 
 URLs formerly using the retired `*.ctl.qzz.io` domain were migrated to the equivalent `*.l3b.cc.cd` names. Credentials and usernames for inactive legacy applications are not changed until the corresponding service is restored and the identity migration can be verified end to end.
 

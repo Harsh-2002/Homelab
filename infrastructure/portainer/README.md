@@ -2,6 +2,12 @@
 
 Portainer EE runs as a Docker Compose service on VM 204 `ctr`, with restored state in `/data/portainer` and its Compose files in `/data/apps/portainer`. It is served privately at `https://portainer.l3b.cc.cd` by Caddy; Portainer retains its own login rather than using a Caddy authentication layer.
 
+## Identity
+
+Portainer uses native Custom OAuth/OIDC with Pocket ID. The provider client ID is `portainer`, its callback and redirect URL are exactly `https://portainer.l3b.cc.cd/`, and automatic user provisioning is enabled. The client secret is stored only in the `Pocket ID OIDC - portainer` API Credential item in the `HomeLab` 1Password vault; it is never committed.
+
+Pocket ID is the normal sign-in path. The restored local Portainer administrator remains deliberately available as the break-glass fallback, so **Hide internal authentication prompt** remains off. After the first Pocket ID sign-in, confirm that `iam-anuragvishwakarma` has the intended environment role before relying on it for administration.
+
 ## Recovery and access
 
 The preserved Portainer state originates at `/EX/RECOVERY/2026-09-15/rootfs/opt/SRVR/Portainer/portainer_data`. It contains the Portainer database, cryptographic key material, configuration, and its automatic database rollback copy. The external recovery disk remains read-only; recovery copies its contents into `/data/portainer` before the service is started.

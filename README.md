@@ -65,4 +65,4 @@ Cloudflare DNS is private by default: the apex record resolves to proxy `10.1.1.
 
 See [`talos-k8s/README.md`](talos-k8s/README.md) and [`gitops/README.md`](gitops/README.md) for operating procedures.
 
-The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, and Proxmox use native OIDC; Komodo's native OIDC configuration is staged for its post-recovery startup. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home and Longhorn are protected this way. Identity endpoints and applications remain restricted to the LAN and Tailscale networks.
+The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, Proxmox, and Portainer use native OIDC; Komodo's retained configuration documents its future rebuild path. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home and Longhorn are protected this way. Identity endpoints and applications remain restricted to the LAN and Tailscale networks.
