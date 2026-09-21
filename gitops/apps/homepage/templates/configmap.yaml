@@ -174,4 +174,49 @@ data:
   bookmarks.yaml: "[]"
   docker.yaml: "{}"
   custom.css: ""
-  custom.js: ""
+  custom.js: |
+    (() => {
+      const units = ["B", "KB", "MB", "GB", "TB", "PB"];
+      const setText = (element, value) => {
+        if (element && element.textContent !== value) element.textContent = value;
+      };
+      const bytes = (value) => {
+        const match = value.trim().match(/^([\d,.]+)\s*(B|KB|MB|GB|TB|PB)$/);
+        if (!match) return null;
+        const amount = Number(match[1].replace(/,/g, ""));
+        return Number.isFinite(amount) ? amount * 1000 ** units.indexOf(match[2]) : null;
+      };
+      const display = (value) => {
+        const index = Math.min(units.length - 1, Math.floor(Math.log(value) / Math.log(1000)));
+        return `${(value / 1000 ** index).toFixed(index ? 2 : 0)} ${units[index]}`;
+      };
+      const render = () => {
+        document.querySelectorAll(".information-widget-longhorn-node").forEach((widget) => {
+          const details = widget.querySelector("svg + div");
+          const rows = details ? Array.from(details.children).filter((row) => row.classList.contains("flex-row")) : [];
+          if (rows.length < 2 || rows[0].lastElementChild?.textContent !== "Free" || rows[1].lastElementChild?.textContent !== "Total") return;
+          const free = bytes(rows[0].firstElementChild?.textContent || "");
+          const total = bytes(rows[1].firstElementChild?.textContent || "");
+          if (free === null || total === null || total < free) return;
+          setText(rows[0].firstElementChild, display(total));
+          setText(rows[0].lastElementChild, "Total");
+          setText(rows[1].firstElementChild, display(total - free));
+          setText(rows[1].lastElementChild, "Used");
+          setText(details.querySelector(".information-widget-label"), "Longhorn");
+        });
+      };
+      const start = () => {
+        let queued = false;
+        new MutationObserver(() => {
+          if (!queued) {
+            queued = true;
+            requestAnimationFrame(() => {
+              queued = false;
+              render();
+            });
+          }
+        }).observe(document.body, { childList: true, characterData: true, subtree: true });
+        render();
+      };
+      document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", start, { once: true }) : start();
+    })();

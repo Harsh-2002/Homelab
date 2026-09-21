@@ -12,7 +12,9 @@ Homepage is the stateless, Git-managed portal served at `https://l3b.cc.cd`.
 
 The header identifies its source explicitly: **K8s** is aggregate Kubernetes CPU and memory. Per-node Kubernetes figures are intentionally omitted to keep the overview concise; use Headlamp when node-level detail is needed. The timestamp is a local browser utility widget.
 
-Native service widgets provide live DNS statistics from AdGuard Home, Beszel system counts, Komodo server/stack/container counts, Argo CD application state, and Proxmox cluster and node CPU/memory state. Longhorn contributes one labelled aggregate storage-capacity widget in the header; its full per-node detail remains one click away in Longhorn.
+Native service widgets provide live DNS statistics from AdGuard Home, Beszel system counts, Komodo server/stack/container counts, Argo CD application state, and Proxmox cluster and node CPU/memory state. Longhorn contributes one labelled aggregate storage-capacity widget in the header, expressed as **Total** first and **Used** beneath it; its full per-node detail remains one click away in Longhorn.
+
+Homepage's native Longhorn widget presents Free before Total. The small `custom.js` adapter changes only that aggregate card into the clearer Total/Used order and performs no network requests. Keep this adapter when upgrading Homepage unless upstream adds an equivalent display option; browser-verify the card after every Homepage upgrade.
 
 `Headlamp` is deliberately a Kubernetes management link rather than a duplicate metric source: its authoritative data is the Kubernetes API already represented by the labelled cluster and node cards. `Pocket ID` remains an identity health/access link; no sensitive authentication internals are displayed.
 
