@@ -163,6 +163,15 @@ data:
         total: true
         labels: true
         nodes: false
+    - openmeteo:
+        label: Bilalpada
+        latitude: 19.4327622
+        longitude: 72.8456399
+        timezone: Asia/Kolkata
+        units: metric
+        cache: 15
+        format:
+          maximumFractionDigits: 0
   kubernetes.yaml: |
     mode: cluster
     ingress: false

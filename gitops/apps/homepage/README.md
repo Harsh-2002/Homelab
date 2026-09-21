@@ -16,6 +16,8 @@ Native service widgets provide live DNS statistics from AdGuard Home, Beszel sys
 
 Homepage's native Longhorn widget presents Free before Total. The small `custom.js` adapter changes only that aggregate card into the clearer Total/Used order and performs no network requests. Keep this adapter when upgrading Homepage unless upstream adds an equivalent display option; browser-verify the card after every Homepage upgrade.
 
+The header also includes a keyless Open-Meteo weather widget for Bilalpada, refreshed at most every 15 minutes. It uses metric units and India Standard Time; it has no credential or new in-cluster dependency.
+
 `Headlamp` is deliberately a Kubernetes management link rather than a duplicate metric source: its authoritative data is the Kubernetes API already represented by the labelled cluster and node cards. `Pocket ID` remains an identity health/access link; no sensitive authentication internals are displayed.
 
 Each non-human metric integration has its own least-privilege identity:
