@@ -6,14 +6,14 @@ MinIO is a Docker Compose workload on VM 204 `ctr`, managed through Portainer wh
 
 | Purpose | Address | Upstream |
 | --- | --- | --- |
-| S3 API | `https://minio.l3b.cc.cd` | `10.1.1.4:9000` |
-| MinIO Console | `https://minio-console.l3b.cc.cd` | `10.1.1.4:9001` |
+| S3 API | `https://minio.l3b.cc.cd` | `10.1.1.4:9002` → container `9000` |
+| MinIO Console | `https://minio-console.l3b.cc.cd` | `10.1.1.4:9003` → container `9001` |
 
 Both endpoints are private to LAN and Tailscale at Caddy. MinIO has native authentication, so it does not use Tinyauth. The console redirect URL is fixed to its external Caddy hostname so console WebSocket origin checks succeed.
 
 ## Portainer stack
 
-Create a Stack named `minio` on the existing `ctr` server from the tracked `infrastructure/minio/compose.yaml` definition. Use the default Stack project name `minio`, enable its normal Compose health checks, and keep automatic image updates disabled. Keep the repository definition authoritative instead of maintaining a second editable UI copy.
+Maintain the existing Stack named `minio` on the `Aether` endpoint from the tracked `infrastructure/minio/compose.yaml` definition. Use the default Stack project name `minio`, enable its normal Compose health checks, and keep automatic image updates disabled. Keep the repository definition authoritative instead of maintaining a second editable UI copy.
 
 In the stack environment, create these four values. They are written only to the runtime `.env`, are not stored in Git, and should also be saved in the existing HomeLab 1Password item.
 
@@ -21,6 +21,7 @@ In the stack environment, create these four values. They are written only to the
 | --- | --- |
 | `MINIO_ROOT_USER` | Unique random root access key; do not use `minioadmin`. |
 | `MINIO_ROOT_PASSWORD` | Long random root secret. |
+| `MINIO_REGION` | `us-east-1`, unless a deliberate application compatibility requirement differs. |
 | `CONSOLE_PBKDF_PASSPHRASE` | At least 32 random characters; retain indefinitely. |
 | `CONSOLE_PBKDF_SALT` | At least 48 random characters; retain indefinitely. |
 

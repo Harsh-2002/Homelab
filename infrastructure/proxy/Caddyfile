@@ -160,14 +160,14 @@
 	handle @minioapi {
 		import private
 		import proxy
-		reverse_proxy 10.1.1.4:9000
+		reverse_proxy 10.1.1.4:9002
 	}
 
 	@minioconsole host minio-console.l3b.cc.cd
 	handle @minioconsole {
 		import private
 		import proxy
-		reverse_proxy 10.1.1.4:9001 {
+		reverse_proxy 10.1.1.4:9003 {
 			flush_interval -1
 		}
 	}
