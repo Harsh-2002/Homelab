@@ -34,19 +34,9 @@ sudo docker compose --project-directory /data/apps/komodo --env-file /data/apps/
 curl --fail --silent --show-error http://10.1.1.4:9120/
 ```
 
-Retrieve the initial username without printing secrets:
+The local break-glass administrator is `iam.anuragvishwakarma@gmail.com`. Its password is authoritative in the existing `HomeLab` 1Password item named `Komodo`; it was generated, rotated into the live local account, and verified with a fresh local-login request. Pocket ID OIDC is the normal access path. The one-time `KOMODO_INIT_ADMIN_*` values were removed from the live environment after the rotation so they cannot become stale copies of a credential.
 
-```bash
-sudo sed -n 's/^KOMODO_INIT_ADMIN_USERNAME=//p' /data/apps/komodo/compose.env
-```
-
-Retrieve the one-time password only when ready to log in:
-
-```bash
-sudo sed -n 's/^KOMODO_INIT_ADMIN_PASSWORD=//p' /data/apps/komodo/compose.env
-```
-
-After changing the administrator password in Komodo, remove the two `KOMODO_INIT_ADMIN_*` lines from the live environment file and redeploy Core. Database backups under `/data/apps/komodo/backups` are replicated with VM 204 but are not an independent backup.
+Database backups under `/data/apps/komodo/backups` are replicated with VM 204 but are not an independent backup.
 
 ## OIDC first-login procedure
 
