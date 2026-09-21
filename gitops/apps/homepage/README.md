@@ -32,3 +32,5 @@ Validate after an Argo sync:
 kubectl --context k8s -n homepage get deploy,pods,svc
 curl -I https://l3b.cc.cd
 ```
+
+For every visual or widget configuration change, completion additionally requires a fresh browser reload of `https://l3b.cc.cd`: confirm the intended cards render, no Homepage error panel is visible, and the browser console has no errors. A successful Helm render or a healthy Kubernetes Deployment alone is not sufficient UI verification.
