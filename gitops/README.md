@@ -52,6 +52,8 @@ argocd login argocd.l3b.cc.cd --grpc-web
 
 Argo CD continues to poll Git every three minutes. GitHub push events also reach the narrowly public `POST /api/webhook` path, causing an immediate refresh; automated sync then reconciles changed desired state. The rest of `argocd.l3b.cc.cd` remains private. The HMAC secret is a separate live Kubernetes Secret referenced by `configs.secret.extra` and is authoritative in 1Password, never Git.
 
+The GitHub webhook is configured for Push events with JSON payloads. Its GitHub ping delivery was validated with HTTP 200 before enabling normal push-driven refreshes.
+
 ## Authentication
 
 The permanent local administrator account is `iam-anuragvishwakarma`. It has the `login` capability and an explicit `role:admin` RBAC assignment. The built-in `admin` account is disabled after the replacement account was verified through Caddy. Argo CD splits local-account configuration keys on dots and Kubernetes ConfigMap data keys cannot contain `@`, so the canonical username form is required here.
