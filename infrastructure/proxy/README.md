@@ -19,13 +19,14 @@ ssh proxy 'systemctl is-enabled caddy; systemctl is-active caddy'
 curl --resolve argocd.l3b.cc.cd:443:10.1.1.3 https://argocd.l3b.cc.cd/
 curl --resolve komodo.l3b.cc.cd:443:10.1.1.3 https://komodo.l3b.cc.cd/
 curl --resolve beszel.l3b.cc.cd:443:10.1.1.3 https://beszel.l3b.cc.cd/api/health
+curl --resolve l3b.cc.cd:443:10.1.1.3 https://l3b.cc.cd/
 ```
 
 ## Private identity flow
 
 Caddy admits only LAN `10.1.1.0/24` and Tailscale `100.64.0.0/10` sources. Pocket ID at `auth.l3b.cc.cd` and Tinyauth at `login.l3b.cc.cd` are subject to the same policy, so remote authentication requires Tailscale.
 
-AdGuard Home and Longhorn import the reusable `authenticate` block. Caddy calls Tinyauth at `10.1.1.6:3000/api/auth/caddy`; successful sessions return identity headers before the request reaches the backend. Headlamp, Argo CD, Proxmox, Komodo, and Beszel use their own native OIDC flows instead.
+AdGuard Home, Longhorn, and the Homepage portal at `l3b.cc.cd` import the reusable `authenticate` block. Caddy calls Tinyauth at `10.1.1.6:3000/api/auth/caddy`; successful sessions return identity headers before the request reaches the backend. Headlamp, Argo CD, Proxmox, Komodo, and Beszel use their own native OIDC flows instead.
 
 Expected unauthenticated behavior:
 

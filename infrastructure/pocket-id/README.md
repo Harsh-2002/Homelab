@@ -58,7 +58,7 @@ systemctl restart pocket-id
 
 ## Tinyauth
 
-Tinyauth v5.2.0 runs in the same container as a separate systemd service and provides Caddy forward authentication for applications without native OIDC. Its public endpoint is `https://login.l3b.cc.cd`; Longhorn and AdGuard Home are protected by the `infrastructure-admins` Pocket ID group.
+Tinyauth v5.2.0 runs in the same container as a separate systemd service and provides Caddy forward authentication for applications without native OIDC. Its public endpoint is `https://login.l3b.cc.cd`; Homepage, Longhorn, and AdGuard Home are protected by the `infrastructure-admins` Pocket ID group.
 
 Tinyauth uses the global `deny` ACL policy. Each protected application therefore has both an explicit OAuth email whitelist and the required `infrastructure-admins` group. In Tinyauth v5 these are separate checks: the application whitelist must allow the user before the OAuth group rule is evaluated.
 
@@ -82,6 +82,7 @@ The final command must return `10.1.1.3`.
 | Komodo | Native OIDC | Staged in the live Compose environment; validate after the recovery extraction and VM reboot |
 | AdGuard Home | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
 | Longhorn | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
+| Homepage | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
 
 Pocket ID emits the user-group friendly name in the OIDC `groups` claim. Both the machine name and friendly name are therefore set to `infrastructure-admins`, matching every downstream RBAC rule. The idempotent client/group provisioning script is `scripts/configure-pocket-id-oidc.sh`. Generated client secrets remain outside Git and Notion.
 
