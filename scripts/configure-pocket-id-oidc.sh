@@ -57,12 +57,12 @@ create_client() {
 create_client headlamp 'Headlamp' 'https://headlamp.l3b.cc.cd' '["https://headlamp.l3b.cc.cd/oidc-callback"]'
 create_client argocd 'Argo CD' 'https://argocd.l3b.cc.cd' '["https://argocd.l3b.cc.cd/auth/callback"]'
 create_client proxmox 'Proxmox' 'https://px.l3b.cc.cd' '["https://px.l3b.cc.cd","https://px10.l3b.cc.cd","https://px20.l3b.cc.cd","https://px30.l3b.cc.cd"]'
-create_client komodo 'Komodo' 'https://komodo.l3b.cc.cd' '["https://komodo.l3b.cc.cd/auth/oidc/callback"]'
 create_client portainer 'Portainer' 'https://portainer.l3b.cc.cd/' '["https://portainer.l3b.cc.cd/"]'
+create_client s3 'RustFS' 'https://rustfs.l3b.cc.cd' '["https://rustfs.l3b.cc.cd/rustfs/admin/v3/oidc/callback/default"]'
 create_client tinyauth 'Tinyauth' 'https://login.l3b.cc.cd' '["https://login.l3b.cc.cd/api/oauth/callback/pocketid"]'
 create_client beszel 'Beszel' 'https://beszel.l3b.cc.cd' '["https://beszel.l3b.cc.cd/api/oauth2-redirect"]'
 
-client_ids='["headlamp","argocd","proxmox","komodo","portainer","tinyauth","beszel"]'
+client_ids='["headlamp","argocd","proxmox","portainer","s3","tinyauth","beszel"]'
 api PUT "/user-groups/$group_id/allowed-oidc-clients" "$(jq -cn --argjson ids "$client_ids" '{oidcClientIds:$ids}')" >/dev/null
 
 printf 'Pocket ID group and OIDC clients configured.\n'

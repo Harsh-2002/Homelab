@@ -137,15 +137,6 @@
 	}
 }
 
-(komodo) {
-	@komodo host komodo.l3b.cc.cd
-	handle @komodo {
-		import private
-		import proxy
-		reverse_proxy 10.1.1.4:9120
-	}
-}
-
 (immich) {
 	@immich host photos.l3b.cc.cd
 	handle @immich {
@@ -177,6 +168,30 @@
 		import private
 		import proxy
 		reverse_proxy 10.1.1.4:9001 {
+			flush_interval -1
+		}
+	}
+}
+
+(s3) {
+	@s3api host s3.l3b.cc.cd
+	handle @s3api {
+		import private
+		header {
+			-Server
+			X-Content-Type-Options nosniff
+			Referrer-Policy strict-origin-when-cross-origin
+		}
+		reverse_proxy 10.1.1.8:9000 {
+			flush_interval -1
+		}
+	}
+
+	@s3console host rustfs.l3b.cc.cd
+	handle @s3console {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.8:9001 {
 			flush_interval -1
 		}
 	}
@@ -258,10 +273,10 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import homepage
 	import pocketid
 	import tinyauth
-	import komodo
 	import immich
 	import portainer
 	import minio
+	import s3
 	import beszel
 	import proxmox
 	import cluster

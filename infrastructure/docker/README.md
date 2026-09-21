@@ -127,8 +127,7 @@ SRVR extraction start:        16:07:27 UTC
 Loop-device attachment:       none
 /EX usage:                    2.5 TiB used, 1.3 TiB available
 /data capacity:               489 GiB free
-Docker state:                 active; 0 running / 3 stopped Komodo containers
-Docker images:                MongoDB 8.0, Komodo Core 2.3.3, Periphery 2.3.3
+Docker state:                 active; application containers are restored deliberately through Portainer
 VM 204 state:                 running on px20
 Replication job 204-0:        OK, FailCount 0
 Temporary HA placement:       strict px20-only
@@ -136,7 +135,7 @@ Temporary HA placement:       strict px20-only
 
 The archive listing command ended with status 141 only because `head` intentionally closed the diagnostic pipe after the first 20 entries; it is not an archive-read failure. The backup error log contains ignored Unix socket entries, which are expected because tar archives cannot store live socket objects.
 
-The required `2026-09-15/SSD` tree is available below `/EX/RECOVERY`. The `2026-09-15/rootfs/opt/SRVR` tree is being populated there and already exposes its major application directories. Do not reboot VM 204, unmount `/EX`, detach the USB disk, or start Komodo until `recovery-srvr-extract.service` finishes successfully and the completion script remounts `/EX` read-only.
+The required `2026-09-15/SSD` tree is available below `/EX/RECOVERY`. The `2026-09-15/rootfs/opt/SRVR` tree is being populated there and already exposes its major application directories. Do not reboot VM 204, unmount `/EX`, or detach the USB disk until `recovery-srvr-extract.service` finishes successfully and the completion script remounts `/EX` read-only.
 
 Monitor without starting another extraction:
 

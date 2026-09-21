@@ -40,7 +40,7 @@ Do not replace these pass-through entries with exact A rewrites: AdGuard Home v0
 Validation:
 
 ```bash
-ssh dns 'dig @127.0.0.1 komodo.l3b.cc.cd A +noall +answer'
+ssh dns 'dig @127.0.0.1 portainer.l3b.cc.cd A +noall +answer'
 ssh dns 'dig @127.0.0.1 k8s.l3b.cc.cd A +noall +answer'
 ssh dns 'systemctl is-enabled AdGuardHome unbound; systemctl is-active AdGuardHome unbound'
 ```

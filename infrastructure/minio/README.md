@@ -1,6 +1,6 @@
 # MinIO
 
-MinIO is a Komodo-managed Docker Compose Stack on VM 204 `ctr`. Its preserved object data and MinIO metadata are restored into `/data/minio`; Komodo owns the runtime Compose file and its local `.env` in the configured Stack directory.
+MinIO is a Docker Compose workload on VM 204 `ctr`, managed through Portainer when it is restored. Its preserved object data and MinIO metadata are restored into `/data/minio`; the Compose definition in this repository remains the source of truth.
 
 ## Endpoints
 
@@ -11,11 +11,11 @@ MinIO is a Komodo-managed Docker Compose Stack on VM 204 `ctr`. Its preserved ob
 
 Both endpoints are private to LAN and Tailscale at Caddy. MinIO has native authentication, so it does not use Tinyauth. The console redirect URL is fixed to its external Caddy hostname so console WebSocket origin checks succeed.
 
-## Komodo Stack
+## Portainer stack
 
-Create a Stack named `minio` on the existing `ctr` server, sourced from Git: repository `Harsh-2002/Homelab`, branch `main`, and file path `infrastructure/minio/compose.yaml`. Enable normal Compose health checks, keep automatic image updates disabled, and use the default Stack project name `minio`. This keeps Git as the Compose source of truth instead of maintaining a second editable UI copy.
+Create a Stack named `minio` on the existing `ctr` server from the tracked `infrastructure/minio/compose.yaml` definition. Use the default Stack project name `minio`, enable its normal Compose health checks, and keep automatic image updates disabled. Keep the repository definition authoritative instead of maintaining a second editable UI copy.
 
-In **Stack → Config → Environment**, create these four values. They are written only to Komodo's Stack `.env`, are not stored in Git, and should also be saved in the existing HomeLab 1Password item.
+In the stack environment, create these four values. They are written only to the runtime `.env`, are not stored in Git, and should also be saved in the existing HomeLab 1Password item.
 
 | Variable | Guidance |
 | --- | --- |

@@ -79,7 +79,6 @@ The final command must return `10.1.1.3`.
 | Headlamp | Native OIDC | Pocket ID group `infrastructure-admins` maps to Kubernetes `cluster-admin` |
 | Argo CD | Native OIDC | Pocket ID group `infrastructure-admins` maps to `role:admin`; local named account remains break-glass |
 | Proxmox | Native OIDC realm `pocketid` | PVE group `infrastructure-admins` has `Administrator` at `/`; PAM/local access remains break-glass |
-| Komodo | Native OIDC | Staged in the live Compose environment; validate after the recovery extraction and VM reboot |
 | Portainer | Native Custom OAuth/OIDC | Pocket ID client `portainer`; automatic user provisioning enabled; local Portainer administrator remains break-glass |
 | AdGuard Home | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
 | Longhorn | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |

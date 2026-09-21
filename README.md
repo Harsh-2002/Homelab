@@ -19,6 +19,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/immich/` — Immich Compose deployment and safe restore procedure.
   - `infrastructure/portainer/` — Portainer EE Compose deployment and safe restore procedure.
   - `infrastructure/minio/` — MinIO Stack configuration and safe restore procedure.
+  - `infrastructure/rustfs/` — native RustFS S3 service, OIDC, HA, and upgrade runbook.
 - `scripts/` — administrative helper scripts.
   - `scripts/cf` — minimal POSIX Cloudflare DNS CLI; token and zone remain in the environment or the non-Git Cloudflare environment file.
 
@@ -49,11 +50,12 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Tinyauth UI | `https://login.l3b.cc.cd` |
 | Beszel service | `10.1.1.7:8090` |
 | Beszel UI | `https://beszel.l3b.cc.cd` |
-| Komodo UI | `https://komodo.l3b.cc.cd` |
 | Immich UI | `https://photos.l3b.cc.cd` |
 | Portainer UI | `https://portainer.l3b.cc.cd` |
 | MinIO S3 API | `https://minio.l3b.cc.cd` |
 | MinIO Console | `https://minio-console.l3b.cc.cd` |
+| RustFS S3 API | `https://s3.l3b.cc.cd` |
+| RustFS Console | `https://rustfs.l3b.cc.cd` |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |
 | Proxmox px20 | `https://px20.l3b.cc.cd` |
@@ -65,4 +67,4 @@ Cloudflare DNS is private by default: the apex record resolves to proxy `10.1.1.
 
 See [`talos-k8s/README.md`](talos-k8s/README.md) and [`gitops/README.md`](gitops/README.md) for operating procedures.
 
-The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, Proxmox, and Portainer use native OIDC; Komodo's retained configuration documents its future rebuild path. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home and Longhorn are protected this way. Identity endpoints and applications remain restricted to the LAN and Tailscale networks.
+The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, Proxmox, and Portainer use native OIDC. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home and Longhorn are protected this way. Identity endpoints and applications remain restricted to the LAN and Tailscale networks.

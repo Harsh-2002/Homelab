@@ -13,7 +13,7 @@ scp infrastructure/proxmox/resolv.conf px30:/etc/resolv.conf
 Validate private, public, and fallback resolution:
 
 ```bash
-getent ahostsv4 komodo.l3b.cc.cd
+getent ahostsv4 px10.l3b.cc.cd
 getent ahostsv4 github.com
 dig @1.1.1.1 example.com A +short
 ```

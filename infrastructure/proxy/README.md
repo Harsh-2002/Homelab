@@ -19,9 +19,10 @@ Post-deployment checks:
 ```bash
 ssh proxy 'systemctl is-enabled caddy; systemctl is-active caddy'
 curl --resolve argocd.l3b.cc.cd:443:10.1.1.3 https://argocd.l3b.cc.cd/
-curl --resolve komodo.l3b.cc.cd:443:10.1.1.3 https://komodo.l3b.cc.cd/
 curl --resolve portainer.l3b.cc.cd:443:10.1.1.3 https://portainer.l3b.cc.cd/api/status
 curl --resolve minio.l3b.cc.cd:443:10.1.1.3 https://minio.l3b.cc.cd/minio/health/live
+curl --resolve s3.l3b.cc.cd:443:10.1.1.3 https://s3.l3b.cc.cd/health/ready
+curl --resolve rustfs.l3b.cc.cd:443:10.1.1.3 https://rustfs.l3b.cc.cd/rustfs/admin/v3/oidc/providers
 curl --resolve beszel.l3b.cc.cd:443:10.1.1.3 https://beszel.l3b.cc.cd/api/health
 curl --resolve l3b.cc.cd:443:10.1.1.3 https://l3b.cc.cd/
 ```
@@ -30,9 +31,11 @@ curl --resolve l3b.cc.cd:443:10.1.1.3 https://l3b.cc.cd/
 
 Caddy admits only LAN `10.1.1.0/24` and Tailscale `100.64.0.0/10` sources. Pocket ID at `auth.l3b.cc.cd` and Tinyauth at `login.l3b.cc.cd` are subject to the same policy, so remote authentication requires Tailscale.
 
-AdGuard Home, Longhorn, and the Homepage portal at `l3b.cc.cd` import the reusable `authenticate` block. Caddy calls Tinyauth at `10.1.1.6:3000/api/auth/caddy`; successful sessions return identity headers before the request reaches the backend. Headlamp, Argo CD, Proxmox, Komodo, Beszel, Immich, and Portainer use their own application authentication flows instead. Immich is private-network-only at `https://photos.l3b.cc.cd`; its API is not placed behind Tinyauth so the native web and mobile clients can authenticate normally. Portainer is private-network-only at `https://portainer.l3b.cc.cd` and keeps its own authenticated session plus reverse-proxy trusted-origin policy.
+AdGuard Home, Longhorn, and the Homepage portal at `l3b.cc.cd` import the reusable `authenticate` block. Caddy calls Tinyauth at `10.1.1.6:3000/api/auth/caddy`; successful sessions return identity headers before the request reaches the backend. Headlamp, Argo CD, Proxmox, Beszel, Immich, and Portainer use their own application authentication flows instead. Immich is private-network-only at `https://photos.l3b.cc.cd`; its API is not placed behind Tinyauth so the native web and mobile clients can authenticate normally. Portainer is private-network-only at `https://portainer.l3b.cc.cd` and keeps its own authenticated session plus reverse-proxy trusted-origin policy.
 
 MinIO is also private-network-only: `minio.l3b.cc.cd` serves the S3 API and `minio-console.l3b.cc.cd` serves the native console. Caddy handles WebSocket upgrades and immediate streaming for the console; MinIO's `MINIO_BROWSER_REDIRECT_URL` must remain the console hostname.
+
+RustFS is private-network-only as well: `s3.l3b.cc.cd` serves its S3 API and `rustfs.l3b.cc.cd` its native OIDC-capable console. The API route deliberately does not use response compression, which avoids altering object-transfer semantics or signed S3 responses. Neither hostname is publicly exposed by DNS; making the API public requires an explicit later decision and a hostname-specific Cloudflare A record.
 
 Expected unauthenticated behavior:
 
