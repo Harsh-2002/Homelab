@@ -1,0 +1,16 @@
+name: portainer
+
+services:
+  portainer:
+    container_name: portainer
+    image: ${PORTAINER_IMAGE}
+    command:
+      - --http-enabled
+      - --trusted-origins
+      - https://portainer.l3b.cc.cd
+    ports:
+      - 10.1.1.4:9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /data/portainer:/data
+    restart: unless-stopped

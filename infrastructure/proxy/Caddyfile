@@ -155,6 +155,15 @@
 	}
 }
 
+(portainer) {
+	@portainer host portainer.l3b.cc.cd
+	handle @portainer {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.4:9000
+	}
+}
+
 (beszel) {
 	@beszel host beszel.l3b.cc.cd
 	handle @beszel {
@@ -233,6 +242,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import tinyauth
 	import komodo
 	import immich
+	import portainer
 	import beszel
 	import proxmox
 	import cluster

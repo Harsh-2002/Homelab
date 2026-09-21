@@ -28,7 +28,7 @@ curl --resolve l3b.cc.cd:443:10.1.1.3 https://l3b.cc.cd/
 
 Caddy admits only LAN `10.1.1.0/24` and Tailscale `100.64.0.0/10` sources. Pocket ID at `auth.l3b.cc.cd` and Tinyauth at `login.l3b.cc.cd` are subject to the same policy, so remote authentication requires Tailscale.
 
-AdGuard Home, Longhorn, and the Homepage portal at `l3b.cc.cd` import the reusable `authenticate` block. Caddy calls Tinyauth at `10.1.1.6:3000/api/auth/caddy`; successful sessions return identity headers before the request reaches the backend. Headlamp, Argo CD, Proxmox, Komodo, Beszel, and Immich use their own application authentication flows instead. Immich is private-network-only at `https://photos.l3b.cc.cd`; its API is not placed behind Tinyauth so the native web and mobile clients can authenticate normally.
+AdGuard Home, Longhorn, and the Homepage portal at `l3b.cc.cd` import the reusable `authenticate` block. Caddy calls Tinyauth at `10.1.1.6:3000/api/auth/caddy`; successful sessions return identity headers before the request reaches the backend. Headlamp, Argo CD, Proxmox, Komodo, Beszel, Immich, and Portainer use their own application authentication flows instead. Immich is private-network-only at `https://photos.l3b.cc.cd`; its API is not placed behind Tinyauth so the native web and mobile clients can authenticate normally. Portainer is private-network-only at `https://portainer.l3b.cc.cd` and keeps its own authenticated session plus reverse-proxy trusted-origin policy.
 
 Expected unauthenticated behavior:
 

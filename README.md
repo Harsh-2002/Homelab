@@ -17,6 +17,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/pulse/` — archived Pulse evaluation and rebuild guide.
   - `infrastructure/beszel/` — Beszel hub and agent services, public key, HA, and operations runbook.
   - `infrastructure/immich/` — Immich Compose deployment and safe restore procedure.
+  - `infrastructure/portainer/` — Portainer EE Compose deployment and safe restore procedure.
 - `scripts/` — administrative helper scripts.
   - `scripts/cf` — minimal POSIX Cloudflare DNS CLI; token and zone remain in the environment or the non-Git Cloudflare environment file.
 
@@ -49,6 +50,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Beszel UI | `https://beszel.l3b.cc.cd` |
 | Komodo UI | `https://komodo.l3b.cc.cd` |
 | Immich UI | `https://photos.l3b.cc.cd` |
+| Portainer UI | `https://portainer.l3b.cc.cd` |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |
 | Proxmox px20 | `https://px20.l3b.cc.cd` |
