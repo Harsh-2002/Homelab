@@ -32,6 +32,9 @@ spec:
                   fieldPath: status.podIP
             - name: HOMEPAGE_ALLOWED_HOSTS
               value: "$(MY_POD_IP):3000,l3b.cc.cd,10.1.1.174,homepage,homepage.{{ .Release.Namespace }}.svc.cluster.local"
+          envFrom:
+            - secretRef:
+                name: homepage-widgets
           ports:
             - name: http
               containerPort: 3000

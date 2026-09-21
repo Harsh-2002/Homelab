@@ -5,32 +5,59 @@ metadata:
 data:
   settings.yaml: |
     title: l3b.cc.cd
-    headerStyle: clean
     theme: dark
     color: slate
+    headerStyle: underlined
     statusStyle: dot
     hideVersion: true
+    layout:
+      Monitoring:
+        style: row
+        columns: 2
+      Control:
+        style: row
+        columns: 2
+      Platform:
+        style: row
+        columns: 3
+      Compute:
+        style: row
+        columns: 4
     quicklaunch:
       searchDescriptions: true
       hideInternetSearch: true
       showSearchSuggestions: false
   services.yaml: |
-    - Core:
-        - Pocket ID:
-            icon: pocket-id.png
-            href: https://auth.l3b.cc.cd
-            description: Identity
-            ping: https://auth.l3b.cc.cd
+    - Monitoring:
         - AdGuard Home:
             icon: adguard-home.png
             href: https://dns.l3b.cc.cd
             description: DNS filtering
             ping: https://dns.l3b.cc.cd
+            widget:
+              type: adguard
+              url: http://10.1.1.2:3000
+              username: "{{ "{{HOMEPAGE_VAR_ADGUARD_USERNAME}}" }}"
+              password: "{{ "{{HOMEPAGE_VAR_ADGUARD_PASSWORD}}" }}"
+              fields: ["queries", "blocked", "latency"]
         - Beszel:
             icon: beszel.png
             href: https://beszel.l3b.cc.cd
             description: Monitoring
             ping: https://beszel.l3b.cc.cd
+            widget:
+              type: beszel
+              url: http://10.1.1.7:8090
+              username: "{{ "{{HOMEPAGE_VAR_BESZEL_USERNAME}}" }}"
+              password: "{{ "{{HOMEPAGE_VAR_BESZEL_PASSWORD}}" }}"
+              version: 2
+              fields: ["systems", "up"]
+    - Control:
+        - Pocket ID:
+            icon: pocket-id.png
+            href: https://auth.l3b.cc.cd
+            description: Identity
+            ping: https://auth.l3b.cc.cd
         - Komodo:
             icon: komodo.png
             href: https://komodo.l3b.cc.cd
@@ -74,6 +101,13 @@ data:
             description: Node
             ping: https://px30.l3b.cc.cd
   widgets.yaml: |
+    - datetime:
+        text_size: md
+        locale: en-IN
+        format:
+          dateStyle: medium
+          timeStyle: short
+          hourCycle: h23
     - kubernetes:
         cluster:
           show: true
