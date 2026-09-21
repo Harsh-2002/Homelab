@@ -24,7 +24,7 @@ Each non-human metric integration has its own least-privilege identity:
 
 - Proxmox `homepage@pve!homepage` has only the `PVEAuditor` token ACL.
 - Argo CD local `homepage` is API-key-only with `role:readonly`.
-- Portainer local service user `homepage` has Portainer's **Read-only User** role for the `Aether` Docker environment only. Its API key can list container status for the dashboard but cannot alter Docker resources.
+- Portainer local service user `homepage` has Portainer's **Helpdesk User** role for the `Aether` Docker environment only. This is the least Portainer role that can read host-wide container counts; its API key cannot alter Docker resources.
 
 Beszel's own API requires a PocketBase superuser for this widget. Homepage therefore uses the pre-existing `Beszel PocketBase Superuser` credential from 1Password for that widget only; it is never stored in Git.
 
