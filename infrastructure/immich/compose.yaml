@@ -1,6 +1,7 @@
 name: immich
 
 x-immich-env: &immich-env
+  IMMICH_HOST: 0.0.0.0
   TZ: ${TZ:?TZ is required}
   DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
   DB_USERNAME: ${DB_USERNAME:?DB_USERNAME is required}
