@@ -5,15 +5,32 @@ metadata:
 data:
   settings.yaml: |
     title: l3b.cc.cd
-    headerStyle: clean
+    description: Private infrastructure console
     theme: dark
-    color: slate
+    color: cyan
+    headerStyle: boxedWidgets
+    iconStyle: theme
     statusStyle: dot
     hideVersion: true
+    fullWidth: true
+    target: _blank
     quicklaunch:
       searchDescriptions: true
       hideInternetSearch: true
       showSearchSuggestions: false
+    layout:
+      Core:
+        style: row
+        columns: 4
+        icon: mdi-shield-check-outline
+      Platform:
+        style: row
+        columns: 3
+        icon: mdi-kubernetes
+      Compute:
+        style: row
+        columns: 4
+        icon: mdi-server
   services.yaml: |
     - Core:
         - Pocket ID:
@@ -74,17 +91,28 @@ data:
             description: Node
             ping: https://px30.l3b.cc.cd
   widgets.yaml: |
+    - greeting:
+        text: l3b.cc.cd
+        text_size: 2xl
+    - datetime:
+        text_size: xl
+        locale: en-IN
+        format:
+          dateStyle: full
+          timeStyle: short
+          hourCycle: h23
     - kubernetes:
         cluster:
           show: true
           cpu: true
           memory: true
-          showLabel: false
+          showLabel: true
+          label: Cluster
         nodes:
           show: true
           cpu: true
           memory: true
-          showLabel: false
+          showLabel: true
   kubernetes.yaml: |
     mode: cluster
     ingress: false
@@ -93,5 +121,49 @@ data:
     # Proxmox widgets are intentionally not configured.
   bookmarks.yaml: "[]"
   docker.yaml: "{}"
-  custom.css: ""
+  custom.css: |
+    #page_wrapper {
+      background:
+        radial-gradient(900px circle at 5% -10%, rgba(6, 182, 212, .16), transparent 46%),
+        radial-gradient(760px circle at 100% 0%, rgba(99, 102, 241, .14), transparent 42%),
+        #020617;
+    }
+    #information-widgets {
+      margin-top: 1.5rem;
+      padding: 1rem 1.25rem;
+      border: 1px solid rgba(103, 232, 249, .14);
+      border-radius: 1rem;
+      background: rgba(15, 23, 42, .72);
+      box-shadow: 0 18px 45px rgba(2, 6, 23, .32);
+      backdrop-filter: blur(16px);
+    }
+    .service-group-name {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .service-card {
+      min-height: 5rem;
+      margin-bottom: .75rem !important;
+      border: 1px solid rgba(148, 163, 184, .14);
+      border-radius: .9rem !important;
+      background: rgba(15, 23, 42, .72) !important;
+      box-shadow: 0 10px 28px rgba(2, 6, 23, .2) !important;
+      backdrop-filter: blur(12px);
+    }
+    .service-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(34, 211, 238, .42);
+      box-shadow: 0 16px 34px rgba(6, 182, 212, .14) !important;
+    }
+    .service-title-text > div:first-child {
+      font-size: 1rem;
+    }
+    @media (max-width: 640px) {
+      #information-widgets {
+        margin: .75rem;
+        padding: .75rem;
+      }
+    }
   custom.js: ""
