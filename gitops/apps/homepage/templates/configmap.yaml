@@ -155,7 +155,7 @@ data:
           cpu: true
           memory: true
           showLabel: true
-          label: Kubernetes Cluster
+          label: K8s
         nodes:
           show: false
     - longhorn:
