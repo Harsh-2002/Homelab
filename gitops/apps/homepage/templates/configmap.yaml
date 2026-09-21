@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage-config
+data:
+  settings.yaml: |
+    title: l3b.cc.cd
+    headerStyle: clean
+    theme: dark
+    color: slate
+    statusStyle: dot
+    hideVersion: true
+    quicklaunch:
+      searchDescriptions: true
+      hideInternetSearch: true
+      showSearchSuggestions: false
+  services.yaml: |
+    - Core:
+        - Pocket ID:
+            icon: pocket-id.png
+            href: https://auth.l3b.cc.cd
+            description: Identity
+            ping: https://auth.l3b.cc.cd
+        - AdGuard Home:
+            icon: adguard-home.png
+            href: https://dns.l3b.cc.cd
+            description: DNS filtering
+            ping: https://dns.l3b.cc.cd
+        - Beszel:
+            icon: beszel.png
+            href: https://beszel.l3b.cc.cd
+            description: Monitoring
+            ping: https://beszel.l3b.cc.cd
+        - Komodo:
+            icon: komodo.png
+            href: https://komodo.l3b.cc.cd
+            description: Docker deployments
+            ping: https://komodo.l3b.cc.cd
+    - Platform:
+        - Argo CD:
+            icon: argo-cd.png
+            href: https://argocd.l3b.cc.cd
+            description: GitOps
+            ping: https://argocd.l3b.cc.cd
+        - Headlamp:
+            icon: headlamp.png
+            href: https://headlamp.l3b.cc.cd
+            description: Kubernetes
+            ping: https://headlamp.l3b.cc.cd
+        - Longhorn:
+            icon: longhorn.png
+            href: https://longhorn.l3b.cc.cd
+            description: Storage
+            ping: https://longhorn.l3b.cc.cd
+    - Compute:
+        - Proxmox:
+            icon: proxmox.png
+            href: https://px.l3b.cc.cd
+            description: Cluster
+            ping: https://px.l3b.cc.cd
+        - px10:
+            icon: proxmox.png
+            href: https://px10.l3b.cc.cd
+            description: Node
+            ping: https://px10.l3b.cc.cd
+        - px20:
+            icon: proxmox.png
+            href: https://px20.l3b.cc.cd
+            description: Node
+            ping: https://px20.l3b.cc.cd
+        - px30:
+            icon: proxmox.png
+            href: https://px30.l3b.cc.cd
+            description: Node
+            ping: https://px30.l3b.cc.cd
+  widgets.yaml: |
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: false
+        nodes:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: false
+  kubernetes.yaml: |
+    mode: cluster
+  bookmarks.yaml: "[]"
+  docker.yaml: "{}"

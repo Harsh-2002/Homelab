@@ -15,6 +15,8 @@ Metrics Server is pinned under `apps/metrics-server/` and supplies live CPU and 
 
 Longhorn is pinned under `apps/longhorn/`. It uses dedicated Talos mounts at `/var/mnt/longhorn`, the V1 data engine, and two replicas. The Longhorn Application intentionally disables automatic pruning because Argo CD cannot run Longhorn's required pre-delete uninstall workflow.
 
+Homepage is pinned under `apps/homepage/`. It is the stateless, ConfigMap-backed root portal at `https://l3b.cc.cd`; its visible service catalogue is versioned in Git and deployed by Argo CD.
+
 See [`apps/longhorn/README.md`](apps/longhorn/README.md) for capacity, validation results, maintenance, and recovery notes.
 
 ## Bootstrap or recovery

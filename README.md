@@ -38,6 +38,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Longhorn UI | `https://longhorn.l3b.cc.cd` |
 | Headlamp service | `10.1.1.173` |
 | Headlamp UI | `https://headlamp.l3b.cc.cd` |
+| Homepage portal | `https://l3b.cc.cd` |
 | Pocket ID service | `10.1.1.6:1411` |
 | Pocket ID UI | `https://auth.l3b.cc.cd` |
 | Tinyauth service | `10.1.1.6:3000` |

@@ -91,6 +91,16 @@
 	}
 }
 
+(homepage) {
+	@homepage host l3b.cc.cd
+	handle @homepage {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.174:80
+	}
+}
+
 (pocketid) {
 	@pocketid host auth.l3b.cc.cd
 	handle @pocketid {
@@ -197,6 +207,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import argocd
 	import longhorn
 	import headlamp
+	import homepage
 	import pocketid
 	import tinyauth
 	import komodo
