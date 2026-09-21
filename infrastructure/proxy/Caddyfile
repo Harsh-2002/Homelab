@@ -36,7 +36,6 @@
 				<main>
 					<h1>403</h1>
 					<p>You don't have access.</p>
-					<div>Client IP: <strong>{http.request.remote.host}</strong></div>
 				</main>
 			</body>
 			</html>
