@@ -164,6 +164,24 @@
 	}
 }
 
+(minio) {
+	@minioapi host minio.l3b.cc.cd
+	handle @minioapi {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.4:9000
+	}
+
+	@minioconsole host minio-console.l3b.cc.cd
+	handle @minioconsole {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.4:9001 {
+			flush_interval -1
+		}
+	}
+}
+
 (beszel) {
 	@beszel host beszel.l3b.cc.cd
 	handle @beszel {
@@ -243,6 +261,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import komodo
 	import immich
 	import portainer
+	import minio
 	import beszel
 	import proxmox
 	import cluster
