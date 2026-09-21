@@ -93,6 +93,11 @@ data:
             href: https://longhorn.l3b.cc.cd
             description: Storage
             ping: https://longhorn.l3b.cc.cd
+        - RustFS:
+            icon: rustfs.png
+            href: https://rustfs.l3b.cc.cd
+            description: S3 storage
+            ping: https://rustfs.l3b.cc.cd
     - Compute:
         - Proxmox:
             icon: proxmox.png

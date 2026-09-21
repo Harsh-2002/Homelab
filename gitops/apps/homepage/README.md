@@ -18,7 +18,7 @@ Homepage's native Longhorn widget presents Free before Total, and its Kubernetes
 
 The header ends with a keyless Open-Meteo weather widget for Bilalpada, visually separated from the preceding date/time. It refreshes at most every 15 minutes, uses metric units and India Standard Time, and has no credential or new in-cluster dependency.
 
-`Headlamp` is deliberately a Kubernetes management link rather than a duplicate metric source: its authoritative data is the Kubernetes API already represented by the labelled cluster and node cards. `Pocket ID` remains an identity health/access link; no sensitive authentication internals are displayed.
+`Headlamp` is deliberately a Kubernetes management link rather than a duplicate metric source: its authoritative data is the Kubernetes API already represented by the labelled cluster and node cards. `RustFS` is a single storage-console card at `https://rustfs.l3b.cc.cd`; the S3 endpoint remains `https://s3.l3b.cc.cd` and is documented in `infrastructure/rustfs/`. `Pocket ID` remains an identity health/access link; no sensitive authentication internals are displayed.
 
 Each non-human metric integration has its own least-privilege identity:
 
