@@ -17,6 +17,14 @@ Proxy-managed DNS uses one apex A rewrite and one wildcard CNAME rewrite:
 
 Adding a new Caddy hostname requires only a Caddy route; no additional AdGuard rewrite is required.
 
+## Public DNS exposure policy
+
+Cloudflare is intentionally private by default. Its apex A record is DNS-only and points `l3b.cc.cd` to the proxy's private address `10.1.1.3`; the existing wildcard CNAME therefore resolves all otherwise-unlisted public names to that private address. Public clients cannot use private RFC1918 addresses, so a new Caddy hostname is not internet-reachable merely because it exists.
+
+To expose a deliberate exception, add an explicit DNS-only public A record for that hostname in Cloudflare. The first exception is `argocd.l3b.cc.cd` -> `150.129.31.154`, required so GitHub can deliver its signed `POST /api/webhook` event. Caddy still keeps every Argo CD path private except that exact signed webhook path. Do not proxy this record through Cloudflare until Caddy is explicitly configured to trust Cloudflare client-IP headers.
+
+Use `/usr/local/bin/cf` on `dev` to inspect or change Cloudflare records. It defaults to a responsive bordered table; add `--plain` to `list` or `get` for tab-separated script output. Its configuration is `/etc/caddy/cloudflare.env`, with `CF_ZONE=l3b.cc.cd`; the API token remains outside Git.
+
 Direct-host exceptions use AdGuard CNAME-exception entries that pass through to exact local A records in Unbound:
 
 | Name | Answer |

@@ -7,8 +7,8 @@ die() { printf '%s\n' "cf: $*" >&2; exit 1; }
 
 help() {
   printf '%s\n' \
-    'Usage: cf list [type|name]' \
-    '       cf get <name>' \
+    'Usage: cf list [type|name] [--plain]' \
+    '       cf get <name> [--plain]' \
     '       cf add <type> <name> <value> [--proxy] [--ttl N]' \
     '       cf set <type> <name> <value> [--proxy] [--ttl N]' \
     '       cf rm <type> <name> [--yes]' \
@@ -62,11 +62,22 @@ zone_id() {
 }
 
 table() {
+  if [ "$plain" = true ]; then
+    jq -r '(["TYPE","NAME","CONTENT","PROXY","TTL"] | @tsv), (.result[] | [.type, .name, .content, (if .proxied then "yes" else "no" end), (if .ttl == 1 then "auto" else (.ttl|tostring) end)] | @tsv)'
+    return
+  fi
+  columns=${COLUMNS:-120}
+  case $columns in ''|*[!0-9]*) columns=120 ;; esac
+  content_width=$((columns - 58))
+  [ "$content_width" -ge 16 ] || content_width=16
   jq -r '
-    ([["TYPE","NAME","CONTENT","PROXY","TTL"]] +
-    [.result[] | [.type, .name, .content, (if .proxied then "yes" else "no" end), (if .ttl == 1 then "auto" else (.ttl|tostring) end)]]) as $rows |
-    [range(0; 5) as $i | [$rows[][$i] | length] | max] as $widths |
-    $rows[] | to_entries | map(.value + (" " * ($widths[.key] - (.value|length)))) | join("  ")'
+    def clip($n): if length > $n then .[0:($n - 1)] + "…" else . end;
+    def border($w): "+" + ($w | map("-" * (. + 2)) | join("+")) + "+";
+    def row($w): "|" + (to_entries | map(. as $cell | ($cell.value | tostring | clip($w[$cell.key])) as $value | " " + $value + (" " * ($w[$cell.key] - ($value | length) + 1)) + "|") | join(""));
+    ["TYPE","NAME","CONTENT","PROXY","TTL"] as $header |
+    [.result[] | [.type, .name, .content, (if .proxied then "yes" else "no" end), (if .ttl == 1 then "auto" else (.ttl|tostring) end)]] as $rows |
+    [7, 28, $content, 7, 8] as $widths |
+    border($widths), ($header | row($widths)), border($widths), ($rows[] | row($widths)), border($widths)' --argjson content "$content_width"
 }
 
 records() { api GET "https://api.cloudflare.com/client/v4/zones/$zone/dns_records?per_page=100"; }
@@ -95,20 +106,29 @@ load_config
 [ -n "${CF_API_TOKEN:-}" ] || die 'CF_API_TOKEN is required'
 [ -n "${CF_ZONE:-}" ] || die 'CF_ZONE is required'
 zone=$(zone_id)
+plain=false
 
 case $command in
   list)
-    [ "$#" -le 2 ] || die 'usage: cf list [type|name]'
+    shift
+    filter=
+    while [ "$#" -gt 0 ]; do
+      case $1 in --plain) plain=true ;; *) [ -z "$filter" ] || die 'usage: cf list [type|name] [--plain]'; filter=$1 ;; esac
+      shift
+    done
     data=$(records)
-    if [ "${2:-}" ]; then
-      case $2 in A|AAAA|CAA|CNAME|MX|NS|PTR|SRV|TXT) data=$(printf '%s' "$data" | jq --arg type "$2" '.result |= map(select(.type == $type))') ;;
-        *) name=$(fqdn "$2"); data=$(printf '%s' "$data" | jq --arg name "$name" '.result |= map(select(.name == $name))') ;;
+    if [ -n "$filter" ]; then
+      case $filter in A|AAAA|CAA|CNAME|MX|NS|PTR|SRV|TXT) data=$(printf '%s' "$data" | jq --arg type "$filter" '.result |= map(select(.type == $type))') ;;
+        *) name=$(fqdn "$filter"); data=$(printf '%s' "$data" | jq --arg name "$name" '.result |= map(select(.name == $name))') ;;
       esac
     fi
     printf '%s' "$data" | table ;;
   get)
-    [ "$#" -eq 2 ] || die 'usage: cf get <name>'
-    name=$(fqdn "$2"); records | jq --arg name "$name" '.result |= map(select(.name == $name))' | table ;;
+    shift; [ "$#" -ge 1 ] || die 'usage: cf get <name> [--plain]'
+    name=$(fqdn "$1"); shift
+    [ "${1:-}" = --plain ] && plain=true && shift
+    [ "$#" -eq 0 ] || die 'usage: cf get <name> [--plain]'
+    records | jq --arg name "$name" '.result |= map(select(.name == $name))' | table ;;
   add|set)
     [ "$#" -ge 4 ] || die "usage: cf $command <type> <name> <value> [--proxy] [--ttl N]"
     type=$2 name=$(fqdn "$3") value=$4; shift 4; options "$@"
@@ -116,7 +136,7 @@ case $command in
     if [ "$command" = add ]; then
       api POST "https://api.cloudflare.com/client/v4/zones/$zone/dns_records" "$body" >/dev/null
     else
-      existing=$(records | jq --arg type "$type" --arg name "$name" '.result | map(select(.type == $type and .name == $name)) | .[0].id // empty')
+      existing=$(records | jq -r --arg type "$type" --arg name "$name" '.result | map(select(.type == $type and .name == $name)) | .[0].id // empty')
       if [ -n "$existing" ]; then api PUT "https://api.cloudflare.com/client/v4/zones/$zone/dns_records/$existing" "$body" >/dev/null
       else api POST "https://api.cloudflare.com/client/v4/zones/$zone/dns_records" "$body" >/dev/null; fi
     fi

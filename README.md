@@ -52,6 +52,10 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Proxmox px20 | `https://px20.l3b.cc.cd` |
 | Proxmox px30 | `https://px30.l3b.cc.cd` |
 
+## Public DNS policy
+
+Cloudflare DNS is private by default: the apex record resolves to proxy `10.1.1.3` and the wildcard CNAME follows it. Explicit public DNS-only records are exceptions, not the default. `argocd.l3b.cc.cd` is the current exception solely for GitHub's signed Argo CD webhook; Caddy still limits public access to `POST /api/webhook`.
+
 See [`talos-k8s/README.md`](talos-k8s/README.md) and [`gitops/README.md`](gitops/README.md) for operating procedures.
 
 The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, and Proxmox use native OIDC; Komodo's native OIDC configuration is staged for its post-recovery startup. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home and Longhorn are protected this way. Identity endpoints and applications remain restricted to the LAN and Tailscale networks.

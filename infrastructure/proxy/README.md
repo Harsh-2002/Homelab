@@ -53,6 +53,8 @@ Content type: application/json
 Events: Pushes only
 ```
 
+Cloudflare public DNS has an explicit DNS-only A record for `argocd.l3b.cc.cd` so GitHub can reach this webhook. The apex and wildcard remain private by default. This record does not make the Argo CD UI public: Caddy still rejects every path except the signed webhook POST.
+
 ## Apple iCloud Private Relay
 
 Do not add Apple Private Relay address ranges to Caddy's private-source allowlist. Relay addresses are temporary, rotate between sessions, and are shared with other Private Relay customers. Allowing an Apple relay range would therefore grant access based on service membership rather than household identity.
