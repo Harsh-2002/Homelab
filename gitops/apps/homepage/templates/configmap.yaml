@@ -89,3 +89,5 @@ data:
     mode: cluster
   bookmarks.yaml: "[]"
   docker.yaml: "{}"
+  custom.css: ""
+  custom.js: ""
