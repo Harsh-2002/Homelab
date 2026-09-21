@@ -47,3 +47,11 @@ sudo sed -n 's/^KOMODO_INIT_ADMIN_PASSWORD=//p' /data/apps/komodo/compose.env
 ```
 
 After changing the administrator password in Komodo, remove the two `KOMODO_INIT_ADMIN_*` lines from the live environment file and redeploy Core. Database backups under `/data/apps/komodo/backups` are replicated with VM 204 but are not an independent backup.
+
+## OIDC first-login procedure
+
+`KOMODO_DISABLE_USER_REGISTRATION=true` and `KOMODO_DISABLE_OIDC_USER_REGISTRATION=true` are the secure steady-state values. A Pocket ID client restriction is the outer gate, but Komodo also blocks creation of new local and OIDC users.
+
+For the first Pocket ID sign-in after deployment, temporarily set `KOMODO_DISABLE_OIDC_USER_REGISTRATION=false` and `KOMODO_ENABLE_NEW_USERS=true`, recreate Core with the explicit environment file, and sign in once. Restore both secure values immediately afterward. Komodo creates subsequent OIDC accounts as enabled non-administrators; use the bootstrap local administrator to promote the verified OIDC account from **Settings → Users**. Do not leave OIDC registration enabled.
+
+The initial deployment created the canonical OIDC account `iam-anuragvishwakarma`, then verified and promoted it to administrator and super-administrator. The bootstrap local account remains break-glass only.
