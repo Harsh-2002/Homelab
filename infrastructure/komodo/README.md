@@ -2,17 +2,17 @@
 
 Komodo v2.3.3 manages Docker and Compose workloads on VM 204 `ctr`. It does not manage Kubernetes; Argo CD remains the Kubernetes deployment controller, and Headlamp is the recommended Kubernetes operations UI.
 
-MongoDB 8 requires AVX. VM 204 is configured for Proxmox CPU type `host`; both permitted HA nodes have matching Intel Core i5-8400T processors with AVX and AVX2. This CPU change is pending the next safe VM reboot because the recovery extraction is active. The Komodo containers are created but intentionally stopped until that reboot.
+MongoDB 8 requires AVX. VM 204 is configured for Proxmox CPU type `host`; both permitted HA nodes have matching Intel Core i5-8400T processors with AVX and AVX2. A controlled HA stop/start activated this CPU model and four vCPUs after the recovery extraction completed. The fixed container names are `komodo-mongo`, `komodo-core`, and `komodo-periphery`.
 
 ## Deployment
 
-The tracked Compose file is installed at `/data/apps/komodo/compose.yaml`. The live `compose.env` is mode `0600`, generated locally on `ctr`, and must never be committed.
+The tracked Compose file is installed at `/data/apps/komodo/compose.yaml`. The live `compose.env` is owned by `root`, mode `0600`, generated locally on `ctr`, and must never be committed. Always pass it explicitly: Compose uses it both to interpolate volume paths and to populate the Core/Periphery environments.
 
 ```bash
 cd /data/apps/komodo
-docker compose --env-file compose.env config --quiet
-docker compose --env-file compose.env pull
-docker compose --env-file compose.env up -d
+sudo docker compose --env-file compose.env config --quiet
+sudo docker compose --env-file compose.env pull
+sudo docker compose --env-file compose.env up -d
 ```
 
 Persistent state:
@@ -30,7 +30,7 @@ Access is through `https://komodo.l3b.cc.cd`. Caddy applies the shared private-s
 Validate:
 
 ```bash
-docker compose --project-directory /data/apps/komodo --env-file /data/apps/komodo/compose.env ps
+sudo docker compose --project-directory /data/apps/komodo --env-file /data/apps/komodo/compose.env ps
 curl --fail --silent --show-error http://10.1.1.4:9120/
 ```
 

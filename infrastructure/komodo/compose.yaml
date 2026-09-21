@@ -1,5 +1,6 @@
 services:
   mongo:
+    container_name: komodo-mongo
     image: mongo:8.0
     command: --quiet --wiredTigerCacheSizeGB 0.25
     restart: unless-stopped
@@ -13,6 +14,7 @@ services:
       - ${KOMODO_DATA_PATH}/mongo-config:/data/configdb
 
   core:
+    container_name: komodo-core
     image: ghcr.io/moghtech/komodo-core:2.3.3
     init: true
     restart: unless-stopped
@@ -28,6 +30,7 @@ services:
       - ${KOMODO_DATA_PATH}/backups:/backups
 
   periphery:
+    container_name: komodo-periphery
     image: ghcr.io/moghtech/komodo-periphery:2.3.3
     init: true
     restart: unless-stopped
@@ -39,4 +42,3 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /proc:/proc
       - ${KOMODO_DATA_PATH}/workspace:${KOMODO_DATA_PATH}/workspace
-
