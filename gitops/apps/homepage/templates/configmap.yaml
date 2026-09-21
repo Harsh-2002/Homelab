@@ -113,12 +113,13 @@ data:
           show: true
           cpu: true
           memory: true
-          showLabel: false
+          showLabel: true
+          label: Kubernetes Cluster
         nodes:
           show: true
           cpu: true
           memory: true
-          showLabel: false
+          showLabel: true
   kubernetes.yaml: |
     mode: cluster
     ingress: false
