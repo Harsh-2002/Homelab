@@ -13,7 +13,7 @@ Both endpoints are private to LAN and Tailscale at Caddy. MinIO has native authe
 
 ## Komodo Stack
 
-Create a Stack named `minio` on the existing `ctr` server. Choose **Write in UI** and paste `compose.yaml` from this directory. Enable normal Compose health checks, keep automatic image updates disabled, and use the default Stack project name `minio`.
+Create a Stack named `minio` on the existing `ctr` server, sourced from Git: repository `Harsh-2002/Homelab`, branch `main`, and file path `infrastructure/minio/compose.yaml`. Enable normal Compose health checks, keep automatic image updates disabled, and use the default Stack project name `minio`. This keeps Git as the Compose source of truth instead of maintaining a second editable UI copy.
 
 In **Stack → Config → Environment**, create these four values. They are written only to Komodo's Stack `.env`, are not stored in Git, and should also be saved in the existing HomeLab 1Password item.
 
