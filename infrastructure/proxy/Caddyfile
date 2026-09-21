@@ -140,9 +140,16 @@
 (immich) {
 	@immich host photos.l3b.cc.cd
 	handle @immich {
-		import private
 		import proxy
 		reverse_proxy 10.1.1.4:2283
+	}
+}
+
+(karakeep) {
+	@karakeep host pin.l3b.cc.cd
+	handle @karakeep {
+		import proxy
+		reverse_proxy 10.1.1.4:3000
 	}
 }
 
@@ -250,6 +257,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import cloudflare
 	import adguard
 	import argocd
+	import karakeep
 	import longhorn
 	import headlamp
 	import homepage

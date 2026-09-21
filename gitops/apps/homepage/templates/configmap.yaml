@@ -103,6 +103,11 @@ data:
             href: https://photos.l3b.cc.cd
             description: Photos
             ping: https://photos.l3b.cc.cd
+        - Karakeep:
+            icon: karakeep.png
+            href: https://pin.l3b.cc.cd
+            description: Bookmarks
+            ping: https://pin.l3b.cc.cd
     - Compute:
         - Proxmox:
             icon: proxmox.png
