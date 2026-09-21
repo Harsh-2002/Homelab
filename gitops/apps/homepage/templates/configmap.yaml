@@ -87,6 +87,7 @@ data:
           showLabel: false
   kubernetes.yaml: |
     mode: cluster
+    ingress: false
   proxmox.yaml: |
     ---
     # Proxmox widgets are intentionally not configured.
