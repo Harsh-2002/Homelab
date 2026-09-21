@@ -10,6 +10,9 @@ data:
     headerStyle: underlined
     statusStyle: dot
     hideVersion: true
+    providers:
+      longhorn:
+        url: http://longhorn-frontend.longhorn-system.svc.cluster.local
     layout:
       Monitoring:
         style: row
@@ -63,12 +66,23 @@ data:
             href: https://komodo.l3b.cc.cd
             description: Docker deployments
             ping: https://komodo.l3b.cc.cd
+            widget:
+              type: komodo
+              url: http://10.1.1.4:9120
+              key: "{{ "{{HOMEPAGE_VAR_KOMODO_API_KEY}}" }}"
+              secret: "{{ "{{HOMEPAGE_VAR_KOMODO_API_SECRET}}" }}"
+              showSummary: true
     - Platform:
         - Argo CD:
             icon: argo-cd.png
             href: https://argocd.l3b.cc.cd
             description: GitOps
             ping: https://argocd.l3b.cc.cd
+            widget:
+              type: argocd
+              url: http://argocd-server.argocd.svc.cluster.local
+              key: "{{ "{{HOMEPAGE_VAR_ARGOCD_API_TOKEN}}" }}"
+              fields: ["apps", "synced", "outOfSync", "degraded"]
         - Headlamp:
             icon: headlamp.png
             href: https://headlamp.l3b.cc.cd
@@ -85,21 +99,48 @@ data:
             href: https://px.l3b.cc.cd
             description: Cluster
             ping: https://px.l3b.cc.cd
+            widget:
+              type: proxmox
+              url: https://10.1.1.10:8006
+              username: "{{ "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_ID}}" }}"
+              password: "{{ "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_SECRET}}" }}"
+              fields: ["vms", "lxc", "resources.cpu", "resources.mem"]
         - px10:
             icon: proxmox.png
             href: https://px10.l3b.cc.cd
             description: Node
             ping: https://px10.l3b.cc.cd
+            widget:
+              type: proxmox
+              url: https://10.1.1.10:8006
+              username: "{{ "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_ID}}" }}"
+              password: "{{ "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_SECRET}}" }}"
+              node: px10
+              fields: ["resources.cpu", "resources.mem"]
         - px20:
             icon: proxmox.png
             href: https://px20.l3b.cc.cd
             description: Node
             ping: https://px20.l3b.cc.cd
+            widget:
+              type: proxmox
+              url: https://10.1.1.20:8006
+              username: "{{ "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_ID}}" }}"
+              password: "{{ "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_SECRET}}" }}"
+              node: px20
+              fields: ["resources.cpu", "resources.mem"]
         - px30:
             icon: proxmox.png
             href: https://px30.l3b.cc.cd
             description: Node
             ping: https://px30.l3b.cc.cd
+            widget:
+              type: proxmox
+              url: https://10.1.1.30:8006
+              username: "{{ "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_ID}}" }}"
+              password: "{{ "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_SECRET}}" }}"
+              node: px30
+              fields: ["resources.cpu", "resources.mem"]
   widgets.yaml: |
     - datetime:
         text_size: md
@@ -120,12 +161,19 @@ data:
           cpu: true
           memory: true
           showLabel: true
+    - longhorn:
+        expanded: true
+        total: true
+        labels: true
+        nodes: false
   kubernetes.yaml: |
     mode: cluster
     ingress: false
   proxmox.yaml: |
     ---
-    # Proxmox widgets are intentionally not configured.
+    # Proxmox service widgets are configured in services.yaml.
+  pve-root-ca.crt: |
+{{ .Files.Get "files/pve-root-ca.crt" | indent 4 }}
   bookmarks.yaml: "[]"
   docker.yaml: "{}"
   custom.css: ""

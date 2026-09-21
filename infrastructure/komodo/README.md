@@ -45,3 +45,7 @@ Database backups under `/data/apps/komodo/backups` are replicated with VM 204 bu
 For the first Pocket ID sign-in after deployment, temporarily set `KOMODO_DISABLE_OIDC_USER_REGISTRATION=false` and `KOMODO_ENABLE_NEW_USERS=true`, recreate Core with the explicit environment file, and sign in once. Restore both secure values immediately afterward. Komodo creates subsequent OIDC accounts as enabled non-administrators; use the bootstrap local administrator to promote the verified OIDC account from **Settings → Users**. Do not leave OIDC registration enabled.
 
 The initial deployment created the canonical OIDC account `iam-anuragvishwakarma`, then verified and promoted it to administrator and super-administrator. The bootstrap local account remains break-glass only.
+
+## Homepage metrics identity
+
+Komodo has a non-human `homepage` service user for the Homepage summary widget. It is enabled with read access to the `Server` and `Stack` resource types only. It has no execute, write, inspect, terminal, log, create-server, or create-build permission. Its API key and secret are stored as `Homepage` fields in the existing `HomeLab` 1Password item named `Komodo`; no credential is stored in Git or in `compose.env`.

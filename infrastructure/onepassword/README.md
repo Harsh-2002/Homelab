@@ -32,7 +32,7 @@ Existing OIDC client secrets are stored as `Pocket ID OIDC - <client>` API Crede
 | --- | --- |
 | `Beszel Monitoring` | Current user login and rotated break-glass password |
 | `Beszel PocketBase Superuser` | PocketBase database break-glass account |
-| `ArgoCD` | Local break-glass account; Pocket ID is normal access |
+| `ArgoCD` | Local break-glass account, Pocket ID normal access, and the dedicated `Homepage` read-only API token |
 | `Headlamp - K8s` | Permanent Kubernetes service-account token; Pocket ID is normal access |
 | `AdGuard Home - DNS` | Native AdGuard administrator login |
 | `Pocket ID` | Passkey identity metadata; no password stored |
@@ -40,6 +40,7 @@ Existing OIDC client secrets are stored as `Pocket ID OIDC - <client>` API Crede
 | `Pocket ID OIDC - <client>` | Per-application OIDC client secret |
 | `Cloudflare DNS API Token` | Caddy ACME DNS-01 token |
 | `Komodo` | Local break-glass super-administrator; Pocket ID is normal access |
+| `Proxmox` | Normal administrator login, plus the dedicated `Homepage` PVEAuditor API token |
 | `Longhorn - K8s`, `Tinyauth` | Pocket ID access metadata; no application password stored |
 
 Beszel, Argo CD, and Komodo break-glass passwords were generated in 1Password, applied to the live services, and verified with fresh logins. AdGuard and Headlamp credentials were validated against their live APIs. Redundant Pocket ID and Beszel credential files were removed from `dev` after byte-for-byte comparison and successful 1Password-backed reconciliation.
