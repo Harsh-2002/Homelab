@@ -61,17 +61,17 @@ data:
             href: https://auth.l3b.cc.cd
             description: Identity
             ping: https://auth.l3b.cc.cd
-        - Komodo:
-            icon: komodo.png
-            href: https://komodo.l3b.cc.cd
-            description: Docker deployments
-            ping: https://komodo.l3b.cc.cd
+        - Portainer:
+            icon: portainer.png
+            href: https://portainer.l3b.cc.cd
+            description: Docker management
+            ping: https://portainer.l3b.cc.cd
             widget:
-              type: komodo
-              url: http://10.1.1.4:9120
-              key: "{{ "{{HOMEPAGE_VAR_KOMODO_API_KEY}}" }}"
-              secret: "{{ "{{HOMEPAGE_VAR_KOMODO_API_SECRET}}" }}"
-              showSummary: true
+              type: portainer
+              url: http://10.1.1.4:9000
+              env: 2
+              key: "{{ "{{HOMEPAGE_VAR_PORTAINER_API_KEY}}" }}"
+              fields: ["running", "stopped", "total"]
     - Platform:
         - Argo CD:
             icon: argo-cd.png

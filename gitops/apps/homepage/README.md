@@ -12,7 +12,7 @@ Homepage is the stateless, Git-managed portal served at `https://l3b.cc.cd`.
 
 The header identifies its source explicitly: **K8s** is aggregate Kubernetes CPU and memory, with memory displayed in decimal GB. Per-node Kubernetes figures are intentionally omitted to keep the overview concise; use Headlamp when node-level detail is needed. The timestamp is a local browser utility widget.
 
-Native service widgets provide live DNS statistics from AdGuard Home, Beszel system counts, Komodo server/stack/container counts, Argo CD application state, and Proxmox cluster and node CPU/memory state. Longhorn contributes one labelled aggregate storage-capacity widget in the header, expressed as **Total** first and **Used** beneath it; its full per-node detail remains one click away in Longhorn.
+Native service widgets provide live DNS statistics from AdGuard Home, Beszel system counts, Portainer Docker container counts, Argo CD application state, and Proxmox cluster and node CPU/memory state. Longhorn contributes one labelled aggregate storage-capacity widget in the header, expressed as **Total** first and **Used** beneath it; its full per-node detail remains one click away in Longhorn.
 
 Homepage's native Longhorn widget presents Free before Total, and its Kubernetes widget presents memory in binary units. The small `custom.js` adapter changes only the aggregate Longhorn card into the clearer Total/Used order and converts the K8s memory display to decimal GB; it performs no network requests. Keep this adapter when upgrading Homepage unless upstream adds equivalent display options; browser-verify the cards after every Homepage upgrade.
 
@@ -24,7 +24,7 @@ Each non-human metric integration has its own least-privilege identity:
 
 - Proxmox `homepage@pve!homepage` has only the `PVEAuditor` token ACL.
 - Argo CD local `homepage` is API-key-only with `role:readonly`.
-- Komodo service user `homepage` has read access only to Servers and Stacks; it has no execute, inspect, terminal, or configuration permission.
+- Portainer local service user `homepage` has Portainer's **Read-only User** role for the `Aether` Docker environment only. Its API key can list container status for the dashboard but cannot alter Docker resources.
 
 Beszel's own API requires a PocketBase superuser for this widget. Homepage therefore uses the pre-existing `Beszel PocketBase Superuser` credential from 1Password for that widget only; it is never stored in Git.
 
