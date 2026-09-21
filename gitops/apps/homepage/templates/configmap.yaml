@@ -87,6 +87,9 @@ data:
           showLabel: false
   kubernetes.yaml: |
     mode: cluster
+  proxmox.yaml: |
+    ---
+    # Proxmox widgets are intentionally not configured.
   bookmarks.yaml: "[]"
   docker.yaml: "{}"
   custom.css: ""
