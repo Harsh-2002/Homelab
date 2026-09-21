@@ -20,6 +20,7 @@ Post-deployment checks:
 ssh proxy 'systemctl is-enabled caddy; systemctl is-active caddy'
 curl --resolve argocd.l3b.cc.cd:443:10.1.1.3 https://argocd.l3b.cc.cd/
 curl --resolve komodo.l3b.cc.cd:443:10.1.1.3 https://komodo.l3b.cc.cd/
+curl --resolve portainer.l3b.cc.cd:443:10.1.1.3 https://portainer.l3b.cc.cd/api/status
 curl --resolve beszel.l3b.cc.cd:443:10.1.1.3 https://beszel.l3b.cc.cd/api/health
 curl --resolve l3b.cc.cd:443:10.1.1.3 https://l3b.cc.cd/
 ```
