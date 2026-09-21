@@ -1,6 +1,6 @@
 # Karakeep
 
-Karakeep is restored on Docker VM 204 `ctr` as Portainer Stack `karakeep` (ID `80`). It is publicly available at `https://pin.l3b.cc.cd` and retains native Karakeep login during the recovery phase.
+Karakeep is restored on Docker VM 204 `ctr` as Portainer Stack `karakeep` (ID `80`). It is publicly available at `https://pin.l3b.cc.cd`. Pocket ID is the normal sign-in path; native Karakeep login remains as a deliberate break-glass path.
 
 ## Layout
 
@@ -18,13 +18,19 @@ Karakeep, Chrome, and Meilisearch run on the Compose-created `karakeep_default` 
 
 ## Restore and upgrade notes
 
-The correct Portainer-mounted data source is `/EX/RECOVERY/2026-09-15/SSD/Karakeep/data`, not the older in-container Hoarder tree. It contains the current September 2026 SQLite snapshot and asset tree. The Hoarder database is a February 2025 rollback source only. Before the corrected restore, the mistaken live directory was preserved at `/data/apps/karakeep/data.pre-ssd-restore-20260921T211944Z`; do not remove it without an explicit retention decision.
+The correct Portainer-mounted data source is `/EX/RECOVERY/2026-09-15/SSD/Karakeep/data`, not the older in-container Hoarder tree. It contains the current September 2026 SQLite snapshot and asset tree. The Hoarder database is a February 2025 rollback source only. The mistakenly restored live tree was removed on 2026-09-21 after the corrected source, SQLite integrity, bookmark data, and browser sign-in were verified. The independent `/EX/RECOVERY` source remains the recovery copy.
 
 The original stack used the legacy Hoarder product name. Karakeep is its successor, so the correct SQLite data is copied intact rather than exported/imported. The legacy Alpine Chrome image is replaced with Karakeep's maintained Chrome image; this does not change application data.
 
 The preserved Meilisearch index was created by v1.16 while the supported current image is v1.41.0. The recovery copy is retained first. If v1.41 rejects its old `data.ms` directory, retain the original and recreate only the derived index by moving the copied `data.ms` aside, starting Meilisearch, then running **Admin Settings → Background Jobs → Reindex All Bookmarks** in Karakeep. Do not delete the preserved recovery source.
 
 Portainer supplies runtime values through its protected Stack environment, which is never committed. The Compose definition explicitly maps only the required values into the relevant containers; it does not use `env_file`, because Portainer's API does not materialize that file. Karakeep session/search secrets and the bucket-scoped RustFS credential are stored in the existing `Karakeep` item in the HomeLab 1Password vault.
+
+## Identity
+
+Karakeep uses native OIDC with Pocket ID. The confidential client is restricted to Pocket ID group `infrastructure-admins`; its exact callback is `https://pin.l3b.cc.cd/api/auth/callback/custom`. The issuer is `https://auth.l3b.cc.cd/.well-known/openid-configuration` and scopes are `openid email profile`.
+
+The existing account email was changed to `iam.anuragvishwakarma@gmail.com` before first OIDC sign-in. `OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING=true` is intentionally enabled only for this trusted first-party provider, allowing Pocket ID to attach to that existing Karakeep account rather than create a second account. The OIDC client ID and secret are stored as fields in the existing `HomeLab` → `Karakeep` item; do not create a duplicate credential item. Native password login is not disabled and is the break-glass method.
 
 ## Operations
 
