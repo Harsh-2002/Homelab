@@ -18,7 +18,7 @@ The service binds only to VM 204's LAN address at `10.1.1.4:2283`. Caddy provide
 
 ## Recovery contract
 
-The recovered database was created by Immich `v3.1.0` and was upgraded to `v3.2.2` after a protected pre-upgrade PostgreSQL dump. It uses PostgreSQL 14 with the pinned VectorChord image in `compose.yaml`. Immich does not support downgrades; read release notes and take a fresh backup before changing `IMMICH_VERSION`.
+The recovered database was created by Immich `v3.1.0` and was upgraded to `v3.2.2` after a protected pre-upgrade PostgreSQL dump at `/data/immich/backups/immich-pre-v3.2.2-20260921T173432Z.sql.gz` (mode `0600`). It uses PostgreSQL 14 with the pinned VectorChord image and Valkey 9 cache image in `compose.yaml`. The upgrade completed with all containers healthy, Caddy returning the native login page, and a real Quick Sync encode passing. Immich does not support downgrades; read release notes and take a fresh backup before changing `IMMICH_VERSION`.
 
 The preserved `.env` is owned by `root`, mode `0600`, and contains the recovered database password. Its values are entered into the Portainer Stack environment during recovery and are never committed. Portainer owns the running Stack; do not run a separate `docker compose up` from `/data/apps/immich`. `.env.example` is illustrative only.
 
