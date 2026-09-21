@@ -156,6 +156,8 @@ data:
           memory: true
           showLabel: true
           label: Kubernetes Cluster
+        nodes:
+          show: false
     - longhorn:
         expanded: true
         total: true
