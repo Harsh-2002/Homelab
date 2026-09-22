@@ -104,3 +104,17 @@ without Proxmox cluster quorum. Do not force quorum or reduce expected votes.
 Complete the physical work before applying the 5060 BIOS package to `px20`.
 Bring both maintained nodes back normally afterward so the cluster regains
 quorum before restoring HA and workload states.
+
+## px20 result and px30 disposition
+
+On 2026-09-22, `px20` was upgraded from BIOS 1.2.17 to 1.32.0 through Dell's
+F12 BIOS Flash Update. SMBIOS confirmed 1.32.0 after boot. Linux Boot Manager
+and the Proxmox EFI System Partition remained healthy; both ZFS pools were
+online; all 32 GiB RAM was present; the NIC linked at 1 Gb/s full duplex; VT-d
+remained active; and the Intel GPU remained bound to `vfio-pci`. No systemd
+units were failed. VM 202 and VM 204 remained stopped. At the operator's
+request, `px20` was then shut down again and confirmed unreachable.
+
+Dell's live OptiPlex 7040 release page was rechecked on 2026-09-22 and still
+lists 1.24.0 as the newest release. `px30` already runs 1.24.0, so it is marked
+already current and must not be reflashed during this maintenance window.
