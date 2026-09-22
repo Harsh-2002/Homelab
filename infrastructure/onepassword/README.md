@@ -40,6 +40,9 @@ Existing OIDC client secrets are stored as `Pocket ID OIDC - <client>` API Crede
 | `Pocket ID OIDC - <client>` | Per-application OIDC client secret |
 | `Pocket ID OIDC - portainer` | Portainer native Custom OAuth/OIDC client secret |
 | `OpenCloud` | URL-specific login plus its bucket-scoped RustFS access key and secret |
+| `Paperless-ngx` | URL-specific local break-glass login and retained `PAPERLESS_SECRET_KEY` |
+| `Pocket ID OIDC - paperless` | Paperless native OIDC client secret |
+| `Portainer` | Native administrator login, the dedicated Homepage read-only API key, and an admin API access token for Stack management |
 | `Cloudflare DNS API Token` | Caddy ACME DNS-01 token |
 | `Proxmox` | Normal administrator login, plus the dedicated `Homepage` PVEAuditor API token |
 | `Longhorn - K8s`, `Tinyauth` | Pocket ID access metadata; no application password stored |

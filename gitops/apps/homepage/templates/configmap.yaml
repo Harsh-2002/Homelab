@@ -135,6 +135,11 @@ data:
             href: https://drive.l3b.cc.cd
             description: Files
             ping: https://drive.l3b.cc.cd/healthz
+        - Paperless-ngx:
+            icon: paperless-ngx.png
+            href: https://docs.l3b.cc.cd
+            description: Documents
+            ping: https://docs.l3b.cc.cd
         - n8n:
             icon: n8n.png
             href: https://n8n.l3b.cc.cd

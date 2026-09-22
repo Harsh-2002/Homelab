@@ -155,6 +155,15 @@
 	}
 }
 
+(paperless) {
+	@paperless host docs.l3b.cc.cd
+	handle @paperless {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.4:8010
+	}
+}
+
 (orva) {
 	@orva host orva.l3b.cc.cd
 	handle @orva {
@@ -361,6 +370,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import tinyauth
 	import immich
 	import opencloud
+	import paperless
 	import orva
 	import portainer
 	import registry

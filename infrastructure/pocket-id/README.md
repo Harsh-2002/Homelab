@@ -83,6 +83,7 @@ The final command must return `10.1.1.3`.
 | Karakeep | Native OIDC | Client is restricted to `infrastructure-admins`; existing Karakeep account is linked by the verified canonical email; native Karakeep login remains break-glass |
 | Immich | Native OIDC | Client `immich` is restricted to `infrastructure-admins`; the pre-existing photo account is explicitly linked and native login remains break-glass |
 | OpenCloud | Native public-client OIDC with PKCE | Web, desktop, Android, and iOS clients are restricted to `infrastructure-admins`; its `opencloud_role` claim grants `opencloudAdmin` |
+| Paperless-ngx | Native OIDC | Client `paperless` is restricted to `infrastructure-admins`; Paperless maps that group claim to superuser status and retains a separate local break-glass login |
 | AdGuard Home | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
 | Longhorn | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
 | Homepage | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
