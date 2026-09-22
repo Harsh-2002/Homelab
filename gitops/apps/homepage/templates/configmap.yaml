@@ -23,6 +23,9 @@ data:
       Platform:
         style: row
         columns: 3
+      Applications:
+        style: row
+        columns: 3
       Compute:
         style: row
         columns: 4
@@ -107,6 +110,16 @@ data:
             href: https://rustfs.l3b.cc.cd
             description: S3 storage
             ping: https://rustfs.l3b.cc.cd
+        - Cairn:
+            icon: cairn.png
+            href: https://cairn.l3b.cc.cd
+            description: S3 development
+            ping: https://cairn.l3b.cc.cd
+        - Docker Registry:
+            icon: docker.png
+            href: https://registry.l3b.cc.cd
+            description: Container images
+    - Applications:
         - Immich:
             icon: immich.png
             href: https://photos.l3b.cc.cd
@@ -117,10 +130,25 @@ data:
             href: https://pin.l3b.cc.cd
             description: Bookmarks
             ping: https://pin.l3b.cc.cd
-        - Docker Registry:
-            icon: docker.png
-            href: https://registry.l3b.cc.cd
-            description: Container images
+        - Nextcloud:
+            icon: nextcloud.png
+            href: https://drive.l3b.cc.cd
+            description: Files · restore pending
+        - n8n:
+            icon: n8n.png
+            href: https://n8n.l3b.cc.cd
+            description: Automation
+            ping: https://n8n.l3b.cc.cd
+        - Memos:
+            icon: memos.png
+            href: https://notes.l3b.cc.cd
+            description: Notes
+            ping: https://notes.l3b.cc.cd
+        - code-server:
+            icon: code-server.png
+            href: https://code.l3b.cc.cd
+            description: Development
+            ping: https://code.l3b.cc.cd
     - Compute:
         - Proxmox:
             icon: proxmox.png
