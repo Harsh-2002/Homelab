@@ -186,6 +186,7 @@ Deployed and verified:
 - Native RustFS and migrated S3 workloads
 - Three-node Tailscale subnet routing and Keepalived gateway VIP
 - Persistent Intel I219 conservative NIC settings on px10, px20, and px30: TSO/GSO/GRO/EEE disabled by `e1000e-stability.service`; px10/px20 had transmit hangs, while px30's I219-LM has no recorded hangs and was aligned for consistency. An 8 GiB cross-node test sustained about 115 MB/s with zero NIC errors
+- Paperless-ngx is staged but **not deployed**: `infrastructure/paperless/compose.yaml` is ready for a Portainer-owned Stack on `ctr`; `/data/apps/paperless/stack.env` holds root-only bootstrap secrets. The available `homepage` Portainer API key is read-only and `op` currently has no account on `dev`; get an admin Portainer session through 1Password before creating the Stack. Do not start it directly with Docker Compose. Caddy and Homepage entries have deliberately not been activated yet.
 
 Planned but **not yet applied** at the time of this handoff:
 

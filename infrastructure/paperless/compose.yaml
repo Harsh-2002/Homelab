@@ -1,0 +1,43 @@
+services:
+  broker:
+    image: docker.io/valkey/valkey:9-alpine
+    container_name: paperless-valkey
+    restart: unless-stopped
+    volumes:
+      - /data/apps/paperless/valkey:/data
+    networks:
+      - default
+
+  paperless:
+    image: ghcr.io/paperless-ngx/paperless-ngx:3.2.1
+    container_name: paperless
+    restart: unless-stopped
+    depends_on:
+      - broker
+    ports:
+      - 10.1.1.4:8010:8000
+    volumes:
+      - /data/apps/paperless/data:/usr/src/paperless/data
+      - /data/apps/paperless/media:/usr/src/paperless/media
+      - /data/apps/paperless/consume:/usr/src/paperless/consume
+      - /data/apps/paperless/export:/usr/src/paperless/export
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBENGINE: sqlite
+      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
+      PAPERLESS_ADMIN_USER: iam-anuragvishwakarma
+      PAPERLESS_ADMIN_MAIL: iam.anuragvishwakarma@gmail.com
+      PAPERLESS_ADMIN_PASSWORD: ${PAPERLESS_ADMIN_PASSWORD}
+      PAPERLESS_URL: https://docs.l3b.cc.cd
+      PAPERLESS_PROXY_SSL_HEADER: '["HTTP_X_FORWARDED_PROTO", "https"]'
+      PAPERLESS_TIME_ZONE: Asia/Kolkata
+      PAPERLESS_OCR_LANGUAGE: eng
+      PAPERLESS_TASK_WORKERS: "1"
+      PAPERLESS_THREADS_PER_WORKER: "2"
+    networks:
+      - default
+      - docknet
+
+networks:
+  docknet:
+    external: true

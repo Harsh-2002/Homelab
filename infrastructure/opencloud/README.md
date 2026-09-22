@@ -33,3 +33,11 @@ curl --resolve drive.l3b.cc.cd:443:10.1.1.3 https://drive.l3b.cc.cd/healthz
 ```
 
 Keep the staged Nextcloud recovery data until OpenCloud login, iOS Files integration, uploads, downloads, and the final data migration have been verified. Import files through OpenCloud/WebDAV; never copy them directly into OpenCloud's internal metadata or S3 layout.
+
+On 2026-09-23 the interrupted file copy was resumed as a transient
+`nextcloud-opencloud-migration` systemd unit on `ctr`. It finished transferring
+the remaining 493 files; the OpenCloud WebDAV inventory then showed 706
+objects totaling 37,731,309,207 bytes, matching the recorded source count
+and size. This is a **copy completion check**, not yet a downloaded hash
+comparison or user-level functional verification. Keep the staged Nextcloud
+tree and backups intact until those checks pass.
