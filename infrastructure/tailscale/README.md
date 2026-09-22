@@ -46,6 +46,26 @@ The reusable enrollment key was revoked through the Tailscale API after tagging.
 
 For tailnet DNS, prefer split DNS for `l3b.cc.cd` through `10.1.1.2`. Do not enable Tailscale DNS acceptance on the Proxmox hosts. Make AdGuard a global tailnet resolver only after remote clients can reach it reliably through the approved subnet routers.
 
+## External monitoring node
+
+GCP free-tier VM `slate` is online at Tailscale address `100.122.33.37` and offers an exit node. It currently accepts the tailnet DNS configuration, whose only global nameserver was `10.1.1.2` when reviewed on 2026-09-22. This makes ordinary DNS on the external notification node dependent on the home internet, subnet routers, and AdGuard, so it is not the desired final state.
+
+The planned DNS design is:
+
+- keep MagicDNS enabled;
+- keep `accept-dns=true` on `slate` so MagicDNS and split DNS work;
+- do not override each device's local resolver for ordinary public DNS;
+- remove `10.1.1.2` as a global tailnet nameserver;
+- configure `10.1.1.2` only as the restricted resolver for `l3b.cc.cd`;
+- let `slate` use its local GCP resolver for public domains;
+- do not maintain Homelab names in `/etc/hosts`.
+
+Do not model `10.1.1.2` followed by `1.1.1.1` as ordered primary/fallback DNS. Tailscale or the operating system can query multiple global resolvers in parallel, reorder them, or use whichever responds first. Split DNS is deterministic when private and public answers differ.
+
+A future Uptime Kuma instance on `slate` should complement, not replace, the internal instance. Its scope is the external viewpoint: home internet, Tailscale and subnet routing, AdGuard DNS, public endpoints, and selected private endpoints. Keep ordinary DNS and ntfy delivery independent of the home network so an AdGuard or home outage cannot suppress the alert. Avoid duplicate monitors and notifications between the internal and external Kuma instances.
+
+This section records an approved design only. The tailnet DNS change and external Uptime Kuma deployment have not yet been applied.
+
 ## Guest routing
 
 Only guests that need to initiate traffic toward Tailscale require a persistent route:
