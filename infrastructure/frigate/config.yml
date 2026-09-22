@@ -18,9 +18,9 @@ proxy:
   header_map:
     user: Remote-User
     role: Remote-Groups
-  role_map:
-    admin:
-      - infrastructure-admins
+    role_map:
+      admin:
+        - infrastructure-admins
 
 detectors:
   cpu1:
