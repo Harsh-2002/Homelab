@@ -25,6 +25,12 @@ The USB drive must be FAT32 but does not need to be bootable. Copy the BIOS
 executable to its root. Retain `BIOS_IMG.rcv` as the matching recovery image;
 do not select it during a normal update.
 
+On 2026-09-22, the 4 GB USB drive previously used for the Proxmox installer
+was erased and rebuilt as a single MBR/FAT32 volume named `BIOSUSB`. The BIOS
+executable, recovery image, checksum manifest, and operator instructions were
+copied to its root. Both Dell payloads passed SHA-256 verification when read
+back from the USB, and the drive was safely ejected. It is ready for `px10`.
+
 ## Sequential procedure
 
 Perform `px10` first, validate it completely, and then perform `px20`. Keep
