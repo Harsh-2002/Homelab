@@ -137,9 +137,10 @@ Proxmox paths.
 The available Proxmox update set was installed on all nodes: kernel
 7.0.14-19, `libunbound8` 1.26.1-0+deb13u1, `proxmox-widget-toolkit` 5.2.10,
 and `pve-docs` 9.2.12. All three EFI System Partitions contain kernel
-7.0.14-19. The nodes deliberately remain on the already validated running
-kernel 7.0.14-17 until a separate rolling reboot activates the new kernel and
-its driver code.
+7.0.14-19. A controlled rolling reboot was then completed in node order
+`px10`, `px20`, `px30`, stopping each node's workloads in place and restoring
+them before continuing. All three nodes now actively run 7.0.14-19 and its
+updated in-kernel driver code.
 
 VM 204 retained its Intel iGPU and 4 TB Crucial X9 Pro USB passthrough. The
 external exFAT partition was manually mounted read-only at `/EX`, as intended;
@@ -153,3 +154,11 @@ healthy, and no non-running pods were present. VM 204 containers and GPU access
 were healthy. Beszel, Pocket ID, Immich, Registry, S3, Homepage, Argo CD,
 Longhorn, Headlamp, Uptime Kuma, Frigate, the Proxmox cluster endpoint, and all
 three node endpoints returned their expected success or authentication status.
+
+After the rolling reboot, CT 104 replication had one expected failed attempt
+while `px30` was offline; a targeted retry completed successfully and reset the
+failure count to zero. Longhorn briefly reported degraded during replica
+recovery and then returned to attached/healthy. Final state was quorum 3/3,
+every HA service started on its original node, every replication job OK, every
+Kubernetes node Ready, no non-running pods, all pools healthy, and all three
+NICs linked at 1 Gb/s full duplex.
