@@ -185,7 +185,7 @@ Deployed and verified:
 - Fresh native Cairn service on the `s3` LXC beside RustFS, using separate ports and `/data/cairn`
 - Native RustFS and migrated S3 workloads
 - Three-node Tailscale subnet routing and Keepalived gateway VIP
-- Persistent Intel I219-V stability workaround on px10 and px20: TSO/GSO/GRO/EEE disabled by `e1000e-stability.service`; 8 GiB cross-node test sustained about 115 MB/s with zero NIC errors
+- Persistent Intel I219 conservative NIC settings on px10, px20, and px30: TSO/GSO/GRO/EEE disabled by `e1000e-stability.service`; px10/px20 had transmit hangs, while px30's I219-LM has no recorded hangs and was aligned for consistency. An 8 GiB cross-node test sustained about 115 MB/s with zero NIC errors
 
 Planned but **not yet applied** at the time of this handoff:
 

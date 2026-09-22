@@ -34,9 +34,13 @@ consequence of the NIC failure, not the original fault.
 The problem reproduced after the BIOS update and on kernels
 `7.0.14-17-pve` and `7.0.14-19-pve`, so BIOS and kernel updates alone are not
 a sufficient correction. `px30` has a different I219-LM revision and no
-recorded hangs.
+recorded hangs. On 2026-09-23 the owner chose the same conservative NIC
+settings for `px30` for consistency; that host has an I219-LM with firmware
+`0.8-4`, and applying the settings there does not mean its NIC is affected.
+Applying EEE-off to px30 briefly renegotiated the link (about three seconds);
+it returned at 1000 Mb/s full duplex, with all three cluster nodes quorate.
 
-The persistent mitigation on `px10` and `px20` disables TSO, GSO, GRO, and
+The persistent settings on all three nodes disable TSO, GSO, GRO, and
 EEE while retaining checksum offload. The I219-V does advertise and enable
 TSO and checksum offload; it is incorrect to say that this NIC lacks these
 capabilities. GSO and GRO are Linux software aggregation features. EEE was
@@ -47,8 +51,10 @@ Deploy or restore it with:
 ```bash
 scp infrastructure/proxmox/e1000e-stability.service px10:/etc/systemd/system/
 scp infrastructure/proxmox/e1000e-stability.service px20:/etc/systemd/system/
+scp infrastructure/proxmox/e1000e-stability.service px30:/etc/systemd/system/
 ssh px10 'systemctl daemon-reload && systemctl enable --now e1000e-stability.service'
 ssh px20 'systemctl daemon-reload && systemctl enable --now e1000e-stability.service'
+ssh px30 'systemctl daemon-reload && systemctl enable --now e1000e-stability.service'
 ```
 
 Validate the active state and counters:
@@ -83,7 +89,7 @@ Do not label overheating as ruled out or claim a confirmed root cause.
 
 The owner requires a software/firmware-only solution; do not propose or
 install any additional NIC, USB adapter, or other hardware. Keep the
-offload/EEE workaround active on both affected hosts and watch for a
+offload/EEE workaround active on all three nodes and watch for a
 recurrence under real traffic. If it recurs, capture the full first hang
 and preceding kernel log, driver/firmware version, offload state, NIC
 counters, and contemporaneous PCH/CPU temperatures before selecting a

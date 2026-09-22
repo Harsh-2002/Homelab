@@ -1,5 +1,5 @@
 [Unit]
-Description=Intel I219-V e1000e stability workaround
+Description=Intel I219 e1000e conservative offload settings
 After=network-online.target
 Wants=network-online.target
 
