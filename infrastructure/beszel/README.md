@@ -2,6 +2,8 @@
 
 Beszel `v0.20.0` provides lightweight host, disk, ZFS, SMART, systemd, and Docker monitoring. The hub and agents use pinned native binaries managed by systemd; automatic application updates are disabled.
 
+CT 104 also hosts the independent native Uptime Kuma service documented under `infrastructure/uptime-kuma/`. The services have separate Unix users, data directories, environment files, listeners, and systemd units, but intentionally share the LXC's HA and replication failure domain.
+
 ## Topology
 
 | Item | Value |

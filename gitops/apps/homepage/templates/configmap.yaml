@@ -55,6 +55,11 @@ data:
               password: "{{ "{{HOMEPAGE_VAR_BESZEL_PASSWORD}}" }}"
               version: 2
               fields: ["systems", "up"]
+        - Uptime Kuma:
+            icon: uptime-kuma.png
+            href: https://status.l3b.cc.cd
+            description: Availability
+            ping: https://status.l3b.cc.cd
         - Frigate:
             icon: frigate.png
             href: https://frigate.l3b.cc.cd

@@ -16,6 +16,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/onepassword/` — scoped 1Password service-account and secret-handling runbook.
   - `infrastructure/pulse/` — archived Pulse evaluation and rebuild guide.
   - `infrastructure/beszel/` — Beszel hub and agent services, public key, HA, and operations runbook.
+  - `infrastructure/uptime-kuma/` — native Uptime Kuma service, private proxy authentication, and recovery runbook.
   - `infrastructure/immich/` — Immich Compose deployment and safe restore procedure.
   - `infrastructure/portainer/` — Portainer EE Compose deployment and safe restore procedure.
   - `infrastructure/registry/` — public Docker Registry and its RustFS-backed restore procedure.
@@ -52,6 +53,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Tinyauth UI | `https://login.l3b.cc.cd` |
 | Beszel service | `10.1.1.7:8090` |
 | Beszel UI | `https://beszel.l3b.cc.cd` |
+| Uptime Kuma UI | `https://status.l3b.cc.cd` |
 | Immich UI | `https://photos.l3b.cc.cd` |
 | Portainer UI | `https://portainer.l3b.cc.cd` |
 | Docker Registry | `https://registry.l3b.cc.cd` |
@@ -69,4 +71,4 @@ Cloudflare DNS is private by default: the apex record resolves to proxy `10.1.1.
 
 See [`talos-k8s/README.md`](talos-k8s/README.md) and [`gitops/README.md`](gitops/README.md) for operating procedures.
 
-The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, Proxmox, and Portainer use native OIDC. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home, Longhorn, Homepage, and Frigate are protected this way. Identity endpoints and applications remain restricted to the LAN and Tailscale networks.
+The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, Proxmox, and Portainer use native OIDC. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home, Longhorn, Homepage, Frigate, and Uptime Kuma are protected this way. Identity endpoints and applications remain restricted to the LAN and Tailscale networks.

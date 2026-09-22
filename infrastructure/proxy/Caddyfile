@@ -237,6 +237,16 @@
 	}
 }
 
+(uptime) {
+	@uptime host status.l3b.cc.cd
+	handle @uptime {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.7:3001
+	}
+}
+
 (pve) {
 	import private
 	import proxy
@@ -300,6 +310,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import frigate
 	import s3
 	import beszel
+	import uptime
 	import proxmox
 	import cluster
 	handle {
