@@ -19,12 +19,13 @@ Use these in order:
 3. The BIOS/firmware Notion runbook for the px10 firmware incident and hardware-specific recovery guidance.
 4. The live hosts and APIs for current truth. Documentation can become stale, so verify before mutation.
 
-There are **two relevant Notion documents**, not three:
+There are **three relevant Notion documents**:
 
 | Document | Page ID | Purpose |
 | --- | --- | --- |
 | `Homelab — Proxmox Cluster Build & Runbook` | `3e0d3ccf-b520-81d1-83b8-cb1465f4935a` | Main Homelab topology, decisions, deployments, tests, incidents, and next actions |
 | `Proxmox BIOS & Firmware Upgrade — px10 Incident, Recovery & Runbook` | `3e2d3ccf-b520-81d8-853e-ecadd7aaaaeb` | px10 BIOS/firmware incident, recovery, and future firmware procedure |
+| `Proxmox — Intel I219-V NIC Stability` | `3e3d3ccf-b520-813d-91a2-d18185fb8b14` | Repeated px10/px20 e1000e transmit-hang incident, persistent mitigation, validation, and escalation path |
 
 Other Notion search results are unrelated articles or personal notes and are not Homelab sources of truth.
 
@@ -34,6 +35,7 @@ Use the CLI without disturbing existing page content:
 NOTION_KEYRING=0 ntn whoami
 NOTION_KEYRING=0 ntn pages get 3e0d3ccf-b520-81d1-83b8-cb1465f4935a
 NOTION_KEYRING=0 ntn pages get 3e2d3ccf-b520-81d8-853e-ecadd7aaaaeb
+NOTION_KEYRING=0 ntn pages get 3e3d3ccf-b520-813d-91a2-d18185fb8b14
 ```
 
 Prefer appending a concise dated section through the block-children API. Do not replace the entire large main page merely to add an update.
@@ -69,7 +71,7 @@ Never assume an untracked or dirty file belongs to the agent. Preserve user chan
 Available SSH aliases:
 
 ```text
-px10  px20  px30  dns  proxy  auth  s3  ctr  dev  pc  pi
+px10  px20  px30  dns  proxy  auth  s3  ctr  dev  orva  pc  pi
 ```
 
 Important roles:
@@ -83,6 +85,7 @@ Important roles:
 | `s3` | Native RustFS object storage |
 | `ctr` | Docker application VM managed through Portainer |
 | `dev` | Administrative and build VM; this repository normally lives here |
+| `orva` | Outbound-isolated serverless VM 106 at `10.1.1.11` |
 
 `slate` is a GCP free-tier VM in the US with Tailscale IP `100.122.33.37`. It is online and offers an exit node, but there was no working regular SSH path from `dev` at the last review. Do not assume `ssh slate` works merely because MagicDNS lists the node.
 
@@ -182,6 +185,7 @@ Deployed and verified:
 - Fresh native Cairn service on the `s3` LXC beside RustFS, using separate ports and `/data/cairn`
 - Native RustFS and migrated S3 workloads
 - Three-node Tailscale subnet routing and Keepalived gateway VIP
+- Persistent Intel I219-V stability workaround on px10 and px20: TSO/GSO/GRO/EEE disabled by `e1000e-stability.service`; 8 GiB cross-node test sustained about 115 MB/s with zero NIC errors
 
 Planned but **not yet applied** at the time of this handoff:
 

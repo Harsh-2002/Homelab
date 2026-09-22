@@ -1,0 +1,13 @@
+[Unit]
+Description=Intel I219-V e1000e stability workaround
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/ethtool -K nic0 tso off gso off gro off
+ExecStart=/usr/sbin/ethtool --set-eee nic0 eee off
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
