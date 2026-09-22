@@ -17,3 +17,7 @@ getent ahostsv4 px10.l3b.cc.cd
 getent ahostsv4 github.com
 dig @1.1.1.1 example.com A +short
 ```
+
+For model-specific firmware package mapping, the sequential USB update
+procedure, validation gates, and the 2026-09-22 fwupd cleanup record, see
+[`BIOS-UPGRADE.md`](BIOS-UPGRADE.md).
