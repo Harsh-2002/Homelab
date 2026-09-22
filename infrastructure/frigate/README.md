@@ -1,6 +1,6 @@
 # Frigate
 
-Frigate runs as Portainer stack `frigate` on the `ctr` Docker VM, using the Intel iGPU's `/dev/dri/renderD128` device for VAAPI decoding. It is deliberately not privileged: only the device, its host `video` and `render` groups, and the narrow `PERFMON` capability required for Intel GPU telemetry are passed explicitly. The VM applies `kernel.perf_event_paranoid=2` so that capability can access the performance event system. VAAPI acceleration is verified. The authenticated UI is bound only to `10.1.1.4:8971` and served privately at `https://frigate.l3b.cc.cd` by Caddy.
+Frigate runs as Portainer stack `frigate` on the `ctr` Docker VM, using the Intel iGPU's `/dev/dri/renderD128` device for VAAPI decoding. It is deliberately not privileged: only the device, its host `video` and `render` groups, and the narrow `PERFMON` capability required for Intel GPU telemetry are passed explicitly. The VM applies `kernel.perf_event_paranoid=2` so that capability can access the performance event system. The container uses Intel's supported modern `iHD` VAAPI driver automatically; no legacy driver override is set. VAAPI decoding and GPU scaling are verified from the live FFmpeg process. The authenticated UI is bound only to `10.1.1.4:8971` and served privately at `https://frigate.l3b.cc.cd` by Caddy.
 
 ## Identity
 
@@ -22,4 +22,4 @@ sudo docker logs --tail 100 frigate
 curl --resolve frigate.l3b.cc.cd:443:10.1.1.3 -I https://frigate.l3b.cc.cd
 ```
 
-Confirm the Frigate system page reports VAAPI hardware acceleration and that access redirects through Pocket ID when no Tinyauth session exists.
+The record path uses `-c:v copy`: recordings retain the source video rather than being unnecessarily transcoded. The detect path uses `preset-vaapi`, which decodes and scales frames on the Intel GPU. Confirm the Frigate system page reports VAAPI hardware acceleration and that access redirects through Pocket ID when no Tinyauth session exists.
