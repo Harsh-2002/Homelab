@@ -44,7 +44,7 @@ CAIRN_LOG_FORMAT=json
 
 The database, staging tree, and object blobs must stay on the same filesystem because Cairn's durability protocol relies on atomic rename. The service runs as the dedicated `cairn` user and is enabled at boot.
 
-The canonical `Cairn S3` item in the `HomeLab` 1Password vault contains the fresh root access key, root secret key, console URL, and master key. The console username/access key is `iam.anuragvishwakarma@gmail.com`; Cairn uses the S3-style access key rather than a separate username. Do not change or lose the master key after data or sealed credentials exist.
+The canonical `Cairn S3` item in the `HomeLab` 1Password vault contains the root access key, root secret key, console URL, and master key. These three secret values were recovered together from the latest historical Portainer Compose revision (`146/v6`) so the native service retains the original Cairn identity. The console username/access key is `iam.anuragvishwakarma@gmail.com`; Cairn uses the S3-style access key rather than a separate username. Do not change or lose the master key after data or sealed credentials exist.
 
 ## Validation
 
