@@ -212,7 +212,9 @@ After a material change:
 5. Run appropriate validation and `git diff --check`.
 6. Scan the changed files for tokens, passwords, private keys, and environment files.
 7. Commit with a clear imperative message.
-8. End with a clean working tree unless pre-existing user changes prevent it.
+8. Push the completed commit to `origin/main`; do not leave finished Homelab work only in the local repository.
+9. Verify that local `main` and `origin/main` point to the same commit.
+10. End with a clean working tree unless pre-existing user changes prevent it.
 
 Useful checks:
 
@@ -220,7 +222,8 @@ Useful checks:
 git status --short
 git diff --check
 git log -5 --oneline
+git status -sb
 rg -n 'tskey-|BEGIN .*PRIVATE KEY|password\s*=' --glob '!**/.git/**'
 ```
 
-Never claim that Notion or Git is current unless both were actually updated and verified.
+Never claim that Notion or GitHub is current unless Notion was updated, the commit was pushed, and the remote branch was verified.
