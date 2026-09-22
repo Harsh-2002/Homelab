@@ -95,3 +95,12 @@ two votes, and no `px10` workload relocated. After `px10` is powered on again,
 restore VM 100 and CT 104 to HA requested state `started`, confirm VM 201 is
 running, repeat endpoint and data-path validation, and complete the 30-minute
 stability observation before beginning `px20`.
+
+For operator-requested physical maintenance later on 2026-09-22, `px20` was
+also shut down while `px10` remained off. VM 202 and VM 204 were confirmed
+stopped before `px20` became unreachable, and HA entered shutdown mode without
+relocating them. This intentionally leaves only `px30` online and therefore
+without Proxmox cluster quorum. Do not force quorum or reduce expected votes.
+Complete the physical work before applying the 5060 BIOS package to `px20`.
+Bring both maintained nodes back normally afterward so the cluster regains
+quorum before restoring HA and workload states.
