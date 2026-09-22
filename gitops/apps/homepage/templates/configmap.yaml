@@ -55,6 +55,10 @@ data:
               password: "{{ "{{HOMEPAGE_VAR_BESZEL_PASSWORD}}" }}"
               version: 2
               fields: ["systems", "up"]
+        - Frigate:
+            icon: frigate.png
+            href: https://frigate.l3b.cc.cd
+            description: NVR
     - Control:
         - Pocket ID:
             icon: pocket-id.png
@@ -108,6 +112,10 @@ data:
             href: https://pin.l3b.cc.cd
             description: Bookmarks
             ping: https://pin.l3b.cc.cd
+        - Docker Registry:
+            icon: docker.png
+            href: https://registry.l3b.cc.cd
+            description: Container images
     - Compute:
         - Proxmox:
             icon: proxmox.png
