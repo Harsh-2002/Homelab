@@ -36,9 +36,12 @@ The problem reproduced after the BIOS update and on kernels
 a sufficient correction. `px30` has a different I219-LM revision and no
 recorded hangs.
 
-The persistent workaround on `px10` and `px20` disables TSO, GSO, GRO, and
-EEE while retaining checksum offload. This avoids the affected large-packet
-segmentation path and has negligible practical cost on the 1 Gb/s links.
+The persistent mitigation on `px10` and `px20` disables TSO, GSO, GRO, and
+EEE while retaining checksum offload. The I219-V does advertise and enable
+TSO and checksum offload; it is incorrect to say that this NIC lacks these
+capabilities. GSO and GRO are Linux software aggregation features. EEE was
+enabled but inactive before the change, so there is no evidence it caused
+the observed incidents.
 Deploy or restore it with:
 
 ```bash
@@ -58,8 +61,34 @@ journalctl -k -g 'Hardware Unit Hang|NETDEV WATCHDOG|Reset adapter'
 ```
 
 On 2026-09-23 an 8 GiB `ctr` (px20) to `dev` (px10) transfer sustained
-approximately 115 MB/s after applying the workaround. Both NICs retained
-zero errors, DMA failures, and transmit timeouts. Continue monitoring; if a
-hang ever recurs with these offloads disabled, the definitive next step is
-to move cluster/VM traffic to a separate supported NIC rather than disabling
-additional checksum features blindly.
+approximately 115 MB/s after applying the mitigation. Both NICs retained
+zero errors, DMA failures, and transmit timeouts. This proves wire-speed
+operation for that test, not long-term stability or a confirmed root cause.
+
+### Research and durable correction
+
+- [Intel's e1000e driver guidance](https://www.intel.com/content/www/us/en/support/articles/000005480/ethernet-products.html)
+  says I219 uses the in-kernel `e1000e` driver, and updates now go through
+  upstream Linux. Installing Intel's old standalone driver is not a sound
+  upgrade path.
+- [Intel's historical transmit-hang patch](https://lists.osuosl.org/pipermail/intel-wired-lan/Week-of-Mon-20171023/010559.html)
+  documents a DMA buffer overrun and reduces outstanding transmit requests
+  for earlier SPT/KBL chipsets. Current [Linux source](https://github.com/torvalds/linux/blob/master/drivers/net/ethernet/intel/e1000e/netdev.c)
+  applies that workaround only to `e1000_pch_spt`. The 5060's PCI ID
+  `8086:15bc` maps to `board_pch_cnp`, so that particular patch cannot be
+  assumed to fix these hosts. The identical log message does not establish
+  the same underlying erratum.
+- [Proxmox staff](https://forum.proxmox.com/threads/kernel-90070-981674-e1000e-0000-00-1f-6-eno2-detected-hardware-unit-hang.173143/)
+  recommends disabling TSO/GSO for this failure class, but
+  [other firsthand reports](https://forum.proxmox.com/threads/intel-nic-e1000e-hardware-unit-hang.106001/)
+  show the hang can persist after offloads are disabled. Treat the current
+  settings as a monitored mitigation.
+
+For durable isolation from the affected I219-V path, use a separate supported
+physical NIC for the Proxmox bridge and Corosync, after confirming the actual
+5060 chassis and available expansion connector. Dell's
+[5060 Micro specification](https://dl.dell.com/topicspdf/optiplex-5060-desktop_specifications3_en-us.pdf)
+lists an M.2 2230 WLAN slot with PCIe support and no standard PCIe card slot;
+the 5060 SFF has standard PCIe slots. Do not order an adapter until the
+chassis and mechanical fit are verified. Move one HA host at a time, verify
+networking and failover, and retain the onboard NIC as a recovery path.
