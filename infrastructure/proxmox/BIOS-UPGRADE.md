@@ -69,3 +69,29 @@ ZFS pools were online, and all original `px10` guests remained running.
 
 The fwupd failure history is intentionally retained as evidence. No BIOS
 setting was changed and no node was rebooted during cleanup.
+
+## px10 result
+
+On 2026-09-22, `px10` was upgraded through Dell's F12 BIOS Flash Update from
+1.4.2 to 1.32.0. SMBIOS and the kernel boot log both reported 1.32.0 after the
+flash. Linux Boot Manager remained the sole boot entry, the Proxmox EFI System
+Partition remained healthy, both ZFS pools were online, cluster quorum was
+3/3, and all Proxmox services recovered. The Intel NIC linked at 1 Gb/s full
+duplex with no RX or TX errors, all 32 GiB RAM was present, VT-d and CPU
+virtualization remained enabled, and the Intel GPU remained bound to
+`vfio-pci`. Legacy Option ROMs, Attempt Legacy Boot, and Secure Boot remained
+disabled, matching the pre-upgrade state.
+
+VM 100, VM 201, and CT 104 recovered on `px10`; HA, replication, the Beszel
+health endpoint, and the management endpoints were checked. All three
+Kubernetes nodes were Ready, the Longhorn volume was attached and healthy, and
+there were no non-running kube-system or Longhorn pods.
+
+At the operator's request, `px10` was then shut down cleanly. Before host
+shutdown, HA requested state for VM 100 and CT 104 was changed from `started`
+to `stopped`, and VM 201 was shut down locally. All three guests were confirmed
+stopped before powering off the host. `px20` and `px30` retained quorum with
+two votes, and no `px10` workload relocated. After `px10` is powered on again,
+restore VM 100 and CT 104 to HA requested state `started`, confirm VM 201 is
+running, repeat endpoint and data-path validation, and complete the 30-minute
+stability observation before beginning `px20`.
