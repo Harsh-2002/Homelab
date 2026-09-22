@@ -70,7 +70,6 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Cairn Console | `https://cairn.l3b.cc.cd` |
 | n8n UI | `https://n8n.l3b.cc.cd` |
 | Memos UI | `https://notes.l3b.cc.cd` |
-| code-server UI | `https://code.l3b.cc.cd` |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |
 | Proxmox px20 | `https://px20.l3b.cc.cd` |

@@ -144,11 +144,6 @@ data:
             href: https://notes.l3b.cc.cd
             description: Notes
             ping: https://notes.l3b.cc.cd
-        - code-server:
-            icon: code-server.png
-            href: https://code.l3b.cc.cd
-            description: Development
-            ping: https://code.l3b.cc.cd
     - Compute:
         - Proxmox:
             icon: proxmox.png
