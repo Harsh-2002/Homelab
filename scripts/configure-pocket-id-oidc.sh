@@ -39,10 +39,14 @@ create_client() {
   name="$2"
   launch_url="$3"
   callbacks="$4"
+  logout_callbacks="${5:-}"
+  if test -z "$logout_callbacks"; then
+    logout_callbacks="$(jq -cn --arg launch "$launch_url" '[$launch]')"
+  fi
   existing="$(api GET '/oidc/clients' | jq -r --arg id "$id" '.data[] | select(.id == $id) | .id' | head -n1)"
   created=false
   if test -z "$existing"; then
-    payload="$(jq -cn --arg id "$id" --arg name "$name" --arg launch "$launch_url" --argjson callbacks "$callbacks" '{id:$id,name:$name,description:"Homelab single sign-on",callbackURLs:$callbacks,logoutCallbackURLs:[$launch],isPublic:false,pkceEnabled:false,requiresReauthentication:false,requiresPushedAuthorizationRequests:false,skipConsent:true,credentials:{},launchURL:$launch,isGroupRestricted:true,accessTokenDurationMinutes:15,refreshTokenDurationMinutes:10080}')"
+    payload="$(jq -cn --arg id "$id" --arg name "$name" --arg launch "$launch_url" --argjson callbacks "$callbacks" --argjson logout_callbacks "$logout_callbacks" '{id:$id,name:$name,description:"Homelab single sign-on",callbackURLs:$callbacks,logoutCallbackURLs:$logout_callbacks,isPublic:false,pkceEnabled:false,requiresReauthentication:false,requiresPushedAuthorizationRequests:false,skipConsent:true,credentials:{},launchURL:$launch,isGroupRestricted:true,accessTokenDurationMinutes:15,refreshTokenDurationMinutes:10080}')"
     api POST '/oidc/clients' "$payload" >/dev/null
     created=true
   fi
@@ -61,8 +65,11 @@ create_client portainer 'Portainer' 'https://portainer.l3b.cc.cd/' '["https://po
 create_client s3 'RustFS' 'https://rustfs.l3b.cc.cd' '["https://rustfs.l3b.cc.cd/rustfs/admin/v3/oidc/callback/default"]'
 create_client tinyauth 'Tinyauth' 'https://login.l3b.cc.cd' '["https://login.l3b.cc.cd/api/oauth/callback/pocketid"]'
 create_client beszel 'Beszel' 'https://beszel.l3b.cc.cd' '["https://beszel.l3b.cc.cd/api/oauth2-redirect"]'
+create_client immich 'Immich' 'https://photos.l3b.cc.cd' '["https://photos.l3b.cc.cd/auth/login","https://photos.l3b.cc.cd/user-settings","app.immich:///oauth-callback"]' '["https://photos.l3b.cc.cd/api/oauth/backchannel-logout"]'
 
-client_ids='["headlamp","argocd","proxmox","portainer","s3","tinyauth","beszel"]'
+declared_client_ids='["headlamp","argocd","proxmox","portainer","s3","tinyauth","beszel","immich"]'
+existing_client_ids="$(api GET "/user-groups/$group_id" | jq -c '[.allowedOidcClients[].id]')"
+client_ids="$(jq -cn --argjson existing "$existing_client_ids" --argjson declared "$declared_client_ids" '$existing + $declared | unique')"
 api PUT "/user-groups/$group_id/allowed-oidc-clients" "$(jq -cn --argjson ids "$client_ids" '{oidcClientIds:$ids}')" >/dev/null
 
 printf 'Pocket ID group and OIDC clients configured.\n'

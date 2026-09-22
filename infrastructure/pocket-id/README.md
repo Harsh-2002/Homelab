@@ -81,6 +81,7 @@ The final command must return `10.1.1.3`.
 | Proxmox | Native OIDC realm `pocketid` | PVE group `infrastructure-admins` has `Administrator` at `/`; PAM/local access remains break-glass |
 | Portainer | Native Custom OAuth/OIDC | Pocket ID client `portainer`; automatic user provisioning enabled; local Portainer administrator remains break-glass |
 | Karakeep | Native OIDC | Client is restricted to `infrastructure-admins`; existing Karakeep account is linked by the verified canonical email; native Karakeep login remains break-glass |
+| Immich | Native OIDC | Client `immich` is restricted to `infrastructure-admins`; the pre-existing photo account is explicitly linked and native login remains break-glass |
 | AdGuard Home | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
 | Longhorn | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
 | Homepage | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
