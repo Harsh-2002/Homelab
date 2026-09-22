@@ -2,6 +2,8 @@
 
 This repository is the reproducible configuration brain for the homelab. The Notion runbook is the operational brain: topology, decisions, access procedures, validation results, and recovery instructions.
 
+Start a new agent or chat with [`HANDOFF.md`](HANDOFF.md). It lists the authoritative Notion pages, access conventions, deployed architecture, pending work, safety rules, and the ready-to-paste continuation prompt.
+
 ## Administrator identity
 
 Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts an email address or OIDC identity. Use `iam-anuragvishwakarma` when a conventional username is required. Do not create new personal accounts with dotted or underscored username variants. Keep operating-system accounts, Kubernetes service accounts, and application service users distinct because they are machine identities.
