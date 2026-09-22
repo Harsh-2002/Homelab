@@ -1,0 +1,6 @@
+table ip tailscale_gateway {
+    chain postrouting {
+        type nat hook postrouting priority srcnat; policy accept;
+        ip saddr 10.1.1.0/24 ip daddr 100.64.0.0/10 oifname "tailscale0" masquerade
+    }
+}

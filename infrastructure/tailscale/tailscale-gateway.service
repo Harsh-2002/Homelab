@@ -1,0 +1,15 @@
+[Unit]
+Description=LAN to Tailscale gateway NAT
+After=tailscaled.service
+Requires=tailscaled.service
+Before=keepalived.service
+
+[Service]
+Type=oneshot
+ExecStartPre=-/usr/sbin/nft delete table ip tailscale_gateway
+ExecStart=/usr/sbin/nft -f /etc/tailscale-gateway.nft
+ExecStop=-/usr/sbin/nft delete table ip tailscale_gateway
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

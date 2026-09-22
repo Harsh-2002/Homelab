@@ -12,6 +12,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 - `gitops/` — Argo CD bootstrap, cluster applications, and workload manifests.
 - `infrastructure/` — reproducible proxy configuration and sanitized service runbooks.
   - `infrastructure/proxmox/` — Proxmox host resolver baseline.
+  - `infrastructure/tailscale/` — three-node Tailscale subnet routing, Keepalived gateway VIP, and recovery runbook.
   - `infrastructure/pocket-id/` — Pocket ID systemd service, pinned upgrade helper, and runbook.
   - `infrastructure/onepassword/` — scoped 1Password service-account and secret-handling runbook.
   - `infrastructure/pulse/` — archived Pulse evaluation and rebuild guide.
@@ -39,6 +40,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Component | Address |
 | --- | --- |
 | Kubernetes API VIP | `10.1.1.200` |
+| Tailscale gateway VIP | `10.1.1.9` |
 | Cilium LoadBalancer pool | `10.1.1.170-10.1.1.190` |
 | Argo CD service | `10.1.1.171` |
 | Argo CD UI | `https://argocd.l3b.cc.cd` |
