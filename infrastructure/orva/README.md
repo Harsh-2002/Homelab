@@ -8,6 +8,7 @@ Orva is the dedicated VM for running serverless functions. VM 106 runs on `px20`
 | Preferred node | `px20` |
 | Replication target | `px10` |
 | Address | `10.1.1.11/24` |
+| Public endpoint | `https://orva.l3b.cc.cd` -> `http://10.1.1.11:8443` through Caddy |
 | Resources | 2 vCPU, 4 GB maximum RAM, 2 GB balloon minimum, 10 GB local-ZFS disk |
 | Guest agent | `qemu-guest-agent`, active through its static systemd unit |
 | Boot | `onboot=1`, managed by Proxmox HA |
@@ -27,7 +28,7 @@ ssh px20 'qm agent 106 ping'
 
 VM 106 remains on `vmbr0` with its normal `/24` address. Security is enforced outside the guest by the Proxmox VM firewall, whose tracked baseline is [`106.fw`](106.fw). The VM cannot remove this policy even if a function compromises the guest.
 
-Inbound policy is `ACCEPT` as requested: SSH and application listeners are reachable from any source that already has a route to the private address. Internet clients still cannot reach an RFC1918 address without an explicit router or tunnel route. Put published HTTP services behind Caddy rather than forwarding VM ports directly.
+Inbound policy is `ACCEPT` as requested: SSH and application listeners are reachable from any source that already has a route to the private address. Internet clients still cannot reach an RFC1918 address without an explicit router or tunnel route. Orva is published by an explicit DNS-only Cloudflare A record and Caddy reverse proxy; the router forwards HTTPS only to Caddy, not directly to VM 106.
 
 Outbound policy allows public Internet destinations but blocks new VM-originated connections to LAN and all RFC1918 address space, Tailscale/CGNAT `100.64.0.0/10`, IPv4 link-local, and IPv6 ULA/link-local. The only internal outbound exception is TCP and UDP DNS to AdGuard `10.1.1.2:53`. Stateful replies to inbound SSH or application connections remain allowed.
 

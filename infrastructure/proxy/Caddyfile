@@ -146,6 +146,23 @@
 	}
 }
 
+(opencloud) {
+	@opencloud host drive.l3b.cc.cd
+	handle @opencloud {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.4:9200
+	}
+}
+
+(orva) {
+	@orva host orva.l3b.cc.cd
+	handle @orva {
+		import proxy
+		reverse_proxy 10.1.1.11:8443
+	}
+}
+
 (karakeep) {
 	@karakeep host pin.l3b.cc.cd
 	handle @karakeep {
@@ -267,16 +284,6 @@
 	}
 }
 
-(code) {
-	@code host code.l3b.cc.cd
-	handle @code {
-		import private
-		import authenticate
-		import proxy
-		reverse_proxy 10.1.1.4:8080
-	}
-}
-
 (cairn) {
 	@cairnapi host cairn-s3.l3b.cc.cd
 	handle @cairnapi {
@@ -353,6 +360,8 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import pocketid
 	import tinyauth
 	import immich
+	import opencloud
+	import orva
 	import portainer
 	import registry
 	import frigate
@@ -361,7 +370,6 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import uptime
 	import n8n
 	import memos
-	import code
 	import cairn
 	import proxmox
 	import cluster

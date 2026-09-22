@@ -35,7 +35,8 @@ curl --resolve cairn.l3b.cc.cd:443:10.1.1.3 https://cairn.l3b.cc.cd/
 curl --resolve cairn-s3.l3b.cc.cd:443:10.1.1.3 https://cairn-s3.l3b.cc.cd/
 curl --resolve n8n.l3b.cc.cd:443:10.1.1.3 https://n8n.l3b.cc.cd/
 curl --resolve notes.l3b.cc.cd:443:10.1.1.3 https://notes.l3b.cc.cd/
-curl --resolve code.l3b.cc.cd:443:10.1.1.3 https://code.l3b.cc.cd/
+curl --resolve drive.l3b.cc.cd:443:10.1.1.3 https://drive.l3b.cc.cd/healthz
+curl --resolve orva.l3b.cc.cd:443:10.1.1.3 -I https://orva.l3b.cc.cd/
 curl -i https://registry.l3b.cc.cd/v2/
 ```
 
@@ -43,7 +44,7 @@ curl -i https://registry.l3b.cc.cd/v2/
 
 Caddy admits only LAN `10.1.1.0/24` and Tailscale `100.64.0.0/10` sources. Pocket ID at `auth.l3b.cc.cd` and Tinyauth at `login.l3b.cc.cd` are subject to the same policy, so remote authentication requires Tailscale.
 
-AdGuard Home, Longhorn, Homepage, Frigate, Uptime Kuma, n8n, and Memos import the reusable `authenticate` block. Caddy calls Tinyauth at `10.1.1.6:3000/api/auth/caddy` before a protected request reaches its backend. Frigate additionally receives a shared proxy-secret header and a fixed identity/group after that gate succeeds: it has one exact Pocket ID allowlisted user, so this guarantees a stable Frigate admin identity even when its proxy-auth UI mishandles forwarded identity headers. Headlamp, Argo CD, Proxmox, Beszel, Immich, OpenCloud, Portainer, and Cairn use their own application authentication flows instead. OpenCloud is private-network-only at `https://drive.l3b.cc.cd`; Tinyauth is deliberately absent so its web, desktop, iOS, Android, WebDAV, and public-share flows reach native OIDC directly. Immich is private-network-only at `https://photos.l3b.cc.cd`; its API is not placed behind Tinyauth so the native web and mobile clients can authenticate normally. Portainer is private-network-only at `https://portainer.l3b.cc.cd` and keeps its own authenticated session plus reverse-proxy trusted-origin policy. Cairn's console and S3 API are private-network-only; the S3 route deliberately avoids Tinyauth so signed S3 clients continue to work.
+AdGuard Home, Longhorn, Homepage, Frigate, Uptime Kuma, n8n, and Memos import the reusable `authenticate` block. Caddy calls Tinyauth at `10.1.1.6:3000/api/auth/caddy` before a protected request reaches its backend. Frigate additionally receives a shared proxy-secret header and a fixed identity/group after that gate succeeds: it has one exact Pocket ID allowlisted user, so this guarantees a stable Frigate admin identity even when its proxy-auth UI mishandles forwarded identity headers. Headlamp, Argo CD, Proxmox, Beszel, Immich, OpenCloud, Portainer, Cairn, and Orva use their own application authentication flows instead. OpenCloud is private-network-only at `https://drive.l3b.cc.cd`; Tinyauth is deliberately absent so its web, desktop, iOS, Android, WebDAV, and public-share flows reach native OIDC directly. Immich and Orva are deliberate public DNS exceptions at `photos.l3b.cc.cd` and `orva.l3b.cc.cd`; Caddy forwards them without Tinyauth so their native APIs and authentication work normally. Portainer is private-network-only at `https://portainer.l3b.cc.cd` and keeps its own authenticated session plus reverse-proxy trusted-origin policy. Cairn's console and S3 API are private-network-only; the S3 route deliberately avoids Tinyauth so signed S3 clients continue to work.
 
 ## Public Docker Registry
 

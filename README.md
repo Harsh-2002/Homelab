@@ -72,7 +72,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | n8n UI | `https://n8n.l3b.cc.cd` |
 | Memos UI | `https://notes.l3b.cc.cd` |
 | OpenCloud files | `https://drive.l3b.cc.cd` |
-| Orva serverless VM | `10.1.1.11` |
+| Orva serverless | `https://orva.l3b.cc.cd` (`10.1.1.11:8443`) |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |
 | Proxmox px20 | `https://px20.l3b.cc.cd` |
@@ -80,7 +80,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 
 ## Public DNS policy
 
-Cloudflare DNS is private by default: the apex record resolves to proxy `10.1.1.3` and the wildcard CNAME follows it. Explicit public DNS-only records are exceptions, not the default. `argocd.l3b.cc.cd` is public solely for GitHub's signed Argo CD webhook, while `registry.l3b.cc.cd` is public for Docker client access and has its own Registry Basic credentials. Caddy still limits public Argo CD access to `POST /api/webhook`.
+Cloudflare DNS is private by default: the apex record resolves to proxy `10.1.1.3` and the wildcard CNAME follows it. Explicit public DNS-only records are exceptions, not the default. Current public application records are `photos`, `pin`, `registry`, and `orva`; `argocd` is public solely for GitHub's signed Argo CD webhook. Caddy still limits public Argo CD access to `POST /api/webhook`.
 
 See [`talos-k8s/README.md`](talos-k8s/README.md) and [`gitops/README.md`](gitops/README.md) for operating procedures.
 
