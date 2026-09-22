@@ -65,7 +65,31 @@ approximately 115 MB/s after applying the mitigation. Both NICs retained
 zero errors, DMA failures, and transmit timeouts. This proves wire-speed
 operation for that test, not long-term stability or a confirmed root cause.
 
-### Research and durable correction
+### Crash evidence and software-only investigation
+
+At px20's 2026-09-23 00:19 IST incident, Corosync links dropped at
+00:19:45. Starting at 00:19:46 the kernel reported `e1000e` transmit
+hardware-unit hangs every two seconds: TX descriptor head `TDH=0x7c`
+remained unchanged while the tail was `TDT=0xb4`. The HA watchdog expired
+at 00:20:41 and the host rebooted. This sequence identifies a stalled NIC
+transmit path as the immediate cause of network isolation and reboot; it
+does **not** prove whether the underlying defect is silicon, firmware,
+driver, or a load/thermal interaction. There were no thermal-throttle,
+machine-check, or PCIe AER error messages in the previous boot. The SSD
+reported 48°C shortly before the failure. Later live readings were about
+77–78°C for the Cannon Lake PCH (120°C reported critical trip) and 63–64°C
+for the CPU package; temperature was **not** recorded at the crash instant.
+Do not label overheating as ruled out or claim a confirmed root cause.
+
+The owner requires a software/firmware-only solution; do not propose or
+install any additional NIC, USB adapter, or other hardware. Keep the
+offload/EEE workaround active on both affected hosts and watch for a
+recurrence under real traffic. If it recurs, capture the full first hang
+and preceding kernel log, driver/firmware version, offload state, NIC
+counters, and contemporaneous PCH/CPU temperatures before selecting a
+specific upstream patch or a controlled Proxmox-kernel comparison. Avoid
+compiling an arbitrary older driver or applying a patch for a different
+chipset just because it prints the same error.
 
 - [Intel's e1000e driver guidance](https://www.intel.com/content/www/us/en/support/articles/000005480/ethernet-products.html)
   says I219 uses the in-kernel `e1000e` driver, and updates now go through
@@ -84,11 +108,7 @@ operation for that test, not long-term stability or a confirmed root cause.
   show the hang can persist after offloads are disabled. Treat the current
   settings as a monitored mitigation.
 
-For durable isolation from the affected I219-V path, use a separate supported
-physical NIC for the Proxmox bridge and Corosync, after confirming the actual
-5060 chassis and available expansion connector. Dell's
-[5060 Micro specification](https://dl.dell.com/topicspdf/optiplex-5060-desktop_specifications3_en-us.pdf)
-lists an M.2 2230 WLAN slot with PCIe support and no standard PCIe card slot;
-the 5060 SFF has standard PCIe slots. Do not order an adapter until the
-chassis and mechanical fit are verified. Move one HA host at a time, verify
-networking and failover, and retain the onboard NIC as a recovery path.
+There is currently no verified chipset-specific source patch that is safer
+than the running in-kernel driver. A custom driver build is warranted only
+after identifying and reviewing such a patch, then testing one node at a
+time with a rollback kernel available.
