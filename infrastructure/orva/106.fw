@@ -1,0 +1,21 @@
+[OPTIONS]
+
+enable: 1
+policy_in: ACCEPT
+policy_out: ACCEPT
+log_level_in: nolog
+log_level_out: info
+macfilter: 1
+ipfilter: 0
+
+[RULES]
+
+OUT ACCEPT -dest 10.1.1.2 -p udp -dport 53 # AdGuard DNS UDP
+OUT ACCEPT -dest 10.1.1.2 -p tcp -dport 53 # AdGuard DNS TCP
+OUT DROP -dest 10.0.0.0/8 -log info # Block RFC1918 10/8
+OUT DROP -dest 172.16.0.0/12 -log info # Block RFC1918 172.16/12
+OUT DROP -dest 192.168.0.0/16 -log info # Block RFC1918 192.168/16
+OUT DROP -dest 100.64.0.0/10 -log info # Block Tailscale and CGNAT
+OUT DROP -dest 169.254.0.0/16 -log info # Block IPv4 link-local
+OUT DROP -dest fc00::/7 -log info # Block IPv6 ULA
+OUT DROP -dest fe80::/10 -log info # Block IPv6 link-local

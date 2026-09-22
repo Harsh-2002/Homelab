@@ -27,6 +27,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/minio/` — historical MinIO-to-RustFS migration record.
   - `infrastructure/rustfs/` — native RustFS S3 service, OIDC, HA, and upgrade runbook.
   - `infrastructure/cairn/` — fresh native Cairn S3 service on the `s3` LXC and its operations runbook.
+  - `infrastructure/orva/` — Orva serverless VM, Proxmox firewall, HA, and replication runbook.
   - `infrastructure/restored-services/` — recovered Portainer workloads, storage paths, and validation state.
 - `scripts/` — administrative helper scripts.
   - `scripts/cf` — minimal POSIX Cloudflare DNS CLI; token and zone remain in the environment or the non-Git Cloudflare environment file.
@@ -71,6 +72,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | n8n UI | `https://n8n.l3b.cc.cd` |
 | Memos UI | `https://notes.l3b.cc.cd` |
 | OpenCloud files | `https://drive.l3b.cc.cd` |
+| Orva serverless VM | `10.1.1.11` |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |
 | Proxmox px20 | `https://px20.l3b.cc.cd` |

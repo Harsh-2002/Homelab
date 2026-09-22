@@ -114,6 +114,7 @@ Read the main README for the full endpoint table. Key infrastructure facts:
 - Router: `10.1.1.1`
 - DNS: `10.1.1.2`
 - Caddy proxy: `10.1.1.3`
+- Orva serverless VM: `10.1.1.11` (VM 106; outbound-isolated by Proxmox firewall)
 - Kubernetes API VIP: `10.1.1.200`
 - Cilium LoadBalancer pool: `10.1.1.170-10.1.1.190`
 - Tailscale/Keepalived gateway VIP: `10.1.1.9`
