@@ -185,6 +185,8 @@
 		import proxy
 		reverse_proxy 10.1.1.4:8971 {
 			header_up X-Proxy-Secret {env.FRIGATE_PROXY_AUTH_SECRET}
+			header_up Remote-User iam.anuragvishwakarma@gmail.com
+			header_up Remote-Groups infrastructure-admins
 		}
 	}
 }
