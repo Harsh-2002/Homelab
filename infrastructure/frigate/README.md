@@ -1,6 +1,6 @@
 # Frigate
 
-Frigate runs as Portainer stack `frigate` on the `ctr` Docker VM, using the Intel iGPU's `/dev/dri/renderD128` device for VAAPI decoding. It is deliberately not privileged: only the device, its host `video` and `render` groups, and the narrow `PERFMON` capability required for Intel GPU telemetry are passed explicitly. The VM applies `kernel.perf_event_paranoid=2` so that capability can access the performance event system. The container pins Intel's `i965` VAAPI driver: it is stable with this camera pipeline, whereas the tested `iHD` path produced VAAPI frame-download errors. VAAPI decoding and GPU scaling remain enabled. Frigate is pinned to `0.18.0`; the pre-upgrade live configuration and database were copied under `/data/apps/frigate/backups/2026-09-22-pre-0.18` before this version change. The authenticated UI is bound only to `10.1.1.4:8971` and served privately at `https://frigate.l3b.cc.cd` by Caddy.
+Frigate runs as Portainer stack `frigate` on the `ctr` Docker VM, using the Intel iGPU's `/dev/dri/renderD128` device for VAAPI decoding and OpenVINO object detection. It is deliberately not privileged: only the device, its host `video` and `render` groups, and the narrow `PERFMON` capability required for Intel GPU telemetry are passed explicitly. The VM applies `kernel.perf_event_paranoid=2` so that capability can access the performance event system. The container pins Intel's `i965` VAAPI driver: it is stable with this camera pipeline, whereas the tested `iHD` path produced VAAPI frame-download errors. VAAPI decoding and GPU scaling remain enabled. OpenVINO uses Frigate's bundled SSD MobileNet model on the detected Intel `GPU` device instead of the test-only CPU detector. Frigate is pinned to `0.18.0`; the pre-upgrade live configuration and database were copied under `/data/apps/frigate/backups/2026-09-22-pre-0.18` before this version change. The authenticated UI is bound only to `10.1.1.4:8971` and served privately at `https://frigate.l3b.cc.cd` by Caddy.
 
 ## Identity
 
@@ -12,7 +12,9 @@ Caddy redirects Frigate's obsolete `/login` route to `/`. This prevents a browse
 
 The durable application paths are `/data/apps/frigate/config` and `/data/apps/frigate/media`. Recovery restores configuration, Frigate's database, model cache, and operational metadata. Historic recordings, clips, and exports from `/EX` are intentionally not restored.
 
-Frigate starts with an empty media directory. It keeps motion recordings, alert recordings, detection recordings, and snapshots for at most seven days. Continuous recording is disabled. A Frigate cleanup pass removes expired media automatically.
+Frigate starts with an empty media directory. It keeps motion recordings, alert recordings, detection recordings, and snapshots for at most seven days. This is a rolling window: cleanup runs hourly and removes expired segments rather than creating weekly copies. Continuous recording is disabled. The main stream measured about 4.35 Mb/s, which would require roughly 306 GiB for seven continuous days and leave insufficient headroom on the shared 500 GB data disk for the other services. Motion/event retention preserves source-quality footage with five seconds of pre-capture and post-capture while keeping storage bounded.
+
+The single `outdoor` camera records the full-resolution main stream and detects at 640×360 and 5 FPS from its substream. People are high-priority alerts and dogs are lower-priority detections. The changing timestamp overlay is motion-masked, and the named `courtyard` zone covers the walkable approach for filtering and automation metadata. The zone is intentionally not required for review items, so objects at the edge of the image are not silently discarded.
 
 ## Operations
 

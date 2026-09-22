@@ -23,9 +23,17 @@ proxy:
         - infrastructure-admins
 
 detectors:
-  cpu1:
-    type: cpu
-    num_threads: 3
+  ov:
+    type: openvino
+    device: GPU
+
+model:
+  width: 300
+  height: 300
+  input_tensor: nhwc
+  input_pixel_format: bgr
+  path: /openvino-model/ssdlite_mobilenet_v2.xml
+  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
 
 ffmpeg:
   hwaccel_args: preset-vaapi
@@ -84,6 +92,18 @@ cameras:
       threshold: 30
       contour_area: 50
       improve_contrast: true
+      mask:
+        timestamp:
+          friendly_name: Camera timestamp
+          enabled: true
+          coordinates: 0.000,0.000,0.400,0.000,0.400,0.080,0.000,0.080
+    review:
+      alerts:
+        labels:
+          - person
+      detections:
+        labels:
+          - dog
     snapshots:
       enabled: true
       timestamp: true
@@ -93,9 +113,13 @@ cameras:
     live:
       streams:
         outdoor: outdoor
+    zones:
+      courtyard:
+        friendly_name: Courtyard
+        coordinates: 0.323,0.245,0.641,0.245,0.827,0.999,0.165,0.999
 
 telemetry:
   stats:
     intel_gpu_stats: true
 
-version: 0.17-0
+version: 0.18-0
