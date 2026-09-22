@@ -34,17 +34,15 @@ Keepalived uses unicast VRRP over `vmbr0`. The Proxmox host firewall was disable
 
 ## Tailscale control plane
 
-`10.1.1.0/24` is approved on all three machines. Identical approved prefixes are required for Tailscale subnet-router failover.
-
-The initial enrollment key did not apply a machine tag: `tailscale status --json` reported no tags. Correct the three machines to `tag:subnet-router` in the admin console after declaring its owner:
+`10.1.1.0/24` is approved on all three machines. Identical approved prefixes are required for Tailscale subnet-router failover. All three machines use the non-user identity `tag:subnet-router`, and their device-key expiry is disabled. The tailnet policy declares the tag with an empty owner list; tailnet Owners and Admins retain implicit authority to assign it:
 
 ```json
 "tagOwners": {
-  "tag:subnet-router": ["iam.anuragvishwakarma@gmail.com"]
+  "tag:subnet-router": []
 }
 ```
 
-After all nodes show the tag, revoke the reusable enrollment key. Revocation does not disconnect already enrolled nodes.
+The reusable enrollment key was revoked through the Tailscale API after tagging. Revocation did not disconnect the enrolled nodes. The separate short-lived API access token remains in 1Password for administration and must be replaced when it expires.
 
 For tailnet DNS, prefer split DNS for `l3b.cc.cd` through `10.1.1.2`. Do not enable Tailscale DNS acceptance on the Proxmox hosts. Make AdGuard a global tailnet resolver only after remote clients can reach it reliably through the approved subnet routers.
 
