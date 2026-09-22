@@ -247,6 +247,54 @@
 	}
 }
 
+(n8n) {
+	@n8n host n8n.l3b.cc.cd
+	handle @n8n {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.4:5678
+	}
+}
+
+(memos) {
+	@memos host notes.l3b.cc.cd
+	handle @memos {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.4:5230
+	}
+}
+
+(code) {
+	@code host code.l3b.cc.cd
+	handle @code {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.4:8080
+	}
+}
+
+(cairn) {
+	@cairnapi host cairn-s3.l3b.cc.cd
+	handle @cairnapi {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.4:7373 {
+			flush_interval -1
+		}
+	}
+
+	@cairnconsole host cairn.l3b.cc.cd
+	handle @cairnconsole {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.4:7374
+	}
+}
+
 (pve) {
 	import private
 	import proxy
@@ -311,6 +359,10 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import s3
 	import beszel
 	import uptime
+	import n8n
+	import memos
+	import code
+	import cairn
 	import proxmox
 	import cluster
 	handle {

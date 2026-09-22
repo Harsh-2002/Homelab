@@ -177,6 +177,7 @@ Deployed and verified:
 - Pocket ID/Tinyauth authentication
 - Beszel and internal Uptime Kuma
 - Portainer-managed Docker workloads including restored applications
+- Restored `n8n`, `memos`, `code`, and Cairn workloads on `ctr`; Nextcloud recovery is documented in `infrastructure/restored-services/`
 - Native RustFS and migrated S3 workloads
 - Three-node Tailscale subnet routing and Keepalived gateway VIP
 

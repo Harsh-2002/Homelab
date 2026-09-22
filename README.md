@@ -26,6 +26,8 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/frigate/` — private Frigate NVR, OIDC proxy integration, and retention policy.
   - `infrastructure/minio/` — historical MinIO-to-RustFS migration record.
   - `infrastructure/rustfs/` — native RustFS S3 service, OIDC, HA, and upgrade runbook.
+  - `infrastructure/cairn/` — restored single-node Cairn S3 service and operations runbook.
+  - `infrastructure/restored-services/` — recovered Portainer workloads, storage paths, and validation state.
 - `scripts/` — administrative helper scripts.
   - `scripts/cf` — minimal POSIX Cloudflare DNS CLI; token and zone remain in the environment or the non-Git Cloudflare environment file.
 
@@ -64,6 +66,11 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Frigate UI | `https://frigate.l3b.cc.cd` |
 | RustFS S3 API | `https://s3.l3b.cc.cd` |
 | RustFS Console | `https://rustfs.l3b.cc.cd` |
+| Cairn S3 API | `https://cairn-s3.l3b.cc.cd` |
+| Cairn Console | `https://cairn.l3b.cc.cd` |
+| n8n UI | `https://n8n.l3b.cc.cd` |
+| Memos UI | `https://notes.l3b.cc.cd` |
+| code-server UI | `https://code.l3b.cc.cd` |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |
 | Proxmox px20 | `https://px20.l3b.cc.cd` |
