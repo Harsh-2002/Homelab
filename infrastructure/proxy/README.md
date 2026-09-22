@@ -2,7 +2,7 @@
 
 The tracked `Caddyfile` is the desired configuration for proxy LXC `10.1.1.3`.
 
-The Cloudflare token is not stored in Git. The proxy loads it from `/etc/caddy/cloudflare.env` through the systemd drop-in `/etc/systemd/system/caddy.service.d/10-cloudflare-env.conf`.
+Secrets are not stored in Git. The proxy loads `/etc/caddy/cloudflare.env` through the systemd drop-in `/etc/systemd/system/caddy.service.d/10-cloudflare-env.conf`. This protected file contains the Cloudflare values and `FRIGATE_PROXY_AUTH_SECRET`; the latter must match the Frigate Stack environment exactly.
 
 The minimal `cf` CLI is tracked at `scripts/cf` and installed on `dev` as `/usr/local/bin/cf`. It reads `CF_API_TOKEN` and `CF_ZONE` from the environment, or from `CF_ENV_FILE` (default `/etc/caddy/cloudflare.env`). The default cache is `~/.cf-zone-id`; override it with `CF_CACHE_FILE`. Keep `CF_ZONE=l3b.cc.cd` alongside the existing Cloudflare token in `/etc/caddy/cloudflare.env` so Caddy and `cf` use one non-Git configuration path.
 
@@ -12,6 +12,12 @@ Deploy and validate:
 scp infrastructure/proxy/Caddyfile proxy:/etc/caddy/Caddyfile.new
 ssh proxy 'set -a; . /etc/caddy/cloudflare.env; set +a; caddy validate --config /etc/caddy/Caddyfile.new --adapter caddyfile'
 ssh proxy 'install -o root -g caddy -m 0640 /etc/caddy/Caddyfile.new /etc/caddy/Caddyfile && rm /etc/caddy/Caddyfile.new && systemctl reload caddy'
+```
+
+A Caddyfile-only change needs a reload. Any change to `/etc/caddy/cloudflare.env` needs `systemctl restart caddy`, because a reload does not rebuild the service process environment. Verify only that the Frigate key is present without printing it:
+
+```bash
+ssh proxy 'caddy_pid=$(pidof caddy); tr "\0" "\n" < /proc/$caddy_pid/environ | grep -q "^FRIGATE_PROXY_AUTH_SECRET="'
 ```
 
 Post-deployment checks:

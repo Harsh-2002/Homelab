@@ -4,7 +4,9 @@ Frigate runs as Portainer stack `frigate` on the `ctr` Docker VM, using the Inte
 
 ## Identity
 
-Frigate does not implement OIDC itself. Pocket ID is supplied through Tinyauth and Caddy's `forward_auth` flow. Tinyauth must approve every request before Caddy proxies it; Caddy then supplies the fixed identity and `infrastructure-admins` role for the sole allowlisted Frigate user, plus a separate proxy secret. This avoids the Frigate 0.17 proxy-header UI regression while preserving Pocket ID as the only browser login. Frigate disables its unrelated local login and maps that group to the Frigate `admin` role. The proxy secret is shared only by Caddy and this Stack runtime environment; it is stored in the existing `HomeLab` 1Password item **Frigate**, never in Git.
+Frigate does not implement OIDC itself. Pocket ID is supplied through Tinyauth and Caddy's `forward_auth` flow. Tinyauth must approve every request before Caddy proxies it; Caddy then supplies the fixed identity and `infrastructure-admins` role for the sole allowlisted Frigate user, plus a separate proxy secret. This avoids the Frigate 0.17 proxy-header UI regression while preserving Pocket ID as the only browser login. Frigate disables its unrelated local login and maps that group to the Frigate `admin` role. The proxy secret is shared only by Caddy and this Stack runtime environment; it is stored in the existing `HomeLab` 1Password item **Frigate**, never in Git. It must be present in both the Portainer Stack environment and `/etc/caddy/cloudflare.env`; restart Caddy after changing the latter so systemd loads the value.
+
+Caddy redirects Frigate's obsolete `/login` route to `/`. This prevents a browser left on the native-login page from repeatedly loading a form that cannot authenticate when proxy auth is enabled.
 
 ## Storage and retention
 
