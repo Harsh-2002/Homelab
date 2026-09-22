@@ -39,6 +39,7 @@ Existing OIDC client secrets are stored as `Pocket ID OIDC - <client>` API Crede
 | `Pocket ID Automation API` | Administrator API key used by automation |
 | `Pocket ID OIDC - <client>` | Per-application OIDC client secret |
 | `Pocket ID OIDC - portainer` | Portainer native Custom OAuth/OIDC client secret |
+| `OpenCloud` | URL-specific login plus its bucket-scoped RustFS access key and secret |
 | `Cloudflare DNS API Token` | Caddy ACME DNS-01 token |
 | `Proxmox` | Normal administrator login, plus the dedicated `Homepage` PVEAuditor API token |
 | `Longhorn - K8s`, `Tinyauth` | Pocket ID access metadata; no application password stored |

@@ -31,7 +31,8 @@ group_id="$(printf '%s' "$groups" | jq -r '.data[] | select(.name == "infrastruc
 if test -z "$group_id"; then
   group_id="$(api POST '/user-groups' '{"friendlyName":"infrastructure-admins","name":"infrastructure-admins"}' | jq -r '.id')"
 fi
-api PUT "/user-groups/$group_id" '{"friendlyName":"infrastructure-admins","name":"infrastructure-admins","customClaims":[]}' >/dev/null
+api PUT "/user-groups/$group_id" '{"friendlyName":"infrastructure-admins","name":"infrastructure-admins"}' >/dev/null
+api PUT "/custom-claims/user-group/$group_id" '[{"key":"opencloud_role","value":"opencloudAdmin"}]' >/dev/null
 api PUT "/user-groups/$group_id/users" "$(jq -cn --arg id "$user_id" '{userIds:[$id]}')" >/dev/null
 
 create_client() {
@@ -58,6 +59,19 @@ create_client() {
   fi
 }
 
+create_public_client() {
+  id="$1"
+  name="$2"
+  callbacks="$3"
+  logout_callbacks="${4:-[]}"
+  existing="$(api GET '/oidc/clients' | jq -r --arg id "$id" '.data[] | select(.id == $id) | .id' | head -n1)"
+  if test -z "$existing"; then
+    payload="$(jq -cn --arg id "$id" --arg name "$name" --argjson callbacks "$callbacks" --argjson logout_callbacks "$logout_callbacks" '{id:$id,name:$name,description:"OpenCloud native client",callbackURLs:$callbacks,logoutCallbackURLs:$logout_callbacks,isPublic:true,pkceEnabled:true,requiresReauthentication:false,requiresPushedAuthorizationRequests:false,skipConsent:true,credentials:{},launchURL:"https://drive.l3b.cc.cd",isGroupRestricted:true,accessTokenDurationMinutes:15,refreshTokenDurationMinutes:10080}')"
+    api POST '/oidc/clients' "$payload" >/dev/null
+  fi
+  api PUT "/oidc/clients/$id/allowed-user-groups" "$(jq -cn --arg gid "$group_id" '{userGroupIds:[$gid]}')" >/dev/null
+}
+
 create_client headlamp 'Headlamp' 'https://headlamp.l3b.cc.cd' '["https://headlamp.l3b.cc.cd/oidc-callback"]'
 create_client argocd 'Argo CD' 'https://argocd.l3b.cc.cd' '["https://argocd.l3b.cc.cd/auth/callback"]'
 create_client proxmox 'Proxmox' 'https://px.l3b.cc.cd' '["https://px.l3b.cc.cd","https://px10.l3b.cc.cd","https://px20.l3b.cc.cd","https://px30.l3b.cc.cd"]'
@@ -66,8 +80,12 @@ create_client s3 'RustFS' 'https://rustfs.l3b.cc.cd' '["https://rustfs.l3b.cc.cd
 create_client tinyauth 'Tinyauth' 'https://login.l3b.cc.cd' '["https://login.l3b.cc.cd/api/oauth/callback/pocketid"]'
 create_client beszel 'Beszel' 'https://beszel.l3b.cc.cd' '["https://beszel.l3b.cc.cd/api/oauth2-redirect"]'
 create_client immich 'Immich' 'https://photos.l3b.cc.cd' '["https://photos.l3b.cc.cd/auth/login","https://photos.l3b.cc.cd/user-settings","app.immich:///oauth-callback"]' '["https://photos.l3b.cc.cd/api/oauth/backchannel-logout"]'
+create_public_client opencloud-web 'OpenCloud Web' '["https://drive.l3b.cc.cd/","https://drive.l3b.cc.cd/oidc-callback.html","https://drive.l3b.cc.cd/oidc-silent-redirect.html"]' '["https://drive.l3b.cc.cd"]'
+create_public_client OpenCloudDesktop 'OpenCloud Desktop' '["http://127.0.0.1","http://localhost"]'
+create_public_client OpenCloudAndroid 'OpenCloud Android' '["oc://android.opencloud.eu"]'
+create_public_client OpenCloudIOS 'OpenCloud iOS' '["oc://ios.opencloud.eu"]'
 
-declared_client_ids='["headlamp","argocd","proxmox","portainer","s3","tinyauth","beszel","immich"]'
+declared_client_ids='["headlamp","argocd","proxmox","portainer","s3","tinyauth","beszel","immich","opencloud-web","OpenCloudDesktop","OpenCloudAndroid","OpenCloudIOS"]'
 existing_client_ids="$(api GET "/user-groups/$group_id" | jq -c '[.allowedOidcClients[].id]')"
 client_ids="$(jq -cn --argjson existing "$existing_client_ids" --argjson declared "$declared_client_ids" '$existing + $declared | unique')"
 api PUT "/user-groups/$group_id/allowed-oidc-clients" "$(jq -cn --argjson ids "$client_ids" '{oidcClientIds:$ids}')" >/dev/null

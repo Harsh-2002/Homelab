@@ -6,7 +6,7 @@ These workloads were recovered from the read-only external SSD at `/EX/RECOVERY/
 | --- | --- | ---: | --- | --- |
 | `n8n` | `/data/apps/n8n` | 5678 | `https://n8n.l3b.cc.cd` | Running |
 | `memos` | `/data/apps/memos` | 5230 | `https://notes.l3b.cc.cd` | Running |
-| `nextcloud` | `/data/apps/nextcloud` | pending validation | pending validation | Restore in progress |
+| `nextcloud` | `/data/apps/nextcloud` | none | none | Superseded by OpenCloud; staged data retained for migration |
 | `jellyfin` | Existing Portainer definition | none | none | Definition retained; intentionally stopped |
 
 All running stacks attach to the external Docker bridge `docknet`. Only the application ports needed by Caddy are published; databases remain bridge-only.
@@ -17,7 +17,7 @@ All running stacks attach to the external Docker bridge `docknet`. Only the appl
 - Memos: SQLite state under `/data/apps/memos/data`
 - Nextcloud: configuration, user data, and MariaDB under `/data/apps/nextcloud/{config,data,mariadb}`
 
-The source SSD normally remains mounted read-only. Do not start Nextcloud until all three source trees have copied successfully and ownership has been validated.
+The source SSD normally remains mounted read-only. Nextcloud is not started: OpenCloud replaced it at `https://drive.l3b.cc.cd`, while the staged Nextcloud tree remains available only as a migration source until file counts and hashes have been validated.
 
 ## Retired workloads
 

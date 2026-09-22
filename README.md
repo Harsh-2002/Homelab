@@ -70,6 +70,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Cairn Console | `https://cairn.l3b.cc.cd` |
 | n8n UI | `https://n8n.l3b.cc.cd` |
 | Memos UI | `https://notes.l3b.cc.cd` |
+| OpenCloud files | `https://drive.l3b.cc.cd` |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |
 | Proxmox px20 | `https://px20.l3b.cc.cd` |
@@ -81,4 +82,4 @@ Cloudflare DNS is private by default: the apex record resolves to proxy `10.1.1.
 
 See [`talos-k8s/README.md`](talos-k8s/README.md) and [`gitops/README.md`](gitops/README.md) for operating procedures.
 
-The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, Proxmox, and Portainer use native OIDC. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home, Longhorn, Homepage, Frigate, and Uptime Kuma are protected this way. Identity endpoints and applications remain restricted to the LAN and Tailscale networks.
+The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, Proxmox, Portainer, and OpenCloud use native OIDC. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home, Longhorn, Homepage, Frigate, and Uptime Kuma are protected this way. Identity endpoints and applications remain restricted to the LAN and Tailscale networks.

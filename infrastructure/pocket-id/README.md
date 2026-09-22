@@ -82,12 +82,13 @@ The final command must return `10.1.1.3`.
 | Portainer | Native Custom OAuth/OIDC | Pocket ID client `portainer`; automatic user provisioning enabled; local Portainer administrator remains break-glass |
 | Karakeep | Native OIDC | Client is restricted to `infrastructure-admins`; existing Karakeep account is linked by the verified canonical email; native Karakeep login remains break-glass |
 | Immich | Native OIDC | Client `immich` is restricted to `infrastructure-admins`; the pre-existing photo account is explicitly linked and native login remains break-glass |
+| OpenCloud | Native public-client OIDC with PKCE | Web, desktop, Android, and iOS clients are restricted to `infrastructure-admins`; its `opencloud_role` claim grants `opencloudAdmin` |
 | AdGuard Home | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
 | Longhorn | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
 | Homepage | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
 | Uptime Kuma | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group; built-in auth is disabled and nftables restricts the backend to Caddy |
 
-Pocket ID emits the user-group friendly name in the OIDC `groups` claim. Both the machine name and friendly name are therefore set to `infrastructure-admins`, matching every downstream RBAC rule. The idempotent client/group provisioning script is `scripts/configure-pocket-id-oidc.sh`. Generated client secrets remain outside Git and Notion.
+Pocket ID emits the user-group friendly name in the OIDC `groups` claim. Both the machine name and friendly name are therefore set to `infrastructure-admins`, matching every downstream RBAC rule. That group also emits the application-specific `opencloud_role=opencloudAdmin` claim. The idempotent client/group provisioning script is `scripts/configure-pocket-id-oidc.sh`. Generated client secrets remain outside Git and Notion; OpenCloud public PKCE clients have no client secrets.
 
 Tinyauth's global ACL policy is `deny`. Provider-level OAuth whitelisting permits creation of a login session, while each application's `oauth.whitelist` and `oauth.groups` are independent authorization checks. A protected application needs both entries. The known-good session exposes:
 

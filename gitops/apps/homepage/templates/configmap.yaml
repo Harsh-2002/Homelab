@@ -130,10 +130,11 @@ data:
             href: https://pin.l3b.cc.cd
             description: Bookmarks
             ping: https://pin.l3b.cc.cd
-        - Nextcloud:
-            icon: nextcloud.png
+        - OpenCloud:
+            icon: open-cloud.png
             href: https://drive.l3b.cc.cd
-            description: Files · restore pending
+            description: Files
+            ping: https://drive.l3b.cc.cd/healthz
         - n8n:
             icon: n8n.png
             href: https://n8n.l3b.cc.cd
