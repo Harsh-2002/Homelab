@@ -26,7 +26,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/frigate/` — private Frigate NVR, OIDC proxy integration, and retention policy.
   - `infrastructure/minio/` — historical MinIO-to-RustFS migration record.
   - `infrastructure/rustfs/` — native RustFS S3 service, OIDC, HA, and upgrade runbook.
-  - `infrastructure/cairn/` — restored single-node Cairn S3 service and operations runbook.
+  - `infrastructure/cairn/` — fresh native Cairn S3 service on the `s3` LXC and its operations runbook.
   - `infrastructure/restored-services/` — recovered Portainer workloads, storage paths, and validation state.
 - `scripts/` — administrative helper scripts.
   - `scripts/cf` — minimal POSIX Cloudflare DNS CLI; token and zone remain in the environment or the non-Git Cloudflare environment file.

@@ -1,6 +1,6 @@
 # Restored Portainer services
 
-These workloads were recovered from the read-only external SSD at `/EX/RECOVERY/2026-09-15` into the persistent ext4 data disk on `ctr`. Portainer owns their stack definitions and retained application secrets; this repository records the topology and recovery decisions without secrets.
+These workloads were recovered from the read-only external SSD at `/EX/RECOVERY/2026-09-15` into the persistent ext4 data disk on `ctr`. Portainer owns their stack definitions and retained application secrets; this repository records the topology and recovery decisions without secrets. Cairn is no longer part of this Portainer group.
 
 | Stack | Persistent path | Host port | URL | State |
 | --- | --- | ---: | --- | --- |
@@ -23,7 +23,7 @@ The source SSD normally remains mounted read-only. Do not start Nextcloud until 
 
 ## Retired workloads
 
-Guacamole, firstfinger/Ghost, and Orva were removed from Portainer and their associated recovery data was intentionally deleted. Cairn was explicitly retained and restored; see `infrastructure/cairn/README.md`.
+Guacamole, firstfinger/Ghost, and Orva were removed from Portainer and their associated recovery data was intentionally deleted. The temporary recovered Cairn stack and `/data/apps/cairn` copy were also removed after Cairn was redeployed fresh as a native service on the `s3` LXC; see `infrastructure/cairn/README.md`.
 
 ## Validation
 
