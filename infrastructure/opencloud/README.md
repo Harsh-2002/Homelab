@@ -28,7 +28,7 @@ The service is private to LAN and Tailscale. Caddy terminates TLS and does not p
 ```bash
 ssh ctr 'sudo docker compose -p opencloud -f /data/apps/opencloud/compose.yaml ps'
 ssh ctr 'curl -fsS http://10.1.1.4:9200/healthz'
-ssh s3 'rc bucket stat s3/opencloud'
+ssh s3 'rc bucket list s3/ | grep opencloud'
 curl --resolve drive.l3b.cc.cd:443:10.1.1.3 https://drive.l3b.cc.cd/healthz
 ```
 
