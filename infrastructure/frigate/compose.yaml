@@ -1,0 +1,40 @@
+name: frigate
+
+services:
+  frigate:
+    image: ghcr.io/blakeblackshear/frigate:0.17.2
+    container_name: frigate
+    restart: unless-stopped
+    shm_size: 512mb
+    stop_grace_period: 30s
+    ports:
+      - 10.1.1.4:8971:8971
+    environment:
+      TZ: Asia/Kolkata
+      LIBVA_DRIVER_NAME: i965
+      FRIGATE_MQTT_HOST: ${FRIGATE_MQTT_HOST}
+      FRIGATE_MQTT_USER: ${FRIGATE_MQTT_USER}
+      FRIGATE_MQTT_PASSWORD: ${FRIGATE_MQTT_PASSWORD}
+      FRIGATE_CAM_IP: ${FRIGATE_CAM_IP}
+      FRIGATE_CAM_USER: ${FRIGATE_CAM_USER}
+      FRIGATE_CAM_PASS: ${FRIGATE_CAM_PASS}
+      FRIGATE_PROXY_AUTH_SECRET: ${FRIGATE_PROXY_AUTH_SECRET}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /data/apps/frigate/config:/config
+      - /data/apps/frigate/media:/media/frigate
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    cap_add:
+      - PERFMON
+    group_add:
+      - "44"
+      - "991"
+    tmpfs:
+      - /tmp/cache:rw,size=2000000000
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:5000/api/version || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s

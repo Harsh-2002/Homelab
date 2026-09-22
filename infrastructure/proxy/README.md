@@ -24,13 +24,19 @@ curl --resolve s3.l3b.cc.cd:443:10.1.1.3 https://s3.l3b.cc.cd/health/ready
 curl --resolve rustfs.l3b.cc.cd:443:10.1.1.3 https://rustfs.l3b.cc.cd/rustfs/admin/v3/oidc/providers
 curl --resolve beszel.l3b.cc.cd:443:10.1.1.3 https://beszel.l3b.cc.cd/api/health
 curl --resolve l3b.cc.cd:443:10.1.1.3 https://l3b.cc.cd/
+curl --resolve frigate.l3b.cc.cd:443:10.1.1.3 -I https://frigate.l3b.cc.cd/
+curl -i https://registry.l3b.cc.cd/v2/
 ```
 
 ## Private identity flow
 
 Caddy admits only LAN `10.1.1.0/24` and Tailscale `100.64.0.0/10` sources. Pocket ID at `auth.l3b.cc.cd` and Tinyauth at `login.l3b.cc.cd` are subject to the same policy, so remote authentication requires Tailscale.
 
-AdGuard Home, Longhorn, and the Homepage portal at `l3b.cc.cd` import the reusable `authenticate` block. Caddy calls Tinyauth at `10.1.1.6:3000/api/auth/caddy`; successful sessions return identity headers before the request reaches the backend. Headlamp, Argo CD, Proxmox, Beszel, Immich, and Portainer use their own application authentication flows instead. Immich is private-network-only at `https://photos.l3b.cc.cd`; its API is not placed behind Tinyauth so the native web and mobile clients can authenticate normally. Portainer is private-network-only at `https://portainer.l3b.cc.cd` and keeps its own authenticated session plus reverse-proxy trusted-origin policy.
+AdGuard Home, Longhorn, Homepage, and Frigate import the reusable `authenticate` block. Caddy calls Tinyauth at `10.1.1.6:3000/api/auth/caddy`; successful sessions return identity headers before the request reaches the backend. Frigate additionally receives a shared proxy-secret header and maps the authenticated `infrastructure-admins` group to its admin role. Headlamp, Argo CD, Proxmox, Beszel, Immich, and Portainer use their own application authentication flows instead. Immich is private-network-only at `https://photos.l3b.cc.cd`; its API is not placed behind Tinyauth so the native web and mobile clients can authenticate normally. Portainer is private-network-only at `https://portainer.l3b.cc.cd` and keeps its own authenticated session plus reverse-proxy trusted-origin policy.
+
+## Public Docker Registry
+
+`registry.l3b.cc.cd` is an explicit public DNS-only Cloudflare record. It intentionally bypasses the private-source and Tinyauth handlers because Docker uses the Registry's retained Basic authentication credentials. Caddy terminates TLS and does not response-compress the Registry route. The unauthenticated `/v2/` endpoint must return `401` with `Docker-Distribution-Api-Version: registry/2.0`.
 
 RustFS is private-network-only as well: `s3.l3b.cc.cd` serves its S3 API and `rustfs.l3b.cc.cd` its native OIDC-capable console. The API route deliberately does not use response compression, which avoids altering object-transfer semantics or signed S3 responses. Neither hostname is publicly exposed by DNS; making the API public requires an explicit later decision and a hostname-specific Cloudflare A record.
 

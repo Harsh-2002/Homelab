@@ -134,6 +134,7 @@
 (authenticate) {
 	forward_auth 10.1.1.6:3000 {
 		uri /api/auth/caddy
+		copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
 	}
 }
 
@@ -159,6 +160,32 @@
 		import private
 		import proxy
 		reverse_proxy 10.1.1.4:9000
+	}
+}
+
+(registry) {
+	@registry host registry.l3b.cc.cd
+	handle @registry {
+		header {
+			-Server
+			X-Content-Type-Options nosniff
+			Referrer-Policy strict-origin-when-cross-origin
+		}
+		reverse_proxy 10.1.1.4:5000 {
+			flush_interval -1
+		}
+	}
+}
+
+(frigate) {
+	@frigate host frigate.l3b.cc.cd
+	handle @frigate {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.4:8971 {
+			header_up X-Proxy-Secret {env.FRIGATE_PROXY_AUTH_SECRET}
+		}
 	}
 }
 
@@ -265,6 +292,8 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import tinyauth
 	import immich
 	import portainer
+	import registry
+	import frigate
 	import s3
 	import beszel
 	import proxmox

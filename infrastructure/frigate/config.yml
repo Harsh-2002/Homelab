@@ -1,0 +1,101 @@
+mqtt:
+  enabled: true
+  host: "{FRIGATE_MQTT_HOST}"
+  port: 1883
+  user: "{FRIGATE_MQTT_USER}"
+  password: "{FRIGATE_MQTT_PASSWORD}"
+  topic_prefix: frigate
+
+auth:
+  enabled: false
+  cookie_secure: true
+
+tls:
+  enabled: false
+
+proxy:
+  auth_secret: "{FRIGATE_PROXY_AUTH_SECRET}"
+  header_map:
+    user: Remote-User
+    role: Remote-Groups
+    role_map:
+      admin:
+        - infrastructure-admins
+
+detectors:
+  cpu1:
+    type: cpu
+    num_threads: 3
+
+ffmpeg:
+  hwaccel_args: preset-vaapi
+
+go2rtc:
+  streams:
+    outdoor:
+      - rtsp://{FRIGATE_CAM_USER}:{FRIGATE_CAM_PASS}@{FRIGATE_CAM_IP}:554/Streaming/Channels/101
+      - "ffmpeg:outdoor#video=copy#audio=opus"
+    outdoor_sub:
+      - rtsp://{FRIGATE_CAM_USER}:{FRIGATE_CAM_PASS}@{FRIGATE_CAM_IP}:554/Streaming/Channels/102
+
+record:
+  enabled: true
+  continuous:
+    days: 0
+  motion:
+    days: 7
+  alerts:
+    retain:
+      days: 7
+      mode: motion
+  detections:
+    retain:
+      days: 7
+      mode: motion
+
+cameras:
+  outdoor:
+    enabled: true
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/outdoor
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/outdoor_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      enabled: true
+      width: 640
+      height: 360
+      fps: 5
+    objects:
+      track:
+        - person
+        - dog
+      filters:
+        person:
+          min_score: 0.5
+          threshold: 0.7
+          min_area: 1000
+    motion:
+      threshold: 30
+      contour_area: 50
+      improve_contrast: true
+    snapshots:
+      enabled: true
+      timestamp: true
+      bounding_box: true
+      retain:
+        default: 7
+    live:
+      streams:
+        outdoor: outdoor
+
+telemetry:
+  stats:
+    intel_gpu_stats: true
+
+version: 0.17-0

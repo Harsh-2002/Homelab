@@ -18,6 +18,8 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/beszel/` — Beszel hub and agent services, public key, HA, and operations runbook.
   - `infrastructure/immich/` — Immich Compose deployment and safe restore procedure.
   - `infrastructure/portainer/` — Portainer EE Compose deployment and safe restore procedure.
+  - `infrastructure/registry/` — public Docker Registry and its RustFS-backed restore procedure.
+  - `infrastructure/frigate/` — private Frigate NVR, OIDC proxy integration, and retention policy.
   - `infrastructure/minio/` — historical MinIO-to-RustFS migration record.
   - `infrastructure/rustfs/` — native RustFS S3 service, OIDC, HA, and upgrade runbook.
 - `scripts/` — administrative helper scripts.
@@ -52,6 +54,8 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Beszel UI | `https://beszel.l3b.cc.cd` |
 | Immich UI | `https://photos.l3b.cc.cd` |
 | Portainer UI | `https://portainer.l3b.cc.cd` |
+| Docker Registry | `https://registry.l3b.cc.cd` |
+| Frigate UI | `https://frigate.l3b.cc.cd` |
 | RustFS S3 API | `https://s3.l3b.cc.cd` |
 | RustFS Console | `https://rustfs.l3b.cc.cd` |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
@@ -61,8 +65,8 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 
 ## Public DNS policy
 
-Cloudflare DNS is private by default: the apex record resolves to proxy `10.1.1.3` and the wildcard CNAME follows it. Explicit public DNS-only records are exceptions, not the default. `argocd.l3b.cc.cd` is the current exception solely for GitHub's signed Argo CD webhook; Caddy still limits public access to `POST /api/webhook`.
+Cloudflare DNS is private by default: the apex record resolves to proxy `10.1.1.3` and the wildcard CNAME follows it. Explicit public DNS-only records are exceptions, not the default. `argocd.l3b.cc.cd` is public solely for GitHub's signed Argo CD webhook, while `registry.l3b.cc.cd` is public for Docker client access and has its own Registry Basic credentials. Caddy still limits public Argo CD access to `POST /api/webhook`.
 
 See [`talos-k8s/README.md`](talos-k8s/README.md) and [`gitops/README.md`](gitops/README.md) for operating procedures.
 
-The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, Proxmox, and Portainer use native OIDC. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home and Longhorn are protected this way. Identity endpoints and applications remain restricted to the LAN and Tailscale networks.
+The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, Proxmox, and Portainer use native OIDC. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home, Longhorn, Homepage, and Frigate are protected this way. Identity endpoints and applications remain restricted to the LAN and Tailscale networks.
