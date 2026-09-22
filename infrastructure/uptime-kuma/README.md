@@ -2,6 +2,8 @@
 
 Uptime Kuma `2.5.5` runs natively under systemd in Proxmox CT 104 `beszel`; Docker and PM2 are intentionally not installed. The private UI is `https://status.l3b.cc.cd`. Caddy restricts it to LAN/Tailscale clients, and Tinyauth requires the canonical administrator email plus Pocket ID group `infrastructure-admins` before any request reaches Uptime Kuma.
 
+Uptime Kuma does not support native OIDC. Its built-in authentication is disabled so a successful Pocket ID/Tinyauth session opens the dashboard directly. This is safe only because CT 104's persistent nftables policy permits TCP `3001` from loopback and Caddy `10.1.1.3`, then rejects every other source. Do not disable or weaken that rule while application authentication is disabled. The saved Uptime Kuma username/password remains the break-glass credential to re-enable local authentication from the CT console.
+
 ## Layout
 
 ```text
@@ -9,6 +11,7 @@ application:  /opt/uptime-kuma
 data:         /var/lib/uptime-kuma
 environment:  /etc/uptime-kuma/uptime-kuma.env
 service:      /etc/systemd/system/uptime-kuma.service
+firewall:     /etc/nftables.conf
 backend:      10.1.1.7:3001
 ```
 
@@ -22,7 +25,7 @@ ssh root@10.1.1.7 'journalctl -u uptime-kuma --since=-15min --no-pager'
 curl -I https://status.l3b.cc.cd
 ```
 
-An unauthenticated HTTPS request must return `401` from Tinyauth. Caddy supports the application's WebSocket connection automatically through `reverse_proxy`.
+An unauthenticated HTTPS request must return `401` from Tinyauth. An authenticated Pocket ID session must open the dashboard without a second Uptime Kuma login. Caddy supports the application's WebSocket connection automatically through `reverse_proxy`. A connection to `10.1.1.7:3001` from any machine except proxy `10.1.1.3` must be rejected.
 
 ## Backup
 
