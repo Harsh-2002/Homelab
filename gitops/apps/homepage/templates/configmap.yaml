@@ -111,7 +111,7 @@ data:
             description: S3 storage
             ping: https://rustfs.l3b.cc.cd
         - Cairn:
-            icon: cairn.png
+            icon: https://cairn.l3b.cc.cd/favicon.svg
             href: https://cairn.l3b.cc.cd
             description: S3 development
             ping: https://cairn.l3b.cc.cd
