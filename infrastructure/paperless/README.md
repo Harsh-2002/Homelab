@@ -51,12 +51,17 @@ configured with client `paperless`, provider ID `pocketid`, exact callback
 `client_secret_post`. The client permits only Pocket ID group
 `infrastructure-admins`; Paperless auto-provisions admitted users and grants
 superuser rights when the group claim is present. The login page and its
-redirect to Pocket ID were browser-tested. The passkey-protected return
-callback still requires an end-to-end sign-in by the owner; do not claim
-that part verified. Caddy has no Tinyauth layer because Paperless has native
-OIDC. Do not deploy this Stack directly with `docker compose`; that would
-violate the chosen management model. The image is pinned to Paperless-ngx
-`3.2.1` and the broker tracks the upstream Valkey `9-alpine` template.
+redirect to Pocket ID were browser-tested. The existing local Paperless user
+is explicitly linked to its matching Pocket ID identity (`provider=pocketid`)
+using Paperless's Django ORM after verifying the Pocket ID email and
+its OIDC subject from Pocket ID v2.16.0. The profile now lists that connected
+social account. A transient SQLite backup was made inside the Paperless
+container during the change and removed after the profile check. A fresh
+passkey-authenticated OIDC login still needs owner verification. Caddy has no
+Tinyauth layer because Paperless has native OIDC. Do not deploy this Stack
+directly with `docker compose`; that would violate the chosen management
+model. The image is pinned to Paperless-ngx `3.2.1` and the broker tracks the
+upstream Valkey `9-alpine` template.
 
 Validation after Portainer deploy:
 
