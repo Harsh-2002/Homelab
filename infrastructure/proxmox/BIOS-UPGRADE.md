@@ -118,3 +118,38 @@ request, `px20` was then shut down again and confirmed unreachable.
 Dell's live OptiPlex 7040 release page was rechecked on 2026-09-22 and still
 lists 1.24.0 as the newest release. `px30` already runs 1.24.0, so it is marked
 already current and must not be reflashed during this maintenance window.
+
+## Final restored state
+
+All three nodes were powered on and revalidated on 2026-09-22. Cluster quorum
+returned to 3/3. VM 100 and CT 104 were first reassigned from their temporary
+stopped HA locations back to `px10`, then their original requested state
+`started` was restored. Final placement matched the pre-maintenance state and
+all HA services were started. Every replication job completed with zero
+failures.
+
+Each physical NIC uses the in-kernel Intel `e1000e` driver and negotiated
+1 Gb/s full duplex with link detected. All host ZFS pools were healthy and all
+physical NVMe, SATA, and attached USB disks reported SMART `PASSED`. The
+`px10` USB ISO store and `px20` USB backup store were mounted at their expected
+Proxmox paths.
+
+The available Proxmox update set was installed on all nodes: kernel
+7.0.14-19, `libunbound8` 1.26.1-0+deb13u1, `proxmox-widget-toolkit` 5.2.10,
+and `pve-docs` 9.2.12. All three EFI System Partitions contain kernel
+7.0.14-19. The nodes deliberately remain on the already validated running
+kernel 7.0.14-17 until a separate rolling reboot activates the new kernel and
+its driver code.
+
+VM 204 retained its Intel iGPU and 4 TB Crucial X9 Pro USB passthrough. The
+external exFAT partition was manually mounted read-only at `/EX`, as intended;
+it remains deliberately absent from `/etc/fstab`. The authoritative
+`/EX/linux-recovery.tar` retained its exact documented size of 502214830080
+bytes. A non-modifying `fsck.exfat -n` reported pre-existing duplicate filename
+entries, so no repair or rename was performed.
+
+All three Kubernetes nodes were Ready, the Longhorn volume was attached and
+healthy, and no non-running pods were present. VM 204 containers and GPU access
+were healthy. Beszel, Pocket ID, Immich, Registry, S3, Homepage, Argo CD,
+Longhorn, Headlamp, Uptime Kuma, Frigate, the Proxmox cluster endpoint, and all
+three node endpoints returned their expected success or authentication status.
