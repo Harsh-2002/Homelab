@@ -7,6 +7,28 @@ The repository's `compose.yaml` is the non-secret source of truth; deploy
 it using Portainer Stack variables `PAPERLESS_SECRET_KEY` and
 `PAPERLESS_ADMIN_PASSWORD`, never by committing those values.
 
+## Manual Portainer deployment
+
+1. In Portainer, select the `ctr` environment, then **Stacks → Add stack**.
+   Name it `paperless`, select **Web editor**, and paste this repository's
+   [`compose.yaml`](compose.yaml) exactly. Do not deploy to any other endpoint.
+2. Add exactly two Stack environment variables:
+   `PAPERLESS_SECRET_KEY` and `PAPERLESS_ADMIN_PASSWORD`. Their generated
+   values are already in root-only `/data/apps/paperless/stack.env` on `ctr`.
+   Read them in your own terminal with
+   `ssh ctr 'sudo cat /data/apps/paperless/stack.env'`; do not paste the
+   output into chat or commit it. Both values are required, including the
+   admin password. Do not change the secret key after first deployment.
+3. Click **Deploy the stack**. No host paths or Docker networks need to be
+   created: the `/data/apps/paperless` directories and external `docknet`
+   network already exist. The initial image pull may take several minutes.
+4. Tell the agent once Portainer shows both containers running. The agent
+   will then verify application health, enable the private Caddy route and
+   Homepage tile, and complete authentication and backup validation.
+
+The Stack's application port is `10.1.1.4:8010`. Do not create a public
+Cloudflare DNS record for `docs.l3b.cc.cd`.
+
 The live layout is `/data/apps/paperless/{data,media,consume,export,valkey}`
 on `ctr`'s persistent `/data` disk. SQLite and the search index live in
 `data`; originals, archives, and thumbnails live in `media`; Valkey is the
