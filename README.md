@@ -24,6 +24,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/portainer/` — Portainer EE Compose deployment and safe restore procedure.
   - `infrastructure/registry/` — public Docker Registry and its RustFS-backed restore procedure.
   - `infrastructure/frigate/` — private Frigate NVR, OIDC proxy integration, and retention policy.
+  - `infrastructure/motrix/` — Motrix Server Compose deployment, SMB download path, and recovery runbook.
   - `infrastructure/minio/` — historical MinIO-to-RustFS migration record.
   - `infrastructure/rustfs/` — native RustFS S3 service, OIDC, HA, and upgrade runbook.
   - `infrastructure/cairn/` — fresh native Cairn S3 service on the `s3` LXC and its operations runbook.
@@ -66,6 +67,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Portainer UI | `https://portainer.l3b.cc.cd` |
 | Docker Registry | `https://registry.l3b.cc.cd` |
 | Frigate UI | `https://frigate.l3b.cc.cd` |
+| Motrix Server (LAN only) | `http://10.1.1.4:8080` |
 | RustFS S3 API | `https://s3.l3b.cc.cd` |
 | RustFS Console | `https://rustfs.l3b.cc.cd` |
 | Cairn S3 API | `https://cairn-s3.l3b.cc.cd` |

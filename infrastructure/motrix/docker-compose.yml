@@ -1,0 +1,28 @@
+services:
+  motrix:
+    image: motrixapp/motrix-server:2.0.0-beta.40
+    container_name: motrix-server
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 120s
+    user: "${PUID:-1000}:${PGID:-1000}"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    environment:
+      MOTRIX_PUBLIC_URL: "http://10.1.1.4:8080"
+      MOTRIX_MDXP_HOST: "0.0.0.0"
+      MOTRIX_ALLOW_INSECURE_OPERATOR_HTTP: "true"
+      MOTRIX_DATA_DIR: /data
+      MOTRIX_TEMP_DIR: /data/tmp
+      MOTRIX_DEFAULT_SAVE_DIR: /downloads
+      MOTRIX_ALLOWED_SAVE_DIRS: /downloads
+      MOTRIX_ARIA2_RPC_LISTEN_ALL: "false"
+    ports:
+      - "10.1.1.4:8080:8080"
+      - "10.1.1.4:16801:16801"
+    volumes:
+      - ./motrix-data:/data
+      - /mnt/AV/downloads:/downloads
