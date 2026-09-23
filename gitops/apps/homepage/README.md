@@ -22,6 +22,8 @@ The header ends with a keyless Open-Meteo weather widget for Bilalpada, visually
 
 The Control row links to Proxmox Backup Server at its private `pbs.l3b.cc.cd` UI. Its native widget uses a dedicated `homepage@pbs!homepage` API token with PBS `Audit` permission on both the user and token. The token is in the `PBS API Token - Homepage` 1Password item and the live `homepage-widgets` Kubernetes Secret; Git has placeholders only. Homepage connects directly to `https://store:8007` using a pod-local host alias and the tracked PBS certificate. The certificate is bundled with the Proxmox cluster CA in `trusted-cas.crt` to keep TLS verification enabled. When PBS rotates its certificate, update `files/pbs-server.crt` before redeploying Homepage.
 
+Homepage v2.4.0 briefly sends one tasks request without `since` on each page load; PBS rejects it with HTTP 400, then the dated 24-hour request succeeds with HTTP 200 and the widget displays the valid count. This is an upstream widget quirk, not a PBS authentication failure.
+
 Each non-human metric integration has its own least-privilege identity:
 
 - Proxmox `homepage@pve!homepage` has only the `PVEAuditor` token ACL.
