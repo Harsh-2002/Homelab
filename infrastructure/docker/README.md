@@ -92,6 +92,8 @@ This provides automatic restart on `px10` after a confirmed `px20` failure. Repl
 
 A 4 TB Crucial X9 Pro USB-C SSD (serial `2338E8C83CF2`) is passed through from `px20` to VM 204 as `usb0`. On 2026-09-23, the owner authorized formatting the entire SSD. It now has a GPT with one 1 MiB-aligned ext4 partition, label `EX`, UUID `92aa5561-1194-4515-98a4-3a441e80338c`, mounted read/write at `/EX`. It remains absent from `/etc/fstab` because the USB disk is detachable. The filesystem uses 4 KiB blocks, one inode per 64 KiB, and a 1% reserved-block allowance. The post-format mount, clean filesystem state, capacity, and write test were verified. Only `lost+found` remains.
 
+Sequential `fio` tests on 2026-09-23 used a 32 GiB temporary file, 1 MiB blocks, direct I/O, and queue depth 16. Two-minute averages were 795 MB/s write and 909 MB/s read; five-minute averages were 814 MB/s write and 916 MB/s read. All four tests finished without I/O errors. The temporary file was removed, restoring about 3.6 TB free. These are single-VM, single-file sequential results, not a guarantee for small-file or concurrent workloads.
+
 The following is the completed 2026-09 recovery history. **Formatting erased `/EX/linux-recovery.tar` and the entire extracted `/EX/RECOVERY` tree. There is no longer an external recovery copy on this SSD.** The original archive was the only whole-system copy known to this runbook.
 
 Before formatting, the source archive was:
