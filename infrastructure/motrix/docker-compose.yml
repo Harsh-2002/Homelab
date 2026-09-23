@@ -17,7 +17,7 @@ services:
       MOTRIX_DATA_DIR: /data
       MOTRIX_TEMP_DIR: /data/tmp
       MOTRIX_DEFAULT_SAVE_DIR: /downloads
-      MOTRIX_ALLOWED_SAVE_DIRS: /downloads
+      MOTRIX_ALLOWED_SAVE_DIRS: /downloads:/media
       MOTRIX_ARIA2_RPC_LISTEN_ALL: "false"
     ports:
       - "10.1.1.4:8080:8080"
@@ -25,3 +25,4 @@ services:
     volumes:
       - ./motrix-data:/data
       - /mnt/AV/downloads:/downloads
+      - /mnt/AV/media:/media
