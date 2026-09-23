@@ -73,6 +73,17 @@ data:
             href: https://auth.l3b.cc.cd
             description: Identity
             ping: https://auth.l3b.cc.cd
+            widget:
+              type: customapi
+              url: http://10.1.1.6:1412/stats
+              refreshInterval: 300000
+              mappings:
+                - field: users
+                  label: Users
+                  format: number
+                - field: clients
+                  label: OIDC Apps
+                  format: number
         - Portainer:
             icon: portainer.png
             href: https://portainer.l3b.cc.cd

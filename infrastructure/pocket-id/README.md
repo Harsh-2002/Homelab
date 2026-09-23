@@ -45,8 +45,18 @@ Register the primary passkey in 1Password and keep a second recovery passkey bef
 - Unit: `/etc/systemd/system/pocket-id.service`
 - Upgrade helper: `/usr/local/sbin/pocket-id-upgrade`
 - SSH policy: `/etc/ssh/sshd_config.d/10-key-only.conf`
+- Homepage counts adapter: `/opt/pocket-id/homepage-metrics.py`, `/etc/systemd/system/homepage-metrics.service`
+- Adapter API key: `/etc/pocket-id/homepage-metrics.key` (`root:pocket-id`, `0640`)
 
 The encryption key and application data must be backed up together. Neither belongs in Git or Notion.
+
+## Homepage counts
+
+Homepage reads `http://10.1.1.6:1412/stats` every five minutes for user and OIDC-client totals. The small native systemd service in this directory calls Pocket ID's local admin API, discards the raw response, and serves only `{"users":N,"clients":N}`. Other paths return 404. The endpoint is LAN-only by address and contains no personal information or client credentials; do not proxy it publicly.
+
+Pocket ID API keys are full-admin. With the owner's approval, the adapter uses the existing `Pocket ID Automation API` key from the HomeLab 1Password vault, stored only in its protected key file on `auth`. Pocket ID does not permit an API key to create another key; minting a dedicated key later requires an administrator passkey session. Homepage itself has no Pocket ID key. When the vault key is rotated, update the protected file and restart `homepage-metrics.service`.
+
+To restore this adapter, copy the tracked Python and unit files to the paths above, install the vault key into the protected file, then run `systemctl daemon-reload && systemctl enable --now homepage-metrics.service`. Verify `curl -fsS http://10.1.1.6:1412/stats` returns only the two totals. When Pocket ID is unavailable, the adapter returns HTTP 503 rather than stale counts.
 
 ## Operations
 

@@ -1,0 +1,18 @@
+[Unit]
+Description=Pocket ID counts for Homepage
+After=network-online.target pocket-id.service
+Wants=network-online.target
+
+[Service]
+User=pocket-id
+Group=pocket-id
+ExecStart=/usr/bin/python3 /opt/pocket-id/homepage-metrics.py
+Restart=on-failure
+RestartSec=5s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+
+[Install]
+WantedBy=multi-user.target
