@@ -41,6 +41,7 @@ Existing OIDC client secrets are stored as `Pocket ID OIDC - <client>` API Crede
 | `Pocket ID OIDC - portainer` | Portainer native Custom OAuth/OIDC client secret |
 | `OpenCloud` | URL-specific login plus its bucket-scoped RustFS access key and secret |
 | `Paperless-ngx` | URL-specific local break-glass login and retained `PAPERLESS_SECRET_KEY` |
+| `Jellyfin` | URL-specific email/password login, full-name record, and Pocket ID OIDC client secret; the old `Jellyfinn` item was removed |
 | `Pocket ID OIDC - paperless` | Paperless native OIDC client secret |
 | `Portainer` | Native administrator login, the dedicated Homepage read-only API key, and an admin API access token for Stack management |
 | `Cloudflare DNS API Token` | Caddy ACME DNS-01 token |

@@ -41,13 +41,14 @@ create_client() {
   launch_url="$3"
   callbacks="$4"
   logout_callbacks="${5:-}"
+  pkce="${6:-false}"
   if test -z "$logout_callbacks"; then
     logout_callbacks="$(jq -cn --arg launch "$launch_url" '[$launch]')"
   fi
   existing="$(api GET '/oidc/clients' | jq -r --arg id "$id" '.data[] | select(.id == $id) | .id' | head -n1)"
   created=false
   if test -z "$existing"; then
-    payload="$(jq -cn --arg id "$id" --arg name "$name" --arg launch "$launch_url" --argjson callbacks "$callbacks" --argjson logout_callbacks "$logout_callbacks" '{id:$id,name:$name,description:"Homelab single sign-on",callbackURLs:$callbacks,logoutCallbackURLs:$logout_callbacks,isPublic:false,pkceEnabled:false,requiresReauthentication:false,requiresPushedAuthorizationRequests:false,skipConsent:true,credentials:{},launchURL:$launch,isGroupRestricted:true,accessTokenDurationMinutes:15,refreshTokenDurationMinutes:10080}')"
+    payload="$(jq -cn --arg id "$id" --arg name "$name" --arg launch "$launch_url" --argjson callbacks "$callbacks" --argjson logout_callbacks "$logout_callbacks" --argjson pkce "$pkce" '{id:$id,name:$name,description:"Homelab single sign-on",callbackURLs:$callbacks,logoutCallbackURLs:$logout_callbacks,isPublic:false,pkceEnabled:$pkce,requiresReauthentication:false,requiresPushedAuthorizationRequests:false,skipConsent:true,credentials:{},launchURL:$launch,isGroupRestricted:true,accessTokenDurationMinutes:15,refreshTokenDurationMinutes:10080}')"
     api POST '/oidc/clients' "$payload" >/dev/null
     created=true
   fi
@@ -82,12 +83,13 @@ create_client tinyauth 'Tinyauth' 'https://login.l3b.cc.cd' '["https://login.l3b
 create_client beszel 'Beszel' 'https://beszel.l3b.cc.cd' '["https://beszel.l3b.cc.cd/api/oauth2-redirect"]'
 create_client immich 'Immich' 'https://photos.l3b.cc.cd' '["https://photos.l3b.cc.cd/auth/login","https://photos.l3b.cc.cd/user-settings","app.immich:///oauth-callback"]' '["https://photos.l3b.cc.cd/api/oauth/backchannel-logout"]'
 create_client paperless 'Paperless-ngx' 'https://docs.l3b.cc.cd' '["https://docs.l3b.cc.cd/accounts/oidc/pocketid/login/callback/"]'
+create_client jellyfin 'Jellyfin' 'https://media.l3b.cc.cd' '["https://media.l3b.cc.cd/sso/OID/redirect/pocketid"]' '' true
 create_public_client opencloud-web 'OpenCloud Web' '["https://drive.l3b.cc.cd/","https://drive.l3b.cc.cd/oidc-callback.html","https://drive.l3b.cc.cd/oidc-silent-redirect.html"]' '["https://drive.l3b.cc.cd"]'
 create_public_client OpenCloudDesktop 'OpenCloud Desktop' '["http://127.0.0.1","http://localhost"]'
 create_public_client OpenCloudAndroid 'OpenCloud Android' '["oc://android.opencloud.eu"]'
 create_public_client OpenCloudIOS 'OpenCloud iOS' '["oc://ios.opencloud.eu"]'
 
-declared_client_ids='["headlamp","argocd","proxmox","pbs","portainer","s3","tinyauth","beszel","immich","paperless","opencloud-web","OpenCloudDesktop","OpenCloudAndroid","OpenCloudIOS"]'
+declared_client_ids='["headlamp","argocd","proxmox","pbs","portainer","s3","tinyauth","beszel","immich","paperless","jellyfin","opencloud-web","OpenCloudDesktop","OpenCloudAndroid","OpenCloudIOS"]'
 existing_client_ids="$(api GET "/user-groups/$group_id" | jq -c '[.allowedOidcClients[].id]')"
 client_ids="$(jq -cn --argjson existing "$existing_client_ids" --argjson declared "$declared_client_ids" '$existing + $declared | unique')"
 api PUT "/user-groups/$group_id/allowed-oidc-clients" "$(jq -cn --argjson ids "$client_ids" '{oidcClientIds:$ids}')" >/dev/null

@@ -1,0 +1,27 @@
+{
+  "FormatVersion": 1,
+  "Configuration": {
+    "OidConfigs": {
+      "pocketid": {
+        "OidEndpoint": "https://auth.l3b.cc.cd/.well-known/openid-configuration",
+        "OidClientId": "jellyfin",
+        "OidSecretFile": "/config/oidc-client-secret",
+        "Enabled": true,
+        "EnableAuthorization": true,
+        "EnableAllFolders": true,
+        "RoleClaim": "groups",
+        "Roles": ["infrastructure-admins"],
+        "AdminRoles": ["infrastructure-admins"],
+        "OidScopes": ["openid", "profile", "email", "groups"],
+        "DefaultUsernameClaim": "email",
+        "LoginButtonText": "Sign in with Pocket ID",
+        "AllowExistingAccountLink": true,
+        "RequireVerifiedEmailForAdoption": true,
+        "RequireVerifiedEmailForLogin": true,
+        "AllowPrivateNetworkAddresses": true,
+        "RequirePkce": true
+      }
+    },
+    "SamlConfigs": {}
+  }
+}
