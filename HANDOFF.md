@@ -182,6 +182,7 @@ Deployed and verified:
 - Beszel and internal Uptime Kuma
 - Portainer-managed Docker workloads including restored applications
 - Restored `n8n` and `memos` workloads on `ctr`; Nextcloud was retired after byte-for-byte verification of its 706 live files in OpenCloud
+- The 4 TB Crucial X9 Pro on `ctr` was reformatted on 2026-09-23 as one ext4 partition mounted at `/EX`; the former whole-system tar and extracted recovery tree were erased at the owner's request. The empty disk is not yet a backup target.
 - Fresh native Cairn service on the `s3` LXC beside RustFS, using separate ports and `/data/cairn`
 - Native RustFS and migrated S3 workloads
 - Three-node Tailscale subnet routing and Keepalived gateway VIP
@@ -190,6 +191,7 @@ Deployed and verified:
 
 Planned but **not yet applied** at the time of this handoff:
 
+- Establish verified independent backups for the Proxmox guests and application data, especially both OpenCloud metadata and its RustFS bucket. The former whole-system recovery tar no longer exists.
 - Change tailnet DNS from global `10.1.1.2` to split DNS: `l3b.cc.cd` only through `10.1.1.2`, while public DNS remains local to each client.
 - Keep MagicDNS enabled and keep `accept-dns=true` on `slate`; do not override its GCP resolver for ordinary public names.
 - Deploy a second Uptime Kuma on `slate` for the external viewpoint and use ntfy there. It should monitor home internet, Tailscale/subnet routing, AdGuard, public services, and selected private services without duplicating every internal alert.

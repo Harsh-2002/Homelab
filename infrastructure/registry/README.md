@@ -6,7 +6,7 @@ Registry uses its default in-memory metadata cache; a separate Redis cache is un
 
 ## Data and credentials
 
-Recovery copies the preserved `htpasswd` file from the read-only `/EX` archive to `/data/apps/registry`. Image blobs remain in RustFS, so no object data is copied locally.
+Recovery copied the preserved `htpasswd` file from the former `/EX` source to `/data/apps/registry`. The external source was erased when the SSD was reformatted on 2026-09-23. Image blobs remain in RustFS, so no object data was copied locally.
 
 The RustFS application identity is restricted to the `docker-registry` bucket and `registry/*` object prefix. Its access key and secret, together with the retained Docker client credentials and Stack runtime secrets, belong in the existing `HomeLab` 1Password item **Docker Private Registry**. Never reuse the RustFS root or `s3-admin` credentials.
 

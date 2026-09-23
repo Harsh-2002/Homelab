@@ -10,9 +10,9 @@ Pocket ID is the normal sign-in path. The restored local Portainer administrator
 
 ## Recovery and access
 
-The preserved Portainer state originates at `/EX/RECOVERY/2026-09-15/rootfs/opt/SRVR/Portainer/portainer_data`. It contains the Portainer database, cryptographic key material, configuration, and its automatic database rollback copy. The external recovery disk remains read-only; recovery copies its contents into `/data/portainer` before the service is started.
+The restored Portainer state originated at the former `/EX/RECOVERY/2026-09-15/rootfs/opt/SRVR/Portainer/portainer_data` path. Recovery copied the database, cryptographic key material, configuration, and rollback copy into `/data/portainer` before the service was started. The external recovery tree was erased when the SSD was reformatted on 2026-09-23.
 
-Recovery was validated on 2026-09-21 with the preserved database migrating from `2.45.0` to `2.45.1`. The source and its rollback copy remain untouched on `/EX`; only the working copy under `/data/portainer` was migrated.
+Recovery was validated on 2026-09-21 with the preserved database migrating from `2.45.0` to `2.45.1`. The live state and its local rollback copy under `/data/portainer` now require independent backups.
 
 Portainer is configured to serve HTTP internally only at `10.1.1.4:9000`; Caddy terminates public-facing TLS and is the only supported browser entrypoint. The `--trusted-origins` setting is deliberately limited to `https://portainer.l3b.cc.cd`; the old `ctl.qzz.io` origin is not retained.
 

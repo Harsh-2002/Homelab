@@ -49,10 +49,11 @@ contact, and no notes, comments, or tags. The owner chose to retire the links
 and discard the 279 files in Nextcloud's deleted-items bin; no migration archive
 or replacement public links were retained. The old Nextcloud Portainer stack,
 containers, images, and staged host data were removed after verification. The
-two extracted Nextcloud folders on the external SSD were also removed. The SSD
-was remounted read-only, and the original whole-system `linux-recovery.tar`
-remains untouched. Migration-only runtime files and `rclone` were removed from
-`ctr`; the transient cleanup unit completed successfully.
+two extracted Nextcloud folders on the external SSD were also removed.
+Migration-only runtime files and `rclone` were removed from `ctr`; the transient
+cleanup unit completed successfully. Later on 2026-09-23, the owner requested
+reformatting the entire external SSD as ext4. That erased the original
+whole-system `linux-recovery.tar`; it is no longer a backup source.
 
 OpenCloud application health and WebDAV content were verified. Sign-in and iOS
 Files integration still require owner acceptance testing. Back up both the

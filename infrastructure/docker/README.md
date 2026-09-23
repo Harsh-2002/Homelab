@@ -88,19 +88,21 @@ The initial full replication and a subsequent incremental replication were valid
 
 This provides automatic restart on `px10` after a confirmed `px20` failure. Replication is asynchronous, so the recovery-point objective is approximately five minutes and the newest writes can be lost during an unplanned failure. Replication is not a backup and does not protect against deletion or corruption replicated to the target.
 
-## Temporary Crucial X9 Pro import
+## Crucial X9 Pro external SSD
 
-A 4 TB Crucial X9 Pro USB-C SSD is temporarily passed through from `px20` to VM 204 as `usb0`. Its exFAT partition has label `EX`, UUID `72FF-5AED`, and is mounted read-only inside the VM at `/EX`. It is intentionally absent from `/etc/fstab`.
+A 4 TB Crucial X9 Pro USB-C SSD (serial `2338E8C83CF2`) is passed through from `px20` to VM 204 as `usb0`. On 2026-09-23, the owner authorized formatting the entire SSD. It now has a GPT with one 1 MiB-aligned ext4 partition, label `EX`, UUID `92aa5561-1194-4515-98a4-3a441e80338c`, mounted read/write at `/EX`. It remains absent from `/etc/fstab` because the USB disk is detachable. The filesystem uses 4 KiB blocks, one inode per 64 KiB, and a 1% reserved-block allowance. The post-format mount, clean filesystem state, capacity, and write test were verified. Only `lost+found` remains.
 
-The source files are:
+The following is the completed 2026-09 recovery history. **Formatting erased `/EX/linux-recovery.tar` and the entire extracted `/EX/RECOVERY` tree. There is no longer an external recovery copy on this SSD.** The original archive was the only whole-system copy known to this runbook.
+
+Before formatting, the source archive was:
 
 ```plain text
 /EX/linux-recovery.tar         502214830080 bytes, about 468 GiB
 ```
 
-The 500 GiB destination has approximately 492 GiB usable, so the archive fits but leaves little working space. Do not retain both the complete tar file and a full extracted copy on `/data`.
+The 500 GiB `/data` destination had approximately 492 GiB usable, so the archive could not be copied there alongside a full extracted tree.
 
-Because exFAT cannot preserve Linux ownership, permissions, ACLs, extended attributes, hard links, and symlinks, the extracted tree on exFAT is a browsable convenience copy only. The original tar remains untouched and is the authoritative full-fidelity backup.
+Because exFAT could not preserve Linux ownership, permissions, ACLs, extended attributes, hard links, and symlinks, the extracted tree on exFAT was a browsable convenience copy only. The original tar was the authoritative full-fidelity backup until the SSD was reformatted.
 
 The first attempt created `/EX/linux-recovery.ext4`, but `px20` then lost its HA agent lock and self-rebooted while that new image was being initialized. After reboot, `fsck.exfat -n /dev/sdc2` reported the source filesystem clean, and `/EX/linux-recovery.tar` retained its exact size and modification timestamp. The incomplete 600 GiB image was later removed; it must not be treated as recovered data.
 
@@ -111,7 +113,7 @@ The full-fidelity ext4-image extraction was stopped cleanly and its partial imag
 2026-09-15/rootfs/opt/SRVR
 ```
 
-`recovery-extract.service` extracted the approximately 357.3 GB SSD dataset first. `recovery-srvr-extract.service` was ordered after it and extracted only `/opt/SRVR`, avoiding the rest of the old operating-system tree. Both wrote below `/EX/RECOVERY`. These extraction units are no longer installed. The original tar remains untouched. Because `/EX` is exFAT, the convenience copy cannot preserve Linux ownership, permissions, ACLs, xattrs, hard links, or symlinks; the tar remains the authoritative full-fidelity backup.
+`recovery-extract.service` extracted the approximately 357.3 GB SSD dataset first. `recovery-srvr-extract.service` was ordered after it and extracted only `/opt/SRVR`, avoiding the rest of the old operating-system tree. Both wrote below the former `/EX/RECOVERY`. These extraction units are no longer installed. The tracked scripts and unit files are historical examples only; their source archive no longer exists.
 
 Historical recovery snapshot from 2026-09-20:
 
@@ -134,18 +136,18 @@ Temporary HA placement:       strict px20-only
 
 The archive listing command ended with status 141 only because `head` intentionally closed the diagnostic pipe after the first 20 entries; it is not an archive-read failure. The backup error log contains ignored Unix socket entries, which are expected because tar archives cannot store live socket objects.
 
-The required `2026-09-15/SSD` and `2026-09-15/rootfs/opt/SRVR` trees are available below `/EX/RECOVERY`. As of 2026-09-23, no extraction unit is installed or running. `/EX` is mounted read-only, and the original 502214830080-byte tar remains in place. The extracted Nextcloud directories were deleted after OpenCloud's 706 live files passed a full downloaded-content comparison. Other recovered datasets remain available.
+All required application data was restored to live services before the owner requested reformatting. Nextcloud's extracted copies were deleted separately after OpenCloud's 706 live files passed a full downloaded-content comparison. Formatting then removed every remaining extracted dataset and the original tar. No recovery or extraction unit is installed or running on `ctr`.
 
-Check the current mount and original archive before further cleanup:
+Check the current ext4 mount and UUID:
 
 ```bash
 findmnt /EX
-stat -c '%s %n' /EX/linux-recovery.tar
+lsblk -f /dev/sdc
 ```
 
-A temporary read-only ratarmount trial was stopped after its full-archive index projected roughly 70–85 minutes, offering little advantage over selective extraction for this one-time recovery. `/RECOVERY` was never mounted. The partial 286 MB index, ratarmount environment, FUSE packages installed for the trial, and empty temporary directories were removed. The source tar remained read-only with its exact size and timestamp unchanged. Use `tar -tf` to locate required paths, then extract only explicitly selected paths into `/data`.
+A temporary read-only ratarmount trial was stopped after its full-archive index projected roughly 70–85 minutes. `/RECOVERY` was never mounted. Its partial index, environment, packages, and empty directories were removed.
 
-While the physical USB disk is present, the strict HA rule is temporarily restricted to `px20` so Proxmox cannot attempt recovery on `px10` without the device. After the import is complete:
+USB passthrough is node-local. If VM 204 runs on `px10`, `/EX` will not be available there. Before physically disconnecting the SSD, unmount it inside VM 204 and remove the passthrough device from the VM configuration:
 
 ```bash
 # inside VM 204
@@ -153,10 +155,9 @@ sudo umount /EX
 
 # on a Proxmox node
 qm set 204 --delete usb0
-ha-manager rules set node-affinity vm204-replica-nodes --nodes 'px20:2,px10:1'
 ```
 
-Confirm `/EX` is unmounted before physically disconnecting the SSD. The tar file nearly fills the 500 GiB destination if copied intact, so do not retain both the archive and a full extracted copy on `/data` without checking space first.
+Confirm `/EX` is unmounted before disconnecting the SSD. Do not assume this formatted disk is a backup until a backup job and restore test exist.
 
 ## Intel iGPU passthrough
 
