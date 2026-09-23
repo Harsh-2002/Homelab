@@ -70,7 +70,6 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Cairn S3 API | `https://cairn-s3.l3b.cc.cd` |
 | Cairn Console | `https://cairn.l3b.cc.cd` |
 | n8n UI | `https://n8n.l3b.cc.cd` |
-| Memos UI | `https://notes.l3b.cc.cd` |
 | OpenCloud files | `https://drive.l3b.cc.cd` |
 | Orva serverless | `https://orva.l3b.cc.cd` (`10.1.1.11:8443`) |
 | Proxmox cluster | `https://px.l3b.cc.cd` |

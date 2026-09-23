@@ -5,7 +5,6 @@ These workloads were recovered from the former external SSD tree at `/EX/RECOVER
 | Stack | Persistent path | Host port | URL | State |
 | --- | --- | ---: | --- | --- |
 | `n8n` | `/data/apps/n8n` | 5678 | `https://n8n.l3b.cc.cd` | Running |
-| `memos` | `/data/apps/memos` | 5230 | `https://notes.l3b.cc.cd` | Running |
 | `jellyfin` | Existing Portainer definition | none | none | Definition retained; intentionally stopped |
 
 All running stacks attach to the external Docker bridge `docknet`. Only the application ports needed by Caddy are published; databases remain bridge-only.
@@ -13,12 +12,10 @@ All running stacks attach to the external Docker bridge `docknet`. Only the appl
 ## Recovery layout
 
 - n8n: application data, files, and PostgreSQL 18 data under `/data/apps/n8n`
-- Memos: SQLite state under `/data/apps/memos/data`
 Nextcloud was retired after its 706 live files were compared byte for byte with OpenCloud; see `infrastructure/opencloud/README.md`.
 
 n8n's existing owner email is `iam.anuragvishwakarma@gmail.com`. Native password login and its existing MFA were verified; Caddy's extra Tinyauth gate was removed, but the route stays LAN/Tailscale-only. The existing `N8N` 1Password item was updated, not duplicated.
 
-Memos' existing `SlashGreen` administrator now uses `iam.anuragvishwakarma@gmail.com`. Native password login was verified. Its native Pocket ID OAuth2 provider is configured, but the existing account has not linked that identity through Account Settings; registration remains disabled. The app was set to private instance access. The owner is evaluating a replacement for Memos, so preserve its SQLite data and do not assume OIDC login or retire it yet.
 
 ## Retired workloads
 

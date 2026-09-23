@@ -145,11 +145,6 @@ data:
             href: https://n8n.l3b.cc.cd
             description: Automation
             ping: https://n8n.l3b.cc.cd
-        - Memos:
-            icon: memos.png
-            href: https://notes.l3b.cc.cd
-            description: Notes
-            ping: https://notes.l3b.cc.cd
     - Compute:
         - Proxmox:
             icon: proxmox.png

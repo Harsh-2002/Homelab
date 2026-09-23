@@ -80,7 +80,6 @@ The final command must return `10.1.1.3`.
 | Argo CD | Native OIDC | Pocket ID group `infrastructure-admins` maps to `role:admin`; local named account remains break-glass |
 | Proxmox | Native OIDC realm `pocketid` | PVE group `infrastructure-admins` has `Administrator` at `/`; PAM/local access remains break-glass |
 | Proxmox Backup Server | Native OIDC realm `pocketid` | PBS user `iam.anuragvishwakarma@gmail.com@pocketid` has `Admin` at `/`; `root@pam` remains break-glass; browser passkey return awaits owner verification |
-| Memos | Native OAuth2 provider `pocketid` | Provider is group-restricted; the existing local account has not yet linked its Pocket identity, and Memos is under replacement review |
 | Portainer | Native Custom OAuth/OIDC | Pocket ID client `portainer`; automatic user provisioning enabled; local Portainer administrator remains break-glass |
 | Karakeep | Native OIDC | Client is restricted to `infrastructure-admins`; existing Karakeep account is linked by the verified canonical email; native Karakeep login remains break-glass |
 | Immich | Native OIDC | Client `immich` is restricted to `infrastructure-admins`; the pre-existing photo account is explicitly linked and native login remains break-glass |
