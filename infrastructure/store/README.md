@@ -34,6 +34,8 @@ Homepage's PBS statistics use the separate token-only `homepage@pbs!homepage` id
 
 Samba is Debian 13's 4.22.11 package and negotiates SMB3 only (`SMB3_00` minimum, `SMB3` maximum), with signing and per-share SMB3 encryption required. This is native SMB encryption, not TLS. It binds only to loopback and `10.1.1.12`, not Tailscale interfaces. Sign in to `AV` as `iam.anuragvishwakarma@gmail.com`; `/etc/samba/user.map` maps that SMB login to the local `iam.anuragvishwakarma` account that owns `/srv/AV`. The `Store SMB` 1Password item holds the separate Samba `tdbsam` password, not a PAM or OIDC password. A test file was uploaded, downloaded, and removed successfully.
 
+The ext4 filesystem's `lost+found` directory is for `fsck` recovery, not a recycle bin. Keep it on disk. Samba's `veto files = /lost+found/` hides and denies it through the `AV` share; `downloads` and `media` remain visible. Do not enable `delete veto files`.
+
 VM 204 `ctr` mounts this share at `/mnt/AV` with SMB 3.1.1 encryption and a systemd automount. Its planned downloader and media paths are `/mnt/AV/downloads` and `/mnt/AV/media`; see `infrastructure/ctr/README.md`. This client mount does not create another copy of the data.
 
 Config sources in this directory are the PBS apt source files, Samba config, and mount/systemd drop-in. The live PBS datastore, PVE storage, backup job, HA rule, and USB mapping are platform state, not generated from these files.
