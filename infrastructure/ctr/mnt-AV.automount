@@ -1,0 +1,9 @@
+[Unit]
+Description=Automount Store AV SMB share
+
+[Automount]
+Where=/mnt/AV
+TimeoutIdleSec=0
+
+[Install]
+WantedBy=multi-user.target

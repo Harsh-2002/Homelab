@@ -7,6 +7,8 @@ These workloads were recovered from the former external SSD tree at `/EX/RECOVER
 | `n8n` | `/data/apps/n8n` | 5678 | `https://n8n.l3b.cc.cd` | Running |
 | `jellyfin` | Existing Portainer definition | none | none | Definition retained; intentionally stopped |
 
+The `AV` SMB share is mounted on `ctr` at `/mnt/AV`, with `/mnt/AV/downloads` and `/mnt/AV/media` prepared for future JDownloader/Jellyfin stacks. Those applications remain undeployed/stopped; their application state belongs on local `/data/apps`, not the SMB share. See `infrastructure/ctr/README.md`.
+
 All running stacks attach to the external Docker bridge `docknet`. Only the application ports needed by Caddy are published; databases remain bridge-only.
 
 ## Recovery layout
