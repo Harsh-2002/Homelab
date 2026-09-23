@@ -1,6 +1,6 @@
 # Store: PBS and SMB
 
-`store` is VM 107 (`10.1.1.12`), normally on px10. It runs Proxmox Backup Server 4.2 and Samba. The PBS UI is private at `https://pbs.l3b.cc.cd`; SMB is `smb://store.l3b.cc.cd/AV`. The cluster token and SMB credentials are in the HomeLab 1Password vault as `PBS API Token - PVE` and `Store SMB`. The PBS root PAM password remains the one the owner set during installation; it was not changed. Never put secrets in this repo.
+`store` is VM 107 (`10.1.1.12`), normally on px10. It runs Proxmox Backup Server 4.2 and Samba. The PBS UI is private at `https://pbs.l3b.cc.cd`; SMB is `smb://smb.l3b.cc.cd/AV` (Windows: `\\smb.l3b.cc.cd\AV`). The cluster token and SMB credentials are in the HomeLab 1Password vault as `PBS API Token - PVE` and `Store SMB`. The PBS root PAM password remains the one the owner set during installation; it was not changed. Never put secrets in this repo.
 
 ## Storage
 
@@ -26,12 +26,12 @@ PVE storage ID `external` points to PBS at `10.1.1.12:8007` using token `pve@pbs
 3. In `store`, check `lvs external`, `findmnt /mnt/datastore/external /srv/AV`, `proxmox-backup-manager datastore show external`, `systemctl status proxmox-backup-proxy smbd`, and `smbclient -L localhost -N` (listing may be denied without credentials). Mount `/srv/AV` with `systemctl start srv-AV.mount` if needed.
 4. From a PVE node check `pvesm status` and `pvesm list external`. Test a guest restore before depending on a backup.
 
-The PBS UI is private behind Caddy. The direct LAN service is `https://10.1.1.12:8007`. `store.l3b.cc.cd` is a direct-host DNS exception, while `pbs.l3b.cc.cd` resolves to the proxy wildcard. Keep them distinct. Caddy's TLS upstream uses the PBS self-signed certificate; the client-facing wildcard certificate is Caddy's.
+The PBS UI is private behind Caddy. The direct LAN service is `https://10.1.1.12:8007`. `store.l3b.cc.cd` and `smb.l3b.cc.cd` resolve directly to the VM, while `pbs.l3b.cc.cd` resolves to the proxy wildcard. Keep them distinct. Caddy's TLS upstream uses the PBS self-signed certificate; the client-facing wildcard certificate is Caddy's. SMB is not HTTP/TLS and does not pass through Caddy.
 
 PBS has native Pocket ID OIDC realm `pocketid` and an explicitly authorized `iam.anuragvishwakarma@gmail.com@pocketid` administrator. Its OIDC client secret is in the `Pocket ID OIDC - pbs` 1Password item. The browser passkey callback still needs owner verification. `root@pam` and the PVE backup token remain unchanged. PVE storage `external` lets the Proxmox UI browse and restore PBS backups, but PVE and PBS remain separate administrative UIs and separate RBAC databases; sharing Pocket ID does not replicate local users.
 
 Homepage's PBS statistics use the separate token-only `homepage@pbs!homepage` identity. Both the user and token have the read-only `Audit` role on `/`, and the secret is stored in `PBS API Token - Homepage` in 1Password plus the live `homepage-widgets` Kubernetes Secret. The Homepage chart pins the PBS server certificate for direct TLS-verified API access; update that public certificate in Git if PBS rotates it.
 
-Samba is Debian 13's 4.22.11 package and negotiates SMB3 only (`SMB3_00` minimum, `SMB3` maximum), with signing required. It binds only to loopback and `10.1.1.12`, not Tailscale interfaces. Sign in to `AV` as `iam.anuragvishwakarma@gmail.com`; `/etc/samba/user.map` maps that SMB login to the local `iam.anuragvishwakarma` account that owns `/srv/AV`. The `Store SMB` 1Password item holds the separate Samba `tdbsam` password, not a PAM or OIDC password. A test file was uploaded, downloaded, and removed successfully.
+Samba is Debian 13's 4.22.11 package and negotiates SMB3 only (`SMB3_00` minimum, `SMB3` maximum), with signing and per-share SMB3 encryption required. This is native SMB encryption, not TLS. It binds only to loopback and `10.1.1.12`, not Tailscale interfaces. Sign in to `AV` as `iam.anuragvishwakarma@gmail.com`; `/etc/samba/user.map` maps that SMB login to the local `iam.anuragvishwakarma` account that owns `/srv/AV`. The `Store SMB` 1Password item holds the separate Samba `tdbsam` password, not a PAM or OIDC password. A test file was uploaded, downloaded, and removed successfully.
 
 Config sources in this directory are the PBS apt source files, Samba config, and mount/systemd drop-in. The live PBS datastore, PVE storage, backup job, HA rule, and USB mapping are platform state, not generated from these files.

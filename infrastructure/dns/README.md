@@ -31,6 +31,7 @@ Direct-host exceptions use AdGuard CNAME-exception entries that pass through to 
 | --- | --- |
 | `dev.l3b.cc.cd` | `10.1.1.5` |
 | `store.l3b.cc.cd` | `10.1.1.12` |
+| `smb.l3b.cc.cd` | `10.1.1.12` |
 | `k8s.l3b.cc.cd` | `10.1.1.200` |
 | `k8s-201.l3b.cc.cd` | `10.1.1.201` |
 | `k8s-202.l3b.cc.cd` | `10.1.1.202` |
