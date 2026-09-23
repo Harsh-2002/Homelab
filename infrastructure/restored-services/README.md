@@ -6,7 +6,6 @@ These workloads were recovered from the read-only external SSD at `/EX/RECOVERY/
 | --- | --- | ---: | --- | --- |
 | `n8n` | `/data/apps/n8n` | 5678 | `https://n8n.l3b.cc.cd` | Running |
 | `memos` | `/data/apps/memos` | 5230 | `https://notes.l3b.cc.cd` | Running |
-| `nextcloud` | `/data/apps/nextcloud` | none | none | Superseded by OpenCloud; staged data retained for migration |
 | `jellyfin` | Existing Portainer definition | none | none | Definition retained; intentionally stopped |
 
 All running stacks attach to the external Docker bridge `docknet`. Only the application ports needed by Caddy are published; databases remain bridge-only.
@@ -15,13 +14,13 @@ All running stacks attach to the external Docker bridge `docknet`. Only the appl
 
 - n8n: application data, files, and PostgreSQL 18 data under `/data/apps/n8n`
 - Memos: SQLite state under `/data/apps/memos/data`
-- Nextcloud: configuration, user data, and MariaDB under `/data/apps/nextcloud/{config,data,mariadb}`
-
-The source SSD normally remains mounted read-only. Nextcloud is not started: OpenCloud replaced it at `https://drive.l3b.cc.cd`, while the staged Nextcloud tree remains available only as a migration source until file counts and hashes have been validated.
+The source SSD normally remains mounted read-only. Nextcloud was retired after its 706 live files were compared byte for byte with OpenCloud; see `infrastructure/opencloud/README.md`.
 
 ## Retired workloads
 
 Guacamole, firstfinger/Ghost, Orva, and code-server were removed from Portainer and their associated recovery data was intentionally deleted. The temporary recovered Cairn stack and `/data/apps/cairn` copy were also removed after Cairn was redeployed fresh as a native service on the `s3` LXC; see `infrastructure/cairn/README.md`.
+
+Nextcloud Portainer stack 92 and both containers were removed. Its staged `/data/apps/nextcloud` and `/data/backups/nextcloud` directories were deleted after OpenCloud verification. The original whole-system tar on the external SSD remains the historical backup.
 
 ## Validation
 

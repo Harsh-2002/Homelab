@@ -96,25 +96,24 @@ The source files are:
 
 ```plain text
 /EX/linux-recovery.tar         502214830080 bytes, about 468 GiB
-/EX/linux-recovery-errors.log  2335 bytes
 ```
 
 The 500 GiB destination has approximately 492 GiB usable, so the archive fits but leaves little working space. Do not retain both the complete tar file and a full extracted copy on `/data`.
 
 Because exFAT cannot preserve Linux ownership, permissions, ACLs, extended attributes, hard links, and symlinks, the extracted tree on exFAT is a browsable convenience copy only. The original tar remains untouched and is the authoritative full-fidelity backup.
 
-The first attempt created `/EX/linux-recovery.ext4`, but `px20` then lost its HA agent lock and self-rebooted while that new image was being initialized. After reboot, `fsck.exfat -n /dev/sdc2` reported the source filesystem clean, and `/EX/linux-recovery.tar` retained its exact size and modification timestamp. `/EX` was remounted read-only. The 600 GiB image is incomplete and must not be mounted or treated as recovered data.
+The first attempt created `/EX/linux-recovery.ext4`, but `px20` then lost its HA agent lock and self-rebooted while that new image was being initialized. After reboot, `fsck.exfat -n /dev/sdc2` reported the source filesystem clean, and `/EX/linux-recovery.tar` retained its exact size and modification timestamp. The incomplete 600 GiB image was later removed; it must not be treated as recovered data.
 
-The full-fidelity ext4-image extraction was stopped cleanly and its partial image retained. A direct full extraction to exFAT was tested and stopped after measured throughput fell below 1 MiB/s in the old root filesystem's small-file tree. Recovery is intentionally limited to the two datasets that contain the required application state:
+The full-fidelity ext4-image extraction was stopped cleanly and its partial image was later removed. A direct full extraction to exFAT was tested and stopped after measured throughput fell below 1 MiB/s in the old root filesystem's small-file tree. Recovery was limited to the two datasets that contain the required application state:
 
 ```plain text
 2026-09-15/SSD
 2026-09-15/rootfs/opt/SRVR
 ```
 
-`recovery-extract.service` extracts the approximately 357.3 GB SSD dataset first. `recovery-srvr-extract.service` is ordered after it and extracts only `/opt/SRVR`, avoiding the rest of the old operating-system tree. Both write below `/EX/RECOVERY`; the second service remounts `/EX` read-only when complete. The original tar remains untouched. Because `/EX` is exFAT, the convenience copy cannot preserve Linux ownership, permissions, ACLs, xattrs, hard links, or symlinks; the tar remains the authoritative full-fidelity backup and the partial ext4 image remains available as a fallback.
+`recovery-extract.service` extracted the approximately 357.3 GB SSD dataset first. `recovery-srvr-extract.service` was ordered after it and extracted only `/opt/SRVR`, avoiding the rest of the old operating-system tree. Both wrote below `/EX/RECOVERY`. These extraction units are no longer installed. The original tar remains untouched. Because `/EX` is exFAT, the convenience copy cannot preserve Linux ownership, permissions, ACLs, xattrs, hard links, or symlinks; the tar remains the authoritative full-fidelity backup.
 
-Current recovery status revalidated on 2026-09-20:
+Historical recovery snapshot from 2026-09-20:
 
 ```plain text
 /EX mount:                    /dev/sdc2, exFAT, read-write during extraction
@@ -135,14 +134,13 @@ Temporary HA placement:       strict px20-only
 
 The archive listing command ended with status 141 only because `head` intentionally closed the diagnostic pipe after the first 20 entries; it is not an archive-read failure. The backup error log contains ignored Unix socket entries, which are expected because tar archives cannot store live socket objects.
 
-The required `2026-09-15/SSD` tree is available below `/EX/RECOVERY`. The `2026-09-15/rootfs/opt/SRVR` tree is being populated there and already exposes its major application directories. Do not reboot VM 204, unmount `/EX`, or detach the USB disk until `recovery-srvr-extract.service` finishes successfully and the completion script remounts `/EX` read-only.
+The required `2026-09-15/SSD` and `2026-09-15/rootfs/opt/SRVR` trees are available below `/EX/RECOVERY`. As of 2026-09-23, no extraction unit is installed or running. `/EX` is mounted read-only, and the original 502214830080-byte tar remains in place. The extracted Nextcloud directories were deleted after OpenCloud's 706 live files passed a full downloaded-content comparison. Other recovered datasets remain available.
 
-Monitor without starting another extraction:
+Check the current mount and original archive before further cleanup:
 
 ```bash
-systemctl status recovery-srvr-extract.service
-journalctl -u recovery-srvr-extract.service -f
 findmnt /EX
+stat -c '%s %n' /EX/linux-recovery.tar
 ```
 
 A temporary read-only ratarmount trial was stopped after its full-archive index projected roughly 70–85 minutes, offering little advantage over selective extraction for this one-time recovery. `/RECOVERY` was never mounted. The partial 286 MB index, ratarmount environment, FUSE packages installed for the trial, and empty temporary directories were removed. The source tar remained read-only with its exact size and timestamp unchanged. Use `tar -tf` to locate required paths, then extract only explicitly selected paths into `/data`.

@@ -32,12 +32,28 @@ ssh s3 'rc bucket list s3/ | grep opencloud'
 curl --resolve drive.l3b.cc.cd:443:10.1.1.3 https://drive.l3b.cc.cd/healthz
 ```
 
-Keep the staged Nextcloud recovery data until OpenCloud login, iOS Files integration, uploads, downloads, and the final data migration have been verified. Import files through OpenCloud/WebDAV; never copy them directly into OpenCloud's internal metadata or S3 layout.
+Import files through OpenCloud/WebDAV; never copy them directly into OpenCloud's internal metadata or S3 layout.
 
-On 2026-09-23 the interrupted file copy was resumed as a transient
-`nextcloud-opencloud-migration` systemd unit on `ctr`. It finished transferring
-the remaining 493 files; the OpenCloud WebDAV inventory then showed 706
-objects totaling 37,731,309,207 bytes, matching the recorded source count
-and size. This is a **copy completion check**, not yet a downloaded hash
-comparison or user-level functional verification. Keep the staged Nextcloud
-tree and backups intact until those checks pass.
+## Nextcloud migration and retirement
+
+The transient `nextcloud-opencloud-migration` systemd job finished on
+2026-09-22. The source contained 706 live files totaling 37,731,309,207 bytes.
+On 2026-09-23, `rclone check --download --one-way` compared every live source
+file with OpenCloud WebDAV and reported **706 matching files, zero differences**.
+The single contact was copied to `contacts.vcf` in the OpenCloud Personal Space
+and verified by SHA-256. OpenCloud then contained 707 files: the 706 live files
+and that contact.
+
+The old Nextcloud database had two public links, three empty calendars, one
+contact, and no notes, comments, or tags. The owner chose to retire the links
+and discard the 279 files in Nextcloud's deleted-items bin; no migration archive
+or replacement public links were retained. The old Nextcloud Portainer stack,
+containers, images, and staged host data were removed after verification. The
+two extracted Nextcloud folders on the external SSD were also removed. The SSD
+was remounted read-only, and the original whole-system `linux-recovery.tar`
+remains untouched. Migration-only runtime files and `rclone` were removed from
+`ctr`; the transient cleanup unit completed successfully.
+
+OpenCloud application health and WebDAV content were verified. Sign-in and iOS
+Files integration still require owner acceptance testing. Back up both the
+OpenCloud metadata directory and RustFS bucket; neither is sufficient alone.
