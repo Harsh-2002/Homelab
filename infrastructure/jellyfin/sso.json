@@ -15,7 +15,7 @@
         "OidScopes": ["openid", "profile", "email", "groups"],
         "DefaultUsernameClaim": "email",
         "LoginButtonText": "Sign in with Pocket ID",
-        "AllowExistingAccountLink": true,
+        "AllowExistingAccountLink": false,
         "RequireVerifiedEmailForAdoption": true,
         "RequireVerifiedEmailForLogin": true,
         "AllowPrivateNetworkAddresses": true,
