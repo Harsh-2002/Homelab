@@ -55,6 +55,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Headlamp UI | `https://headlamp.l3b.cc.cd` |
 | Homepage portal | `https://l3b.cc.cd` |
 | Pocket ID service | `10.1.1.6:1411` |
+| Pocket ID counts (private) | `10.1.1.6:1412` |
 | Pocket ID UI | `https://auth.l3b.cc.cd` |
 | Tinyauth service | `10.1.1.6:3000` |
 | Tinyauth UI | `https://login.l3b.cc.cd` |

@@ -52,7 +52,7 @@ The encryption key and application data must be backed up together. Neither belo
 
 ## Homepage counts
 
-Homepage reads `http://10.1.1.6:1412/stats` every five minutes for user and OIDC-client totals. The small native systemd service in this directory calls Pocket ID's local admin API, discards the raw response, and serves only `{"users":N,"clients":N}`. Other paths return 404. The endpoint is LAN-only by address and contains no personal information or client credentials; do not proxy it publicly.
+Homepage reads `http://10.1.1.6:1412/stats` every five minutes for user and OIDC-client totals. The small native systemd service in this directory calls Pocket ID's local admin API, discards the raw response, and serves only `{"users":N,"clients":N}`. Other paths return 404. The endpoint binds only to the private LAN address and contains no personal information or client credentials; do not proxy it publicly.
 
 Pocket ID API keys are full-admin. With the owner's approval, the adapter uses the existing `Pocket ID Automation API` key from the HomeLab 1Password vault, stored only in its protected key file on `auth`. Pocket ID does not permit an API key to create another key; minting a dedicated key later requires an administrator passkey session. Homepage itself has no Pocket ID key. When the vault key is rotated, update the protected file and restart `homepage-metrics.service`.
 
