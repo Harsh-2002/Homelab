@@ -16,6 +16,10 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       serviceAccountName: homepage
+      hostAliases:
+        - ip: 10.1.1.12
+          hostnames:
+            - store
       securityContext:
         seccompProfile:
           type: RuntimeDefault
@@ -33,7 +37,7 @@ spec:
             - name: HOMEPAGE_ALLOWED_HOSTS
               value: "$(MY_POD_IP):3000,l3b.cc.cd,10.1.1.174,homepage,homepage.{{ .Release.Namespace }}.svc.cluster.local"
             - name: NODE_EXTRA_CA_CERTS
-              value: /etc/ssl/certs/pve-root-ca.crt
+              value: /etc/ssl/certs/trusted-cas.crt
           envFrom:
             - secretRef:
                 name: homepage-widgets
@@ -100,8 +104,8 @@ spec:
               mountPath: /app/config/custom.js
               subPath: custom.js
             - name: config
-              mountPath: /etc/ssl/certs/pve-root-ca.crt
-              subPath: pve-root-ca.crt
+              mountPath: /etc/ssl/certs/trusted-cas.crt
+              subPath: trusted-cas.crt
               readOnly: true
             - name: logs
               mountPath: /app/config/logs

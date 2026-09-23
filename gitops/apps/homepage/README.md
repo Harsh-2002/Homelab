@@ -12,7 +12,7 @@ Homepage is the stateless, Git-managed portal served at `https://l3b.cc.cd`.
 
 The header identifies its source explicitly: **K8s** is aggregate Kubernetes CPU and memory, with memory displayed in decimal GB. Per-node Kubernetes figures are intentionally omitted to keep the overview concise; use Headlamp when node-level detail is needed. The timestamp is a local browser utility widget.
 
-Native service widgets provide live DNS statistics from AdGuard Home, Beszel system counts, Portainer Docker container counts, Argo CD application state, and Proxmox cluster and node CPU/memory state. Longhorn contributes one labelled aggregate storage-capacity widget in the header, expressed as **Total** first and **Used** beneath it; its full per-node detail remains one click away in Longhorn. Frigate and Docker Registry are direct cards: their private/protected API endpoints do not receive a misleading unauthenticated monitor check.
+Native service widgets provide live DNS statistics from AdGuard Home, Beszel system counts, Portainer Docker container counts, Argo CD application state, PBS datastore usage/24-hour failures/CPU/memory, and Proxmox cluster and node CPU/memory state. Longhorn contributes one labelled aggregate storage-capacity widget in the header, expressed as **Total** first and **Used** beneath it; its full per-node detail remains one click away in Longhorn. Frigate and Docker Registry are direct cards: their private/protected API endpoints do not receive a misleading unauthenticated monitor check.
 
 Homepage's native Longhorn widget presents Free before Total, and its Kubernetes widget presents memory in binary units. The small `custom.js` adapter changes only the aggregate Longhorn card into the clearer Total/Used order and converts the K8s memory display to decimal GB; it performs no network requests. Keep this adapter when upgrading Homepage unless upstream adds equivalent display options; browser-verify the cards after every Homepage upgrade.
 
@@ -20,17 +20,18 @@ The header ends with a keyless Open-Meteo weather widget for Bilalpada, visually
 
 `Headlamp` is deliberately a Kubernetes management link rather than a duplicate metric source: its authoritative data is the Kubernetes API already represented by the labelled cluster and node cards. `RustFS` and the native Cairn development deployment have separate Platform cards and separate S3 endpoints as documented in their infrastructure runbooks. The Cairn card uses the project's own console favicon rather than the unrelated icon-catalog entry with the same name. The Applications row contains Immich, Karakeep, OpenCloud, Paperless-ngx, and n8n. Live applications use status checks. `Pocket ID` remains an identity health/access link; no sensitive authentication internals are displayed.
 
-The Control row links to Proxmox Backup Server at its private `pbs.l3b.cc.cd` UI. It uses an availability check only; no PBS credential or backup data is exposed to Homepage.
+The Control row links to Proxmox Backup Server at its private `pbs.l3b.cc.cd` UI. Its native widget uses a dedicated `homepage@pbs!homepage` API token with PBS `Audit` permission on both the user and token. The token is in the `PBS API Token - Homepage` 1Password item and the live `homepage-widgets` Kubernetes Secret; Git has placeholders only. Homepage connects directly to `https://store:8007` using a pod-local host alias and the tracked PBS certificate. The certificate is bundled with the Proxmox cluster CA in `trusted-cas.crt` to keep TLS verification enabled. When PBS rotates its certificate, update `files/pbs-server.crt` before redeploying Homepage.
 
 Each non-human metric integration has its own least-privilege identity:
 
 - Proxmox `homepage@pve!homepage` has only the `PVEAuditor` token ACL.
+- PBS `homepage@pbs!homepage` has only the `Audit` token ACL, intersected with the same read-only user role.
 - Argo CD local `homepage` is API-key-only with `role:readonly`.
 - Portainer local service user `homepage` has Portainer's **Helpdesk User** role for the `Aether` Docker environment only. This is the least Portainer role that can read host-wide container counts; its API key cannot alter Docker resources.
 
 Beszel's own API requires a PocketBase superuser for this widget. Homepage therefore uses the pre-existing `Beszel PocketBase Superuser` credential from 1Password for that widget only; it is never stored in Git.
 
-The internal Proxmox API uses the tracked cluster root CA at `files/pve-root-ca.crt`, mounted with `NODE_EXTRA_CA_CERTS`. This keeps TLS verification enabled for all three direct `:8006` widget requests. Replace that file only if the Proxmox cluster CA is intentionally rotated.
+The internal Proxmox and PBS APIs use tracked certificates at `files/pve-root-ca.crt` and `files/pbs-server.crt`, mounted as one `NODE_EXTRA_CA_CERTS` bundle. This keeps TLS verification enabled for all direct widget requests. Replace a source certificate only when that service's certificate is intentionally rotated.
 
 Validate after an Argo sync:
 

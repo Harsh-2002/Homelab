@@ -19,7 +19,7 @@ data:
         columns: 2
       Control:
         style: row
-        columns: 2
+        columns: 3
       Platform:
         style: row
         columns: 3
@@ -89,6 +89,13 @@ data:
             href: https://pbs.l3b.cc.cd
             description: Backups
             ping: https://pbs.l3b.cc.cd
+            widget:
+              type: proxmoxbackupserver
+              url: https://store:8007
+              username: "{{ "{{HOMEPAGE_VAR_PBS_API_TOKEN_ID}}" }}"
+              password: "{{ "{{HOMEPAGE_VAR_PBS_API_TOKEN_SECRET}}" }}"
+              datastore: external
+              fields: ["datastore_usage", "failed_tasks_24h", "cpu_usage", "memory_usage"]
     - Platform:
         - Argo CD:
             icon: argo-cd.png
@@ -235,8 +242,9 @@ data:
   proxmox.yaml: |
     ---
     # Proxmox service widgets are configured in services.yaml.
-  pve-root-ca.crt: |
+  trusted-cas.crt: |
 {{ .Files.Get "files/pve-root-ca.crt" | indent 4 }}
+{{ .Files.Get "files/pbs-server.crt" | indent 4 }}
   bookmarks.yaml: "[]"
   docker.yaml: "{}"
   custom.css: |
