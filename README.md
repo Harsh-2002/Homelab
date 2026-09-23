@@ -67,7 +67,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Portainer UI | `https://portainer.l3b.cc.cd` |
 | Docker Registry | `https://registry.l3b.cc.cd` |
 | Frigate UI | `https://frigate.l3b.cc.cd` |
-| Motrix Server (LAN only) | `http://10.1.1.4:8080` |
+| Motrix Server (private) | `https://downloads.l3b.cc.cd` |
 | RustFS S3 API | `https://s3.l3b.cc.cd` |
 | RustFS Console | `https://rustfs.l3b.cc.cd` |
 | Cairn S3 API | `https://cairn-s3.l3b.cc.cd` |

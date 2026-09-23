@@ -189,6 +189,21 @@
 	}
 }
 
+(downloads) {
+	@downloads host downloads.l3b.cc.cd
+	handle @downloads {
+		import private
+		import proxy
+		@mdxp path /mdxp /mdxp/*
+		handle @mdxp {
+			reverse_proxy 10.1.1.4:16801
+		}
+		handle {
+			reverse_proxy 10.1.1.4:8080
+		}
+	}
+}
+
 (jellyfin) {
 	@jellyfin host media.l3b.cc.cd
 	handle @jellyfin {
@@ -383,6 +398,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import paperless
 	import orva
 	import portainer
+	import downloads
 	import jellyfin
 	import registry
 	import frigate

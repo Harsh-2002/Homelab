@@ -12,9 +12,8 @@ services:
     tmpfs:
       - /tmp:rw,noexec,nosuid,size=64m,mode=1777
     environment:
-      MOTRIX_PUBLIC_URL: "http://10.1.1.4:8080"
+      MOTRIX_PUBLIC_URL: "https://downloads.l3b.cc.cd"
       MOTRIX_MDXP_HOST: "0.0.0.0"
-      MOTRIX_ALLOW_INSECURE_OPERATOR_HTTP: "true"
       MOTRIX_DATA_DIR: /data
       MOTRIX_TEMP_DIR: /data/tmp
       MOTRIX_DEFAULT_SAVE_DIR: /downloads

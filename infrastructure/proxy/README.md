@@ -37,6 +37,7 @@ curl --resolve n8n.l3b.cc.cd:443:10.1.1.3 https://n8n.l3b.cc.cd/
 curl --resolve drive.l3b.cc.cd:443:10.1.1.3 https://drive.l3b.cc.cd/healthz
 curl --resolve docs.l3b.cc.cd:443:10.1.1.3 -I https://docs.l3b.cc.cd/
 curl --resolve media.l3b.cc.cd:443:10.1.1.3 -I https://media.l3b.cc.cd/
+curl --resolve downloads.l3b.cc.cd:443:10.1.1.3 https://downloads.l3b.cc.cd/healthz
 curl --resolve orva.l3b.cc.cd:443:10.1.1.3 -I https://orva.l3b.cc.cd/
 curl -i https://registry.l3b.cc.cd/v2/
 ```
@@ -46,6 +47,8 @@ curl -i https://registry.l3b.cc.cd/v2/
 Caddy admits only LAN `10.1.1.0/24` and Tailscale `100.64.0.0/10` sources. Pocket ID at `auth.l3b.cc.cd` and Tinyauth at `login.l3b.cc.cd` are subject to the same policy, so remote authentication requires Tailscale.
 
 AdGuard Home, Longhorn, Homepage, Frigate, and Uptime Kuma import the reusable `authenticate` block. Caddy calls Tinyauth at `10.1.1.6:3000/api/auth/caddy` before a protected request reaches its backend. Frigate additionally receives a shared proxy-secret header and a fixed identity/group after that gate succeeds: it has one exact Pocket ID allowlisted user, so this guarantees a stable Frigate admin identity even when its proxy-auth UI mishandles forwarded identity headers. Headlamp, Argo CD, Proxmox, PBS, Beszel, Immich, OpenCloud, Portainer, Cairn, Orva, and n8n use their own application authentication flows instead. n8n remains private-network-only and uses its native login with MFA. OpenCloud is private-network-only at `https://drive.l3b.cc.cd`; Tinyauth is deliberately absent so its web, desktop, iOS, Android, WebDAV, and public-share flows reach native OIDC directly. Immich and Orva are deliberate public DNS exceptions at `photos.l3b.cc.cd` and `orva.l3b.cc.cd`; Caddy forwards them without Tinyauth so their native APIs and authentication work normally. Portainer is private-network-only at `https://portainer.l3b.cc.cd` and keeps its own authenticated session plus reverse-proxy trusted-origin policy. Cairn's console and S3 API are private-network-only; the S3 route deliberately avoids Tinyauth so signed S3 clients continue to work.
+
+Motrix is private-network-only at `https://downloads.l3b.cc.cd`. Caddy sends `/mdxp` and its subpaths to the MDXP upstream on `ctr:16801`, and everything else to the Web UI/API on `ctr:8080`. Motrix uses its own operator token and device pairing, so this route does not import Tinyauth. `MOTRIX_PUBLIC_URL` must match the HTTPS browser origin exactly; see `infrastructure/motrix/README.md`.
 
 Jellyfin at `media.l3b.cc.cd` is a deliberate public DNS-only exception. It
 uses its own application login; Caddy does not put Tinyauth in front of
