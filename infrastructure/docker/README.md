@@ -90,7 +90,7 @@ This provides automatic restart on `px10` after a confirmed `px20` failure. Repl
 
 ## Crucial X9 Pro external SSD
 
-A 4 TB Crucial X9 Pro USB-C SSD (serial `2338E8C83CF2`) is passed through from `px20` to VM 204 as `usb0`. On 2026-09-23, the owner authorized formatting the entire SSD. It now has a GPT with one 1 MiB-aligned ext4 partition, label `EX`, UUID `92aa5561-1194-4515-98a4-3a441e80338c`, mounted read/write at `/EX`. It remains absent from `/etc/fstab` because the USB disk is detachable. The filesystem uses 4 KiB blocks, one inode per 64 KiB, and a 1% reserved-block allowance. The post-format mount, clean filesystem state, capacity, and write test were verified. Only `lost+found` remains.
+A 4 TB Crucial X9 Pro USB-C SSD (serial `2338E8C83CF2`) was temporarily passed through from `px20` to VM 204 as `usb0`. On 2026-09-23, the owner authorized formatting the entire SSD. It has a GPT with one 1 MiB-aligned ext4 partition, label `EX`, UUID `92aa5561-1194-4515-98a4-3a441e80338c`. The filesystem uses 4 KiB blocks, one inode per 64 KiB, and a 1% reserved-block allowance. The post-format mount, clean filesystem state, capacity, and write test were verified; only `lost+found` remained. It was never added to `/etc/fstab`.
 
 Sequential `fio` tests on 2026-09-23 used a 32 GiB temporary file, 1 MiB blocks, direct I/O, and queue depth 16. Two-minute averages were 795 MB/s write and 909 MB/s read; five-minute averages were 814 MB/s write and 916 MB/s read. All four tests finished without I/O errors. The temporary file was removed, restoring about 3.6 TB free. These are single-VM, single-file sequential results, not a guarantee for small-file or concurrent workloads.
 
@@ -140,7 +140,9 @@ The archive listing command ended with status 141 only because `head` intentiona
 
 All required application data was restored to live services before the owner requested reformatting. Nextcloud's extracted copies were deleted separately after OpenCloud's 706 live files passed a full downloaded-content comparison. Formatting then removed every remaining extracted dataset and the original tar. No recovery or extraction unit is installed or running on `ctr`.
 
-Check the current ext4 mount and UUID:
+On 2026-09-23, after benchmarking, `/EX` was cleanly unmounted, its empty mount-point directory was removed, and `qm set 204 --delete usb0` removed the live USB passthrough. VM 204 remained running; its guest block-device list no longer showed the Crucial disk and `qm pending 204` showed no USB change awaiting reboot. The physical SSD may now be disconnected from `px20` without rebooting `ctr`.
+
+If the SSD is attached again later, check its filesystem identity before mounting:
 
 ```bash
 findmnt /EX
@@ -149,17 +151,7 @@ lsblk -f /dev/sdc
 
 A temporary read-only ratarmount trial was stopped after its full-archive index projected roughly 70–85 minutes. `/RECOVERY` was never mounted. Its partial index, environment, packages, and empty directories were removed.
 
-USB passthrough is node-local. If VM 204 runs on `px10`, `/EX` will not be available there. Before physically disconnecting the SSD, unmount it inside VM 204 and remove the passthrough device from the VM configuration:
-
-```bash
-# inside VM 204
-sudo umount /EX
-
-# on a Proxmox node
-qm set 204 --delete usb0
-```
-
-Confirm `/EX` is unmounted before disconnecting the SSD. Do not assume this formatted disk is a backup until a backup job and restore test exist.
+USB passthrough was node-local to `px20`. The disk is not a backup until a backup job and restore test exist.
 
 ## Intel iGPU passthrough
 
