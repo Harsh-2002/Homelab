@@ -9,7 +9,7 @@ These workloads were recovered from the former external SSD tree at `/EX/RECOVER
 
 The `AV` SMB share is mounted on `ctr` at `/mnt/AV`, with `/mnt/AV/downloads` and `/mnt/AV/media` prepared for future JDownloader/Jellyfin stacks. Those applications remain undeployed/stopped; their application state belongs on local `/data/apps`, not the SMB share. See `infrastructure/ctr/README.md`.
 
-All running stacks attach to the external Docker bridge `docknet`. Only the application ports needed by Caddy are published; databases remain bridge-only.
+Each running stack uses its own Compose default bridge. Only the application ports needed by Caddy are published; databases remain bridge-only. Do not attach new stacks to the retired shared `docknet` bridge.
 
 ## Recovery layout
 
@@ -30,7 +30,7 @@ Nextcloud Portainer stack 92 and both containers were removed. Its staged `/data
 ```bash
 ssh ctr 'curl -fsS http://127.0.0.1:5678/healthz'
 ssh ctr 'curl -fsS http://127.0.0.1:5230/healthz'
-ssh ctr 'sudo docker ps --filter network=docknet'
+ssh ctr 'sudo docker ps --format "{{.Names}} {{.Networks}}"'
 ```
 
 After any stack edit, validate both the local health endpoint and the Caddy URL. Do not infer a successful restore from Portainer metadata alone.

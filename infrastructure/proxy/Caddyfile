@@ -189,6 +189,14 @@
 	}
 }
 
+(jellyfin) {
+	@jellyfin host media.l3b.cc.cd
+	handle @jellyfin {
+		import proxy
+		reverse_proxy 10.1.1.4:8096
+	}
+}
+
 (registry) {
 	@registry host registry.l3b.cc.cd
 	handle @registry {
@@ -375,6 +383,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import paperless
 	import orva
 	import portainer
+	import jellyfin
 	import registry
 	import frigate
 	import s3

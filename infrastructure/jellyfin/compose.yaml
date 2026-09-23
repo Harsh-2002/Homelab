@@ -1,0 +1,38 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:12.1@sha256:78d3ea1207d1322471fcac39a614f004f2ccf7e878f95ab2977d752f07e4dd7e
+    container_name: jellyfin
+    user: "1000:1000"
+    group_add:
+      - "991"
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    environment:
+      TZ: Asia/Kolkata
+      JELLYFIN_PublishedServerUrl: https://media.l3b.cc.cd
+    ports:
+      - 10.1.1.4:8096:8096
+    volumes:
+      - type: bind
+        source: /data/apps/jellyfin/config
+        target: /config
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /data/apps/jellyfin/cache
+        target: /cache
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /mnt/AV/media
+        target: /media
+        read_only: true
+        bind:
+          create_host_path: false
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8096/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    restart: unless-stopped

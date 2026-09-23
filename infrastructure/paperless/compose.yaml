@@ -5,8 +5,6 @@ services:
     restart: unless-stopped
     volumes:
       - /data/apps/paperless/valkey:/data
-    networks:
-      - default
 
   paperless:
     image: ghcr.io/paperless-ngx/paperless-ngx:3.2.1
@@ -39,10 +37,3 @@ services:
       PAPERLESS_OCR_LANGUAGE: eng
       PAPERLESS_TASK_WORKERS: "1"
       PAPERLESS_THREADS_PER_WORKER: "2"
-    networks:
-      - default
-      - docknet
-
-networks:
-  docknet:
-    external: true

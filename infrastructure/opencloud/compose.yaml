@@ -70,12 +70,6 @@ services:
       - /data/apps/opencloud/data:/var/lib/opencloud
     ports:
       - 10.1.1.4:9200:9200
-    networks:
-      - default
-      - docknet
     restart: always
     labels:
       com.centurylinklabs.watchtower.enable: "false"
-networks:
-  docknet:
-    external: true

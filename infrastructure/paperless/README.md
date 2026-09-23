@@ -20,9 +20,9 @@ truth. The live Stack has three protected variables:
    change `PAPERLESS_SECRET_KEY` after deployment. The temporary
    `/data/apps/paperless/stack.env` was removed after the vault and
    Portainer copies were verified.
-3. Click **Deploy the stack**. No host paths or Docker networks need to be
-   created: the `/data/apps/paperless` directories and external `docknet`
-   network already exist. The initial image pull may take several minutes.
+3. Click **Deploy the stack**. The `/data/apps/paperless` directories already
+   exist; Compose creates the stack's own default network. The initial image
+   pull may take several minutes.
 4. Verify both containers and the app. Caddy's private route is enabled.
    Homepage is Git-managed; sync its Argo CD app after adding the card.
 

@@ -143,6 +143,11 @@ data:
             href: https://registry.l3b.cc.cd
             description: Container images
     - Applications:
+        - Jellyfin:
+            icon: jellyfin.png
+            href: https://media.l3b.cc.cd
+            description: Movies and TV Shows
+            ping: https://media.l3b.cc.cd/health
         - Immich:
             icon: immich.png
             href: https://photos.l3b.cc.cd
