@@ -5,9 +5,9 @@ These workloads were recovered from the former external SSD tree at `/EX/RECOVER
 | Stack | Persistent path | Host port | URL | State |
 | --- | --- | ---: | --- | --- |
 | `n8n` | `/data/apps/n8n` | 5678 | `https://n8n.l3b.cc.cd` | Running |
-| `jellyfin` | Existing Portainer definition | none | none | Definition retained; intentionally stopped |
+| `jellyfin` | `/data/apps/jellyfin` + `/mnt/AV/media` | 8096 | `https://media.l3b.cc.cd` | Running; see `infrastructure/jellyfin/README.md` |
 
-The `AV` SMB share is mounted on `ctr` at `/mnt/AV`, with `/mnt/AV/downloads` and `/mnt/AV/media` prepared for future JDownloader/Jellyfin stacks. Those applications remain undeployed/stopped; their application state belongs on local `/data/apps`, not the SMB share. See `infrastructure/ctr/README.md`.
+The `AV` SMB share is mounted on `ctr` at `/mnt/AV`. Jellyfin reads only `/mnt/AV/media` and keeps its application state on local `/data/apps`; JDownloader remains stopped. See `infrastructure/ctr/README.md`.
 
 Each running stack uses its own Compose default bridge. Only the application ports needed by Caddy are published; databases remain bridge-only. Do not attach new stacks to the retired shared `docknet` bridge.
 
