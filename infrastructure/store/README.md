@@ -28,4 +28,8 @@ PVE storage ID `external` points to PBS at `10.1.1.12:8007` using token `pve@pbs
 
 The PBS UI is private behind Caddy. The direct LAN service is `https://10.1.1.12:8007`. `store.l3b.cc.cd` is a direct-host DNS exception, while `pbs.l3b.cc.cd` resolves to the proxy wildcard. Keep them distinct. Caddy's TLS upstream uses the PBS self-signed certificate; the client-facing wildcard certificate is Caddy's.
 
+PBS has native Pocket ID OIDC realm `pocketid` and an explicitly authorized `iam.anuragvishwakarma@gmail.com@pocketid` administrator. Its OIDC client secret is in the `Pocket ID OIDC - pbs` 1Password item. The browser passkey callback still needs owner verification. `root@pam` and the PVE backup token remain unchanged. PVE storage `external` lets the Proxmox UI browse and restore PBS backups, but PVE and PBS remain separate administrative UIs and separate RBAC databases; sharing Pocket ID does not replicate local users.
+
+Samba is Debian 13's 4.22.11 package and negotiates SMB3 only (`SMB3_00` minimum, `SMB3` maximum), with signing required. It binds only to loopback and `10.1.1.12`, not Tailscale interfaces. The `Store SMB` 1Password item is a separate Samba `tdbsam` credential, not a PAM or OIDC password. A test file was uploaded, downloaded, and removed successfully.
+
 Config sources in this directory are the PBS apt source files, Samba config, and mount/systemd drop-in. The live PBS datastore, PVE storage, backup job, HA rule, and USB mapping are platform state, not generated from these files.

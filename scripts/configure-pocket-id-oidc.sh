@@ -75,18 +75,20 @@ create_public_client() {
 create_client headlamp 'Headlamp' 'https://headlamp.l3b.cc.cd' '["https://headlamp.l3b.cc.cd/oidc-callback"]'
 create_client argocd 'Argo CD' 'https://argocd.l3b.cc.cd' '["https://argocd.l3b.cc.cd/auth/callback"]'
 create_client proxmox 'Proxmox' 'https://px.l3b.cc.cd' '["https://px.l3b.cc.cd","https://px10.l3b.cc.cd","https://px20.l3b.cc.cd","https://px30.l3b.cc.cd"]'
+create_client pbs 'Proxmox Backup Server' 'https://pbs.l3b.cc.cd' '["https://pbs.l3b.cc.cd"]'
 create_client portainer 'Portainer' 'https://portainer.l3b.cc.cd/' '["https://portainer.l3b.cc.cd/"]'
 create_client s3 'RustFS' 'https://rustfs.l3b.cc.cd' '["https://rustfs.l3b.cc.cd/rustfs/admin/v3/oidc/callback/default"]'
 create_client tinyauth 'Tinyauth' 'https://login.l3b.cc.cd' '["https://login.l3b.cc.cd/api/oauth/callback/pocketid"]'
 create_client beszel 'Beszel' 'https://beszel.l3b.cc.cd' '["https://beszel.l3b.cc.cd/api/oauth2-redirect"]'
 create_client immich 'Immich' 'https://photos.l3b.cc.cd' '["https://photos.l3b.cc.cd/auth/login","https://photos.l3b.cc.cd/user-settings","app.immich:///oauth-callback"]' '["https://photos.l3b.cc.cd/api/oauth/backchannel-logout"]'
 create_client paperless 'Paperless-ngx' 'https://docs.l3b.cc.cd' '["https://docs.l3b.cc.cd/accounts/oidc/pocketid/login/callback/"]'
+create_client memos 'Memos' 'https://notes.l3b.cc.cd' '["https://notes.l3b.cc.cd/auth/callback"]'
 create_public_client opencloud-web 'OpenCloud Web' '["https://drive.l3b.cc.cd/","https://drive.l3b.cc.cd/oidc-callback.html","https://drive.l3b.cc.cd/oidc-silent-redirect.html"]' '["https://drive.l3b.cc.cd"]'
 create_public_client OpenCloudDesktop 'OpenCloud Desktop' '["http://127.0.0.1","http://localhost"]'
 create_public_client OpenCloudAndroid 'OpenCloud Android' '["oc://android.opencloud.eu"]'
 create_public_client OpenCloudIOS 'OpenCloud iOS' '["oc://ios.opencloud.eu"]'
 
-declared_client_ids='["headlamp","argocd","proxmox","portainer","s3","tinyauth","beszel","immich","paperless","opencloud-web","OpenCloudDesktop","OpenCloudAndroid","OpenCloudIOS"]'
+declared_client_ids='["headlamp","argocd","proxmox","pbs","portainer","s3","tinyauth","beszel","immich","paperless","memos","opencloud-web","OpenCloudDesktop","OpenCloudAndroid","OpenCloudIOS"]'
 existing_client_ids="$(api GET "/user-groups/$group_id" | jq -c '[.allowedOidcClients[].id]')"
 client_ids="$(jq -cn --argjson existing "$existing_client_ids" --argjson declared "$declared_client_ids" '$existing + $declared | unique')"
 api PUT "/user-groups/$group_id/allowed-oidc-clients" "$(jq -cn --argjson ids "$client_ids" '{oidcClientIds:$ids}')" >/dev/null

@@ -16,6 +16,10 @@ All running stacks attach to the external Docker bridge `docknet`. Only the appl
 - Memos: SQLite state under `/data/apps/memos/data`
 Nextcloud was retired after its 706 live files were compared byte for byte with OpenCloud; see `infrastructure/opencloud/README.md`.
 
+n8n's existing owner email is `iam.anuragvishwakarma@gmail.com`. Native password login and its existing MFA were verified; Caddy's extra Tinyauth gate was removed, but the route stays LAN/Tailscale-only. The existing `N8N` 1Password item was updated, not duplicated.
+
+Memos' existing `SlashGreen` administrator now uses `iam.anuragvishwakarma@gmail.com`. Native password login was verified. Its native Pocket ID OAuth2 provider is configured, but the existing account has not linked that identity through Account Settings; registration remains disabled. The app was set to private instance access. The owner is evaluating a replacement for Memos, so preserve its SQLite data and do not assume OIDC login or retire it yet.
+
 ## Retired workloads
 
 Guacamole, firstfinger/Ghost, Orva, and code-server were removed from Portainer and their associated recovery data was intentionally deleted. The temporary recovered Cairn stack and `/data/apps/cairn` copy were also removed after Cairn was redeployed fresh as a native service on the `s3` LXC; see `infrastructure/cairn/README.md`.
