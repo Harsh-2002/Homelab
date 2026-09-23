@@ -1,6 +1,6 @@
 # Store: PBS and SMB
 
-`store` is VM 107 (`10.1.1.12`), normally on px10. It runs Proxmox Backup Server 4.2 and Samba. The PBS UI is private at `https://pbs.l3b.cc.cd`; SMB is `smb://store.l3b.cc.cd/files`. The cluster token and SMB credentials are in the HomeLab 1Password vault as `PBS API Token - PVE` and `Store SMB`. The PBS root PAM password remains the one the owner set during installation; it was not changed. Never put secrets in this repo.
+`store` is VM 107 (`10.1.1.12`), normally on px10. It runs Proxmox Backup Server 4.2 and Samba. The PBS UI is private at `https://pbs.l3b.cc.cd`; SMB is `smb://store.l3b.cc.cd/AV`. The cluster token and SMB credentials are in the HomeLab 1Password vault as `PBS API Token - PVE` and `Store SMB`. The PBS root PAM password remains the one the owner set during installation; it was not changed. Never put secrets in this repo.
 
 ## Storage
 
@@ -9,7 +9,7 @@ The Crucial X9 Pro 4 TB USB SSD (serial `2338E8C83CF2`) is passed through to VM 
 | LV | Size | Filesystem | Mount | Purpose |
 | --- | ---: | --- | --- | --- |
 | `external/backup` | 1 TiB | ext4 | `/mnt/datastore/external` | PBS removable datastore `external` |
-| `external/share` | 1 TiB | ext4 | `/srv/files` | SMB share `/srv/files/data` |
+| `external/share` | 1 TiB | ext4 | `/srv/AV` | SMB share `/srv/AV` |
 
 About 1.64 TiB remains unallocated in the VG for future expansion. The PBS filesystem UUID is `c21cf584-1056-4d9c-8d52-ba2c72d92379`; the SMB filesystem UUID is `2489f3c3-bbaa-4f4b-bdf5-69d240a6bdab`. Use UUIDs/LVM names, not `/dev/sdX`, when moving the SSD. Both filesystems have zero reserved blocks. Samba requires the SMB mount and stops if it disappears. The PBS datastore is configured as removable, bound to its backing-device UUID.
 
@@ -23,7 +23,7 @@ PVE storage ID `external` points to PBS at `10.1.1.12:8007` using token `pve@pbs
 
 1. Attach the exact Crucial SSD to px10 or px20. Confirm its serial with `lsblk -o NAME,SERIAL,SIZE` before changing the VM's USB mapping. Never initialize or format it during recovery.
 2. Ensure VM 107's `usb0` maps the SSD, then start/restart VM 107. The USB ID on px10 was `0634:5603`, but identify the device again after a move.
-3. In `store`, check `lvs external`, `findmnt /mnt/datastore/external /srv/files`, `proxmox-backup-manager datastore show external`, `systemctl status proxmox-backup-proxy smbd`, and `smbclient -L localhost -N` (listing may be denied without credentials). Mount `/srv/files` with `systemctl start srv-files.mount` if needed.
+3. In `store`, check `lvs external`, `findmnt /mnt/datastore/external /srv/AV`, `proxmox-backup-manager datastore show external`, `systemctl status proxmox-backup-proxy smbd`, and `smbclient -L localhost -N` (listing may be denied without credentials). Mount `/srv/AV` with `systemctl start srv-AV.mount` if needed.
 4. From a PVE node check `pvesm status` and `pvesm list external`. Test a guest restore before depending on a backup.
 
 The PBS UI is private behind Caddy. The direct LAN service is `https://10.1.1.12:8007`. `store.l3b.cc.cd` is a direct-host DNS exception, while `pbs.l3b.cc.cd` resolves to the proxy wildcard. Keep them distinct. Caddy's TLS upstream uses the PBS self-signed certificate; the client-facing wildcard certificate is Caddy's.

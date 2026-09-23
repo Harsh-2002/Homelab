@@ -3,7 +3,7 @@ Description=Crucial external SMB volume
 
 [Mount]
 What=/dev/disk/by-uuid/2489f3c3-bbaa-4f4b-bdf5-69d240a6bdab
-Where=/srv/files
+Where=/srv/AV
 Type=ext4
 Options=rw,noatime
 TimeoutSec=15s
