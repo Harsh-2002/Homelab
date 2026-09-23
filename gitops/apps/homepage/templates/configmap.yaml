@@ -297,6 +297,9 @@ data:
           setText(details.querySelector(".information-widget-label"), "Longhorn");
         });
         renderK8s();
+        document.querySelectorAll(".service-block > div.font-bold").forEach((label) => {
+          if (label.textContent.trim() === "Failed Tasks 24h") setText(label, "Failed Tasks");
+        });
       };
       const start = () => {
         let queued = false;

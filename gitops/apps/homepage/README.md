@@ -24,6 +24,8 @@ The Control row links to Proxmox Backup Server at its private `pbs.l3b.cc.cd` UI
 
 Homepage v2.4.0 briefly sends one tasks request without `since` on each page load; PBS rejects it with HTTP 400, then the dated 24-hour request succeeds with HTTP 200 and the widget displays the valid count. This is an upstream widget quirk, not a PBS authentication failure.
 
+The small `custom.js` adapter shortens the PBS field's display label to **Failed Tasks** to avoid a narrow-card wrap; the value still represents the last 24 hours.
+
 Each non-human metric integration has its own least-privilege identity:
 
 - Proxmox `homepage@pve!homepage` has only the `PVEAuditor` token ACL.
