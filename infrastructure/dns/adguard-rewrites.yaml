@@ -5,6 +5,9 @@ rewrites:
   - domain: dev.l3b.cc.cd
     answer: dev.l3b.cc.cd
     enabled: true
+  - domain: store.l3b.cc.cd
+    answer: store.l3b.cc.cd
+    enabled: true
   - domain: k8s.l3b.cc.cd
     answer: k8s.l3b.cc.cd
     enabled: true

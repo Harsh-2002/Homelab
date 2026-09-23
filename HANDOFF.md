@@ -182,7 +182,9 @@ Deployed and verified:
 - Beszel and internal Uptime Kuma
 - Portainer-managed Docker workloads including restored applications
 - Restored `n8n` and `memos` workloads on `ctr`; Nextcloud was retired after byte-for-byte verification of its 706 live files in OpenCloud
-- The 4 TB Crucial X9 Pro was reformatted on 2026-09-23 as one ext4 partition; the former whole-system tar and extracted recovery tree were erased at the owner's request. After benchmarking, `/EX` was unmounted and `usb0` passthrough was removed live from VM 204 on `px20`; the physical SSD is ready to disconnect. The empty disk is not yet a backup target.
+- The 4 TB Crucial X9 Pro was reformatted on 2026-09-23; the former whole-system tar and recovery tree were erased at the owner's request. It is now an LVM disk passed to `store` VM 107 on px10, with separate 1 TiB PBS and 1 TiB SMB volumes and about 1.64 TiB unallocated. See `infrastructure/store/README.md` before moving or resizing it.
+- PBS 4.2 and Samba run in `store` (`10.1.1.12`). The PBS UI is private at `pbs.l3b.cc.cd`; SMB is `smb://store.l3b.cc.cd/files`. VM 107 replicates its OS disk to px20 and has HA affinity only to px10/px20. The USB data does not replicate, so physical disk movement is required after host failure.
+- PVE storage `external` is connected to PBS. Job `critical-to-pbs` backs up VM 100, CT 101–105, and VM 204 daily at 01:00 IST, keeping seven daily and four weekly points. K8s/Longhorn, orva, and PBS itself are excluded. CT 102's initial backup completed successfully.
 - Fresh native Cairn service on the `s3` LXC beside RustFS, using separate ports and `/data/cairn`
 - Native RustFS and migrated S3 workloads
 - Three-node Tailscale subnet routing and Keepalived gateway VIP
@@ -191,7 +193,7 @@ Deployed and verified:
 
 Planned but **not yet applied** at the time of this handoff:
 
-- Establish verified independent backups for the Proxmox guests and application data, especially both OpenCloud metadata and its RustFS bucket. The former whole-system recovery tar no longer exists.
+- Verify a full restore and extend independent backup coverage for application data, especially both OpenCloud metadata and its RustFS bucket. The initial PBS job is not a complete backup strategy; the former whole-system recovery tar no longer exists.
 - Change tailnet DNS from global `10.1.1.2` to split DNS: `l3b.cc.cd` only through `10.1.1.2`, while public DNS remains local to each client.
 - Keep MagicDNS enabled and keep `accept-dns=true` on `slate`; do not override its GCP resolver for ordinary public names.
 - Deploy a second Uptime Kuma on `slate` for the external viewpoint and use ntfy there. It should monitor home internet, Tailscale/subnet routing, AdGuard, public services, and selected private services without duplicating every internal alert.

@@ -1,0 +1,31 @@
+# Store: PBS and SMB
+
+`store` is VM 107 (`10.1.1.12`), normally on px10. It runs Proxmox Backup Server 4.2 and Samba. The PBS UI is private at `https://pbs.l3b.cc.cd`; SMB is `smb://store.l3b.cc.cd/files`. The cluster token and SMB credentials are in the HomeLab 1Password vault as `PBS API Token - PVE` and `Store SMB`. The PBS root PAM password remains the one the owner set during installation; it was not changed. Never put secrets in this repo.
+
+## Storage
+
+The Crucial X9 Pro 4 TB USB SSD (serial `2338E8C83CF2`) is passed through to VM 107. It has a GPT partition with an LVM VG named `external`:
+
+| LV | Size | Filesystem | Mount | Purpose |
+| --- | ---: | --- | --- | --- |
+| `external/backup` | 1 TiB | ext4 | `/mnt/datastore/external` | PBS removable datastore `external` |
+| `external/share` | 1 TiB | ext4 | `/srv/files` | SMB share `/srv/files/data` |
+
+About 1.64 TiB remains unallocated in the VG for future expansion. The PBS filesystem UUID is `c21cf584-1056-4d9c-8d52-ba2c72d92379`; the SMB filesystem UUID is `2489f3c3-bbaa-4f4b-bdf5-69d240a6bdab`. Use UUIDs/LVM names, not `/dev/sdX`, when moving the SSD. Both filesystems have zero reserved blocks. Samba requires the SMB mount and stops if it disappears. The PBS datastore is configured as removable, bound to its backing-device UUID.
+
+The SSD is **not replicated**. HA and Proxmox replication cover only VM 107's 100 GB OS disk on local ZFS. VM 107 has a strict HA node-affinity rule for px10 (preferred) and px20 (fallback), with replication every five minutes. px30 is excluded. After px10 fails, the VM may start on px20, but the PBS datastore and SMB share remain unavailable until the USB SSD is physically moved and passed through to VM 107 there. Do not treat this disk as its own backup.
+
+## Backups
+
+PVE storage ID `external` points to PBS at `10.1.1.12:8007` using token `pve@pbs!cluster`. The token has `DatastoreBackup` permission. The scheduled job `critical-to-pbs` runs at 01:00 IST daily, snapshot mode, for dev (100), proxy (101), DNS (102), auth (103), Beszel (104), s3 (105), and ctr (204). PBS job `daily-retention` prunes at 03:00 IST to seven daily and four weekly points; garbage collection runs at 04:00 IST. New backups are verified automatically, and job `monthly-recheck` runs Sundays at 05:00 IST to reverify snapshots older than 30 days. It excludes orva (106), store itself (107), and K8s/Longhorn VMs (201–203) to protect the 1 TiB capacity. CT 102's initial backup completed on 2026-09-23. Monitor datastore use before broadening scope. Back up important SMB files elsewhere; the same SSD cannot provide an independent copy.
+
+## Recovery and checks
+
+1. Attach the exact Crucial SSD to px10 or px20. Confirm its serial with `lsblk -o NAME,SERIAL,SIZE` before changing the VM's USB mapping. Never initialize or format it during recovery.
+2. Ensure VM 107's `usb0` maps the SSD, then start/restart VM 107. The USB ID on px10 was `0634:5603`, but identify the device again after a move.
+3. In `store`, check `lvs external`, `findmnt /mnt/datastore/external /srv/files`, `proxmox-backup-manager datastore show external`, `systemctl status proxmox-backup-proxy smbd`, and `smbclient -L localhost -N` (listing may be denied without credentials). Mount `/srv/files` with `systemctl start srv-files.mount` if needed.
+4. From a PVE node check `pvesm status` and `pvesm list external`. Test a guest restore before depending on a backup.
+
+The PBS UI is private behind Caddy. The direct LAN service is `https://10.1.1.12:8007`. `store.l3b.cc.cd` is a direct-host DNS exception, while `pbs.l3b.cc.cd` resolves to the proxy wildcard. Keep them distinct. Caddy's TLS upstream uses the PBS self-signed certificate; the client-facing wildcard certificate is Caddy's.
+
+Config sources in this directory are the PBS apt source files, Samba config, and mount/systemd drop-in. The live PBS datastore, PVE storage, backup job, HA rule, and USB mapping are platform state, not generated from these files.
