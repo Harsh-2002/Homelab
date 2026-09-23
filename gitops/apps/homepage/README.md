@@ -20,6 +20,8 @@ The header ends with a keyless Open-Meteo weather widget for Bilalpada, visually
 
 `Headlamp` is deliberately a Kubernetes management link rather than a duplicate metric source: its authoritative data is the Kubernetes API already represented by the labelled cluster and node cards. `RustFS` and the native Cairn development deployment have separate Platform cards and separate S3 endpoints as documented in their infrastructure runbooks. The Cairn card uses the project's own console favicon rather than the unrelated icon-catalog entry with the same name. The Applications row contains Immich, Karakeep, OpenCloud, Paperless-ngx, and n8n. Live applications use status checks. `Pocket ID` remains an identity health/access link; no sensitive authentication internals are displayed.
 
+The Control row links to Proxmox Backup Server at its private `pbs.l3b.cc.cd` UI. It uses an availability check only; no PBS credential or backup data is exposed to Homepage.
+
 Each non-human metric integration has its own least-privilege identity:
 
 - Proxmox `homepage@pve!homepage` has only the `PVEAuditor` token ACL.

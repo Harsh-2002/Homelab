@@ -84,6 +84,11 @@ data:
               env: 2
               key: "{{ "{{HOMEPAGE_VAR_PORTAINER_API_KEY}}" }}"
               fields: ["running", "stopped", "total"]
+        - Proxmox Backup Server:
+            icon: proxmox.png
+            href: https://pbs.l3b.cc.cd
+            description: Backups
+            ping: https://pbs.l3b.cc.cd
     - Platform:
         - Argo CD:
             icon: argo-cd.png
