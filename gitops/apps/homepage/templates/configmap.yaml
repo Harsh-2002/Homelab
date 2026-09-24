@@ -148,6 +148,11 @@ data:
             href: https://media.l3b.cc.cd
             description: Movies and TV Shows
             ping: https://media.l3b.cc.cd/health
+        - Motrix:
+            icon: https://downloads.l3b.cc.cd/favicon.ico
+            href: https://downloads.l3b.cc.cd
+            description: Downloads
+            ping: https://downloads.l3b.cc.cd/healthz
         - Immich:
             icon: immich.png
             href: https://photos.l3b.cc.cd
