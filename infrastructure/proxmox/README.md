@@ -18,6 +18,12 @@ getent ahostsv4 github.com
 dig @1.1.1.1 example.com A +short
 ```
 
+## px20 spare USB SSD
+
+The 256 GB `CONSISTENT SSD S7 256GB` USB disk (serial `20260200000000001741`, ext4 partition UUID `6e73fae7-a244-4b6c-899d-5023b1305546`) is attached to px20 but intentionally **unmounted and unregistered**. On 2026-09-24, the empty `backup-store` directory-storage entry was removed from cluster storage configuration, its UUID mount was removed from px20 `/etc/fstab`, and the mountpoint was removed. The disk was not formatted, wiped, or physically detached; its ext4 filesystem and standard `dump`/`lost+found` directories remain on the disk. The hourly `critical-to-pbs` job targets only PBS storage `external`, not this spare.
+
+Identify the disk by serial and UUID before any future use; `/dev/sdc` is not a stable name. Check with `lsblk -o NAME,MODEL,SERIAL,SIZE,FSTYPE,UUID,MOUNTPOINTS` on px20 and `pvesm status` on a cluster node. Do not assume the spare is another backup copy. To reuse it, decide its role first, then deliberately mount and register it; do not format it merely to make it visible.
+
 For model-specific firmware package mapping, the sequential USB update
 procedure, validation gates, and the 2026-09-22 fwupd cleanup record, see
 [`BIOS-UPGRADE.md`](BIOS-UPGRADE.md).
