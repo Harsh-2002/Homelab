@@ -363,6 +363,15 @@
 	}
 }
 
+(storefront) {
+	@storefront host store.l3b.cc.cd
+	handle @storefront {
+		import proxy
+		root * /srv/store
+		file_server
+	}
+}
+
 (cluster) {
 	@cluster host px.l3b.cc.cd
 	handle @cluster {
@@ -409,6 +418,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import cairn
 	import proxmox
 	import backup
+	import storefront
 	import cluster
 	handle {
 		abort
