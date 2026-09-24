@@ -8,6 +8,8 @@ DNS LXC `10.1.1.2` runs:
 
 The protected active configuration is `/opt/AdGuardHome/AdGuardHome.yaml`. It is not copied into Git because it contains the administrator password hash and operational state. The safe desired DNS fragments are tracked as `adguard-rewrites.yaml` and `unbound-local.conf`.
 
+The sanitized, publicly shareable overview is [SHAREABLE-SETUP.md](SHAREABLE-SETUP.md), published at `https://share.l3b.cc.cd/public/guides/adguard-unbound-setup.md`. Audit finding on 2026-09-24: the running Unbound process answers on loopback port 5335, but the retained on-disk configuration does not declare that port or cache tuning; its config query reports default port 53 and 4 MiB message/RRset caches. Treat this as restart-risk configuration drift. Do not claim the current Unbound layer is tuned or reproducible until its persistent config is reconciled and restart-tested.
+
 Proxy-managed DNS uses one apex A rewrite and one wildcard CNAME rewrite:
 
 | Name | Type | Answer |
@@ -21,7 +23,7 @@ Adding a new Caddy hostname requires only a Caddy route; no additional AdGuard r
 
 Cloudflare is intentionally private by default. Its apex A record is DNS-only and points `l3b.cc.cd` to the proxy's private address `10.1.1.3`; the existing wildcard CNAME therefore resolves all otherwise-unlisted public names to that private address. Public clients cannot use private RFC1918 addresses, so a new Caddy hostname is not internet-reachable merely because it exists.
 
-To expose a deliberate exception, add an explicit DNS-only public A record for that hostname in Cloudflare. Current records pointing to `150.129.31.154` are `argocd`, `photos`, `pin`, `registry`, `orva`, `media`, and `store`. Caddy keeps every Argo CD path private except its signed webhook, while the application routes rely on their native authentication. Do not proxy these records through Cloudflare until Caddy is explicitly configured to trust Cloudflare client-IP headers.
+To expose a deliberate exception, add an explicit DNS-only public A record for that hostname in Cloudflare. Current records pointing to `150.129.31.154` are `argocd`, `photos`, `pin`, `registry`, `orva`, `media`, `store`, and `share`. Caddy keeps every Argo CD path private except its signed webhook, while the application routes rely on their native authentication. Do not proxy these records through Cloudflare until Caddy is explicitly configured to trust Cloudflare client-IP headers.
 
 Use `/usr/local/bin/cf` on `dev` to inspect or change Cloudflare records. It defaults to a responsive bordered table; add `--plain` to `list` or `get` for tab-separated script output. Its configuration is `/etc/caddy/cloudflare.env`, with `CF_ZONE=l3b.cc.cd`; the API token remains outside Git.
 

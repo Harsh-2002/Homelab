@@ -117,6 +117,7 @@ Read the main README for the full endpoint table. Key infrastructure facts:
 - Router: `10.1.1.1`
 - DNS: `10.1.1.2`
 - Caddy proxy: `10.1.1.3`
+- Public read-only RustFS object links use `https://share.l3b.cc.cd/public/<key>`: Caddy forwards only GET/HEAD under `/public/*`, and the `public` bucket grants anonymous GetObject but not listing/write. The sanitized DNS guide is at `/public/guides/adguard-unbound-setup.md`; see `infrastructure/dns/SHAREABLE-SETUP.md`. The private `s3` API/console are unchanged. Current Unbound files have listener/cache configuration drift (running 5335, on-disk default 53/4 MiB); reconcile before relying on restart.
 - Public `store.l3b.cc.cd` is a static Astro storefront from `git@github.com:Harsh-2002/store.git`, built with `npm ci && npm run build` and served by Caddy from `/srv/store` on `proxy`. Cloudflare's explicit DNS-only A record targets `150.129.31.154`; internal Unbound resolves the name to `10.1.1.3`. This web name is distinct from the `store` SSH alias and PBS/SMB VM at `10.1.1.12`. See `infrastructure/proxy/README.md`.
 - Orva serverless VM: `10.1.1.11` (VM 106; outbound-isolated by Proxmox firewall)
 - Kubernetes API VIP: `10.1.1.200`

@@ -67,6 +67,8 @@ Pocket ID OIDC login; its Caddy route does not import Tinyauth.
 
 RustFS is private-network-only as well: `s3.l3b.cc.cd` serves its S3 API and `rustfs.l3b.cc.cd` its native OIDC-capable console. The API route deliberately does not use response compression, which avoids altering object-transfer semantics or signed S3 responses. Neither hostname is publicly exposed by DNS; making the API public requires an explicit later decision and a hostname-specific Cloudflare A record.
 
+`share.l3b.cc.cd` is a narrow public object-download endpoint backed by RustFS. Caddy only forwards `GET` and `HEAD` for `/public/*` to `10.1.1.8:9000`; all other paths and methods return 403. Cloudflare's explicit DNS-only `share` A record points to `150.129.31.154`. The private S3 API and console remain unchanged. The `public` bucket has anonymous `s3:GetObject` on its objects only, not list/write; every object placed there is intentionally public. The first object is the sanitized DNS guide at `/public/guides/adguard-unbound-setup.md`.
+
 Expected unauthenticated behavior:
 
 ```text

@@ -266,6 +266,25 @@
 	}
 }
 
+(publicshare) {
+	@share {
+		host share.l3b.cc.cd
+		path /public/*
+		method GET HEAD
+	}
+	handle @share {
+		header {
+			-Server
+			X-Content-Type-Options nosniff
+		}
+		reverse_proxy 10.1.1.8:9000
+	}
+	@sharehost host share.l3b.cc.cd
+	handle @sharehost {
+		respond 403
+	}
+}
+
 (beszel) {
 	@beszel host beszel.l3b.cc.cd
 	handle @beszel {
@@ -412,6 +431,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import registry
 	import frigate
 	import s3
+	import publicshare
 	import beszel
 	import uptime
 	import n8n
