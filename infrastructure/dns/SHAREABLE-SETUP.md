@@ -4,18 +4,11 @@ This is a sanitized description of a small home-lab DNS stack, checked against t
 
 ## Architecture
 
-```text
-LAN / Kubernetes / Tailscale clients
-        │ DNS, TCP/UDP 53
-        ▼
-AdGuard Home (systemd service, dedicated Debian LXC)
-  ├─ local rewrites and HaGeZi blocklists
-  ├─ 128 MiB DNS cache
-  └─ upstream 127.0.0.1:5335
-        ▼
-Unbound (systemd service, recursive resolver + DNSSEC validator)
-        ▼
-DNS root, TLD and authoritative servers
+```mermaid
+flowchart LR
+    C[LAN, Kubernetes and Tailscale clients] -->|TCP/UDP 53| A[AdGuard Home]
+    A -->|blocklists, rewrites, 128 MiB cache| U[Unbound on loopback:5335]
+    U -->|recursive DNSSEC resolution| R[Root, TLD and authoritative servers]
 ```
 
 The DNS container has 2 vCPU and 2 GiB RAM. AdGuard Home `v0.107.79` and Unbound `v1.26.1` are installed as native systemd services, both enabled and running. AdGuard listens on its LAN address and loopback for plain DNS; its management UI listens on a separate LAN port behind a private reverse proxy. Unbound is reached only over loopback. There is no Docker or public DNS listener.
@@ -81,19 +74,63 @@ I use the default blocking mode, with no custom allowlist or user rules in the s
 
 An apex A rewrite points `<INTERNAL_DOMAIN>` to `<PROXY_LAN_IP>`, and a wildcard CNAME rewrite points `*.<INTERNAL_DOMAIN>` back to that apex. New reverse-proxy services therefore need a proxy route but usually no new local DNS record. A few direct-host names use AdGuard CNAME exceptions and exact A records in Unbound instead. Public DNS is private-by-default; only explicitly published names receive public A records. Keep direct-host, SMB and management names private.
 
-## Unbound settings and an important caveat
+## Unbound: complete current config and a reproducible example
 
-The running Unbound process answers recursive queries on `127.0.0.1:5335`, and its Debian systemd unit is enabled. Its trust anchor is managed at `/var/lib/unbound/root.key`. The retained local-zone file is conceptually:
+Unbound is the **recursive resolver**, not a forwarder to a public DNS provider. The running process answers on `127.0.0.1:5335`, and its Debian systemd unit is enabled. These are all of the current on-disk Unbound files, with only the domain and host details replaced:
+
+`/etc/unbound/unbound.conf`:
+
+```unbound
+include-toplevel: "/etc/unbound/unbound.conf.d/*.conf"
+```
+
+`/etc/unbound/unbound.conf.d/remote-control.conf`:
+
+```unbound
+remote-control:
+    control-enable: yes
+    control-interface: /run/unbound.ctl
+```
+
+`/etc/unbound/unbound.conf.d/root-auto-trust-anchor-file.conf`:
+
+```unbound
+server:
+    auto-trust-anchor-file: "/var/lib/unbound/root.key"
+```
+
+`/etc/unbound/unbound.conf.d/homelab.conf` (there are several direct-host `local-data` lines; this shows the complete pattern without my private inventory):
 
 ```unbound
 server:
     local-zone: "<INTERNAL_DOMAIN>." transparent
-    local-data: "<DIRECT_HOST>.<INTERNAL_DOMAIN>. 30 IN A <DIRECT_HOST_LAN_IP>"
+    local-data: "<DIRECT_HOST_1>.<INTERNAL_DOMAIN>. 30 IN A <HOST_1_LAN_IP>"
+    local-data: "<DIRECT_HOST_2>.<INTERNAL_DOMAIN>. 30 IN A <HOST_2_LAN_IP>"
 ```
 
-However, **the current on-disk Unbound files do not declare `interface: 127.0.0.1`, `port: 5335`, or larger cache sizes**. Runtime socket inspection shows port 5335, while querying the current config reports the Unbound defaults (port 53; 4 MiB message and 4 MiB RRset caches). This is configuration drift, not a reproducible tuned resolver. Do **not** copy the local-zone fragment alone or assume a future full restart will recreate the working listener. The persistent listener/cache configuration must be reconciled and restart-tested before treating this as a complete installation recipe. No such live change was made while preparing this shareable note.
+**Important live/on-disk drift:** None of those files declares `interface: 127.0.0.1`, `port: 5335`, or custom caches. Socket inspection confirms that the already-running process is on 5335, but the current config query reports Unbound defaults: port 53, 4 MiB message cache, 4 MiB RRset cache, `prefetch: no`, `serve-expired: no`, one configured thread, and qname minimisation/DNSSEC validation enabled. A reload log says the process continued with two threads because of existing `so-reuseport` state. Thus the process state is **not reproducible from these files**; a cold restart may fail to bind as expected or conflict with AdGuard on port 53. I did not restart or modify it for this write-up.
 
-For a new installation, explicitly set the loopback listener and port, then size Unbound's caches deliberately for the machine. The official Unbound manual explains `msg-cache-size`, `rrset-cache-size`, `prefetch`, `serve-expired`, DNSSEC and qname minimisation. Avoid claiming “max cache” without measuring hit rate and memory; the 128 MiB AdGuard cache is currently the main intentionally sized cache in this stack.
+For someone building the same architecture afresh, the missing persistent settings should go into a separate file such as `/etc/unbound/unbound.conf.d/recursive.conf`. The following is a **recommended example, not a claim about my currently installed file** for a two-core, 2 GiB DNS guest with AdGuard's 128 MiB cache:
+
+```unbound
+server:
+    interface: 127.0.0.1
+    port: 5335
+    access-control: 127.0.0.0/8 allow
+    num-threads: 2
+    so-reuseport: yes
+    msg-cache-size: 32m
+    rrset-cache-size: 64m
+    cache-min-ttl: 0
+    cache-max-ttl: 86400
+    prefetch: yes
+    serve-expired: no
+    qname-minimisation: yes
+    hide-identity: yes
+    hide-version: yes
+```
+
+Keep the Debian root trust-anchor file above for DNSSEC. `prefetch` refreshes popular near-expiry cache entries; I would leave Unbound's own `serve-expired` off because AdGuard already has optimistic caching. These cache sizes are a starting budget, not a universal maximum; watch memory and cache hit rate. Before applying a new file, run `unbound-checkconf`, ensure port 5335 is reachable only on loopback, and plan a restart test when DNS clients have a working fallback.
 
 ## Operational checks
 

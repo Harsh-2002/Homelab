@@ -70,8 +70,8 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Motrix Server (private) | `https://downloads.l3b.cc.cd` |
 | RustFS S3 API | `https://s3.l3b.cc.cd` |
 | RustFS Console | `https://rustfs.l3b.cc.cd` |
-| Cairn S3 API | `https://cairn-s3.l3b.cc.cd` |
-| Cairn Console | `https://cairn.l3b.cc.cd` |
+| Cairn S3 API (public, S3-authenticated) | `https://cairn-s3.l3b.cc.cd` |
+| Cairn Console (private) | `https://cairn.l3b.cc.cd` |
 | n8n UI | `https://n8n.l3b.cc.cd` |
 | OpenCloud files | `https://drive.l3b.cc.cd` |
 | Orva serverless | `https://orva.l3b.cc.cd` (`10.1.1.11:8443`) |

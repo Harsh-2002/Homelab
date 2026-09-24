@@ -6,12 +6,14 @@ Cairn is a fresh native deployment on the `s3` LXC at `10.1.1.8`, alongside Rust
 
 | Service | Listener | URL | Exposure |
 | --- | --- | --- | --- |
-| Cairn S3/API | `10.1.1.8:7373` | `https://cairn-s3.l3b.cc.cd` | LAN/Tailscale only |
+| Cairn S3/API | `10.1.1.8:7373` | `https://cairn-s3.l3b.cc.cd` | Public; S3 auth/policies apply |
 | Cairn console | `10.1.1.8:7374` | `https://cairn.l3b.cc.cd` | LAN/Tailscale only |
 | RustFS S3/API | `10.1.1.8:9000` | `https://s3.l3b.cc.cd` | LAN/Tailscale only |
 | RustFS console | `10.1.1.8:9001` | `https://rustfs.l3b.cc.cd` | LAN/Tailscale only |
 
 Caddy at `10.1.1.3` terminates TLS. Cairn binds only the LXC LAN address and trusts only `10.1.1.3/32` as its reverse proxy.
+
+The API hostname has an explicit DNS-only Cloudflare A record to `150.129.31.154`, and Caddy does not apply its LAN/Tailscale source filter to that API route. The console retains the source filter and has no public DNS exception. The existing `public` Cairn bucket is currently empty and has no anonymous-read policy: the temporary DNS-guide object and policy were removed when the guide moved to Notion. Do not assume a bucket name alone makes objects public. Public API clients must use valid S3 credentials unless a specific bucket/object policy is deliberately added.
 
 ## Installation
 

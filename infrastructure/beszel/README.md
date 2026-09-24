@@ -14,7 +14,7 @@ CT 104 also hosts the independent native Uptime Kuma service documented under `i
 | Primary node | `px10` |
 | Replica node | `px30` |
 | Agent transport | SSH-key pull mode on TCP `45876` |
-| Monitored hosts | `px10`, `px20`, `px30`, `ctr` |
+| Monitored systems | `px10`, `px20`, `px30`, `dev`, `proxy`, `dns`, `auth`, `beszel`, `s3`, `orva`, `store`, `ctr` (12 total) |
 
 Caddy terminates TLS and applies the private LAN/Tailscale policy. Pocket ID is configured as Beszel's native OIDC provider with callback `https://beszel.l3b.cc.cd/api/oauth2-redirect`.
 
@@ -41,7 +41,9 @@ state:        /var/lib/beszel-agent
 service:      /etc/systemd/system/beszel-agent.service
 ```
 
-The agents receive `CAP_SYS_RAWIO` and `CAP_SYS_ADMIN` so `smartctl` can read SATA and NVMe health without running the whole process as root. Proxmox agents are members of `disk`; the `ctr` agent is additionally a member of `docker` for read access to `/var/run/docker.sock`.
+The agents receive `CAP_SYS_RAWIO` and `CAP_SYS_ADMIN` so `smartctl` can read SATA and NVMe health where the guest/host exposes the hardware, without running the whole process as root. Unprivileged LXC agents cannot see host physical disks merely because the service has these capabilities. Proxmox agents are members of `disk`; the `ctr` agent is additionally a member of `docker` for read access to `/var/run/docker.sock`.
+
+On 2026-09-24, the missing agents were installed on `dev`, `proxy`, `dns`, `auth`, hub LXC `beszel`, `s3`, `orva`, and `store`; `ctr` and the three Proxmox hosts already ran the same current `v0.20.0` release. The new agent binary came from the pinned official `beszel-agent_linux_amd64.tar.gz` release and its published SHA-256 was verified before installation. Each guest has a dedicated `beszel` system account, LAN-IP-bound listener on port 45876, the hub public key at `/etc/beszel-agent/key`, and an enabled native systemd unit. All 12 records were registered in the hub for the existing owner and returned `up`. The three Talos K8s VMs (201–203) are intentionally excluded.
 
 Beszel monitors the Proxmox hosts as Linux systems. It does not replace the Proxmox UI for cluster quorum, VM/LXC inventory, replication, or HA state. Kubernetes operations remain in Headlamp, Argo CD, Longhorn, and Metrics Server; no Beszel agent is installed in Talos.
 
@@ -49,7 +51,7 @@ Beszel monitors the Proxmox hosts as Linux systems. It does not replace the Prox
 
 Normal access uses the **Pocket ID** button on the Beszel login page. The OIDC client is restricted to the `infrastructure-admins` Pocket ID group. The matching verified Beszel user is `iam.anuragvishwakarma@gmail.com`.
 
-Break-glass credentials are stored only on `dev` in `~/.config/beszel/initial-admin.json`, mode `0600`. Pocket ID client material is in `~/.config/pocket-id/clients/beszel.json`, also mode `0600`. Move durable copies to 1Password and never commit them.
+The existing `HomeLab` 1Password items `Beszel Monitoring` and `Beszel PocketBase Superuser` contain the break-glass credentials; do not duplicate them. The existing PocketBase superuser password was set to its vault-stored value during the 2026-09-24 guest rollout and authentication was verified. Pocket ID OIDC and the owner user are unchanged. Never commit these values.
 
 ## Operations
 
@@ -63,12 +65,15 @@ curl -fsS https://beszel.l3b.cc.cd/api/health
 Agent checks:
 
 ```bash
-for host in px10 px20 px30 ctr; do
+for host in px10 px20 px30 proxy dns auth s3 store; do
   ssh "$host" 'systemctl is-enabled beszel-agent; systemctl is-active beszel-agent; /usr/local/sbin/beszel-agent --version'
 done
+systemctl is-active beszel-agent # dev, run locally
+ssh orva 'systemctl is-active beszel-agent'
+ssh root@10.1.1.7 'systemctl is-active beszel-agent'
 ```
 
-Agent logs should show an SSH connection from `10.1.1.7`. All four systems must show `up` in the Beszel UI. The three Proxmox nodes should expose six `ONLINE` ZFS pools in total and physical devices under SMART.
+Agent logs should show an SSH connection from `10.1.1.7`. All 12 systems must show `up` in the Beszel UI. The three Proxmox nodes should expose six `ONLINE` ZFS pools in total and physical devices under SMART.
 
 ## High availability
 
@@ -95,4 +100,4 @@ Remove the temporary archive from the LXC after validating and storing the encry
 
 ## Upgrade
 
-Read the release notes, take a backup, and verify the release checksum. Install an explicit version on the hub and all agents; do not use `latest` or enable automatic updates on Proxmox hosts. After upgrading, verify versions, four `up` systems, ZFS/SMART collection, Docker collection, OIDC, and a new replication cycle.
+Read the release notes, take a backup, and verify the release checksum. Install an explicit version on the hub and all agents; do not use `latest` or enable automatic updates on Proxmox hosts. After upgrading, verify versions, 12 `up` systems, ZFS/SMART collection, Docker collection, OIDC, and a new replication cycle.

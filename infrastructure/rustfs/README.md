@@ -29,11 +29,10 @@ Proxmox HA can restart the guest on `px10` after a host failure once the most re
 | S3 API | `https://s3.l3b.cc.cd` | LAN/Tailscale only |
 | Console | `https://rustfs.l3b.cc.cd` | LAN/Tailscale only |
 | Native health check | `http://10.1.1.8:9000/health/ready` | LXC network only |
-| Public objects only | `https://share.l3b.cc.cd/public/<key>` | Internet GET/HEAD only via Caddy |
 
 Caddy terminates TLS and proxies both private routes. The API intentionally remains private and is not compressed by Caddy so S3 object-transfer and signature behavior stays transparent. Do not add a public Cloudflare A record for `s3.l3b.cc.cd` unless public S3 write/read exposure is explicitly designed and approved.
 
-The separate `public` bucket is deliberately anonymous-read (`s3:GetObject` on `arn:aws:s3:::public/*`), without bucket listing or anonymous write. Caddy exposes only GET/HEAD on `/public/*` at the `share` hostname; the authenticated S3 API is still private. Upload only material that has been reviewed for publication. Example: `AWS_PROFILE=s3 aws s3 cp file.md s3://public/guides/file.md --content-type 'text/markdown; charset=utf-8'` on `s3`.
+The temporary RustFS `public` bucket and `share` Caddy hostname created for the DNS guide were removed. Public S3 access, where explicitly required, uses Cairn's separate API at `cairn-s3.l3b.cc.cd`; the RustFS API and console remain private.
 
 Pocket ID is the native console OIDC provider. Its exact callback is `https://rustfs.l3b.cc.cd/rustfs/admin/v3/oidc/callback/default`. RustFS maps the flat `groups` claim directly to RustFS policy names, so the custom `infrastructure-admins` policy is the full equivalent of RustFS's built-in `consoleAdmin` policy. This permits only the existing Pocket ID `infrastructure-admins` group; no fixed OIDC role policy is used.
 

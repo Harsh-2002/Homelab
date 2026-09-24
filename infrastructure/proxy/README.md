@@ -67,7 +67,7 @@ Pocket ID OIDC login; its Caddy route does not import Tinyauth.
 
 RustFS is private-network-only as well: `s3.l3b.cc.cd` serves its S3 API and `rustfs.l3b.cc.cd` its native OIDC-capable console. The API route deliberately does not use response compression, which avoids altering object-transfer semantics or signed S3 responses. Neither hostname is publicly exposed by DNS; making the API public requires an explicit later decision and a hostname-specific Cloudflare A record.
 
-`share.l3b.cc.cd` is a narrow public object-download endpoint backed by RustFS. Caddy only forwards `GET` and `HEAD` for `/public/*` to `10.1.1.8:9000`; all other paths and methods return 403. Cloudflare's explicit DNS-only `share` A record points to `150.129.31.154`. The private S3 API and console remain unchanged. The `public` bucket has anonymous `s3:GetObject` on its objects only, not list/write; every object placed there is intentionally public. The first object is the sanitized DNS guide at `/public/guides/adguard-unbound-setup.md`.
+`cairn-s3.l3b.cc.cd` is an explicit public DNS-only Cloudflare record pointing to `150.129.31.154`. Caddy forwards the Cairn S3 API to `10.1.1.8:7373` without the private-source gate or response compression so signed S3 requests work. Cairn's own S3 authentication and bucket policies remain in force. `cairn.l3b.cc.cd` is still private-network-only and has no public DNS exception; a public-IP test returned 403. Do not confuse Cairn's public API with the separate private RustFS API. The temporary `share` hostname and object route were removed.
 
 Expected unauthenticated behavior:
 

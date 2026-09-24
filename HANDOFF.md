@@ -26,6 +26,7 @@ There are **three relevant Notion documents**:
 | `Homelab — Proxmox Cluster Build & Runbook` | `3e0d3ccf-b520-81d1-83b8-cb1465f4935a` | Main Homelab topology, decisions, deployments, tests, incidents, and next actions |
 | `Proxmox BIOS & Firmware Upgrade — px10 Incident, Recovery & Runbook` | `3e2d3ccf-b520-81d8-853e-ecadd7aaaaeb` | px10 BIOS/firmware incident, recovery, and future firmware procedure |
 | `Proxmox — Intel I219-V NIC Stability` | `3e3d3ccf-b520-813d-91a2-d18185fb8b14` | Repeated px10/px20 e1000e transmit-hang incident, persistent mitigation, validation, and escalation path |
+| `AdGuard Home + Unbound: my DNS setup` | `3e5d3ccf-b520-818b-8546-c4dbca0ecdce` | Sanitized, shareable DNS architecture guide; mirrors `infrastructure/dns/SHAREABLE-SETUP.md` |
 
 Other Notion search results are unrelated articles or personal notes and are not Homelab sources of truth.
 
@@ -36,6 +37,7 @@ NOTION_KEYRING=0 ntn whoami
 NOTION_KEYRING=0 ntn pages get 3e0d3ccf-b520-81d1-83b8-cb1465f4935a
 NOTION_KEYRING=0 ntn pages get 3e2d3ccf-b520-81d8-853e-ecadd7aaaaeb
 NOTION_KEYRING=0 ntn pages get 3e3d3ccf-b520-813d-91a2-d18185fb8b14
+NOTION_KEYRING=0 ntn pages get 3e5d3ccf-b520-818b-8546-c4dbca0ecdce
 ```
 
 Prefer appending a concise dated section through the block-children API. Do not replace the entire large main page merely to add an update.
@@ -117,7 +119,7 @@ Read the main README for the full endpoint table. Key infrastructure facts:
 - Router: `10.1.1.1`
 - DNS: `10.1.1.2`
 - Caddy proxy: `10.1.1.3`
-- Public read-only RustFS object links use `https://share.l3b.cc.cd/public/<key>`: Caddy forwards only GET/HEAD under `/public/*`, and the `public` bucket grants anonymous GetObject but not listing/write. The sanitized DNS guide is at `/public/guides/adguard-unbound-setup.md`; see `infrastructure/dns/SHAREABLE-SETUP.md`. The private `s3` API/console are unchanged. Current Unbound files have listener/cache configuration drift (running 5335, on-disk default 53/4 MiB); reconcile before relying on restart.
+- Cairn S3/API is deliberately public at `cairn-s3.l3b.cc.cd` with native S3 authentication/policies; its console `cairn.l3b.cc.cd` remains private. The temporary `share` hostname and RustFS public bucket were removed. The sanitized DNS guide is a separate [Notion page](https://app.notion.com/p/AdGuard-Home-Unbound-my-DNS-setup-3e5d3ccfb520818b8546c4dbca0ecdce) and `infrastructure/dns/SHAREABLE-SETUP.md`, not an S3 object. Current Unbound files have listener/cache configuration drift (running 5335, on-disk default 53/4 MiB); reconcile before relying on restart.
 - Public `store.l3b.cc.cd` is a static Astro storefront from `git@github.com:Harsh-2002/store.git`, built with `npm ci && npm run build` and served by Caddy from `/srv/store` on `proxy`. Cloudflare's explicit DNS-only A record targets `150.129.31.154`; internal Unbound resolves the name to `10.1.1.3`. This web name is distinct from the `store` SSH alias and PBS/SMB VM at `10.1.1.12`. See `infrastructure/proxy/README.md`.
 - Orva serverless VM: `10.1.1.11` (VM 106; outbound-isolated by Proxmox firewall)
 - Kubernetes API VIP: `10.1.1.200`
