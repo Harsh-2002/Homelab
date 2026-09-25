@@ -64,7 +64,7 @@ Then read only the runbooks related to the task. Examples:
 - Talos/Kubernetes: `talos-k8s/`, `gitops/`
 - Identity: `infrastructure/pocket-id/`
 - Monitoring: `infrastructure/beszel/`, `infrastructure/uptime-kuma/`, `infrastructure/metrics/`
-- Applications: the matching directory under `infrastructure/`
+- Applications: the matching directory under `infrastructure/`, including `infrastructure/n8n-sandbox/` for n8n's isolated code-execution backend
 
 Never assume an untracked or dirty file belongs to the agent. Preserve user changes and inspect the diff before editing.
 
@@ -187,6 +187,7 @@ Deployed and verified:
 - Private Grafana and VictoriaMetrics in Beszel CT 104, with Pocket ID OIDC, 30-day metrics retention, Proxmox and Kubernetes exporters, and a storage-focused dashboard; see `infrastructure/metrics/README.md`. Kubernetes vmagent is GitOps-managed, but its remote-write Secret is created separately from the HomeLab 1Password vault.
 - Portainer-managed Docker workloads including restored applications
 - Restored `n8n` workload on `ctr`; Nextcloud was retired after byte-for-byte verification of its 706 live files in OpenCloud
+- Portainer Stack 150 `n8n-sandbox` runs Sandbox Service 1.4.0 on `ctr`. Its API is reachable only as `http://sandbox.internal:8080` from `n8n_default`; the mTLS-protected privileged runner has no LAN or Caddy exposure. An authenticated create/execute/delete test returned `sandbox-ok`. The matching API, registration, and runner secrets are in the single `HomeLab` vault item `n8n Sandbox`; see `infrastructure/n8n-sandbox/README.md`.
 - The 4 TB Crucial X9 Pro was reformatted on 2026-09-23; the former whole-system tar and recovery tree were erased at the owner's request. It is now an LVM disk passed to `store` VM 107 on px10, with a 2 TiB PBS volume and a ~1.64 TiB SMB volume; the VG has no free extents after online growth on 2026-09-24. See `infrastructure/store/README.md` before moving or resizing it.
 - PBS 4.2 and Samba run in `store` (`10.1.1.12`). The PBS UI is private at `pbs.l3b.cc.cd`; direct-LAN SMB is `smb://smb.l3b.cc.cd/AV` with SMB3 encryption required, not HTTPS/TLS. VM 107 replicates its OS disk to px20 and has HA affinity only to px10/px20. The USB data does not replicate, so physical disk movement is required after host failure.
 - VM 204 `ctr` mounts the encrypted SMB3 share persistently at `/mnt/AV` using a systemd automount; Motrix defaults to `/mnt/AV/downloads` and can also save under `/mnt/AV/media`, while Jellyfin indexes `/mnt/AV/media/movies` and `/mnt/AV/media/shows`. The root-only CIFS credential comes from the existing `Store SMB` vault item. Application databases/config stay on local `/data/apps`. Motrix is private at `https://downloads.l3b.cc.cd`; see `infrastructure/ctr/README.md` and `infrastructure/motrix/README.md`.
