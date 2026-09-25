@@ -26,7 +26,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/registry/` — public Docker Registry and its RustFS-backed restore procedure.
   - `infrastructure/frigate/` — private Frigate NVR, OIDC proxy integration, and retention policy.
   - `infrastructure/motrix/` — Motrix Server Compose deployment, SMB download path, and recovery runbook.
-  - `infrastructure/n8n-sandbox/` — isolated n8n Assistant/Agent code-execution service and recovery runbook.
+  - `infrastructure/n8n/` — unified n8n, PostgreSQL, SearXNG, and isolated Assistant/Agent sandbox Stack.
   - `infrastructure/minio/` — historical MinIO-to-RustFS migration record.
   - `infrastructure/rustfs/` — native RustFS S3 service, OIDC, HA, and upgrade runbook.
   - `infrastructure/cairn/` — fresh native Cairn S3 service on the `s3` LXC and its operations runbook.

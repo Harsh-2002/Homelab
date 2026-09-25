@@ -18,7 +18,7 @@ Nextcloud was retired after its 706 live files were compared byte for byte with 
 
 n8n's existing owner email is `iam.anuragvishwakarma@gmail.com`. Native password login and its existing MFA were verified; Caddy's extra Tinyauth gate was removed, but the route stays LAN/Tailscale-only. The existing `N8N` 1Password item was updated, not duplicated.
 
-The separate Portainer Stack `n8n-sandbox` (ID 150) supplies isolated code execution to n8n Assistant and Agents. Only the API joins `n8n_default`, under the alias `sandbox.internal`; its privileged Docker-in-Docker runner is confined to a private control bridge. See `infrastructure/n8n-sandbox/README.md`.
+Portainer Stack `n8n` (ID 85) also owns its PostgreSQL database, internal SearXNG JSON-search service, and isolated Sandbox Service. The former separate sandbox Stack 150 was removed after successful consolidation. SearXNG and the Sandbox API join the default Stack network without publishing host ports; the privileged Docker-in-Docker runner is confined to a private control bridge. See `infrastructure/n8n/README.md`.
 
 
 ## Retired workloads
