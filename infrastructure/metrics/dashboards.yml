@@ -1,0 +1,9 @@
+apiVersion: 1
+providers:
+  - name: Infrastructure
+    orgId: 1
+    folder: Infrastructure
+    type: file
+    allowUiUpdates: false
+    options:
+      path: /etc/grafana/dashboards

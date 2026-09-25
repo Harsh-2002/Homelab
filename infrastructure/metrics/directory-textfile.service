@@ -1,0 +1,10 @@
+[Unit]
+Description=Export top-level data directory sizes for node_exporter
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/default/directory-textfile
+ExecStart=/usr/local/sbin/directory-textfile ${DIRECTORY_ROOT}
+Nice=19
+IOSchedulingClass=idle
+CPUQuota=20%

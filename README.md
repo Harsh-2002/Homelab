@@ -19,6 +19,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/onepassword/` — scoped 1Password service-account and secret-handling runbook.
   - `infrastructure/pulse/` — archived Pulse evaluation and rebuild guide.
   - `infrastructure/beszel/` — Beszel hub and agent services, public key, HA, and operations runbook.
+  - `infrastructure/metrics/` — Grafana, VictoriaMetrics, exporters, storage inventory, and Kubernetes collection.
   - `infrastructure/uptime-kuma/` — native Uptime Kuma service, private proxy authentication, and recovery runbook.
   - `infrastructure/immich/` — Immich Compose deployment and safe restore procedure.
   - `infrastructure/portainer/` — Portainer EE Compose deployment and safe restore procedure.
@@ -62,6 +63,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Tinyauth UI | `https://login.l3b.cc.cd` |
 | Beszel service | `10.1.1.7:8090` |
 | Beszel UI | `https://beszel.l3b.cc.cd` |
+| Grafana UI | `https://grafana.l3b.cc.cd` |
 | Uptime Kuma UI | `https://status.l3b.cc.cd` |
 | Immich UI | `https://photos.l3b.cc.cd` |
 | Portainer UI | `https://portainer.l3b.cc.cd` |

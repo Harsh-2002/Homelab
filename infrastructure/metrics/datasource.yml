@@ -1,0 +1,13 @@
+apiVersion: 1
+datasources:
+  - name: VictoriaMetrics
+    uid: victoria
+    type: prometheus
+    access: proxy
+    url: http://10.1.1.7:8428
+    basicAuth: true
+    basicAuthUser: metrics
+    secureJsonData:
+      basicAuthPassword: $VM_API_PASSWORD
+    isDefault: true
+    editable: false

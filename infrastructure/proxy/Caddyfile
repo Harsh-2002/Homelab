@@ -296,6 +296,27 @@
 	}
 }
 
+(grafana) {
+	@grafana host grafana.l3b.cc.cd
+	handle @grafana {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.7:3000
+	}
+}
+
+(metricswrite) {
+	@metricswrite {
+		host metrics.l3b.cc.cd
+		path /api/v1/write
+		method POST
+	}
+	handle @metricswrite {
+		import private
+		reverse_proxy 10.1.1.7:8428
+	}
+}
+
 (n8n) {
 	@n8n host n8n.l3b.cc.cd
 	handle @n8n {
@@ -416,6 +437,8 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import frigate
 	import s3
 	import beszel
+	import grafana
+	import metricswrite
 	import uptime
 	import n8n
 	import cairn

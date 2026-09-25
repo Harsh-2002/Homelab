@@ -63,7 +63,7 @@ Then read only the runbooks related to the task. Examples:
 - Tailscale routing: `infrastructure/tailscale/`
 - Talos/Kubernetes: `talos-k8s/`, `gitops/`
 - Identity: `infrastructure/pocket-id/`
-- Monitoring: `infrastructure/beszel/`, `infrastructure/uptime-kuma/`
+- Monitoring: `infrastructure/beszel/`, `infrastructure/uptime-kuma/`, `infrastructure/metrics/`
 - Applications: the matching directory under `infrastructure/`
 
 Never assume an untracked or dirty file belongs to the agent. Preserve user changes and inspect the diff before editing.
@@ -184,6 +184,7 @@ Deployed and verified:
 - Talos Kubernetes, Argo CD, Cilium, Longhorn, Headlamp, Homepage, and metrics-server
 - Pocket ID/Tinyauth authentication
 - Beszel and internal Uptime Kuma
+- Private Grafana and VictoriaMetrics in Beszel CT 104, with Pocket ID OIDC, 30-day metrics retention, Proxmox and Kubernetes exporters, and a storage-focused dashboard; see `infrastructure/metrics/README.md`. Kubernetes vmagent is GitOps-managed, but its remote-write Secret is created separately from the HomeLab 1Password vault.
 - Portainer-managed Docker workloads including restored applications
 - Restored `n8n` workload on `ctr`; Nextcloud was retired after byte-for-byte verification of its 706 live files in OpenCloud
 - The 4 TB Crucial X9 Pro was reformatted on 2026-09-23; the former whole-system tar and recovery tree were erased at the owner's request. It is now an LVM disk passed to `store` VM 107 on px10, with a 2 TiB PBS volume and a ~1.64 TiB SMB volume; the VG has no free extents after online growth on 2026-09-24. See `infrastructure/store/README.md` before moving or resizing it.

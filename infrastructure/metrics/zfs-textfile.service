@@ -1,0 +1,8 @@
+[Unit]
+Description=Export ZFS pool and dataset sizes for node_exporter
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/zfs-textfile
+Nice=10
+IOSchedulingClass=idle

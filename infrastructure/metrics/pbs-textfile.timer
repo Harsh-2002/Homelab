@@ -1,0 +1,10 @@
+[Unit]
+Description=Refresh PBS datastore capacity metrics
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

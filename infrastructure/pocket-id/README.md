@@ -91,6 +91,7 @@ The final command must return `10.1.1.3`.
 | Proxmox | Native OIDC realm `pocketid` | PVE group `infrastructure-admins` has `Administrator` at `/`; PAM/local access remains break-glass |
 | Proxmox Backup Server | Native OIDC realm `pocketid` | PBS user `iam.anuragvishwakarma@gmail.com@pocketid` has `Admin` at `/`; `root@pam` remains break-glass; browser passkey return awaits owner verification |
 | Portainer | Native Custom OAuth/OIDC | Pocket ID client `portainer`; automatic user provisioning enabled; local Portainer administrator remains break-glass |
+| Grafana | Native Generic OAuth/OIDC | Pocket ID client `grafana` restricted to `infrastructure-admins`; local Grafana administrator remains break-glass |
 | Karakeep | Native OIDC | Client is restricted to `infrastructure-admins`; existing Karakeep account is linked by the verified canonical email; native Karakeep login remains break-glass |
 | Immich | Native OIDC | Client `immich` is restricted to `infrastructure-admins`; the pre-existing photo account is explicitly linked and native login remains break-glass |
 | OpenCloud | Native public-client OIDC with PKCE | Web, desktop, Android, and iOS clients are restricted to `infrastructure-admins`; its `opencloud_role` claim grants `opencloudAdmin` |

@@ -2,7 +2,7 @@
 
 Beszel `v0.20.0` provides lightweight host, disk, ZFS, SMART, systemd, and Docker monitoring. The hub and agents use pinned native binaries managed by systemd; automatic application updates are disabled.
 
-CT 104 also hosts the independent native Uptime Kuma service documented under `infrastructure/uptime-kuma/`. The services have separate Unix users, data directories, environment files, listeners, and systemd units, but intentionally share the LXC's HA and replication failure domain.
+CT 104 also hosts the independent native Uptime Kuma service documented under `infrastructure/uptime-kuma/`, plus Grafana and VictoriaMetrics documented under `infrastructure/metrics/`. The services have separate Unix users, data directories, environment files, listeners, and systemd units, but intentionally share the LXC's HA and replication failure domain.
 
 ## Topology
 
@@ -10,7 +10,7 @@ CT 104 also hosts the independent native Uptime Kuma service documented under `i
 | --- | --- |
 | URL | `https://beszel.l3b.cc.cd` |
 | Hub | CT 104 `beszel`, `10.1.1.7:8090` |
-| Hub resources | 1 vCPU, 1 GiB RAM, 512 MiB swap, 10 GiB `local-zfs` |
+| Hub resources | 2 vCPU, 3 GiB RAM, 512 MiB swap, 30 GiB `local-zfs` |
 | Primary node | `px10` |
 | Replica node | `px30` |
 | Agent transport | SSH-key pull mode on TCP `45876` |
@@ -77,7 +77,7 @@ Agent logs should show an SSH connection from `10.1.1.7`. All 12 systems must sh
 
 ## High availability
 
-CT 104 is managed by Proxmox HA with failback enabled, two local restart attempts, and one relocation attempt. Strict rule `ct104-replica-nodes` permits px10 and px30, preferring px10. Replication job `104-0` copies the 10 GiB local-ZFS disk from px10 to px30 every five minutes.
+CT 104 is managed by Proxmox HA with failback enabled, two local restart attempts, and one relocation attempt. Strict rule `ct104-replica-nodes` permits px10 and px30, preferring px10. Replication job `104-0` copies the 30 GiB local-ZFS disk from px10 to px30 every five minutes.
 
 ```bash
 ssh px10 'ha-manager status; ha-manager config | sed -n "/ct:104/,+8p"'

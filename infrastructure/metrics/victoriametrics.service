@@ -1,0 +1,19 @@
+[Unit]
+Description=VictoriaMetrics single-node
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=victoriametrics
+Group=victoriametrics
+ExecStart=/usr/local/bin/victoria-metrics-prod -httpListenAddr=10.1.1.7:8428 -httpAuth.username=metrics -httpAuth.password=file:///etc/victoriametrics/api-password -storageDataPath=/var/lib/victoriametrics -retentionPeriod=30d -storage.minFreeDiskSpaceBytes=3GiB -promscrape.config=/etc/victoriametrics/scrape.yml -memory.allowedBytes=512MiB -search.maxMemoryPerQuery=128MiB
+Restart=on-failure
+RestartSec=5s
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/victoriametrics
+
+[Install]
+WantedBy=multi-user.target
