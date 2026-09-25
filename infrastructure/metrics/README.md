@@ -60,6 +60,8 @@ VictoriaMetrics data is `/var/lib/victoriametrics`; Grafana's SQLite database is
 
 ## Verification and maintenance
 
+The PBS textfile exporter also reads the latest 1,000 local PBS tasks every five minutes and publishes successful/failed backup task counts for the past 24 hours plus the last backup start time. These are backup-service task counts, not a promise that every guest has a valid recoverable backup; check PBS verification jobs and test restores separately.
+
 ```bash
 ssh root@10.1.1.7 'systemctl is-enabled grafana-server victoriametrics pve-exporter; systemctl is-active grafana-server victoriametrics pve-exporter; df -h /; free -h'
 curl -fsS https://grafana.l3b.cc.cd/api/health
