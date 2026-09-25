@@ -58,6 +58,11 @@ data:
               password: "{{ "{{HOMEPAGE_VAR_BESZEL_PASSWORD}}" }}"
               version: 2
               fields: ["systems", "up"]
+        - Grafana:
+            icon: grafana.png
+            href: https://grafana.l3b.cc.cd
+            description: Infrastructure metrics
+            ping: https://grafana.l3b.cc.cd/api/health
         - Uptime Kuma:
             icon: uptime-kuma.png
             href: https://status.l3b.cc.cd
