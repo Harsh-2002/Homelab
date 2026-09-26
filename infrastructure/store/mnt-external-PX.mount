@@ -1,6 +1,7 @@
 [Unit]
 Description=Crucial SSD PX filesystem
 After=local-fs.target
+Before=pve-guests.service
 
 [Mount]
 What=/dev/disk/by-uuid/c21cf584-1056-4d9c-8d52-ba2c72d92379
