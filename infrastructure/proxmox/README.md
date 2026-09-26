@@ -26,6 +26,10 @@ The 256 GB `CONSISTENT SSD S7 256GB` USB disk (serial `20260200000000001741`, ex
 
 Identify the disk by serial and UUID before any future use; `/dev/sdc` is not a stable name. Check with `lsblk -o NAME,MODEL,SERIAL,SIZE,FSTYPE,UUID,MOUNTPOINTS` on px20 and `pvesm status` on a cluster node. Do not assume the spare is another backup copy. To reuse it, decide its role first, then deliberately mount and register it; do not format it merely to make it visible.
 
+## VM installer media
+
+On 2026-09-26, all six VMs (100, 106, 201, 202, 203, 204) had `ide2: none,media=cdrom` and `ide2` in their boot order. No installer ISO was attached. The empty `ide2` devices were deleted from their configurations and boot order changed to `scsi0;net0`, preserving disk boot and network fallback. Proxmox keeps these changes in `[PENDING]` while the VMs run; they take effect at each VM's next planned restart. Do not reboot Kubernetes or service VMs merely to remove an already-empty optical drive. VM 106's separate `ide0` Cloud-Init drive remains attached because it provides guest configuration. LXC containers have no CD-ROM devices.
+
 For model-specific firmware package mapping, the sequential USB update
 procedure, validation gates, and the 2026-09-22 fwupd cleanup record, see
 [`BIOS-UPGRADE.md`](BIOS-UPGRADE.md).
