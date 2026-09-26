@@ -1,0 +1,9 @@
+[Unit]
+Description=Export native Proxmox backup archive freshness
+After=networking.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/backup-textfile
+Nice=19
+IOSchedulingClass=idle

@@ -1,41 +1,42 @@
 {
-  "uid": "infrastructure",
-  "title": "Infrastructure Overview",
-  "description": "Operational health across Proxmox, Kubernetes, Longhorn, and PX backups. Use Compute & Guests or Storage & Backups for drill-downs.",
+  "uid": "storage",
+  "title": "Storage & Backups",
+  "description": "Physical storage and backup health: Proxmox datastores, ZFS, Longhorn, guest filesystems, and the Store volumes. Views overlap; do not sum them.",
   "tags": [
-    "infrastructure",
-    "overview"
+    "storage",
+    "backups",
+    "longhorn",
+    "zfs"
   ],
   "timezone": "browser",
   "schemaVersion": 41,
-  "version": 2,
+  "version": 3,
   "refresh": "1m",
   "time": {
-    "from": "now-6h",
+    "from": "now-24h",
     "to": "now"
   },
   "links": [
+    {
+      "title": "Infrastructure Overview",
+      "type": "link",
+      "url": "/d/infrastructure/infrastructure",
+      "icon": "home",
+      "targetBlank": false
+    },
     {
       "title": "Compute & Guests",
       "type": "link",
       "url": "/d/proxmox-guests/proxmox-guests",
       "icon": "server",
       "targetBlank": false
-    },
-    {
-      "title": "Storage & Backups",
-      "type": "link",
-      "url": "/d/storage/storage",
-      "icon": "database",
-      "targetBlank": false
     }
   ],
   "panels": [
     {
-      "id": 1,
-      "title": "PVE nodes online",
+      "id": 13,
+      "title": "ZFS raw capacity",
       "type": "stat",
-      "description": "Three Proxmox hosts, deduplicated across the PVE API scrapes.",
       "gridPos": {
         "h": 5,
         "w": 8,
@@ -48,34 +49,14 @@
       },
       "targets": [
         {
-          "expr": "sum(max by(id) (pve_up{id=~\"node/.*\"}))",
+          "expr": "sum(zfs_pool_size_bytes{host!=\"\"})",
           "refId": "A",
           "instant": true
         }
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 2
-              },
-              {
-                "color": "green",
-                "value": 3
-              }
-            ]
-          }
+          "unit": "bytes"
         },
         "overrides": []
       },
@@ -93,13 +74,13 @@
         "graphMode": "none",
         "justifyMode": "center",
         "wideLayout": true
-      }
+      },
+      "description": "Sum of the physical ZFS pool capacities on px10, px20, and px30; this does not include the external Store disks."
     },
     {
       "id": 2,
-      "title": "Guests online",
+      "title": "ZFS allocated",
       "type": "stat",
-      "description": "Running VMs and LXCs reported by Proxmox.",
       "gridPos": {
         "h": 5,
         "w": 8,
@@ -112,26 +93,14 @@
       },
       "targets": [
         {
-          "expr": "sum(max by(id) (pve_up{id=~\"(qemu|lxc)/.*\"}))",
+          "expr": "sum(zfs_pool_allocated_bytes{host!=\"\"})",
           "refId": "A",
           "instant": true
         }
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
+          "unit": "bytes"
         },
         "overrides": []
       },
@@ -149,11 +118,12 @@
         "graphMode": "none",
         "justifyMode": "center",
         "wideLayout": true
-      }
+      },
+      "description": "Physical bytes allocated across the three Proxmox ZFS hosts. Replicated guest disks consume capacity on more than one host."
     },
     {
       "id": 3,
-      "title": "K8s nodes ready",
+      "title": "Longhorn · physical disk used",
       "type": "stat",
       "gridPos": {
         "h": 5,
@@ -167,34 +137,14 @@
       },
       "targets": [
         {
-          "expr": "sum(kube_node_status_condition{condition=\"Ready\",status=\"true\"} == 1)",
+          "expr": "sum(longhorn_node_storage_usage_bytes)",
           "refId": "A",
           "instant": true
         }
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 2
-              },
-              {
-                "color": "green",
-                "value": 3
-              }
-            ]
-          }
+          "unit": "bytes"
         },
         "overrides": []
       },
@@ -215,8 +165,8 @@
       }
     },
     {
-      "id": 4,
-      "title": "K8s pods running",
+      "id": 14,
+      "title": "Store volumes · used",
       "type": "stat",
       "gridPos": {
         "h": 5,
@@ -230,7 +180,117 @@
       },
       "targets": [
         {
-          "expr": "sum(kube_pod_status_phase{phase=\"Running\"})",
+          "expr": "sum(node_filesystem_size_bytes{job=\"data-hosts\",host=\"store\",mountpoint=~\"/srv/(AV|PX|ISO)\"} - node_filesystem_avail_bytes{job=\"data-hosts\",host=\"store\",mountpoint=~\"/srv/(AV|PX|ISO)\"})",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true
+      },
+      "description": "Used physical bytes across the AV, PX and ISO filesystems on Store; not included in ZFS totals."
+    },
+    {
+      "id": 1,
+      "title": "PX backups · used",
+      "type": "stat",
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 8,
+        "y": 5
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "victoria"
+      },
+      "targets": [
+        {
+          "expr": "100 * (1 - node_filesystem_avail_bytes{job=\"data-hosts\",host=\"store\",instance=\"10.1.1.12:9100\",mountpoint=\"/srv/PX\"} / node_filesystem_size_bytes{job=\"data-hosts\",host=\"store\",instance=\"10.1.1.12:9100\",mountpoint=\"/srv/PX\"})",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true
+      },
+      "description": "Used space on the Store PX filesystem, including any backup exports."
+    },
+    {
+      "id": 4,
+      "title": "Linux mounts · above 80%",
+      "type": "stat",
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 16,
+        "y": 5
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "victoria"
+      },
+      "targets": [
+        {
+          "expr": "sum(100 * (1 - node_filesystem_avail_bytes{job=~\"data-hosts|linux-guests\",host!=\"\",fstype!~\"tmpfs|devtmpfs|overlay|squashfs|nsfs|ramfs\",mountpoint!~\"/boot.*\"} / node_filesystem_size_bytes{job=~\"data-hosts|linux-guests\",host!=\"\",fstype!~\"tmpfs|devtmpfs|overlay|squashfs|nsfs|ramfs\",mountpoint!~\"/boot.*\"}) > bool 80)",
           "refId": "A",
           "instant": true
         }
@@ -239,7 +299,24 @@
         "defaults": {
           "unit": "short",
           "color": {
-            "mode": "continuous-GrYlRd"
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 3
+              }
+            ]
           }
         },
         "overrides": []
@@ -262,278 +339,14 @@
     },
     {
       "id": 5,
-      "title": "Scrape targets down",
-      "type": "stat",
-      "description": "Zero means every configured scrape target is responding.",
-      "gridPos": {
-        "h": 5,
-        "w": 8,
-        "x": 8,
-        "y": 5
-      },
-      "datasource": {
-        "type": "prometheus",
-        "uid": "victoria"
-      },
-      "targets": [
-        {
-          "expr": "sum(up == bool 0)",
-          "refId": "A",
-          "instant": true
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 1
-              },
-              {
-                "color": "red",
-                "value": 3
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "orientation": "auto",
-        "textMode": "value",
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "wideLayout": true
-      }
-    },
-    {
-      "id": 6,
-      "title": "Backups overdue",
-      "type": "stat",
-      "gridPos": {
-        "h": 5,
-        "w": 8,
-        "x": 16,
-        "y": 5
-      },
-      "datasource": {
-        "type": "prometheus",
-        "uid": "victoria"
-      },
-      "targets": [
-        {
-          "expr": "sum((time() - pve_backup_latest_timestamp_seconds{vmid!=\"\"} > bool 36 * 3600))",
-          "refId": "A",
-          "instant": true
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 1
-              },
-              {
-                "color": "red",
-                "value": 2
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "orientation": "auto",
-        "textMode": "value",
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "wideLayout": true
-      },
-      "description": "PX guest backups older than 36 hours, including never-backed-up guests. Kubernetes VMs are intentionally excluded from the PX job."
-    },
-    {
-      "id": 7,
-      "title": "Proxmox CPU · nodes",
-      "type": "timeseries",
-      "description": "Current CPU use for px10, px20 and px30 over the selected time range.",
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 10
-      },
-      "datasource": {
-        "type": "prometheus",
-        "uid": "victoria"
-      },
-      "targets": [
-        {
-          "expr": "100 * max by(id) (pve_cpu_usage_ratio{id=~\"node/.*\"})",
-          "refId": "A",
-          "legendFormat": "{{id}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percent",
-          "min": 0,
-          "max": 100,
-          "custom": {
-            "drawStyle": "line",
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "fillOpacity": 10,
-            "showPoints": "never",
-            "spanNulls": false
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        },
-        "legend": {
-          "showLegend": true,
-          "displayMode": "list",
-          "placement": "bottom",
-          "calcs": [
-            "lastNotNull",
-            "max"
-          ]
-        },
-        "custom": {
-          "axisLabel": "CPU used",
-          "axisPlacement": "auto",
-          "drawStyle": "line",
-          "fillOpacity": 10,
-          "lineInterpolation": "smooth",
-          "lineWidth": 2,
-          "showPoints": "never",
-          "spanNulls": false,
-          "stacking": {
-            "mode": "none",
-            "group": "A"
-          }
-        }
-      }
-    },
-    {
-      "id": 8,
-      "title": "Proxmox memory · nodes",
-      "type": "timeseries",
-      "description": "Memory in use as a share of installed memory on each PVE host.",
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 10
-      },
-      "datasource": {
-        "type": "prometheus",
-        "uid": "victoria"
-      },
-      "targets": [
-        {
-          "expr": "100 * max by(id) (pve_memory_usage_bytes{id=~\"node/.*\"}) / max by(id) (pve_memory_size_bytes{id=~\"node/.*\"})",
-          "refId": "A",
-          "legendFormat": "{{id}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percent",
-          "min": 0,
-          "max": 100,
-          "custom": {
-            "drawStyle": "line",
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "fillOpacity": 10,
-            "showPoints": "never",
-            "spanNulls": false
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        },
-        "legend": {
-          "showLegend": true,
-          "displayMode": "list",
-          "placement": "bottom",
-          "calcs": [
-            "lastNotNull",
-            "max"
-          ]
-        },
-        "custom": {
-          "axisLabel": "Memory used",
-          "axisPlacement": "auto",
-          "drawStyle": "line",
-          "fillOpacity": 10,
-          "lineInterpolation": "smooth",
-          "lineWidth": 2,
-          "showPoints": "never",
-          "spanNulls": false,
-          "stacking": {
-            "mode": "none",
-            "group": "A"
-          }
-        }
-      }
-    },
-    {
-      "id": 9,
-      "title": "Proxmox storage · used capacity",
+      "title": "Proxmox datastores · capacity used",
       "type": "bargauge",
-      "description": "PVE datastore fill. Shared PX and ISO exports appear once, from px10; the storage dashboard has mount-level details.",
+      "description": "Unique PVE datastore views; shared PX and ISO exports are shown once from px10.",
       "gridPos": {
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 19
+        "y": 10
       },
       "datasource": {
         "type": "prometheus",
@@ -588,15 +401,362 @@
       }
     },
     {
-      "id": 10,
-      "title": "Longhorn · disk used by node",
-      "type": "bargauge",
-      "description": "Used disk as a percentage of each node's Longhorn disk capacity.",
+      "id": 6,
+      "title": "ZFS pool · allocated over time",
+      "type": "timeseries",
+      "description": "ZFS allocation divided by pool size. Host labels identify which physical node owns the pool.",
       "gridPos": {
         "h": 9,
         "w": 12,
         "x": 12,
+        "y": 10
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "victoria"
+      },
+      "targets": [
+        {
+          "expr": "100 * zfs_pool_allocated_bytes{host!=\"\"} / zfs_pool_size_bytes{host!=\"\"}",
+          "refId": "A",
+          "legendFormat": "{{host}} · {{pool}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "custom": {
+          "axisLabel": "Pool allocated",
+          "axisPlacement": "auto",
+          "drawStyle": "line",
+          "fillOpacity": 10,
+          "lineInterpolation": "smooth",
+          "lineWidth": 2,
+          "showPoints": "never",
+          "stacking": {
+            "mode": "none",
+            "group": "A"
+          }
+        }
+      }
+    },
+    {
+      "id": 7,
+      "title": "Linux filesystems · used capacity",
+      "type": "table",
+      "description": "Real filesystems and mountpoints from Debian guests and data hosts. Temporary filesystems and boot partitions are excluded.",
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
         "y": 19
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "victoria"
+      },
+      "targets": [
+        {
+          "expr": "100 * (1 - node_filesystem_avail_bytes{job=~\"data-hosts|linux-guests\",host!=\"\",fstype!~\"tmpfs|devtmpfs|overlay|squashfs|nsfs|ramfs\",mountpoint!~\"/boot.*\"} / node_filesystem_size_bytes{job=~\"data-hosts|linux-guests\",host!=\"\",fstype!~\"tmpfs|devtmpfs|overlay|squashfs|nsfs|ramfs\",mountpoint!~\"/boot.*\"})",
+          "refId": "A",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Used %"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 70
+                    },
+                    {
+                      "color": "red",
+                      "value": 85
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "instance": true,
+              "job": true,
+              "device": true,
+              "fstype": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value": "Used %"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Largest ZFS datasets",
+      "type": "table",
+      "description": "Largest individual datasets from all three hosts. Parent datasets are excluded to avoid counting the same data twice.",
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 30
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "victoria"
+      },
+      "targets": [
+        {
+          "expr": "topk(20, zfs_dataset_used_bytes{host!=\"\",dataset!~\"^(data|rpool|rpool/data)$\"})",
+          "refId": "A",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value": "Used"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Largest data directories · daily scan",
+      "type": "table",
+      "description": "Largest immediate directories under the configured data roots. The scan runs daily and is a snapshot, not a live file index.",
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "victoria"
+      },
+      "targets": [
+        {
+          "expr": "topk(20, storage_directory_bytes)",
+          "refId": "A",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value": "Used"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Store volumes · used space",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 40
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "victoria"
+      },
+      "targets": [
+        {
+          "expr": "node_filesystem_size_bytes{job=\"data-hosts\",host=\"store\",instance=\"10.1.1.12:9100\",mountpoint=~\"/srv/(AV|PX|ISO)\"} - node_filesystem_avail_bytes{job=\"data-hosts\",host=\"store\",instance=\"10.1.1.12:9100\",mountpoint=~\"/srv/(AV|PX|ISO)\"}",
+          "refId": "A",
+          "legendFormat": "{{mountpoint}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0,
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 28,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "custom": {
+          "axisLabel": "Used bytes",
+          "axisPlacement": "auto",
+          "drawStyle": "line",
+          "fillOpacity": 8,
+          "lineInterpolation": "smooth",
+          "lineWidth": 2,
+          "showPoints": "never",
+          "stacking": {
+            "mode": "none",
+            "group": "A"
+          }
+        }
+      },
+      "description": "Used bytes on AV, PX, and ISO. These are separate partitions, not a single pool."
+    },
+    {
+      "id": 11,
+      "title": "Longhorn · disk use by node",
+      "type": "bargauge",
+      "description": "Physical Longhorn disk usage against raw capacity per node. Replicas consume additional physical space.",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 40
       },
       "datasource": {
         "type": "prometheus",
@@ -651,224 +811,14 @@
       }
     },
     {
-      "id": 11,
-      "title": "Kubernetes CPU · nodes",
-      "type": "timeseries",
-      "description": "Container CPU demand as a share of each Talos node's CPU capacity, measured by kubelet/cAdvisor.",
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 28
-      },
-      "datasource": {
-        "type": "prometheus",
-        "uid": "victoria"
-      },
-      "targets": [
-        {
-          "expr": "100 * sum by(node) (rate(container_cpu_usage_seconds_total{job=\"cadvisor\",container!=\"\",image!=\"\"}[5m])) / on(node) kube_node_status_capacity{resource=\"cpu\"}",
-          "refId": "A",
-          "legendFormat": "{{node}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percent",
-          "min": 0,
-          "max": 100,
-          "custom": {
-            "drawStyle": "line",
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "fillOpacity": 10,
-            "showPoints": "never",
-            "spanNulls": false
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        },
-        "legend": {
-          "showLegend": true,
-          "displayMode": "list",
-          "placement": "bottom",
-          "calcs": [
-            "lastNotNull",
-            "max"
-          ]
-        },
-        "custom": {
-          "axisLabel": "CPU used",
-          "axisPlacement": "auto",
-          "drawStyle": "line",
-          "fillOpacity": 10,
-          "lineInterpolation": "smooth",
-          "lineWidth": 2,
-          "showPoints": "never",
-          "spanNulls": false,
-          "stacking": {
-            "mode": "none",
-            "group": "A"
-          }
-        }
-      }
-    },
-    {
       "id": 12,
-      "title": "Kubernetes memory · nodes",
-      "type": "timeseries",
-      "description": "Container working set as a share of each Talos node's memory capacity.",
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 28
-      },
-      "datasource": {
-        "type": "prometheus",
-        "uid": "victoria"
-      },
-      "targets": [
-        {
-          "expr": "100 * sum by(node) (container_memory_working_set_bytes{job=\"cadvisor\",container!=\"\",image!=\"\"}) / on(node) kube_node_status_capacity{resource=\"memory\"}",
-          "refId": "A",
-          "legendFormat": "{{node}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percent",
-          "min": 0,
-          "max": 100,
-          "custom": {
-            "drawStyle": "line",
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "fillOpacity": 10,
-            "showPoints": "never",
-            "spanNulls": false
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        },
-        "legend": {
-          "showLegend": true,
-          "displayMode": "list",
-          "placement": "bottom",
-          "calcs": [
-            "lastNotNull",
-            "max"
-          ]
-        },
-        "custom": {
-          "axisLabel": "Memory used",
-          "axisPlacement": "auto",
-          "drawStyle": "line",
-          "fillOpacity": 10,
-          "lineInterpolation": "smooth",
-          "lineWidth": 2,
-          "showPoints": "never",
-          "stacking": {
-            "mode": "none",
-            "group": "A"
-          }
-        }
-      }
-    },
-    {
-      "id": 13,
-      "title": "Proxmox node availability",
-      "type": "state-timeline",
-      "description": "One means reachable; zero means the node is unavailable to the PVE API.",
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 37
-      },
-      "datasource": {
-        "type": "prometheus",
-        "uid": "victoria"
-      },
-      "targets": [
-        {
-          "expr": "max by(id) (pve_up{id=~\"node/.*\"})",
-          "refId": "A",
-          "legendFormat": "{{id}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "type": "value",
-              "options": {
-                "0": {
-                  "text": "DOWN",
-                  "color": "red"
-                },
-                "1": {
-                  "text": "UP",
-                  "color": "green"
-                }
-              }
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "green",
-                "value": 1
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "showValue": "never",
-        "alignValue": "center",
-        "rowHeight": 0.8,
-        "colWidth": 0.9,
-        "mergeValues": true,
-        "legend": {
-          "showLegend": true,
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      }
-    },
-    {
-      "id": 14,
       "title": "Backup age · protected guests",
       "type": "bargauge",
-      "description": "Hours since the newest completed PX backup archive per guest. Zero timestamp means no completed archive; the bar will appear very old.",
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 37
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 49
       },
       "datasource": {
         "type": "prometheus",
@@ -920,7 +870,8 @@
           "fields": "",
           "values": false
         }
-      }
+      },
+      "description": "Hours since the newest completed PX backup archive for each protected guest. Red means older than 36 hours."
     }
   ]
 }
