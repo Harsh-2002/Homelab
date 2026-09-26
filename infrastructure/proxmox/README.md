@@ -20,6 +20,8 @@ dig @1.1.1.1 example.com A +short
 
 ## px20 spare USB SSD
 
+The separate px10 256 GB USB SSD (serial `20260200000000001716`, ext4 UUID `a19cf10d-4e36-4e00-94ce-bacc9381b30b`) now backs the cluster-wide `ISO` CIFS storage via `store` CT 109. It is mounted at `/mnt/external/ISO` on px10, with the matching mount unit staged on px20 for manual USB failover. The former px10-only `iso-store` storage entry and `/etc/fstab` mount were removed after checking that no guest configuration referenced it. See [`../store/README.md`](../store/README.md). It is **not** the px20 spare disk below.
+
 The 256 GB `CONSISTENT SSD S7 256GB` USB disk (serial `20260200000000001741`, ext4 partition UUID `6e73fae7-a244-4b6c-899d-5023b1305546`) is attached to px20 but intentionally **unmounted and unregistered**. On 2026-09-24, the empty `backup-store` directory-storage entry was removed from cluster storage configuration, its UUID mount was removed from px20 `/etc/fstab`, and the mountpoint was removed. The disk was not formatted, wiped, or physically detached; its ext4 filesystem and standard `dump`/`lost+found` directories remain on the disk. Native critical-guest backups now target the separate `PX` share on the Crucial SSD, not this spare.
 
 Identify the disk by serial and UUID before any future use; `/dev/sdc` is not a stable name. Check with `lsblk -o NAME,MODEL,SERIAL,SIZE,FSTYPE,UUID,MOUNTPOINTS` on px20 and `pvesm status` on a cluster node. Do not assume the spare is another backup copy. To reuse it, decide its role first, then deliberately mount and register it; do not format it merely to make it visible.

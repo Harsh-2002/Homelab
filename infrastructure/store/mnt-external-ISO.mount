@@ -1,0 +1,14 @@
+[Unit]
+Description=ISO SSD filesystem
+After=local-fs.target
+Before=pve-guests.service
+
+[Mount]
+What=/dev/disk/by-uuid/a19cf10d-4e36-4e00-94ce-bacc9381b30b
+Where=/mnt/external/ISO
+Type=ext4
+Options=rw,noatime
+TimeoutSec=15s
+
+[Install]
+WantedBy=multi-user.target
