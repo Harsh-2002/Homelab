@@ -565,9 +565,9 @@
     },
     {
       "id": 8,
-      "title": "Largest ZFS datasets",
+      "title": "Largest ZFS datasets · referenced",
       "type": "table",
-      "description": "Largest individual datasets from all three hosts. Parent datasets are excluded to avoid counting the same data twice.",
+      "description": "Data referenced by each dataset, excluding empty volume reservations. Snapshots and replicated copies require separate accounting; compare physical zpool allocation for real disk fill.",
       "gridPos": {
         "h": 10,
         "w": 12,
@@ -580,7 +580,7 @@
       },
       "targets": [
         {
-          "expr": "topk(20, zfs_dataset_used_bytes{host!=\"\",dataset!~\"^(data|rpool|rpool/data)$\"})",
+          "expr": "topk(20, zfs_dataset_referenced_bytes{host!=\"\",dataset!~\"^(data|rpool|rpool/data)$\"})",
           "refId": "A",
           "instant": true,
           "format": "table"
@@ -613,11 +613,12 @@
             "excludeByName": {
               "Time": true,
               "instance": true,
-              "job": true
+              "job": true,
+              "__name__": true
             },
             "indexByName": {},
             "renameByName": {
-              "Value": "Used"
+              "Value": "Referenced"
             }
           }
         }
@@ -673,7 +674,8 @@
             "excludeByName": {
               "Time": true,
               "instance": true,
-              "job": true
+              "job": true,
+              "__name__": true
             },
             "indexByName": {},
             "renameByName": {
