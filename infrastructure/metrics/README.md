@@ -26,7 +26,7 @@ Node Exporter listens only on each host's `10.1.1.x:9100`, not on Tailscale/publ
 
 Kubernetes vmagent uses bounded local buffering (512 MiB per remote-write URL, 1 GiB `emptyDir`) and sends over HTTPS through Caddy. Its queue survives a short backend outage but not pod replacement. Kubernetes Secret `vmagent-remote-write` comes from the `VictoriaMetrics API` 1Password item; it is intentionally not in Git. kube-state-metrics covers selected object types. Longhorn's existing ingress NetworkPolicy blocks arbitrary pods, so `allow-vmagent-metrics` permits only monitoring vmagent on TCP 9500. Kubelet scraping uses a service-account bearer token; the kubelet certificate is not trusted through the Kubernetes API CA, so that internal scrape connection skips certificate verification. The API server and remote-write connection retain normal TLS verification.
 
-Grafana provisions `Infrastructure` and `Proxmox Guests & Mounts` dashboards. The first is the cluster overview: per-storage, pool, dataset, filesystem, directory, Longhorn-node, Proxmox-node, and Kubernetes-workload usage. The second shows every PVE guest's CPU, memory, allocated disk, PVE-reported used disk, Debian guest mounts, offline guests, failed replication syncs, backup coverage and the PBS datastore. The PBS datastore is a bind-mounted subdirectory and Node Exporter does not report that mount, so a five-minute local textfile timer measures its backing filesystem with `stat -f`. `pve_disk_usage_bytes` can be zero for a VM even while its filesystem contains data; use the guest mount panel and ZFS dataset view for actual occupancy. Talos Kubernetes VMs do not run Node Exporter; kubelet/cAdvisor and Longhorn cover their workloads and storage. Do not sum all storage panels together: PVE may advertise the same shared storage on multiple nodes, ZFS parents include child usage, and Longhorn scheduled capacity is replicated allocation rather than unique user data. The daily directory inventory provides the next step when an ext4 filesystem such as `/data` grows.
+Grafana provisions `Infrastructure` and `Proxmox Guests & Mounts` dashboards. The first is the cluster overview: per-storage, pool, dataset, filesystem, directory, Longhorn-node, Proxmox-node, and Kubernetes-workload usage. The second shows every PVE guest's CPU, memory, allocated disk, PVE-reported used disk, Debian guest mounts, offline guests, failed replication syncs, backup coverage, and the native `PX` backup storage. `pve_disk_usage_bytes` can be zero for a VM even while its filesystem contains data; use the guest mount panel and ZFS dataset view for actual occupancy. Talos Kubernetes VMs do not run Node Exporter; kubelet/cAdvisor and Longhorn cover their workloads and storage. Do not sum all storage panels together: PVE may advertise the same shared storage on multiple nodes, ZFS parents include child usage, and Longhorn scheduled capacity is replicated allocation rather than unique user data. The daily directory inventory provides the next step when an ext4 filesystem such as `/data` grows.
 
 ## Authentication and secrets
 
@@ -53,14 +53,14 @@ Grafana reads secrets from root-only `/etc/grafana/grafana-secret.env`; Victoria
 | `dashboards.yml`, `infrastructure.json`, `proxmox-guests.json` | `/etc/grafana/provisioning/dashboards/infrastructure.yml`, `/etc/grafana/dashboards/` |
 | `victoriametrics.service`, `scrape.yml` | `/etc/systemd/system/victoriametrics.service`, `/etc/victoriametrics/scrape.yml` |
 | `pve-exporter.service` | `/etc/systemd/system/pve-exporter.service` |
-| `zfs-textfile.*`, `directory-textfile.*`, `pbs-textfile.*` | `/usr/local/sbin/` and `/etc/systemd/system/` on measured hosts |
+| `zfs-textfile.*`, `directory-textfile.*` | `/usr/local/sbin/` and `/etc/systemd/system/` on measured hosts |
 | `gitops/apps/monitoring/` | Argo CD Application `monitoring` |
 
 VictoriaMetrics data is `/var/lib/victoriametrics`; Grafana's SQLite database is `/var/lib/grafana/grafana.db`; Beszel data remains `/var/lib/beszel/beszel_data`. PVE exporter runs from `/opt/pve-exporter`, a Python virtual environment pinned at package version `3.10.0`.
 
 ## Verification and maintenance
 
-The PBS textfile exporter also reads the latest 1,000 local PBS tasks every five minutes and publishes successful/failed backup task counts for the past 24 hours plus the last backup start time. These are backup-service task counts, not a promise that every guest has a valid recoverable backup; check PBS verification jobs and test restores separately.
+Native Proxmox backups are stored on the cluster-wide `PX` CIFS storage. A storage-capacity or successful-task metric is not a promise that every guest has a recoverable backup; confirm the backup set and periodically perform a test restore.
 
 ```bash
 ssh root@10.1.1.7 'systemctl is-enabled grafana-server victoriametrics pve-exporter; systemctl is-active grafana-server victoriametrics pve-exporter; df -h /; free -h'
@@ -71,7 +71,6 @@ kubectl -n longhorn-system get networkpolicy allow-vmagent-metrics
 for host in px10 px20 px30; do ssh "$host" 'systemctl is-active prometheus-node-exporter zfs-textfile.timer'; done
 ssh ctr 'systemctl is-active prometheus-node-exporter directory-textfile.timer'
 ssh store 'systemctl is-active prometheus-node-exporter directory-textfile.timer'
-ssh store 'systemctl is-active pbs-textfile.timer; cat /var/lib/prometheus/node-exporter/pbs.prom'
 ```
 
 The `up` query in Grafana Explore should return `1` for every target. Query `sum by(job)(up)` for counts and `sum(up == bool 0)` for failures. Check `storage_directory_inventory_timestamp_seconds` for staleness and vmagent queue/error counters if Kubernetes metrics stop. After changing the vmagent scrape ConfigMap, roll its Deployment because the file is mounted through `subPath`.

@@ -374,19 +374,6 @@
 	}
 }
 
-(backup) {
-	@backup host pbs.l3b.cc.cd
-	handle @backup {
-		import private
-		import proxy
-		reverse_proxy https://10.1.1.12:8007 {
-			transport http {
-				tls_insecure_skip_verify
-			}
-		}
-	}
-}
-
 (storefront) {
 	@storefront host store.l3b.cc.cd
 	handle @storefront {
@@ -443,7 +430,6 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import n8n
 	import cairn
 	import proxmox
-	import backup
 	import storefront
 	import cluster
 	handle {

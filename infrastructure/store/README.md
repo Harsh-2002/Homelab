@@ -1,43 +1,33 @@
-# Store: PBS and SMB
+# Store: AV and PX
 
-`store` is VM 107 (`10.1.1.12`), normally on px10. It runs Proxmox Backup Server 4.2 and Samba. The PBS UI is private at `https://pbs.l3b.cc.cd`; SMB is `smb://smb.l3b.cc.cd/AV` (Windows: `\\smb.l3b.cc.cd\AV`). The cluster token and SMB credentials are in the HomeLab 1Password vault as `PBS API Token - PVE` and `Store SMB`. The PBS root PAM password remains the one the owner set during installation; it was not changed. Never put secrets in this repo.
+`store` is Debian 13 LXC 109 at `10.1.1.12`, normally on px10. It runs Samba 4.22.11 with 1 vCPU, 1 GiB RAM, and an 8 GiB `local-zfs` root disk. It uses the stock `debian-13-standard_13.6-1_amd64.tar.zst` template. The old PBS VM 107 is retired only after the replacement native backup set has completed. This directory is the source of truth for Samba and the host mount units; the live CT, storage, HA, and backup-job objects are Proxmox state.
 
-## Storage
+## External SSD and shares
 
-The Crucial X9 Pro 4 TB USB SSD (serial `2338E8C83CF2`) is passed through to VM 107. It has a GPT partition with an LVM VG named `external`:
+The Crucial X9 Pro 4 TB USB SSD, serial `2338E8C83CF2`, has one LVM PV and VG `external`. There is no need to repartition or reformat the SSD for this migration. Mount the two existing ext4 LVs on the Proxmox host and bind them into the unprivileged CT:
 
-| LV | Size | Filesystem | Mount | Purpose |
-| --- | ---: | --- | --- | --- |
-| `external/backup` | 2 TiB | ext4 | `/mnt/datastore/external` | PBS removable datastore `external` |
-| `external/share` | ~1.64 TiB | ext4 | `/srv/AV` | SMB share `/srv/AV` |
+| LV | UUID | Host mount | CT mount | SMB share |
+| --- | --- | --- | --- | --- |
+| `external/share`, ~1.64 TiB | `2489f3c3-bbaa-4f4b-bdf5-69d240a6bdab` | `/mnt/external/AV` | `/srv/AV` | `AV` |
+| `external/backup`, 2 TiB | `c21cf584-1056-4d9c-8d52-ba2c72d92379` | `/mnt/external/PX` | `/srv/PX` | `PX` at `/srv/PX/exports` |
 
-The entire `external` VG is now allocated; there are no free extents for another volume such as a shared ISO store. On 2026-09-24, the mounted backup LV and ext4 filesystem were grown online from 1 to 2 TiB, then the share LV and ext4 filesystem received all remaining extents. No filesystem was reformatted or unmounted. The PBS filesystem UUID is `c21cf584-1056-4d9c-8d52-ba2c72d92379`; the SMB filesystem UUID is `2489f3c3-bbaa-4f4b-bdf5-69d240a6bdab`. Use UUIDs/LVM names, not `/dev/sdX`, when moving the SSD. Both filesystems have zero reserved blocks. Samba requires the SMB mount and stops if it disappears. The PBS datastore is configured as removable, bound to its backing-device UUID.
+Install `mnt-external-AV.mount` and `mnt-external-PX.mount` on px10 and px20. Enable/start them only on the node holding the SSD. CT mount points use `replicate=0`; only the 8 GiB root disk is replicated to px20. The host directories alone are **not** the data volumes. Each volume has a `.store-volume` marker; `smbd` refuses to start unless both markers are visible inside the CT, preventing writes to empty mount directories. After a host restart, verify both mounts before relying on SMB. The SSD itself is not replicated, so after px10 fails it must be physically moved to px20 and the two mount units started there. Then restart CT 109 or `smbd` after confirming its bind mounts point to the real filesystems.
 
-The SSD is **not replicated**. HA and Proxmox replication cover only VM 107's 100 GB OS disk on local ZFS. VM 107 has a strict HA node-affinity rule for px10 (preferred) and px20 (fallback), with replication every five minutes. px30 is excluded. After px10 fails, the VM may start on px20, but the PBS datastore and SMB share remain unavailable until the USB SSD is physically moved and passed through to VM 107 there. Do not treat this disk as its own backup.
+Both shares require SMB3 encryption and signing. They use the **same** Samba account: login `iam.anuragvishwakarma@gmail.com`, mapped to local `iam.anuragvishwakarma` (UID 1000). Its password remains in the existing `Store SMB` item in the HomeLab 1Password vault. No PAM or OIDC password is involved. On an unprivileged CT, UID 1000 maps to host UID 101000; the `AV` volume and `PX/exports` directory must keep matching ownership. The ext4 `lost+found` directory remains on disk but is hidden from the `AV` share.
 
-## Backups
+Connect to `AV` using `smb://smb.l3b.cc.cd/AV` on macOS or `\\smb.l3b.cc.cd\AV` on Windows. `PX` is `smb://smb.l3b.cc.cd/PX` or `\\smb.l3b.cc.cd\PX`, intended for Proxmox backups only. `ctr` still mounts `AV` at `/mnt/AV` with its existing encrypted SMB 3.1.1 automount; its Motrix and Jellyfin paths remain unchanged. SMB is not HTTP and does not pass through Caddy.
 
-PVE storage ID `external` points to PBS at `10.1.1.12:8007` using token `pve@pbs!cluster`. Both the backing `pve@pbs` user and its token have only `DatastorePowerUser` on `/datastore/external`: they may back up and prune their owned snapshots, but are not datastore administrators. The scheduled job `critical-to-pbs` runs hourly in snapshot mode for dev (100), proxy (101), DNS (102), auth (103), Beszel (104), s3 (105), and ctr (204), with `keep-last=1` per guest. A successful new backup prunes its predecessor; a failed upload leaves the last completed snapshot. PBS job `daily-retention` is a 03:00 IST fallback with the same `keep-last=1` policy. Garbage collection runs at 04:00 IST and releases unreferenced chunks later, so pruning does not immediately reduce disk use. New backups are verified automatically, and job `monthly-recheck` runs Sundays at 05:00 IST to reverify snapshots older than 30 days. It excludes orva (106), store itself (107), and K8s/Longhorn VMs (201–203); reassess scope and recovery needs before adding them, even with the 2 TiB capacity. Monitor datastore use before broadening scope. Back up important SMB files elsewhere; the same SSD cannot provide an independent copy. One retained snapshot is a deliberately narrow recovery window: corruption or deletion present in the newest backup cannot be rolled back to an older point.
+## Proxmox native backups
 
-On 2026-09-24, the first scheduled backup uploads and PBS verify tasks succeeded, but PVE marked the job failed because the old token lacked prune permission. After switching to the scoped `DatastorePowerUser` role and `keep-last=1`, an on-demand CT 102 backup completed `TASK OK`: 53.342 MiB of 900.199 MiB changed, 94.1% reused, and its predecessor was pruned. PBS verified the replacement. The next scheduled hourly cycle finished `OK` on px10, px20, and px30; the datastore listed exactly one new snapshot each for guests 100, 101, 102, 103, 104, 105, and 204.
+Cluster storage ID `PX` is CIFS/SMB at `10.1.1.12`, share `PX`, `content backup`, SMB 3.1.1 with `seal`. The credential file is cluster-private `/etc/pve/priv/storage/PX.pw`; do not put it in Git or commands/logs. A single storage definition is available to px10, px20, and px30. The scheduled job `critical-to-px` uses snapshot mode, zstd, daily `02:00` Asia/Kolkata time, and `keep-last=1` for guests 100, 101, 102, 103, 104, 105, and 204. K8s/Longhorn VMs 201-203, orva 106, and store CT 109 are excluded. Native file backups are **full archives**, not PBS-style incremental transfers; ensure capacity for the current and replacement archive during rotation.
 
-## Recovery and checks
+The `PX` share is served by CT 109, so using it as the only backup location for CT 109 creates a recovery dependency. Its root disk is replicated to px20, while this repo records the service configuration and 1Password holds its credential. The SSD is a single physical failure domain for both `AV` and `PX`; a VM backup on `PX` does not protect files stored in `AV` against SSD failure.
 
-1. Attach the exact Crucial SSD to px10 or px20. Confirm its serial with `lsblk -o NAME,SERIAL,SIZE` before changing the VM's USB mapping. Never initialize or format it during recovery.
-2. Ensure VM 107's `usb0` maps the SSD, then start/restart VM 107. The USB ID on px10 was `0634:5603`, but identify the device again after a move.
-3. In `store`, check `lvs external`, `findmnt /mnt/datastore/external /srv/AV`, `proxmox-backup-manager datastore show external`, `systemctl status proxmox-backup-proxy smbd`, and `smbclient -L localhost -N` (listing may be denied without credentials). Mount `/srv/AV` with `systemctl start srv-AV.mount` if needed.
-4. From a PVE node check `pvesm status` and `pvesm list external`. Test a guest restore before depending on a backup.
+## Checks and recovery
 
-The PBS UI is private behind Caddy. The direct LAN service is `https://10.1.1.12:8007`. `store.l3b.cc.cd` and `smb.l3b.cc.cd` resolve directly to the VM, while `pbs.l3b.cc.cd` resolves to the proxy wildcard. Keep them distinct. Caddy's TLS upstream uses the PBS self-signed certificate; the client-facing wildcard certificate is Caddy's. SMB is not HTTP/TLS and does not pass through Caddy.
+1. On the node holding the SSD, confirm serial `2338E8C83CF2` with `lsblk -o NAME,SERIAL,SIZE,FSTYPE,MOUNTPOINTS` before mounting anything. Never initialize or format an unidentified disk.
+2. Confirm `findmnt /mnt/external/AV` and `findmnt /mnt/external/PX`, both marker files, and the expected UUIDs. Start the two mount units if needed.
+3. In CT 109, check `findmnt /srv/AV`, `findmnt /srv/PX`, `systemctl status smbd`, `testparm -s`, and `ss -ltnp | grep 445`. If the CT started before the host mounts, restart it after the real filesystems are mounted; merely mounting over the host paths does not repair existing bind mounts.
+4. From all three PVE nodes, check `pvesm list PX` and `findmnt /mnt/pve/PX`. Verify a fresh `vzdump` archive and periodically restore a guest to a temporary ID. The Proxmox UI shows these archives under the `PX` storage; no separate PBS UI exists.
 
-PBS has native Pocket ID OIDC realm `pocketid` and an explicitly authorized `iam.anuragvishwakarma@gmail.com@pocketid` administrator. Its OIDC client secret is in the `Pocket ID OIDC - pbs` 1Password item. The browser passkey callback still needs owner verification. `root@pam` and the PVE backup token remain unchanged. PVE storage `external` lets the Proxmox UI browse and restore PBS backups, but PVE and PBS remain separate administrative UIs and separate RBAC databases; sharing Pocket ID does not replicate local users.
-
-Homepage's PBS statistics use the separate token-only `homepage@pbs!homepage` identity. Both the user and token have the read-only `Audit` role on `/`, and the secret is stored in `PBS API Token - Homepage` in 1Password plus the live `homepage-widgets` Kubernetes Secret. The Homepage chart pins the PBS server certificate for direct TLS-verified API access; update that public certificate in Git if PBS rotates it.
-
-Samba is Debian 13's 4.22.11 package and negotiates SMB3 only (`SMB3_00` minimum, `SMB3` maximum), with signing and per-share SMB3 encryption required. This is native SMB encryption, not TLS. It binds only to loopback and `10.1.1.12`, not Tailscale interfaces. Sign in to `AV` as `iam.anuragvishwakarma@gmail.com`; `/etc/samba/user.map` maps that SMB login to the local `iam.anuragvishwakarma` account that owns `/srv/AV`. The `Store SMB` 1Password item holds the separate Samba `tdbsam` password, not a PAM or OIDC password. A test file was uploaded, downloaded, and removed successfully.
-
-The ext4 filesystem's `lost+found` directory is for `fsck` recovery, not a recycle bin. Keep it on disk. Samba's `veto files = /lost+found/` hides and denies it through the `AV` share; `downloads` and `media` remain visible. Do not enable `delete veto files`.
-
-VM 204 `ctr` mounts this share at `/mnt/AV` with SMB 3.1.1 encryption and a systemd automount. Its planned downloader and media paths are `/mnt/AV/downloads` and `/mnt/AV/media`; see `infrastructure/ctr/README.md`. This client mount does not create another copy of the data.
-
-Config sources in this directory are the PBS apt source files, Samba config, and mount/systemd drop-in. The live PBS datastore, PVE storage, backup job, HA rule, and USB mapping are platform state, not generated from these files.
+The old PBS datastore content may be removed only after every included guest has a successful native backup and a test restore has passed. See the repository history for the retired PBS setup; do not restore its OIDC client, Caddy route, Homepage widget, or credentials unless PBS is intentionally redeployed.

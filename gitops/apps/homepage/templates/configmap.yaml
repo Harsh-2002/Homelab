@@ -100,18 +100,6 @@ data:
               env: 2
               key: "{{ "{{HOMEPAGE_VAR_PORTAINER_API_KEY}}" }}"
               fields: ["running", "stopped", "total"]
-        - Proxmox Backup Server:
-            icon: proxmox.png
-            href: https://pbs.l3b.cc.cd
-            description: Backups
-            ping: https://pbs.l3b.cc.cd
-            widget:
-              type: proxmoxbackupserver
-              url: https://store:8007
-              username: "{{ "{{HOMEPAGE_VAR_PBS_API_TOKEN_ID}}" }}"
-              password: "{{ "{{HOMEPAGE_VAR_PBS_API_TOKEN_SECRET}}" }}"
-              datastore: external
-              fields: ["datastore_usage", "failed_tasks_24h", "cpu_usage", "memory_usage"]
     - Platform:
         - Argo CD:
             icon: argo-cd.png
@@ -270,7 +258,6 @@ data:
     # Proxmox service widgets are configured in services.yaml.
   trusted-cas.crt: |
 {{ .Files.Get "files/pve-root-ca.crt" | indent 4 }}
-{{ .Files.Get "files/pbs-server.crt" | indent 4 }}
   bookmarks.yaml: "[]"
   docker.yaml: "{}"
   custom.css: |
@@ -323,9 +310,6 @@ data:
           setText(details.querySelector(".information-widget-label"), "Longhorn");
         });
         renderK8s();
-        document.querySelectorAll(".service-block > div.font-bold").forEach((label) => {
-          if (label.textContent.trim() === "Failed Tasks 24h") setText(label, "Failed Tasks");
-        });
       };
       const start = () => {
         let queued = false;

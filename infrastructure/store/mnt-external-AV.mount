@@ -1,12 +1,13 @@
 [Unit]
-Description=Crucial external SMB volume
+Description=Crucial SSD AV filesystem
+After=local-fs.target
 
 [Mount]
 What=/dev/disk/by-uuid/2489f3c3-bbaa-4f4b-bdf5-69d240a6bdab
-Where=/srv/AV
+Where=/mnt/external/AV
 Type=ext4
 Options=rw,noatime
 TimeoutSec=15s
 
 [Install]
-WantedBy=local-fs.target
+WantedBy=multi-user.target

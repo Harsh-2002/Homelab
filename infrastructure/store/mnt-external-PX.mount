@@ -1,0 +1,13 @@
+[Unit]
+Description=Crucial SSD PX filesystem
+After=local-fs.target
+
+[Mount]
+What=/dev/disk/by-uuid/c21cf584-1056-4d9c-8d52-ba2c72d92379
+Where=/mnt/external/PX
+Type=ext4
+Options=rw,noatime
+TimeoutSec=15s
+
+[Install]
+WantedBy=multi-user.target

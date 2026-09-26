@@ -1,6 +1,0 @@
-[Unit]
-Description=Export PBS datastore filesystem capacity
-
-[Service]
-Type=oneshot
-ExecStart=/usr/local/sbin/pbs-textfile.sh

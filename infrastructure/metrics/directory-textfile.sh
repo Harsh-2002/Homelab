@@ -13,7 +13,7 @@ while IFS= read -r -d '' entry; do
   size="$(du -s -x -B1 "$entry" | awk '{print $1}')"
   label="$(printf '%s' "$entry" | sed 's/\\/\\\\/g; s/"/\\"/g')"
   printf 'storage_directory_bytes{path="%s"} %s\n' "$label" "$size" >> "$tmp_file"
-done < <(find "$root_dir" -mindepth 1 -maxdepth 1 -type d -print0)
+done < <(find "$root_dir" -mindepth 1 -maxdepth 1 -type d ! -name lost+found -print0)
 printf 'storage_directory_inventory_timestamp_seconds %s\n' "$(date +%s)" >> "$tmp_file"
 chmod 0644 "$tmp_file"
 mv -f "$tmp_file" "$output_dir/directories.prom"

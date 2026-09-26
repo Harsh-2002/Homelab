@@ -39,7 +39,7 @@ Direct-host exceptions use AdGuard CNAME-exception entries that pass through to 
 | `k8s-202.l3b.cc.cd` | `10.1.1.202` |
 | `k8s-203.l3b.cc.cd` | `10.1.1.203` |
 
-Do not replace these pass-through entries with exact A rewrites: AdGuard Home v0.107.79 gives the wildcard legacy rewrite precedence. Unbound owns the exception A records. `store.l3b.cc.cd` is now the public storefront on Caddy; the PBS VM remains `10.1.1.12`, reachable by the `store` SSH alias and `pbs.l3b.cc.cd` / `smb.l3b.cc.cd` for services.
+Do not replace these pass-through entries with exact A rewrites: AdGuard Home v0.107.79 gives the wildcard legacy rewrite precedence. Unbound owns the exception A records. `store.l3b.cc.cd` is the public storefront on Caddy; the storage LXC remains `10.1.1.12`, reachable by the `store` SSH alias and `smb.l3b.cc.cd` for AV and PX shares.
 
 Validation:
 

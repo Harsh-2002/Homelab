@@ -16,10 +16,6 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       serviceAccountName: homepage
-      hostAliases:
-        - ip: 10.1.1.12
-          hostnames:
-            - store
       securityContext:
         seccompProfile:
           type: RuntimeDefault
