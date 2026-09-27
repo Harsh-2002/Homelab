@@ -13,7 +13,7 @@ flowchart LR
 
 The DNS container has 2 vCPU and 2 GiB RAM. AdGuard Home `v0.107.79` and Unbound `v1.26.1` are installed as native systemd services, both enabled and running. AdGuard listens on its LAN address and loopback for plain DNS; its management UI listens on a separate LAN port behind a private reverse proxy. Unbound is reached only over loopback. There is no Docker or public DNS listener.
 
-Clients use the AdGuard LAN IP. Infrastructure clients with private DNS names use it as their **only** resolver: a public second server can return the public wildcard address for an internal name, and a client may keep using that second server after AdGuard recovers. For redundancy, add a second internal resolver carrying the same local records; do not use a public resolver as the fallback for split-horizon infrastructure. AdGuard itself has **no fallback upstream**: recursive queries go to Unbound. The public bootstrap resolvers in the AdGuard settings are for resolving hostname-based encrypted upstreams if needed; they are not the normal recursive path.
+Clients use the AdGuard LAN IP. Infrastructure clients with private DNS names use it as their **only** resolver: a public second server can return the public wildcard address for an internal name, and a client may keep using that second server after AdGuard recovers. For redundancy, add a second internal resolver carrying the same local records; do not use a public resolver as the fallback for split-horizon infrastructure. AdGuard itself has **no fallback upstream**: recursive queries go to Unbound. Its bootstrap resolver is also loopback Unbound, avoiding AdGuard's built-in public defaults if a hostname-based upstream is ever introduced.
 
 ## AdGuard Home settings
 

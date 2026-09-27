@@ -3,9 +3,9 @@ network:
   ethernets:
     eth0:
       match:
-        macaddress: "bc:24:11:c1:d4:76"
+        macaddress: "bc:24:11:34:44:bf"
       addresses:
-      - "10.1.1.4/24"
+      - "10.1.1.11/24"
       nameservers:
         addresses:
         - 10.1.1.2

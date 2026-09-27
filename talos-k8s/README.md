@@ -10,13 +10,14 @@ The cluster consists of three Talos control-plane nodes:
 
 The Kubernetes API uses the layer-2 VIP `10.1.1.200`. Cilium provides kube-proxy replacement, Kubernetes IPAM, and L2-announced LoadBalancer addresses from `10.1.1.170-10.1.1.190`.
 
-Talos nodes use AdGuard Home `10.1.1.2` as their primary resolver and Cloudflare `1.1.1.1` as the availability fallback. Kubernetes Service discovery remains on CoreDNS; CoreDNS forwards external lookups through the node resolver configuration.
+Talos nodes use only AdGuard Home `10.1.1.2` as their resolver. Kubernetes Service discovery remains on CoreDNS; CoreDNS forwards external lookups through the node resolver configuration. A public fallback cannot resolve our private split-horizon records. DNS redundancy requires a second internal resolver with the same records, not a public resolver.
 
 ## Tracked configuration
 
 - `cluster-name.patch.yaml` — cluster name.
 - `vip.patch.yaml` — Kubernetes API VIP.
 - `k8s-20x.patch.yaml` — hostname, static address, gateway, and resolver configuration per node.
+- `dns.patch.yaml` — shared Talos resolver configuration (only `10.1.1.2`).
 - `cilium-talos.patch.yaml` — disables kube-proxy and Flannel for Cilium.
 - `cilium-values.yaml` — currently deployed Cilium Helm values.
 - `lb-pool.yaml` — Cilium LoadBalancer IP pool.

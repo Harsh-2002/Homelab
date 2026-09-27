@@ -10,6 +10,8 @@ The static site was rebuilt from source commit `a370a33300e7495960fbee88e6381261
 
 Secrets are not stored in Git. The proxy loads `/etc/caddy/cloudflare.env` through the systemd drop-in `/etc/systemd/system/caddy.service.d/10-cloudflare-env.conf`. This protected file contains the Cloudflare values and `FRIGATE_PROXY_AUTH_SECRET`; the latter must match the Frigate Stack environment exactly.
 
+The proxy host resolves normal traffic through internal AdGuard `10.1.1.2` only. The `cloudflare` TLS snippet's public `resolvers` are scoped to ACME DNS-01 TXT propagation checks; they are not host DNS or upstream DNS for proxied requests. Keep this exception when renewing the wildcard certificate.
+
 The minimal `cf` CLI is tracked at `scripts/cf` and installed on `dev` as `/usr/local/bin/cf`. It reads `CF_API_TOKEN` and `CF_ZONE` from the environment, or from `CF_ENV_FILE` (default `/etc/caddy/cloudflare.env`). The default cache is `~/.cf-zone-id`; override it with `CF_CACHE_FILE`. Keep `CF_ZONE=l3b.cc.cd` alongside the existing Cloudflare token in `/etc/caddy/cloudflare.env` so Caddy and `cf` use one non-Git configuration path.
 
 Deploy and validate:

@@ -3,14 +3,17 @@ network:
   ethernets:
     eth0:
       match:
-        macaddress: "bc:24:11:c1:d4:76"
+        macaddress: "bc:24:11:62:35:72"
       addresses:
-      - "10.1.1.4/24"
+      - "10.1.1.5/24"
       nameservers:
         addresses:
         - 10.1.1.2
         search:
         - l3b.cc.cd
+      dhcp6: true
+      dhcp6-overrides:
+        use-dns: false
       ra-overrides:
         use-dns: false
       set-name: "eth0"
