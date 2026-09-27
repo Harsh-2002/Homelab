@@ -180,7 +180,7 @@
       },
       "targets": [
         {
-          "expr": "sum(node_filesystem_size_bytes{job=\"data-hosts\",host=\"store\",mountpoint=~\"/srv/(AV|PX|ISO)\"} - node_filesystem_avail_bytes{job=\"data-hosts\",host=\"store\",mountpoint=~\"/srv/(AV|PX|ISO)\"})",
+          "expr": "sum(node_filesystem_size_bytes{job=\"data-hosts\",host=\"store\",mountpoint=~\"/srv/(AV|BACKUP|ISO)\"} - node_filesystem_avail_bytes{job=\"data-hosts\",host=\"store\",mountpoint=~\"/srv/(AV|BACKUP|ISO)\"})",
           "refId": "A",
           "instant": true
         }
@@ -206,11 +206,11 @@
         "justifyMode": "center",
         "wideLayout": true
       },
-      "description": "Used physical bytes across the AV, PX and ISO filesystems on Store; not included in ZFS totals."
+      "description": "Used physical bytes across the AV, BACKUP and ISO filesystems on Store; not included in ZFS totals."
     },
     {
       "id": 1,
-      "title": "PX backups · used",
+      "title": "BACKUP archives · used",
       "type": "stat",
       "gridPos": {
         "h": 5,
@@ -224,7 +224,7 @@
       },
       "targets": [
         {
-          "expr": "100 * (1 - node_filesystem_avail_bytes{job=\"data-hosts\",host=\"store\",instance=\"10.1.1.12:9100\",mountpoint=\"/srv/PX\"} / node_filesystem_size_bytes{job=\"data-hosts\",host=\"store\",instance=\"10.1.1.12:9100\",mountpoint=\"/srv/PX\"})",
+          "expr": "100 * (1 - node_filesystem_avail_bytes{job=\"data-hosts\",host=\"store\",instance=\"10.1.1.12:9100\",mountpoint=\"/srv/BACKUP\"} / node_filesystem_size_bytes{job=\"data-hosts\",host=\"store\",instance=\"10.1.1.12:9100\",mountpoint=\"/srv/BACKUP\"})",
           "refId": "A",
           "instant": true
         }
@@ -272,7 +272,7 @@
         "justifyMode": "center",
         "wideLayout": true
       },
-      "description": "Used space on the Store PX filesystem, including any backup exports."
+      "description": "Used space on the Store BACKUP filesystem, including any backup exports."
     },
     {
       "id": 4,
@@ -341,7 +341,7 @@
       "id": 5,
       "title": "Proxmox datastores · capacity used",
       "type": "bargauge",
-      "description": "Unique PVE datastore views; shared PX and ISO exports are shown once from px10.",
+      "description": "Unique PVE datastore views; shared BACKUP and ISO exports are shown once from px10.",
       "gridPos": {
         "h": 9,
         "w": 12,
@@ -354,7 +354,7 @@
       },
       "targets": [
         {
-          "expr": "100 * max by(id) (pve_disk_usage_bytes{id=~\"storage/.*\",id!~\"storage/(px20|px30)/(PX|ISO)\"}) / max by(id) (pve_disk_size_bytes{id=~\"storage/.*\",id!~\"storage/(px20|px30)/(PX|ISO)\"})",
+          "expr": "100 * max by(id) (pve_disk_usage_bytes{id=~\"storage/.*\",id!~\"storage/(px20|px30)/(BACKUP|ISO)\"}) / max by(id) (pve_disk_size_bytes{id=~\"storage/.*\",id!~\"storage/(px20|px30)/(BACKUP|ISO)\"})",
           "refId": "A",
           "legendFormat": "{{id}}"
         }
@@ -701,7 +701,7 @@
       },
       "targets": [
         {
-          "expr": "node_filesystem_size_bytes{job=\"data-hosts\",host=\"store\",instance=\"10.1.1.12:9100\",mountpoint=~\"/srv/(AV|PX|ISO)\"} - node_filesystem_avail_bytes{job=\"data-hosts\",host=\"store\",instance=\"10.1.1.12:9100\",mountpoint=~\"/srv/(AV|PX|ISO)\"}",
+          "expr": "node_filesystem_size_bytes{job=\"data-hosts\",host=\"store\",instance=\"10.1.1.12:9100\",mountpoint=~\"/srv/(AV|BACKUP|ISO)\"} - node_filesystem_avail_bytes{job=\"data-hosts\",host=\"store\",instance=\"10.1.1.12:9100\",mountpoint=~\"/srv/(AV|BACKUP|ISO)\"}",
           "refId": "A",
           "legendFormat": "{{mountpoint}}"
         }
@@ -747,7 +747,7 @@
           }
         }
       },
-      "description": "Used bytes on AV, PX, and ISO. These are separate partitions, not a single pool."
+      "description": "Used bytes on AV, BACKUP, and ISO. These are separate partitions, not a single pool."
     },
     {
       "id": 11,
@@ -873,7 +873,7 @@
           "values": false
         }
       },
-      "description": "Hours since the newest completed PX backup archive for each protected guest. Red means older than 36 hours."
+      "description": "Hours since the newest completed BACKUP archive for each protected guest. Red means older than 36 hours."
     }
   ]
 }

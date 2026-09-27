@@ -1,9 +1,9 @@
 #!/bin/sh
 set -eu
 
-backup_dir=/srv/PX/exports/dump
+backup_dir=/srv/BACKUP/exports/dump
 output_dir=/var/lib/prometheus/node-exporter
-test -f /srv/PX/.store-volume
+test -f /srv/BACKUP/.store-volume
 test -d "$backup_dir"
 install -d -m 0755 "$output_dir"
 tmp_file="$(mktemp "$output_dir/backups.prom.XXXXXX")"

@@ -1,6 +1,5 @@
 [Unit]
 Description=Crucial SSD AV filesystem
-After=local-fs.target
 Before=pve-guests.service
 
 [Mount]
@@ -8,7 +7,7 @@ What=/dev/disk/by-uuid/2489f3c3-bbaa-4f4b-bdf5-69d240a6bdab
 Where=/mnt/external/AV
 Type=ext4
 Options=rw,noatime
-TimeoutSec=15s
+TimeoutSec=60s
 
 [Install]
 WantedBy=multi-user.target

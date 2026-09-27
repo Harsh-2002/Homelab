@@ -1,14 +1,13 @@
 [Unit]
-Description=Crucial SSD PX filesystem
-After=local-fs.target
+Description=Crucial SSD BACKUP filesystem
 Before=pve-guests.service
 
 [Mount]
 What=/dev/disk/by-uuid/c21cf584-1056-4d9c-8d52-ba2c72d92379
-Where=/mnt/external/PX
+Where=/mnt/external/BACKUP
 Type=ext4
 Options=rw,noatime
-TimeoutSec=15s
+TimeoutSec=60s
 
 [Install]
 WantedBy=multi-user.target

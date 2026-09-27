@@ -1,0 +1,17 @@
+network:
+  version: 2
+  ethernets:
+    eth0:
+      match:
+        macaddress: "bc:24:11:c1:d4:76"
+      addresses:
+      - "10.1.1.4/24"
+      nameservers:
+        addresses:
+        - 10.1.1.2
+        search:
+        - l3b.cc.cd
+      set-name: "eth0"
+      routes:
+      - to: "default"
+        via: "10.1.1.1"

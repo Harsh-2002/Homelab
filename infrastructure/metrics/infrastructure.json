@@ -1,7 +1,7 @@
 {
   "uid": "infrastructure",
   "title": "Infrastructure Overview",
-  "description": "Operational health across Proxmox, Kubernetes, Longhorn, and PX backups. Use Compute & Guests or Storage & Backups for drill-downs.",
+  "description": "Operational health across Proxmox, Kubernetes, Longhorn, and BACKUP archives. Use Compute & Guests or Storage & Backups for drill-downs.",
   "tags": [
     "infrastructure",
     "overview"
@@ -386,7 +386,7 @@
         "justifyMode": "center",
         "wideLayout": true
       },
-      "description": "PX guest backups older than 36 hours, including never-backed-up guests. Kubernetes VMs are intentionally excluded from the PX job."
+      "description": "BACKUP guest archives older than 36 hours, including never-backed-up guests. Kubernetes VMs are intentionally excluded from this job."
     },
     {
       "id": 7,
@@ -528,7 +528,7 @@
       "id": 9,
       "title": "Proxmox storage · used capacity",
       "type": "bargauge",
-      "description": "PVE datastore fill. Shared PX and ISO exports appear once, from px10; the storage dashboard has mount-level details.",
+      "description": "PVE datastore fill. Shared BACKUP and ISO exports appear once, from px10; the storage dashboard has mount-level details.",
       "gridPos": {
         "h": 9,
         "w": 12,
@@ -541,7 +541,7 @@
       },
       "targets": [
         {
-          "expr": "100 * max by(id) (pve_disk_usage_bytes{id=~\"storage/.*\",id!~\"storage/(px20|px30)/(PX|ISO)\"}) / max by(id) (pve_disk_size_bytes{id=~\"storage/.*\",id!~\"storage/(px20|px30)/(PX|ISO)\"})",
+          "expr": "100 * max by(id) (pve_disk_usage_bytes{id=~\"storage/.*\",id!~\"storage/(px20|px30)/(BACKUP|ISO)\"}) / max by(id) (pve_disk_size_bytes{id=~\"storage/.*\",id!~\"storage/(px20|px30)/(BACKUP|ISO)\"})",
           "refId": "A",
           "legendFormat": "{{id}}"
         }
@@ -863,7 +863,7 @@
       "id": 14,
       "title": "Backup age · protected guests",
       "type": "bargauge",
-      "description": "Hours since the newest completed PX backup archive per guest. Zero timestamp means no completed archive; the bar will appear very old.",
+      "description": "Hours since the newest completed BACKUP archive per guest. Zero timestamp means no completed archive; the bar will appear very old.",
       "gridPos": {
         "h": 8,
         "w": 12,

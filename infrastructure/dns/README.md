@@ -6,9 +6,9 @@ DNS LXC `10.1.1.2` runs:
 - Unbound `v1.26.1` on `127.0.0.1:5335` as the recursive upstream.
 - HaGeZi Multi PRO and HaGeZi TIF Medium blocklists.
 
-The protected active configuration is `/opt/AdGuardHome/AdGuardHome.yaml`. It is not copied into Git because it contains the administrator password hash and operational state. The safe desired DNS fragments are tracked as `adguard-rewrites.yaml` and `unbound-local.conf`.
+The protected active configuration is `/opt/AdGuardHome/AdGuardHome.yaml`. It is not copied into Git because it contains the administrator password hash and operational state. The safe desired DNS fragments are tracked as `adguard-rewrites.yaml`, `unbound-local.conf`, and `unbound-recursive.conf`.
 
-The sanitized, shareable overview is [SHAREABLE-SETUP.md](SHAREABLE-SETUP.md) and the separate Notion page [AdGuard Home + Unbound: my DNS setup](https://app.notion.com/p/AdGuard-Home-Unbound-my-DNS-setup-3e5d3ccfb520818b8546c4dbca0ecdce). No copy is hosted in S3. Audit finding on 2026-09-24: the running Unbound process answers on loopback port 5335, but the retained on-disk configuration does not declare that port or cache tuning; its config query reports default port 53 and 4 MiB message/RRset caches. Treat this as restart-risk configuration drift. Do not claim the current Unbound layer is tuned or reproducible until its persistent config is reconciled and restart-tested.
+The sanitized, shareable overview is [SHAREABLE-SETUP.md](SHAREABLE-SETUP.md) and the separate Notion page [AdGuard Home + Unbound: my DNS setup](https://app.notion.com/p/AdGuard-Home-Unbound-my-DNS-setup-3e5d3ccfb520818b8546c4dbca0ecdce). No copy is hosted in S3. On 2026-09-27, the previously missing Unbound loopback/port/cache settings caused a real restart failure: Unbound bound port 53, while AdGuard was configured to query port 5335. The tracked `unbound-recursive.conf` was installed at `/etc/unbound/unbound.conf.d/recursive.conf`; `unbound-checkconf`, a cold service restart, direct port-5335 recursion, and AdGuard port-53 queries all passed.
 
 Proxy-managed DNS uses one apex A rewrite and one wildcard CNAME rewrite:
 
@@ -39,7 +39,9 @@ Direct-host exceptions use AdGuard CNAME-exception entries that pass through to 
 | `k8s-202.l3b.cc.cd` | `10.1.1.202` |
 | `k8s-203.l3b.cc.cd` | `10.1.1.203` |
 
-Do not replace these pass-through entries with exact A rewrites: AdGuard Home v0.107.79 gives the wildcard legacy rewrite precedence. Unbound owns the exception A records. `store.l3b.cc.cd` is the public storefront on Caddy; the storage LXC remains `10.1.1.12`, reachable by the `store` SSH alias and `smb.l3b.cc.cd` for AV and PX shares.
+Do not replace these pass-through entries with exact A rewrites: AdGuard Home v0.107.79 gives the wildcard legacy rewrite precedence. Unbound owns the exception A records. `store.l3b.cc.cd` is the public storefront on Caddy; the storage LXC remains `10.1.1.12`, reachable by the `store` SSH alias and `smb.l3b.cc.cd` for AV, BACKUP, and ISO shares.
+
+Do not configure public DNS as a second resolver on split-horizon infrastructure clients. During the 2026-09-27 DNS outage, `ctr`'s `systemd-resolved` selected `1.1.1.1` and continued returning the public wildcard/proxy address for `smb.l3b.cc.cd` after AdGuard recovered. That broke its SMB automount and Motrix. The three Proxmox hosts and `ctr` now use only `10.1.1.2`; `ctr`'s Proxmox cloud-init nameserver and guest Netplan config were both updated. DNS redundancy requires a second *internal* resolver with the same local records, not a public fallback. This is a single DNS-instance dependency until then.
 
 Validation:
 

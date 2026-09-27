@@ -1,6 +1,6 @@
 # AdGuard Home + Unbound: my DNS setup
 
-This is a sanitized description of a small home-lab DNS stack, checked against the running services on 2026-09-24. Replace every `<PLACEHOLDER>` with your own addresses and domain. It is a description of what I run, not a drop-in copy of my protected configuration.
+This is a sanitized description of a small home-lab DNS stack, checked against the running services on 2026-09-27. Replace every `<PLACEHOLDER>` with your own addresses and domain. It is a description of what I run, not a drop-in copy of my protected configuration.
 
 ## Architecture
 
@@ -13,7 +13,7 @@ flowchart LR
 
 The DNS container has 2 vCPU and 2 GiB RAM. AdGuard Home `v0.107.79` and Unbound `v1.26.1` are installed as native systemd services, both enabled and running. AdGuard listens on its LAN address and loopback for plain DNS; its management UI listens on a separate LAN port behind a private reverse proxy. Unbound is reached only over loopback. There is no Docker or public DNS listener.
 
-Clients use the AdGuard LAN IP. The router and infrastructure point to it as primary DNS; a public resolver may be configured as a *client-side* fallback, but that can bypass local names and filtering when selected. AdGuard itself has **no fallback upstream**: recursive queries go to Unbound. The public bootstrap resolvers in the AdGuard settings are for resolving hostname-based encrypted upstreams if needed; they are not the normal recursive path.
+Clients use the AdGuard LAN IP. Infrastructure clients with private DNS names use it as their **only** resolver: a public second server can return the public wildcard address for an internal name, and a client may keep using that second server after AdGuard recovers. For redundancy, add a second internal resolver carrying the same local records; do not use a public resolver as the fallback for split-horizon infrastructure. AdGuard itself has **no fallback upstream**: recursive queries go to Unbound. The public bootstrap resolvers in the AdGuard settings are for resolving hostname-based encrypted upstreams if needed; they are not the normal recursive path.
 
 ## AdGuard Home settings
 
@@ -74,7 +74,7 @@ I use the default blocking mode, with no custom allowlist or user rules in the s
 
 An apex A rewrite points `<INTERNAL_DOMAIN>` to `<PROXY_LAN_IP>`, and a wildcard CNAME rewrite points `*.<INTERNAL_DOMAIN>` back to that apex. New reverse-proxy services therefore need a proxy route but usually no new local DNS record. A few direct-host names use AdGuard CNAME exceptions and exact A records in Unbound instead. Public DNS is private-by-default; only explicitly published names receive public A records. Keep direct-host, SMB and management names private.
 
-## Unbound: complete current config and a reproducible example
+## Unbound: complete current config
 
 Unbound is the **recursive resolver**, not a forwarder to a public DNS provider. The running process answers on `127.0.0.1:5335`, and its Debian systemd unit is enabled. These are all of the current on-disk Unbound files, with only the domain and host details replaced:
 
@@ -108,9 +108,7 @@ server:
     local-data: "<DIRECT_HOST_2>.<INTERNAL_DOMAIN>. 30 IN A <HOST_2_LAN_IP>"
 ```
 
-**Important live/on-disk drift:** None of those files declares `interface: 127.0.0.1`, `port: 5335`, or custom caches. Socket inspection confirms that the already-running process is on 5335, but the current config query reports Unbound defaults: port 53, 4 MiB message cache, 4 MiB RRset cache, `prefetch: no`, `serve-expired: no`, one configured thread, and qname minimisation/DNSSEC validation enabled. A reload log says the process continued with two threads because of existing `so-reuseport` state. Thus the process state is **not reproducible from these files**; a cold restart may fail to bind as expected or conflict with AdGuard on port 53. I did not restart or modify it for this write-up.
-
-For someone building the same architecture afresh, the missing persistent settings should go into a separate file such as `/etc/unbound/unbound.conf.d/recursive.conf`. The following is a **recommended example, not a claim about my currently installed file** for a two-core, 2 GiB DNS guest with AdGuard's 128 MiB cache:
+`/etc/unbound/unbound.conf.d/recursive.conf` is now installed and tracked in sanitized form. The missing persistent settings caused a real outage on 2026-09-27 when Unbound restarted on port 53 instead of 5335. The following settings were installed and verified with `unbound-checkconf`, a service restart, and direct recursive queries on port 5335:
 
 ```unbound
 server:
@@ -130,7 +128,7 @@ server:
     hide-version: yes
 ```
 
-Keep the Debian root trust-anchor file above for DNSSEC. `prefetch` refreshes popular near-expiry cache entries; I would leave Unbound's own `serve-expired` off because AdGuard already has optimistic caching. These cache sizes are a starting budget, not a universal maximum; watch memory and cache hit rate. Before applying a new file, run `unbound-checkconf`, ensure port 5335 is reachable only on loopback, and plan a restart test when DNS clients have a working fallback.
+Keep the Debian root trust-anchor file above for DNSSEC. `prefetch` refreshes popular near-expiry cache entries; Unbound's own `serve-expired` stays off because AdGuard already has optimistic caching. These cache sizes are a starting budget, not a universal maximum; watch memory and cache hit rate. Before applying a new file, run `unbound-checkconf`, ensure port 5335 is reachable only on loopback, and perform a restart test during a maintenance window.
 
 ## Operational checks
 
