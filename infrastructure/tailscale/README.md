@@ -84,6 +84,12 @@ Gateway=10.1.1.9
 
 Do not add three weighted routes or guest-side health scripts. Keepalived owns failover, and the route remains valid when Proxmox HA relocates a guest to another host on the same LAN.
 
+### 2026-09-28: same-host firewall/NAT failure
+
+`dev` (VM 100 on px10) now has the persistent route in `infrastructure/dns/client-netplan/dev.yaml`; `ip route get 100.122.33.37` selects `10.1.1.9`. **The route is not yet usable from dev while px10 owns the VIP.** A packet capture proved that packets from `10.1.1.5` reach px10 and appear on `tailscale0`, but receive no reply. A targeted nft trace proved that the first IPv4 NAT postrouting pass for a dev-to-slate packet occurs with output interface `fwbr100i0`, not `tailscale0`, so the existing `oifname "tailscale0" masquerade` rule does not match. Conntrack recorded an unreplied flow with reply destination still `10.1.1.5`, confirming no SNAT mapping. VM 100 has `firewall=1` and `net.bridge.bridge-nf-call-iptables=1`, which puts its traffic through a Proxmox firewall bridge. px10 itself reaches slate successfully. [Proxmox's administration guide](https://pve.proxmox.com/pve-docs/pve-admin-guide.pdf) documents this firewall-bridge/POSTROUTING interaction and suggests conntrack zones for some masquerade setups.
+
+Do not treat this as a working HA gateway yet. Changing the nft NAT priority from `srcnat` to `srcnat - 1` and a temporary iptables MASQUERADE rule did **not** fix it; both changes and the trace rule were removed. The next step is a controlled, narrowly scoped conntrack-zone test on the VIP owner, followed by dev-to-slate tests and a failover test on px20 before rolling a persistent fix to all hosts. Do not disable VM firewalls or bridge netfilter globally as an untested workaround.
+
 ## Deployment and recovery
 
 Enroll a replacement node with `scripts/ts.sh`, then copy the tracked files and enable the services. Example for px10:
@@ -114,7 +120,7 @@ ip -4 -br address show vmbr0
 journalctl -u keepalived -n 30 --no-pager
 ```
 
-Exactly one host must own `10.1.1.9/24`. Controlled tests moved the VIP from px10 to px20 in under five seconds and back. A guest route was temporarily installed on dev and successfully reached remote tailnet node `slate` through both px10 and px20. The temporary dev route was removed after testing.
+Exactly one host must own `10.1.1.9/24`. Earlier controlled tests moved the VIP from px10 to px20 in under five seconds and back. A temporary dev route previously reached `slate` through both hosts, but the 2026-09-28 same-host firewall/NAT test above fails and takes precedence over that earlier observation.
 
 ## Removal
 
