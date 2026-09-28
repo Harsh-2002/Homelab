@@ -89,7 +89,7 @@ Important roles:
 | `dev` | Administrative and build VM; this repository normally lives here |
 | `orva` | Outbound-isolated serverless VM 106 at `10.1.1.11` |
 
-`slate` is a GCP free-tier VM in the US with Tailscale IP `100.122.33.37`. It is online and offers an exit node, but there was no working regular SSH path from `dev` at the last review. Do not assume `ssh slate` works merely because MagicDNS lists the node.
+`slate` is a GCP free-tier VM in the US with Tailscale IP `100.122.33.37`. It is online and offers an exit node. `dev` now has a direct Tailscale client and a verified `ssh slate` alias for `root@100.122.33.37`; this does not depend on MagicDNS. Neither ntfy nor external Uptime Kuma is installed there yet. The owner chose native system services on `slate`, not Docker/Portainer Agent; that trial was fully removed. `ctr` was not enrolled in Tailscale.
 
 ## Secret handling
 
@@ -124,53 +124,18 @@ Read the main README for the full endpoint table. Key infrastructure facts:
 - Orva serverless VM: `10.1.1.11` (VM 106; outbound-isolated by Proxmox firewall)
 - Kubernetes API VIP: `10.1.1.200`
 - Cilium LoadBalancer pool: `10.1.1.170-10.1.1.190`
-- Tailscale/Keepalived gateway VIP: `10.1.1.9`
+- Tailscale: px10/px20/px30 are approved subnet routers for `10.1.1.0/24`; `dev` is a direct tailnet client. The former `10.1.1.9` gateway VIP was removed.
 - Primary internal domain: `l3b.cc.cd`
 - DNS is private by default; internet exposure requires an explicit Cloudflare record and corresponding Caddy policy.
 - Pocket ID is the OIDC provider. Tinyauth protects services without native OIDC support.
 - Portainer is the current Docker management interface. Komodo and Pulse are removed from live infrastructure; their repository directories are historical/rebuild documentation only.
 - RustFS replaced MinIO. Do not redeploy MinIO unless specifically requested for recovery.
 
-## Tailscale HA gateway
+## Tailscale subnet routing and direct clients
 
-The Tailscale gateway runs directly on all three Proxmox hosts. There is no gateway VM or LXC.
+Tailscale runs directly on all three Proxmox hosts. All three advertise and have approval for `10.1.1.0/24`, use `tag:subnet-router`, and have device-key expiry disabled. Tailscale's native subnet-router failover handles inbound tailnet-to-LAN access. The only persistent host services are `tailscaled.service` and `tailscale-gro.service`. Hosts have `accept-dns=false`, `accept-routes=false`, Tailscale SSH disabled, and native auto-update enabled.
 
-| Host | LAN | Tailscale | Keepalived priority |
-| --- | --- | --- | ---: |
-| px10 | `10.1.1.10` | `100.100.202.88` | 150 |
-| px20 | `10.1.1.20` | `100.115.39.43` | 120 |
-| px30 | `10.1.1.30` | `100.101.22.38` | 90 |
-
-All three advertise and have approval for `10.1.1.0/24`, use `tag:subnet-router`, and have device-key expiry disabled. They use:
-
-```text
-accept-dns=false
-accept-routes=false
-snat-subnet-routes=true
-netfilter-mode=on
-Tailscale SSH disabled
-exit-node advertisement disabled
-Tailscale native auto-update enabled
-```
-
-Persistent services on every Proxmox host:
-
-```text
-tailscaled.service
-tailscale-gro.service
-tailscale-gateway.service
-keepalived.service
-```
-
-The VIP normally belongs to px10, fails to px20 and then px30, and automatically fails back. Host reboot, Keepalived failure, and `tailscaled` failure were tested. LAN guests that need to initiate tailnet traffic use one persistent route:
-
-```text
-100.64.0.0/10 via 10.1.1.9
-```
-
-Do not add three weighted routes or guest-side polling. A scoped nftables masquerade rule on the active Proxmox host makes outbound failover independent of Tailscale's separate inbound subnet-router election.
-
-Authoritative detail is in `infrastructure/tailscale/README.md`.
+On 2026-09-28 the owner retired the separate outbound gateway: `10.1.1.9`, Keepalived, the custom nft NAT table/service, and the health script were removed from all three Proxmox hosts. A Proxmox VM firewall bridge caused the old gateway NAT rule to miss same-host guest traffic. No router static route to the former VIP should be added. Guests that need outbound tailnet access run their own Tailscale client instead; `dev` now uses direct Tailscale `100.70.45.76`, with `accept-dns=false`, `accept-routes=false`, auto-update enabled, and no advertised routes. Its obsolete route through `10.1.1.9` was removed. `ssh slate` reaches `root@100.122.33.37` using a pinned SSH host key. Full verification and recovery instructions are in `infrastructure/tailscale/README.md`.
 
 ## Deployed versus planned
 
@@ -197,16 +162,15 @@ Deployed and verified:
 - n8n's existing owner email was updated to `iam.anuragvishwakarma@gmail.com`, and native password + existing MFA login was verified.
 - Fresh native Cairn service on the `s3` LXC beside RustFS, using separate ports and `/data/cairn`
 - Native RustFS and migrated S3 workloads
-- Three-node Tailscale subnet routing and Keepalived gateway VIP
+- Three-node Tailscale subnet routing and direct Tailscale access from `dev`; the former gateway VIP was retired
 - Persistent Intel I219 conservative NIC settings on px10, px20, and px30: TSO/GSO/GRO/EEE disabled by `e1000e-stability.service`; px10/px20 had transmit hangs, while px30's I219-LM has no recorded hangs and was aligned for consistency. An 8 GiB cross-node test sustained about 115 MB/s with zero NIC errors
 - Paperless-ngx `3.2.1` runs as Portainer-owned Stack ID 149 on `ctr`, with SQLite/media under `/data/apps/paperless` and Valkey as broker. `https://docs.l3b.cc.cd` is private through Caddy with native Pocket ID OIDC; local login was tested as break-glass, while the passkey-protected OIDC return still needs owner verification. Homepage has a GitOps card. Secrets live in the two distinct `HomeLab` vault items `Paperless-ngx` and `Pocket ID OIDC - paperless` plus Portainer Stack Env; temporary plaintext files were removed. Use `scripts/op-sa` on `dev`: plain `op` does not load the existing service-account token file automatically. See `infrastructure/paperless/README.md`.
 
 Planned but **not yet applied** at the time of this handoff:
 
 - Extend independent backup coverage for application data, especially both OpenCloud metadata and its RustFS bucket. The current `BACKUP` archives and `AV` files share one physical SSD and are not an off-site backup; the former whole-system recovery tar no longer exists.
-- Change tailnet DNS from global `10.1.1.2` to split DNS: `l3b.cc.cd` only through `10.1.1.2`, while public DNS remains local to each client.
-- Keep MagicDNS enabled and keep `accept-dns=true` on `slate`; do not override its GCP resolver for ordinary public names.
-- Deploy a second Uptime Kuma on `slate` for the external viewpoint and use ntfy there. It should monitor home internet, Tailscale/subnet routing, AdGuard, public services, and selected private services without duplicating every internal alert.
+- If private names are needed from `slate`, configure split DNS for `l3b.cc.cd` without making home AdGuard a global resolver; `slate` currently has `accept-dns=false` and uses its independent resolver for public names.
+- Deploy native ntfy and a second, native Uptime Kuma on `slate` for the external viewpoint. Uptime Kuma needs Node.js (it is not a Go binary). Keep UIs tailnet-only, plan alert-publisher reachability from guests without Tailscale, and test ntfy iOS background delivery. Monitor home internet, Tailscale/subnet routing, AdGuard, public services, and selected private services without duplicating every internal alert.
 - Optionally invite `iam.anuragvishwakarma@gmail.com` to Tailscale as Admin. The current Gmail owner cannot be replaced through the API.
 
 ## Working rules
