@@ -8,6 +8,12 @@ rewrites:
   - domain: store.l3b.cc.cd
     answer: store.l3b.cc.cd
     enabled: true
+  - domain: ntfy.l3b.cc.cd
+    answer: ntfy.l3b.cc.cd
+    enabled: true
+  - domain: watch.l3b.cc.cd
+    answer: watch.l3b.cc.cd
+    enabled: true
   - domain: smb.l3b.cc.cd
     answer: smb.l3b.cc.cd
     enabled: true

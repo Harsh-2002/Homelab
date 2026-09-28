@@ -1,0 +1,8 @@
+base-url: "https://ntfy.l3b.cc.cd"
+listen-http: "127.0.0.1:2586"
+behind-proxy: true
+cache-file: "/var/lib/ntfy/cache.db"
+cache-duration: "24h"
+auth-file: "/var/lib/ntfy/user.db"
+auth-default-access: "deny-all"
+upstream-base-url: "https://ntfy.sh"

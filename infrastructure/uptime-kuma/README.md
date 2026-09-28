@@ -1,5 +1,7 @@
 # Uptime Kuma
 
+The independent external instance on GCP `slate` is documented in `../slate/README.md`. It is public at `https://watch.l3b.cc.cd` with native password plus TOTP and monitors the home from outside. The following runbook is for the separate private, Pocket ID-protected instance on CT 104.
+
 Uptime Kuma `2.5.5` runs natively under systemd in Proxmox CT 104 `beszel`; Docker and PM2 are intentionally not installed. The private UI is `https://status.l3b.cc.cd`. Caddy restricts it to LAN/Tailscale clients, and Tinyauth requires the canonical administrator email plus Pocket ID group `infrastructure-admins` before any request reaches Uptime Kuma.
 
 Uptime Kuma does not support native OIDC. Its built-in authentication is disabled so a successful Pocket ID/Tinyauth session opens the dashboard directly. This is safe only because CT 104's persistent nftables policy permits TCP `3001` from loopback and Caddy `10.1.1.3`, then rejects every other source. Do not disable or weaken that rule while application authentication is disabled. The saved Uptime Kuma username/password remains the break-glass credential to re-enable local authentication from the CT console.

@@ -21,6 +21,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/beszel/` — Beszel hub and agent services, public key, HA, and operations runbook.
   - `infrastructure/metrics/` — Grafana, VictoriaMetrics, exporters, storage inventory, and Kubernetes collection.
   - `infrastructure/uptime-kuma/` — native Uptime Kuma service, private proxy authentication, and recovery runbook.
+  - `infrastructure/slate/` — external ntfy, Uptime Kuma, Caddy, and recovery runbook.
   - `infrastructure/immich/` — Immich Compose deployment and safe restore procedure.
   - `infrastructure/portainer/` — Portainer EE Compose deployment and safe restore procedure.
   - `infrastructure/registry/` — public Docker Registry and its RustFS-backed restore procedure.
@@ -66,6 +67,8 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Beszel UI | `https://beszel.l3b.cc.cd` |
 | Grafana UI | `https://grafana.l3b.cc.cd` |
 | Uptime Kuma UI | `https://status.l3b.cc.cd` |
+| External Uptime Kuma UI | `https://watch.l3b.cc.cd` |
+| ntfy alerts | `https://ntfy.l3b.cc.cd` |
 | Immich UI | `https://photos.l3b.cc.cd` |
 | Portainer UI | `https://portainer.l3b.cc.cd` |
 | Docker Registry | `https://registry.l3b.cc.cd` |
@@ -85,8 +88,8 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 
 ## Public DNS policy
 
-Cloudflare DNS is private by default: the apex record resolves to proxy `10.1.1.3` and the wildcard CNAME follows it. Explicit public DNS-only records are exceptions, not the default. Current public application records are `photos`, `pin`, `registry`, and `orva`; `argocd` is public solely for GitHub's signed Argo CD webhook. Caddy still limits public Argo CD access to `POST /api/webhook`.
+Cloudflare DNS is private by default: the apex record resolves to proxy `10.1.1.3` and the wildcard CNAME follows it. Explicit public DNS-only records are exceptions, not the default. Current public application records include `photos`, `pin`, `registry`, `orva`, `ntfy`, and `watch`; `argocd` is public solely for GitHub's signed Argo CD webhook. Caddy still limits public Argo CD access to `POST /api/webhook`.
 
 See [`talos-k8s/README.md`](talos-k8s/README.md) and [`gitops/README.md`](gitops/README.md) for operating procedures.
 
-The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, Proxmox, Portainer, and OpenCloud use native OIDC. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home, Longhorn, Homepage, Frigate, and Uptime Kuma are protected this way. Identity endpoints and applications remain restricted to the LAN and Tailscale networks.
+The identity layer is deployed. Pocket ID provides passkey authentication with the primary passkey synchronized through 1Password. Headlamp, Argo CD, Proxmox, Portainer, and OpenCloud use native OIDC. Tinyauth provides Caddy `forward_auth` for services without native OIDC; AdGuard Home, Longhorn, Homepage, Frigate, and the internal Uptime Kuma are protected this way. Most identity endpoints and applications remain restricted to the LAN and Tailscale networks; the independent `watch` dashboard uses its own password and TOTP.

@@ -1,0 +1,27 @@
+{
+	auto_https disable_redirects
+	servers :443 {
+		protocols h1 h2 h3
+	}
+}
+
+(cloudflare) {
+	tls {
+		issuer acme {
+			dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+			resolvers 1.1.1.1 1.0.0.1
+		}
+	}
+}
+
+ntfy.l3b.cc.cd {
+	import cloudflare
+	header -Server
+	reverse_proxy 127.0.0.1:2586
+}
+
+watch.l3b.cc.cd {
+	import cloudflare
+	header -Server
+	reverse_proxy 127.0.0.1:3001
+}

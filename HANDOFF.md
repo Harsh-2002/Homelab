@@ -89,7 +89,7 @@ Important roles:
 | `dev` | Administrative and build VM; this repository normally lives here |
 | `orva` | Outbound-isolated serverless VM 106 at `10.1.1.11` |
 
-`slate` is a GCP free-tier VM in the US with Tailscale IP `100.122.33.37`. It is online and offers an exit node. `dev` now has a direct Tailscale client and a verified `ssh slate` alias for `root@100.122.33.37`; this does not depend on MagicDNS. Neither ntfy nor external Uptime Kuma is installed there yet. The owner chose native system services on `slate`, not Docker/Portainer Agent; that trial was fully removed. `ctr` was not enrolled in Tailscale.
+`slate` is a GCP free-tier VM in the US with Tailscale IP `100.122.33.37` and public IP `8.235.70.28`. It is online and offers an exit node. `dev` has a direct Tailscale client and verified `ssh slate` alias for `root@100.122.33.37`; this does not depend on MagicDNS. Native ntfy, a second Uptime Kuma, and custom Caddy now run there as systemd services with public HTTPS at `ntfy.l3b.cc.cd` and `watch.l3b.cc.cd`. Credentials are in separate `ntfy` and `Uptime Kuma - Slate` HomeLab vault items. Docker/Portainer Agent was fully removed, and `ctr` was not enrolled in Tailscale. See `infrastructure/slate/README.md`.
 
 ## Secret handling
 
@@ -149,6 +149,7 @@ Deployed and verified:
 - Talos Kubernetes, Argo CD, Cilium, Longhorn, Headlamp, Homepage, and metrics-server
 - Pocket ID/Tinyauth authentication
 - Beszel and internal Uptime Kuma
+- External native ntfy and Uptime Kuma on `slate`, behind Cloudflare DNS-01 Caddy; all six external monitors were UP and their restricted ntfy test notification succeeded on 2026-09-28. The owner still needs to subscribe the iOS ntfy client and verify background push.
 - Private Grafana and VictoriaMetrics in Beszel CT 104, with Pocket ID OIDC, 30-day metrics retention, Proxmox and Kubernetes exporters, and three linked provisioned dashboards: Infrastructure Overview (home), Compute & Guests, and Storage & Backups. A 15-minute textfile timer on store CT 109 exports BACKUP archive freshness; PBS metrics are retired. See `infrastructure/metrics/README.md`. Kubernetes vmagent is GitOps-managed, but its remote-write Secret is created separately from the HomeLab 1Password vault.
 - Portainer-managed Docker workloads including restored applications
 - Portainer Stack 85 `n8n` on `ctr` now owns n8n 2.40.7, PostgreSQL, SearXNG, and Sandbox Service 1.4.0. SearXNG is internal at `http://searxng:8080`, with JSON search enabled; the sandbox API is internal at `http://sandbox-api:8080`. The privileged mTLS runner stays on a private control bridge and neither backend publishes a host port. JSON search and authenticated sandbox create/execute/delete were verified. Former separate Stack 150 was deleted after consolidation without deleting its persistent API state or TLS volume. Secrets remain in the existing `N8N` and `n8n Sandbox` HomeLab vault items; see `infrastructure/n8n/README.md`.
@@ -169,8 +170,7 @@ Deployed and verified:
 Planned but **not yet applied** at the time of this handoff:
 
 - Extend independent backup coverage for application data, especially both OpenCloud metadata and its RustFS bucket. The current `BACKUP` archives and `AV` files share one physical SSD and are not an off-site backup; the former whole-system recovery tar no longer exists.
-- If private names are needed from `slate`, configure split DNS for `l3b.cc.cd` without making home AdGuard a global resolver; `slate` currently has `accept-dns=false` and uses its independent resolver for public names.
-- Deploy native ntfy and a second, native Uptime Kuma on `slate` for the external viewpoint. Uptime Kuma needs Node.js (it is not a Go binary). Keep UIs tailnet-only, plan alert-publisher reachability from guests without Tailscale, and test ntfy iOS background delivery. Monitor home internet, Tailscale/subnet routing, AdGuard, public services, and selected private services without duplicating every internal alert.
+- Test ntfy iOS background delivery after subscribing to the self-hosted `infra` topic; server-side upstream push and restricted publishing are configured, but mobile delivery cannot be verified without the owner's device.
 - Optionally invite `iam.anuragvishwakarma@gmail.com` to Tailscale as Admin. The current Gmail owner cannot be replaced through the API.
 
 ## Working rules
