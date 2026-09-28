@@ -1,6 +1,8 @@
 # Store: AV, BACKUP, and ISO
 
-`store` is Debian 13 LXC 109 at `10.1.1.12`, normally on px10. It runs Samba 4.22.11 with 1 vCPU, 1 GiB RAM, and an 8 GiB `local-zfs` root disk. It uses the stock `debian-13-standard_13.6-1_amd64.tar.zst` template. The former PBS VM 107 and datastore were removed after all seven native backups and a test restore succeeded on 2026-09-26. This directory is the source of truth for Samba and the host mount units; the live CT, storage, HA, and backup-job objects are Proxmox state.
+`store` is Debian 13 LXC 109 at `10.1.1.12`, normally on px10. It runs Samba 4.22.11 with 1 vCPU, 2 GiB RAM, 512 MiB swap, and an 8 GiB `local-zfs` root disk. It uses the stock `debian-13-standard_13.6-1_amd64.tar.zst` template. The former PBS VM 107 and datastore were removed after all seven native backups and a test restore succeeded on 2026-09-26. This directory is the source of truth for Samba and the host mount units; the live CT, storage, HA, and backup-job objects are Proxmox state.
+
+On 2026-09-28, Samba was OOM-killed under backup load and did not restart, leaving the `BACKUP` CIFS mount hung and CT 204 in near-continuous I/O wait. The stuck Proxmox backup task was cancelled after `smbd` was restarted. CT 109 memory was raised from 1 GiB to 2 GiB with 512 MiB swap; `smbd-external.conf` now sets `Restart=on-failure` with a 10-second delay. Monitor the next scheduled backup and `systemctl is-active smbd`; this is not a substitute for an independent backup copy.
 
 ## External SSDs and shares
 

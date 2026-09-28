@@ -296,6 +296,22 @@
 	}
 }
 
+(memory) {
+	@memory host memory.l3b.cc.cd
+	handle @memory {
+		import private
+		@studio path /studio /studio/*
+		forward_auth @studio 10.1.1.6:3000 {
+			uri /api/auth/caddy
+			copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+		}
+		import proxy
+		reverse_proxy 10.1.1.4:1933 {
+			flush_interval -1
+		}
+	}
+}
+
 (grafana) {
 	@grafana host grafana.l3b.cc.cd
 	handle @grafana {
@@ -427,6 +443,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import grafana
 	import metricswrite
 	import uptime
+	import memory
 	import n8n
 	import cairn
 	import proxmox

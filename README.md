@@ -28,6 +28,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/frigate/` — private Frigate NVR, OIDC proxy integration, and retention policy.
   - `infrastructure/motrix/` — Motrix Server Compose deployment, SMB download path, and recovery runbook.
   - `infrastructure/n8n/` — unified n8n, PostgreSQL, SearXNG, and isolated Assistant/Agent sandbox Stack.
+  - `infrastructure/openviking/` — shared agent memory, local embeddings, Groq/Cerebras fallback, and Portainer operations.
   - `infrastructure/minio/` — historical MinIO-to-RustFS migration record.
   - `infrastructure/rustfs/` — native RustFS S3 service, OIDC, HA, and upgrade runbook.
   - `infrastructure/cairn/` — fresh native Cairn S3 service on the `s3` LXC and its operations runbook.
@@ -79,6 +80,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Cairn S3 API (public, S3-authenticated) | `https://cairn-s3.l3b.cc.cd` |
 | Cairn Console (private) | `https://cairn.l3b.cc.cd` |
 | n8n UI | `https://n8n.l3b.cc.cd` |
+| OpenViking API/MCP (private) | `https://memory.l3b.cc.cd` (`/mcp`) |
 | OpenCloud files | `https://drive.l3b.cc.cd` |
 | Orva serverless | `https://orva.l3b.cc.cd` (`10.1.1.11:8443`) |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
