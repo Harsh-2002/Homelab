@@ -1,0 +1,23 @@
+# Current infrastructure verification and open items
+
+Verified 2026-09-28 19:51 UTC (2026-09-29 01:21 Asia/Kolkata). This is a dated observation, not a live dashboard. Recheck before taking action. Historical RCAs and deployed configuration remain in the relevant runbooks and the four Notion pages.
+
+## Verified healthy or present
+
+- Proxmox cluster `px` has 3/3 votes and quorum; HA manager reports watchdog/fencing armed and all listed HA services started. This does not prove every application's health.
+- px10, px20, and px30 run `7.0.14-19-pve`. `e1000e-stability.service` is active and enabled on all three. TSO, GSO, GRO, and EEE are disabled; RX/TX checksum offload remains enabled. A kernel-journal search from 2026-09-23 returned zero new `Hardware Unit Hang`, `NETDEV WATCHDOG`, or `Reset adapter` lines on these hosts. This is evidence for the mitigation, **not** proof that the underlying Intel NIC defect is fixed.
+- AdGuard Home and Unbound are active and enabled. `unbound-checkconf` passes; Unbound listens on loopback port 5335; direct recursion and AdGuard's internal apex resolution to `10.1.1.3` succeeded. The earlier on-disk Unbound port/cache drift is historical and was corrected on 2026-09-27.
+- OpenViking MCP health reports an initialized service and VikingFS storage. The shared account can read/search the imported runbooks, Notion snapshots, active configs, and operating standards.
+- Store CT 109 is started on px10. Its AV, BACKUP, and ISO filesystems are mounted inside the CT, and `smbd` is active. This does **not** mean all client mounts are healthy.
+
+## Open issues, ordered by impact
+
+1. **Shared ISO storage unavailable on all three Proxmox nodes.** `pvesm status` reports `ISO` inactive on px10/px20/px30 even though `/srv/ISO` exists in Store CT 109. A direct `stat /mnt/pve/ISO` on px10 returns `Host is down`. The px10 kernel repeatedly logs CIFS `STATUS_LOGON_FAILURE` around 2026-09-29 01:18–01:20 IST. Proxmox's ISO and BACKUP password files compare identical, but BACKUP's existing mount being active does not establish that a *new* SMB authentication succeeds. Diagnose the Samba account/credentials and mount state; do not assume a remount alone fixes authentication. Do not detach or wipe the ISO disk.
+2. **Scheduled backup did not complete for all seven critical guests.** Job `critical-to-backup` remains enabled at 02:00 Asia/Kolkata, targets VM 100, CT 101–105, and VM 204, with zstd and `keep-last=1`. On BACKUP, CT 101–103 have 2026-09-28 archives, but VM 100, CT 104–105, and VM 204 still have 2026-09-26 archives. The 2026-09-28 VM 100 task reached 100% only after 9h40m, then failed to rename its temporary archive; VM 204 slowed from normal throughput to around 0.4–1.2 MiB/s and ended with unexpected status after many hours. The 2026-09-27 Store Samba OOM incident is documented, but the complete cause of the continued slow/failing backup run is **not yet proven**. Inspect task logs, Store disk/USB and SMB health, and capacity before retrying or changing retention. Do not delete the older successful archives.
+3. **Backup coverage remains incomplete by design.** K8s/Longhorn, orva, Store CT itself, OpenCloud metadata plus its RustFS bucket, and some application data have no independently verified off-site backup in the current plan. Proxmox ZFS replication/HA is not a backup, and BACKUP and AV reside on the same physical Crucial SSD. Keep this separate from the current job failure above.
+4. **NIC stability is monitored, not conclusively repaired.** BIOS upgrades and kernel updates did not by themselves eliminate the px10/px20 e1000e hangs. Continue monitoring after the persistent offload/EEE mitigation. On recurrence, capture the first hang, nearby kernel logs, NIC counters, and temperatures before selecting a software/firmware test. Do not claim a definitive hardware or thermal cause without evidence.
+5. **Owner/device verification remains pending.** The external ntfy/Uptime Kuma services on slate were previously verified server-side; iOS background notification delivery still needs the owner's device test. The router's reported public secondary DNS setting has not been verified as LAN DHCP versus router WAN/relay configuration; public fallback can bypass split-horizon DNS.
+
+## Working rule for this note
+
+After resolving or discovering an issue, update the relevant service runbook, this file, the main Notion chronology, and the affected OpenViking resources. Record exact check time, evidence, and whether the result was deployed, tested, or only planned. Do not overwrite historical incident records with a current-status claim.
