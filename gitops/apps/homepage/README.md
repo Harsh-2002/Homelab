@@ -10,6 +10,8 @@ Homepage is the stateless, Git-managed portal served at `https://l3b.cc.cd`.
 
 ## Live metrics
 
+Home Assistant has a native widget for people, lights and switches, authenticated by `HOMEPAGE_VAR_HOMEASSISTANT_TOKEN` in the live `homepage-widgets` Secret. The API token is held in the existing `Home Assistant` HomeLab 1Password item, never in Git. OpenViking and Hermes have health-checked cards; neither has a native Homepage statistics widget, so the portal does not invent counts from unrelated endpoints.
+
 The header identifies its source explicitly: **K8s** is aggregate Kubernetes CPU and memory, with memory displayed in decimal GB. Per-node Kubernetes figures are intentionally omitted to keep the overview concise; use Headlamp when node-level detail is needed. The timestamp is a local browser utility widget.
 
 Native service widgets provide live DNS statistics from AdGuard Home, Beszel system counts, Portainer Docker container counts, Argo CD application state, and Proxmox cluster and node CPU/memory state. Longhorn contributes one labelled aggregate storage-capacity widget in the header, expressed as **Total** first and **Used** beneath it; its full per-node detail remains one click away in Longhorn. Frigate and Docker Registry are direct cards: their private/protected API endpoints do not receive a misleading unauthenticated monitor check.

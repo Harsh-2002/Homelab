@@ -8,6 +8,8 @@ The owner has no physical Zigbee, Thread, Z-Wave or other radio passthrough plan
 
 ## Access and availability
 
+The official Terminal & SSH app (`core_ssh` 10.5.0) is installed with the `dev` VM's Ed25519 public key, no SSH password, and host port 22. It starts on boot. From `dev`, use `ssh haos` (alias in `/home/dev/.ssh/config`); this opens the app container and its Home Assistant CLI/config mount, not the underlying HAOS host filesystem. A key-only `ha core info` call succeeded. The QEMU guest agent is already included in the HAOS image: `qm guest cmd 107 ping` and `qm guest exec 107` work, and the `qemu-ga` process is running. Do not attempt Alpine package management on the HAOS host: HAOS is a Buildroot-generated appliance, while its SSH app container is Alpine-based.
+
 - LAN IP: `10.1.1.13/24` (static, gateway `10.1.1.1`). HAOS initially received temporary DHCP address `10.1.1.231`; after the owner configured its static address, the UI responded at `http://10.1.1.13/` on 2026-09-29. Port 8123 redirects to port 80 on this image. Port 4357 is only the HAOS Observer page, not the setup UI; it reported Supervisor connected, supported and healthy.
 - The owner completed initial onboarding and created an account. The Proxmox QEMU guest agent responds to `qm guest cmd 107 ping`. In Home Assistant 2026.9, HTTP settings are managed under Settings > System > Network. Trust X-Forwarded-For is enabled there, with only Caddy `10.1.1.3/32` trusted. An initial `http:` YAML block was imported by Home Assistant, then removed because it was ignored after migration and raised a repair warning; do not add it back. The HA configuration check succeeded.
 - Private HTTPS URL: `https://home.l3b.cc.cd`. The existing wildcard DNS resolves it to Caddy `10.1.1.3`, which proxies to `10.1.1.13:80`. Caddy applies the private LAN/Tailscale source policy, and Home Assistant retains its native login. No public Cloudflare record was created. Validated from `dev`: HTTPS root 200, unauthenticated `/api/` 401, WebSocket `/api/websocket` 101 with `auth_required`.
@@ -17,8 +19,9 @@ The owner has no physical Zigbee, Thread, Z-Wave or other radio passthrough plan
 
 ## Next steps
 
-- Add monitoring for the private HTTPS URL. Do not create a public DNS record for this hostname.
-- Connect Hermes to Home Assistant only after onboarding. Use a dedicated, scoped Home Assistant long-lived access token and keep it in 1Password, not in this repository.
+- Homepage now has a private card, direct health check, and native people/lights/switches widget. Its token is injected through the live `homepage-widgets` Kubernetes Secret. Do not create a public DNS record for this hostname.
+- Hermes uses the long-lived Home Assistant token via `HASS_TOKEN` and the direct LAN URL via `HASS_URL` in its mode-0600 `.env`; the token is also in the existing `Home Assistant` HomeLab 1Password item. The owner supplied this token for both Hermes and Homepage. Never commit it.
+- Home Assistant Core does not include a generic OIDC authentication provider. The community `hass-oidc-auth` integration supports Pocket ID with a public PKCE client and can preserve local login, but it is a third-party authentication extension. Do not mistake Home Assistant's OAuth2 integration credentials for inbound SSO. The native account remains the break-glass login until a separately verified OIDC installation and account-linking test.
 - Test HA relocation to px20 during a planned maintenance window; do not force a host failure merely to validate it.
 
-Official references: [Home Assistant Linux installation](https://www.home-assistant.io/installation/linux/), [Proxmox VM disk import](https://pve.proxmox.com/pve-docs/qm.html).
+References: [Home Assistant Linux installation](https://www.home-assistant.io/installation/linux/), [Home Assistant authentication providers](https://www.home-assistant.io/docs/authentication/providers/), [Community OIDC integration and Pocket ID guide](https://github.com/christiaangoossens/hass-oidc-auth/blob/main/docs/provider-configurations/pocket-id.md), [Proxmox VM disk import](https://pve.proxmox.com/pve-docs/qm.html).

@@ -100,6 +100,11 @@ data:
               env: 2
               key: "{{ "{{HOMEPAGE_VAR_PORTAINER_API_KEY}}" }}"
               fields: ["running", "stopped", "total"]
+        - Hermes:
+            icon: https://hermes.l3b.cc.cd/favicon.ico
+            href: https://hermes.l3b.cc.cd
+            description: Personal agent
+            ping: http://10.1.1.5:9119/api/status
     - Platform:
         - Argo CD:
             icon: argo-cd.png
@@ -135,6 +140,11 @@ data:
             icon: docker.png
             href: https://registry.l3b.cc.cd
             description: Container images
+        - OpenViking:
+            icon: https://memory.l3b.cc.cd/favicon.ico
+            href: https://memory.l3b.cc.cd
+            description: Shared agent memory
+            ping: http://10.1.1.4:1933/health
     - Applications:
         - Jellyfin:
             icon: jellyfin.png
@@ -171,6 +181,16 @@ data:
             href: https://n8n.l3b.cc.cd
             description: Automation
             ping: https://n8n.l3b.cc.cd
+        - Home Assistant:
+            icon: home-assistant.png
+            href: https://home.l3b.cc.cd
+            description: Smart home
+            ping: http://10.1.1.13
+            widget:
+              type: homeassistant
+              url: http://10.1.1.13
+              key: "{{ "{{HOMEPAGE_VAR_HOMEASSISTANT_TOKEN}}" }}"
+              fields: ["people_home", "lights_on", "switches_on"]
     - Compute:
         - Proxmox:
             icon: proxmox.png
