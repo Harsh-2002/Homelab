@@ -13,6 +13,10 @@ Orva is the dedicated VM for running serverless functions. VM 106 runs on `px20`
 | Guest agent | `qemu-guest-agent`, active through its static systemd unit |
 | Boot | `onboot=1`, managed by Proxmox HA |
 
+## MCP clients
+
+The authenticated streamable-HTTP endpoint is `https://orva.l3b.cc.cd/mcp`. On `dev`, Codex uses the `orva` entry in `~/.codex/config.toml`, and Hermes uses `mcp_servers.orva` in `~/.hermes/config.yaml`. Both files are mode `0600` and contain the bearer credential directly; do not copy that credential into this repository, Homepage, Notion, or logs. A fresh Codex session loads the new MCP entry. After changing Hermes MCP configuration, restart `hermes-gateway.service` or reload MCP from an active Hermes conversation. Verify with `codex mcp get orva` (redact headers before sharing) and `hermes mcp test orva`.
+
 ## HA and replication
 
 Replication job `106-0` copies local-ZFS storage from `px20` to `px10` every five minutes. HA resource `vm:106` is kept in `started` state with two local restart attempts and one relocation attempt. Strict node-affinity rule `vm106-replica-nodes` permits only `px20` at priority 2 and replica node `px10` at priority 1; HA must never select `px30`, where no replica exists.

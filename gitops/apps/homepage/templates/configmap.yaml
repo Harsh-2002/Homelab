@@ -151,6 +151,11 @@ data:
             href: https://memory.l3b.cc.cd
             description: Shared agent memory
             ping: http://10.1.1.4:1933/health
+        - Orva:
+            icon: https://orva.l3b.cc.cd/web/favicon.svg
+            href: https://orva.l3b.cc.cd
+            description: Serverless functions
+            ping: https://orva.l3b.cc.cd
     - Applications:
         - Jellyfin:
             icon: jellyfin.png
