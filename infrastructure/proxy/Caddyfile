@@ -312,6 +312,15 @@
 	}
 }
 
+(hermes) {
+	@hermes host hermes.l3b.cc.cd
+	handle @hermes {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.5:9119
+	}
+}
+
 (grafana) {
 	@grafana host grafana.l3b.cc.cd
 	handle @grafana {
@@ -444,6 +453,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import metricswrite
 	import uptime
 	import memory
+	import hermes
 	import n8n
 	import cairn
 	import proxmox

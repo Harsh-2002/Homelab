@@ -63,11 +63,12 @@ create_client() {
 create_public_client() {
   id="$1"
   name="$2"
-  callbacks="$3"
-  logout_callbacks="${4:-[]}"
+  launch_url="$3"
+  callbacks="$4"
+  logout_callbacks="${5:-[]}"
   existing="$(api GET '/oidc/clients' | jq -r --arg id "$id" '.data[] | select(.id == $id) | .id' | head -n1)"
   if test -z "$existing"; then
-    payload="$(jq -cn --arg id "$id" --arg name "$name" --argjson callbacks "$callbacks" --argjson logout_callbacks "$logout_callbacks" '{id:$id,name:$name,description:"OpenCloud native client",callbackURLs:$callbacks,logoutCallbackURLs:$logout_callbacks,isPublic:true,pkceEnabled:true,requiresReauthentication:false,requiresPushedAuthorizationRequests:false,skipConsent:true,credentials:{},launchURL:"https://drive.l3b.cc.cd",isGroupRestricted:true,accessTokenDurationMinutes:15,refreshTokenDurationMinutes:10080}')"
+    payload="$(jq -cn --arg id "$id" --arg name "$name" --arg launch "$launch_url" --argjson callbacks "$callbacks" --argjson logout_callbacks "$logout_callbacks" '{id:$id,name:$name,description:"Homelab public PKCE client",callbackURLs:$callbacks,logoutCallbackURLs:$logout_callbacks,isPublic:true,pkceEnabled:true,requiresReauthentication:false,requiresPushedAuthorizationRequests:false,skipConsent:true,credentials:{},launchURL:$launch,isGroupRestricted:true,accessTokenDurationMinutes:15,refreshTokenDurationMinutes:10080}')"
     api POST '/oidc/clients' "$payload" >/dev/null
   fi
   api PUT "/oidc/clients/$id/allowed-user-groups" "$(jq -cn --arg gid "$group_id" '{userGroupIds:[$gid]}')" >/dev/null
@@ -83,12 +84,13 @@ create_client beszel 'Beszel' 'https://beszel.l3b.cc.cd' '["https://beszel.l3b.c
 create_client immich 'Immich' 'https://photos.l3b.cc.cd' '["https://photos.l3b.cc.cd/auth/login","https://photos.l3b.cc.cd/user-settings","app.immich:///oauth-callback"]' '["https://photos.l3b.cc.cd/api/oauth/backchannel-logout"]'
 create_client paperless 'Paperless-ngx' 'https://docs.l3b.cc.cd' '["https://docs.l3b.cc.cd/accounts/oidc/pocketid/login/callback/"]'
 create_client jellyfin 'Jellyfin' 'https://media.l3b.cc.cd' '["https://media.l3b.cc.cd/sso/OID/redirect/pocketid"]' '' true
-create_public_client opencloud-web 'OpenCloud Web' '["https://drive.l3b.cc.cd/","https://drive.l3b.cc.cd/oidc-callback.html","https://drive.l3b.cc.cd/oidc-silent-redirect.html"]' '["https://drive.l3b.cc.cd"]'
-create_public_client OpenCloudDesktop 'OpenCloud Desktop' '["http://127.0.0.1","http://localhost"]'
-create_public_client OpenCloudAndroid 'OpenCloud Android' '["oc://android.opencloud.eu"]'
-create_public_client OpenCloudIOS 'OpenCloud iOS' '["oc://ios.opencloud.eu"]'
+create_public_client opencloud-web 'OpenCloud Web' 'https://drive.l3b.cc.cd' '["https://drive.l3b.cc.cd/","https://drive.l3b.cc.cd/oidc-callback.html","https://drive.l3b.cc.cd/oidc-silent-redirect.html"]' '["https://drive.l3b.cc.cd"]'
+create_public_client OpenCloudDesktop 'OpenCloud Desktop' 'https://drive.l3b.cc.cd' '["http://127.0.0.1","http://localhost"]'
+create_public_client OpenCloudAndroid 'OpenCloud Android' 'https://drive.l3b.cc.cd' '["oc://android.opencloud.eu"]'
+create_public_client OpenCloudIOS 'OpenCloud iOS' 'https://drive.l3b.cc.cd' '["oc://ios.opencloud.eu"]'
+create_public_client hermes-dashboard 'Hermes Dashboard' 'https://hermes.l3b.cc.cd' '["https://hermes.l3b.cc.cd/auth/callback"]' '["https://hermes.l3b.cc.cd"]'
 
-declared_client_ids='["headlamp","argocd","proxmox","portainer","s3","tinyauth","beszel","immich","paperless","jellyfin","opencloud-web","OpenCloudDesktop","OpenCloudAndroid","OpenCloudIOS"]'
+declared_client_ids='["headlamp","argocd","proxmox","portainer","s3","tinyauth","beszel","immich","paperless","jellyfin","opencloud-web","OpenCloudDesktop","OpenCloudAndroid","OpenCloudIOS","hermes-dashboard"]'
 existing_client_ids="$(api GET "/user-groups/$group_id" | jq -c '[.allowedOidcClients[].id | select(. != "pbs")]')"
 client_ids="$(jq -cn --argjson existing "$existing_client_ids" --argjson declared "$declared_client_ids" '$existing + $declared | unique')"
 api PUT "/user-groups/$group_id/allowed-oidc-clients" "$(jq -cn --argjson ids "$client_ids" '{oidcClientIds:$ids}')" >/dev/null
