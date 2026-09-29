@@ -27,7 +27,6 @@ services:
       - type: bind
         source: /mnt/AV/media
         target: /media
-        read_only: true
         bind:
           create_host_path: false
     healthcheck:

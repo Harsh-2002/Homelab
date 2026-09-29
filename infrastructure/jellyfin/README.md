@@ -4,14 +4,14 @@ Portainer stack 94 on `ctr` is the fresh Jellyfin instance. The old stack defini
 
 | Purpose | Path |
 | --- | --- |
-| SMB library root | `/mnt/AV/media` on `ctr`, mounted read-only as `/media` |
+| SMB library root | `/mnt/AV/media` on `ctr`, mounted read-write as `/media` |
 | Movies | `/mnt/AV/media/movies` → `/media/movies` |
 | TV Shows | `/mnt/AV/media/shows` → `/media/shows` |
 | Unused staging folder | `/mnt/AV/media/source` → `/media/source` |
 | Local app state | `/data/apps/jellyfin/config` → `/config` |
 | Local cache and transcodes | `/data/apps/jellyfin/cache` → `/cache` |
 
-Only the media subtree is presented to Jellyfin; `/mnt/AV/downloads` is not mounted into it. The two libraries are **Movies** (`/media/movies`) and **TV Shows** (`/media/shows`). `source` is not a library. The media bind is read-only so scans cannot modify source files. App state and transcoding cache stay on `ctr`'s local 500 GB ext4 `/data` disk, not the external SMB volume. The share itself is a single physical USB SSD and is not replicated.
+Only the media subtree is presented to Jellyfin; `/mnt/AV/downloads` is not mounted into it. The two libraries are **Movies** (`/media/movies`) and **TV Shows** (`/media/shows`). `source` is not a library. The media bind is writable so a Jellyfin administrator can delete media from the UI. Deleting a hardlinked library file does not remove its qBittorrent download; Radarr/Sonarr may also re-import a monitored title, so remove unwanted titles from the library manager as well. App state and transcoding cache stay on `ctr`'s local 500 GB ext4 `/data` disk, not the external SMB volume. The share itself is a single physical USB SSD and is not replicated.
 
 The service listens on `10.1.1.4:8096` and Caddy exposes `https://media.l3b.cc.cd` publicly through an explicit DNS-only Cloudflare A record. Jellyfin retains its own application login; Caddy auth is not inserted in front of streaming clients. The administrator uses `iam.anuragvishwakarma@gmail.com`; its strong password is saved in the existing HomeLab 1Password `Jellyfin` item, scoped to this URL. No duplicate vault item was created.
 

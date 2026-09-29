@@ -43,7 +43,13 @@ service:      /etc/systemd/system/beszel-agent.service
 
 The agents receive `CAP_SYS_RAWIO` and `CAP_SYS_ADMIN` so `smartctl` can read SATA and NVMe health where the guest/host exposes the hardware, without running the whole process as root. Unprivileged LXC agents cannot see host physical disks merely because the service has these capabilities. Proxmox agents are members of `disk`; the `ctr` agent is additionally a member of `docker` for read access to `/var/run/docker.sock`.
 
-On 2026-09-24, the missing agents were installed on `dev`, `proxy`, `dns`, `auth`, hub LXC `beszel`, `s3`, `orva`, and `store`; `ctr` and the three Proxmox hosts already ran the same current `v0.20.0` release. The new agent binary came from the pinned official `beszel-agent_linux_amd64.tar.gz` release and its published SHA-256 was verified before installation. Each guest has a dedicated `beszel` system account, LAN-IP-bound listener on port 45876, the hub public key at `/etc/beszel-agent/key`, and an enabled native systemd unit. All 12 records were registered in the hub for the existing owner and returned `up`. The three Talos K8s VMs (201–203) are intentionally excluded.
+On 2026-09-24, the missing agents were installed on `dev`, `proxy`, `dns`, `auth`, hub LXC `beszel`, `s3`, `orva`, and `store`; `ctr` and the three Proxmox hosts already ran the same current `v0.20.0` release. The new agent binary came from the pinned official `beszel-agent_linux_amd64.tar.gz` release and its published SHA-256 was verified before installation. Each guest has a dedicated `beszel` system account, the hub public key at `/etc/beszel-agent/key`, and an enabled native systemd unit. All 12 records were registered in the hub for the existing owner and returned `up`. The three Talos K8s VMs (201–203) are intentionally excluded.
+
+### 2026-09-29 LXC agent boot-order RCA
+
+The agents on `dns`, `auth`, `proxy`, and the `beszel` hub LXC sometimes showed down after guest reboot even though `beszel-agent.service` was active. Their environment files used `LISTEN=<LAN IP>:45876`. On `dns`, systemd started the agent two seconds before `eth0` gained carrier; `network-online.target` did not wait because `systemd-networkd-wait-online.service` was disabled. The process stayed active without an externally reachable listener. The same fixed-IP bind pattern existed on the other affected LXCs.
+
+Set `LISTEN=45876` in `/etc/beszel-agent/agent.env` so the agent binds port 45876 on available interfaces, independent of when the LXC receives its address. This matches the tracked [`agent.env.example`](agent.env.example). The setting was applied to the four affected LXCs and proactively to `s3`, then each agent was restarted. All five units were enabled and active, `ss` showed `*:45876`, the hub could connect to each port, and agent logs showed SSH connections from `10.1.1.7`. This is persistent across reboot because the environment file and enabled unit are persistent. A full guest-reboot test was not performed on these production LXCs; validate after the next normal reboot. The private LAN/Tailscale boundary remains the access control; do not expose TCP 45876 publicly.
 
 Beszel monitors the Proxmox hosts as Linux systems. It does not replace the Proxmox UI for cluster quorum, VM/LXC inventory, replication, or HA state. Kubernetes operations remain in Headlamp, Argo CD, Longhorn, and Metrics Server; no Beszel agent is installed in Talos.
 
@@ -74,6 +80,8 @@ ssh root@10.1.1.7 'systemctl is-active beszel-agent'
 ```
 
 Agent logs should show an SSH connection from `10.1.1.7`. All 12 systems must show `up` in the Beszel UI. The three Proxmox nodes should expose six `ONLINE` ZFS pools in total and physical devices under SMART.
+
+For an LXC that appears down after reboot, check `systemctl status beszel-agent`, `ss -lnt '( sport = :45876 )'`, and `journalctl -u beszel-agent -b`. Do not assume `active` means its socket is reachable. The `beszel` hostname is not a reliable SSH alias on `dev` because wildcard DNS may resolve it to the Caddy proxy; use `ssh root@10.1.1.7` for the hub guest.
 
 ## High availability
 
