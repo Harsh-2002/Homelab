@@ -1,0 +1,4 @@
+{
+  "url": "https://memory.l3b.cc.cd",
+  "api_key": "{{ op://HomeLab/OpenViking/agent-key }}"
+}

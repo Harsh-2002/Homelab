@@ -1,6 +1,0 @@
-#!/bin/sh
-set -eu
-
-OPENVIKING_AGENT_KEY=$(/home/dev/Homelab/scripts/op-sa read 'op://HomeLab/OpenViking/agent-key')
-export OPENVIKING_AGENT_KEY
-jq -n '{Authorization:("Bearer " + env.OPENVIKING_AGENT_KEY)}'

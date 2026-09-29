@@ -1,0 +1,23 @@
+# Hermes Agent on dev
+
+Hermes Agent runs under the existing `dev` Linux account on `dev`, not a separate OS user. This deliberately reuses that account's Git, SSH, `gh`, and Codex CLI authentication. It also means Hermes has the same filesystem and command privileges as `dev`; do not grant Telegram access to anyone other than the owner's numeric Telegram user ID. The official installer creates the isolated Python/runtime tree under `/home/dev/.hermes/hermes-agent` and keeps Hermes configuration and sessions under `/home/dev/.hermes`. No browser/computer-use extras are installed. The working installation is v0.21.5 plus upstream main commit `09581caca` (2026-09-29); pinning the v0.21.5 tag failed because that tag lacks `pm/lock.json` and `pm.cli` required by the current installer, so the installer was rerun on main and validated.
+
+The model provider is `openai-codex` with `gpt-6-luna` and `agent.reasoning_effort: medium`. The existing Codex CLI login was imported into Hermes' own protected auth store via `hermes model`; a one-shot CLI model call succeeded. Groq is used **only** for incoming Telegram voice transcription (`stt.provider: groq`, `whisper-large-v3-turbo`, language auto-detect), not for chat inference. Generate the 0600 `/home/dev/.hermes/.env` from this directory's `.env.template` using `scripts/op-sa inject`; never put resolved keys in Git, chat, or command output. The `Groq API Key` vault item remains the source of truth. Hermes reads `stt.provider` and `agent.reasoning_effort` despite its `config set/get` schema warning for those keys; verify runtime behavior on upgrade.
+
+Hermes' built-in OpenViking memory provider connects to `https://memory.l3b.cc.cd` with the same account-scoped agent key as Codex, injected from the `OpenViking` HomeLab vault item. The root API key is not used by Hermes. `hermes memory status` reports the plugin installed, active, and available. The provider's OpenViking search/read/remember tools are available to Hermes; ordinary built-in memory additions are mirrored by the provider, while replace/remove are not automatically mirrored.
+
+The existing Telegram bot is `@heyhermesai_bot`. Its token is stored in the single HomeLab vault item `Hermes Telegram Bot` field `credential`; the owner's **numeric** ID is in `allowed-user-id`. The gateway environment sets `TELEGRAM_ALLOWED_USERS` to that ID, never a username or `*`. The bot token was verified with Telegram `getMe`, and the gateway connected in polling mode. Because the original token was pasted into chat, rotate it with BotFather, update the vault item, re-inject `.env`, and restart the gateway. Do not confuse the existing `Hermes Agent` vault item (mobile app login) with the Telegram bot token.
+
+The only gateway is the `dev` user service `hermes-gateway.service`; `loginctl` linger is enabled so it starts after host reboot and survives logout. No public inbound port or Caddy route is needed. Check `hermes gateway status` and `journalctl --user -u hermes-gateway --no-pager -n 80`. Hermes' GitHub skill uses the already-authenticated `gh` CLI (`Harsh-2002`); `hermes doctor` confirms full GitHub API access and explicitly says no additional `GITHUB_TOKEN` is needed. Avoid copying that OAuth token into another env file. Web search uses `web.search_backend: openai-native` through the same Codex OAuth login; URL extraction remains the default keyless Firecrawl backend. This avoids exposing n8n's internal-only SearXNG or adding another service.
+
+At the owner's explicit request, `approvals.mode: off` is set persistently in `/home/dev/.hermes/config.yaml` for full command-approval bypass in CLI and Telegram sessions. Hermes' non-bypassable hardline blocklist still applies. This is high-trust access to the entire `dev` account, including SSH, GitHub, and the service-account vault helper; keep the Telegram allowlist to the single numeric owner ID, rotate the exposed bot token, and do not add other bot users casually. Check with `hermes config get approvals.mode`; to restore guarded behavior, set `smart` and restart `hermes-gateway.service`.
+
+After rotating the bot token, update only the `credential` field of the existing `Hermes Telegram Bot` item, then run from `/home/dev/Homelab`:
+
+```sh
+scripts/op-sa inject -i infrastructure/hermes/.env.template -o /home/dev/.hermes/.env --file-mode 0600 --force
+systemctl --user restart hermes-gateway
+hermes gateway status
+```
+
+Update the pinned Hermes release deliberately after reviewing its release notes, then recheck Codex auth, OpenViking memory, Groq STT, and Telegram access. Never place secrets in tracked configuration or automatic memory transcripts.
