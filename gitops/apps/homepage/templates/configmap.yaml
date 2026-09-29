@@ -19,13 +19,14 @@ data:
         columns: 2
       Control:
         style: row
-        columns: 4
+        columns: 3
+        useEqualHeights: true
       Platform:
         style: row
         columns: 3
       Applications:
         style: row
-        columns: 3
+        columns: 4
       Compute:
         style: row
         columns: 4
@@ -100,11 +101,6 @@ data:
               env: 2
               key: "{{ "{{HOMEPAGE_VAR_PORTAINER_API_KEY}}" }}"
               fields: ["running", "stopped", "total"]
-        - Hermes:
-            icon: https://hermes.l3b.cc.cd/favicon.ico
-            href: https://hermes.l3b.cc.cd
-            description: Personal agent
-            ping: http://10.1.1.5:9119/api/status
         - Home Assistant:
             icon: home-assistant.png
             href: https://home.l3b.cc.cd
@@ -191,6 +187,11 @@ data:
             href: https://n8n.l3b.cc.cd
             description: Automation
             ping: https://n8n.l3b.cc.cd
+        - Hermes:
+            icon: https://hermes.l3b.cc.cd/favicon.ico
+            href: https://hermes.l3b.cc.cd
+            description: Personal agent
+            ping: http://10.1.1.5:9119/api/status
     - Compute:
         - Proxmox:
             icon: proxmox.png
