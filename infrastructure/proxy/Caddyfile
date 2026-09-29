@@ -113,6 +113,15 @@
 	}
 }
 
+(homeassistant) {
+	@homeassistant host home.l3b.cc.cd
+	handle @homeassistant {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.13:80
+	}
+}
+
 (pocketid) {
 	@pocketid host auth.l3b.cc.cd
 	handle @pocketid {
@@ -436,6 +445,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import longhorn
 	import headlamp
 	import homepage
+	import homeassistant
 	import pocketid
 	import tinyauth
 	import immich

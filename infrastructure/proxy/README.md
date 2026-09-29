@@ -2,6 +2,8 @@
 
 The tracked `Caddyfile` is the desired configuration for proxy LXC `10.1.1.3`.
 
+Home Assistant OS VM 107 is privately served at `https://home.l3b.cc.cd` from `10.1.1.13:80`. It uses the existing wildcard DNS and TLS certificate, Caddy's LAN/Tailscale source restriction, and Home Assistant's own login. Home Assistant trusts forwarded client IPs only from `10.1.1.3/32`; do not add a public Cloudflare DNS record. The route was verified with HTTP 200 for the page, HTTP 401 for an unauthenticated API call, and HTTP 101 WebSocket upgrade.
+
 `grafana.l3b.cc.cd` is a private native-OIDC UI for the infrastructure metrics stack in Beszel CT 104. `metrics.l3b.cc.cd` is a private, write-only endpoint: Caddy forwards only `POST /api/v1/write` to authenticated VictoriaMetrics, for Kubernetes vmagent. Other paths are not exposed through this hostname. See `infrastructure/metrics/README.md`.
 
 `store.l3b.cc.cd` is a deliberately public static Astro storefront served by Caddy directly from `/srv/store`; it has no container or authentication gate. Build source is `git@github.com:Harsh-2002/store.git`, not this infrastructure repo. Rebuild with `npm ci && npm run build`, copy the generated `dist/` contents into `/srv/store` on `proxy` (owned by `root:caddy`, directories `0750`, files `0640`), and verify the public URL and static assets. Its browser enquiry form posts to Orva; never submit a real enquiry as a deployment smoke test. Public Cloudflare has a DNS-only `store` A record at `150.129.31.154`; internal DNS resolves the same name to proxy `10.1.1.3` via the Unbound exception. This hostname does not denote the storage LXC; the `store` SSH alias still targets `10.1.1.12`.
