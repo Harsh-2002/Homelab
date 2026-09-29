@@ -19,7 +19,7 @@ data:
         columns: 2
       Control:
         style: row
-        columns: 3
+        columns: 4
       Platform:
         style: row
         columns: 3
@@ -105,6 +105,16 @@ data:
             href: https://hermes.l3b.cc.cd
             description: Personal agent
             ping: http://10.1.1.5:9119/api/status
+        - Home Assistant:
+            icon: home-assistant.png
+            href: https://home.l3b.cc.cd
+            description: Smart home
+            ping: http://10.1.1.13
+            widget:
+              type: homeassistant
+              url: http://10.1.1.13
+              key: "{{ "{{HOMEPAGE_VAR_HOMEASSISTANT_TOKEN}}" }}"
+              fields: ["people_home", "lights_on", "switches_on"]
     - Platform:
         - Argo CD:
             icon: argo-cd.png
@@ -181,16 +191,6 @@ data:
             href: https://n8n.l3b.cc.cd
             description: Automation
             ping: https://n8n.l3b.cc.cd
-        - Home Assistant:
-            icon: home-assistant.png
-            href: https://home.l3b.cc.cd
-            description: Smart home
-            ping: http://10.1.1.13
-            widget:
-              type: homeassistant
-              url: http://10.1.1.13
-              key: "{{ "{{HOMEPAGE_VAR_HOMEASSISTANT_TOKEN}}" }}"
-              fields: ["people_home", "lights_on", "switches_on"]
     - Compute:
         - Proxmox:
             icon: proxmox.png
