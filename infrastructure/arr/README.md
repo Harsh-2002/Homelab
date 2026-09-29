@@ -21,6 +21,8 @@ qBittorrent categories `movies` and `shows` save to those category directories. 
 
 All six Caddy routes are private to LAN and Tailscale, protected by Tinyauth/Pocket ID, and not deliberately published in public Cloudflare DNS. They are `sonarr`, `radarr`, `prowlarr`, `bazarr`, `seerr`, and `torrent` under `l3b.cc.cd`. Their backend ports on `10.1.1.4` are reachable directly on the LAN, so app-native authentication is enabled too: Forms for Sonarr/Radarr/Prowlarr/Bazarr, qBittorrent's Web UI login, and Jellyfin sign-in for Seerr. Credentials are in the existing HomeLab 1Password items with the matching service names; Seerr uses the `Jellyfin` account. Use `iam.anuragvishwakarma@gmail.com` where email is accepted and `iam-anuragvishwakarma` for qBittorrent.
 
+Tinyauth's global ACL policy is deny-by-default. The per-app authorization rules for these six hostnames are tracked in `infrastructure/pocket-id/tinyauth-arr.rules` and loaded through a systemd drop-in on `auth`. A valid Pocket ID session is not enough without each app's whitelist and group rule. The 2026-09-29 initial OIDC denial was caused by missing rules, not a Pocket ID token failure.
+
 Seerr is initialized with Jellyfin and default Sonarr/Radarr servers using their API keys and existing HD-1080p profiles. Prowlarr has both applications registered for full sync. Bazarr has both applications connected. No indexers, subtitle providers, or downloads were added on the owner's behalf; add only sources you are authorized to use. Any request to Seerr needs functioning indexers before it can find releases.
 
 ## Operations

@@ -68,7 +68,7 @@ systemctl restart pocket-id
 
 ## Tinyauth
 
-Tinyauth v5.2.0 runs in the same container as a separate systemd service and provides Caddy forward authentication for applications without native OIDC. Its public endpoint is `https://login.l3b.cc.cd`; Homepage, Longhorn, AdGuard Home, Frigate, and Uptime Kuma are protected by the `infrastructure-admins` Pocket ID group.
+Tinyauth v5.2.0 runs in the same container as a separate systemd service and provides Caddy forward authentication for applications without native OIDC. Its public endpoint is `https://login.l3b.cc.cd`; Homepage, Longhorn, AdGuard Home, Frigate, Uptime Kuma, and the private media automation apps are protected by the `infrastructure-admins` Pocket ID group.
 
 Tinyauth uses the global `deny` ACL policy. Each protected application therefore has both an explicit OAuth email whitelist and the required `infrastructure-admins` group. In Tinyauth v5 these are separate checks: the application whitelist must allow the user before the OAuth group rule is evaluated.
 
@@ -81,6 +81,8 @@ getent ahostsv4 auth.l3b.cc.cd
 ```
 
 The final command must return `10.1.1.3`.
+
+The media automation app rules are tracked in `tinyauth-arr.rules` and loaded as `/etc/tinyauth/arr.env` through the systemd drop-in `tinyauth-arr.conf`. The original `/etc/tinyauth/tinyauth.env` still holds the existing OAuth secret and app rules; do not replace it with the tracked file. When adding another Caddy `authenticate` route under the global deny policy, add an exact matching `TINYAUTH_APPS_<NAME>_CONFIG_DOMAIN`, `_OAUTH_WHITELIST`, and `_OAUTH_GROUPS` rule before testing sign-in. Restart Tinyauth after editing either environment file.
 
 ### Identity integrations
 
@@ -99,6 +101,7 @@ The final command must return `10.1.1.3`.
 | Longhorn | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
 | Homepage | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group |
 | Uptime Kuma | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group; built-in auth is disabled and nftables restricts the backend to Caddy |
+| Sonarr, Radarr, Prowlarr, Bazarr, Seerr, qBittorrent | Caddy forward auth through Tinyauth | Exact OAuth email whitelist and required `infrastructure-admins` group; app-native login is an additional LAN-access boundary |
 
 Pocket ID emits the user-group friendly name in the OIDC `groups` claim. Both the machine name and friendly name are therefore set to `infrastructure-admins`, matching every downstream RBAC rule. That group also emits the application-specific `opencloud_role=opencloudAdmin` claim. The idempotent client/group provisioning script is `scripts/configure-pocket-id-oidc.sh`. Generated client secrets remain outside Git and Notion; OpenCloud public PKCE clients have no client secrets.
 
@@ -122,6 +125,7 @@ Structured API authentication no longer inherits the former `system:masters` beh
 - An empty provider whitelist rejected the Pocket ID email before a Tinyauth session could be created. The provider now explicitly permits the administrator email.
 - A group-friendly-name mismatch was removed by standardizing it to `infrastructure-admins`.
 - With ACL policy `deny`, per-app OAuth whitelists are mandatory even when the group claim matches. DNS and Longhorn now require both the exact email and group.
+- On 2026-09-29, the six new Arr Caddy routes initially reached Tinyauth without matching app rules. Pocket ID issued a valid login, but Tinyauth logged `User is not allowed to access resource resource=seerr`. The tracked `tinyauth-arr.rules` file adds the missing per-app whitelist and group rules. Tinyauth was restarted and the variables were verified in its process environment. A browser sign-in should be retried to verify the complete session flow.
 
 Validate the two forward-auth applications with a browser session and confirm an unauthenticated CLI request receives `401`, not direct backend content:
 
