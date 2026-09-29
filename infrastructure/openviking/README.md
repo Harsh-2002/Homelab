@@ -9,20 +9,21 @@ OpenViking v0.4.22 runs as Portainer stack `openviking` on `ctr` (10.1.1.4). Cad
 | Portainer stack | `openviking` (endpoint `ctr`) |
 | Compose reference | `infrastructure/openviking/compose.yaml` |
 | OpenViking configuration | `/data/apps/openviking/state/ov.conf` |
-| API keys | Portainer stack environment variables (not in Git) |
+| Root API key | Portainer stack environment variable (not in Git) |
+| Codex OAuth state | `/data/apps/openviking/state/codex_auth.json` (0600; not in Git) |
 | Memory/index data | `/data/apps/openviking/state/data` |
 | Local embedding model | `/data/apps/openviking/ollama` |
 | Proxy | `infrastructure/proxy/Caddyfile`, `memory` snippet |
 
-The official v0.4.22 image does not include the optional `llama-cpp-python` runtime for its `provider: local` GGUF embedding backend. We do not rebuild that image. Instead, the official Ollama container serves the 384-dimensional, CPU-only `all-minilm` embedding model over the internal Docker network. Groq `openai/gpt-oss-120b` is VLM priority 1; Cerebras `gpt-oss-120b` is priority 2. OpenViking's ordered `vlm.credentials` provides fallback. Neither provider handles embeddings.
+The official v0.4.22 image does not include the optional `llama-cpp-python` runtime for its `provider: local` GGUF embedding backend. We do not rebuild that image. Instead, the official Ollama container serves the 384-dimensional, CPU-only `all-minilm` embedding model over the internal Docker network. The VLM uses the v0.4.22 `openai-codex` provider with `gpt-6-luna` through the existing Codex account. Groq and Cerebras are not configured in this stack. Codex OAuth is only for the VLM; embeddings remain local.
 
-The Portainer environment fields are populated from the HomeLab 1Password vault items `Groq API Key`, `Cerebras API Key`, and `OpenViking`. Portainer resolves Compose variables from these fields; the values are not in Git. The legacy host-side `secrets.env` file used during staging is removed once deployment succeeds. Keep the root key for administration only. Create an account-scoped user key for agents and store it in the same vault item. All agents must use that *same* user key to access the same memory account.
+The Portainer stack has only `OPENVIKING_ROOT_API_KEY`, sourced from the existing `OpenViking` item in the HomeLab 1Password vault. No provider API key is needed for Codex OAuth. The Codex CLI login was imported once using `openviking-server init`; its resulting `codex_auth.json` persists on the state bind mount. It must be protected and renewed if the Codex account session expires. Do not commit or print it. The legacy host-side `secrets.env` file used during staging is removed. Keep the root key for administration only. The same vault item stores the account-scoped user key for agents; all agents must use that *same* user key to access the same memory account.
 
 ## Operations
 
 After a fresh deployment, pull the model once with `docker exec openviking-ollama ollama pull all-minilm`. Verify `docker inspect` health for both containers and `GET /health` on port 1933. Authentication is enforced on `/api/v1/*` and `/mcp` with `Authorization: Bearer <user-key>` or `X-API-Key: <user-key>`.
 
-When upgrading, check the tagged release notes, update the pinned image in Compose, retain both bind-mounted data directories and `ov.conf`, and redeploy through Portainer. A restart must not require re-pulling the embedding model or regenerating API keys. Back up `/data/apps/openviking/state` and `/data/apps/openviking/ollama` before a version upgrade.
+When upgrading, check the tagged release notes, update the pinned image in Compose, retain both bind-mounted data directories, `ov.conf`, and `codex_auth.json`, and redeploy through Portainer. A restart must not require re-pulling the embedding model or regenerating API keys. Back up `/data/apps/openviking/state` and `/data/apps/openviking/ollama` before a version upgrade. Run `docker exec openviking openviking-server doctor` afterward; its VLM probe verifies Codex OAuth and model access.
 
 For Codex and Claude Code, the official OpenViking integrations can automate recall/capture; MCP alone provides manual tools. Hermes has a built-in OpenViking memory provider. Point each at the same HTTPS endpoint and account-scoped user key, never the root key.
 
@@ -40,4 +41,4 @@ The imported Notion pages are dated history, not a claim that every old instruct
 
 The [official Codex integration guide](https://docs.openviking.ai/en/agent-integrations/04-codex) describes an optional memory plugin with session/prompt/stop hooks for automatic recall and capture. This deployment currently uses the existing authenticated MCP connection only; no transcript-capturing hooks were installed. Installing those hooks is a separate privacy decision, because they can capture conversation and tool output automatically.
 
-The dated [current-state and open-issues note](CURRENT-STATE.md) records live verification separately from the historical import. Read it after `START-HERE.md`, then recheck the relevant hosts before acting. As of its 2026-09-28 verification, the shared ISO storage and the scheduled backup job need investigation; neither should be described as fully healthy based solely on their configured/enabled state.
+The dated [current-state and open-issues note](CURRENT-STATE.md) records live verification separately from the historical import. Read it after `START-HERE.md`, then recheck the relevant hosts before acting. Its 2026-09-28 ISO/backup findings are historical; see its 2026-09-29 follow-up for the verified recovery and remaining backup limitations.

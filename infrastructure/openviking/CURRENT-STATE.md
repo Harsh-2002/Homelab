@@ -1,5 +1,15 @@
 # Current infrastructure verification and open items
 
+## 2026-09-29 follow-up
+
+The 2026-09-28 ISO and backup failures below are historical observations, not current open incidents. Live Samba password drift from the `Store SMB` vault credential was corrected, stale CIFS mounts were cleared, and fresh `ISO`/`BACKUP` mounts and `pvesm list` succeeded on px10, px20, and px30. Store CT 109 now has 4 GiB RAM/1 GiB swap and `smbd` restart-on-failure. `ISO` now accepts `iso,vztmpl,images` for shared installer/template/VM-image staging.
+
+The backup schedule was split: `critical-to-backup` at 02:00 Asia/Kolkata covers VM 100 and CT 101–105; `ctr-to-backup` at 03:00 covers VM 204. Both use snapshot, zstd, one worker, and `keep-last=1`. A 2026-09-29 VM 204 archive of 300,772,791,474 bytes passed an independent `zstd -t` check; latest successful archives for all seven guests were visible on all three nodes. Two invalid 2026-09-28 `.vma.dat` partials were then permanently removed. These are full native archives, not incremental or off-site copies. The single Crucial SSD and excluded guests/app data remain backup gaps. The next scheduled cycles still need observation after this repair.
+
+OpenViking v0.4.22 now uses the official `openai-codex` provider with `gpt-6-luna`; Groq and Cerebras were removed from its Portainer stack. Post-restart `openviking-server doctor` passed the VLM probe and local Ollama `all-minilm` embedding probe, and authenticated memory search still worked. Its Codex OAuth file persists under the protected state mount. Motrix is now Portainer stack `motrix` (ID 152); its existing token/state bind mount and `/mnt/AV` downloads survived the transfer, and local/Caddy health checks passed. The old direct Compose and `.env` files were removed from the host.
+
+The next recurring checks are scheduled backup completion, Store SMB/SSD health, iOS ntfy delivery, and router DNS fallback behavior. Neither HA replication nor the single local BACKUP SSD is an independent off-site backup.
+
 Verified 2026-09-28 19:51 UTC (2026-09-29 01:21 Asia/Kolkata). This is a dated observation, not a live dashboard. Recheck before taking action. Historical RCAs and deployed configuration remain in the relevant runbooks and the four Notion pages.
 
 ## Verified healthy or present

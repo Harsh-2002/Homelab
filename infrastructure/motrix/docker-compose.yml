@@ -23,6 +23,6 @@ services:
       - "10.1.1.4:8080:8080"
       - "10.1.1.4:16801:16801"
     volumes:
-      - ./motrix-data:/data
+      - /data/apps/motrix/motrix-data:/data
       - /mnt/AV/downloads:/downloads
       - /mnt/AV/media:/media

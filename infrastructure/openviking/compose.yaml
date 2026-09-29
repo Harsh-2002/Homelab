@@ -6,8 +6,6 @@ services:
     environment:
       OPENVIKING_WITH_BOT: "1"
       OPENVIKING_PUBLIC_BASE_URL: https://memory.l3b.cc.cd
-      GROQ_API_KEY: ${GROQ_API_KEY}
-      CEREBRAS_API_KEY: ${CEREBRAS_API_KEY}
       OPENVIKING_ROOT_API_KEY: ${OPENVIKING_ROOT_API_KEY}
     ports:
       - "10.1.1.4:1933:1933"
