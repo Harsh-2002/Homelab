@@ -27,6 +27,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/registry/` — public Docker Registry and its RustFS-backed restore procedure.
   - `infrastructure/frigate/` — private Frigate NVR, OIDC proxy integration, and retention policy.
   - `infrastructure/motrix/` — Motrix Server Compose deployment, SMB download path, and recovery runbook.
+  - `infrastructure/arr/` — Portainer-managed media automation stack, access, storage paths, and recovery checks.
   - `infrastructure/n8n/` — unified n8n, PostgreSQL, SearXNG, and isolated Assistant/Agent sandbox Stack.
   - `infrastructure/openviking/` — shared agent memory, local embeddings, Groq/Cerebras fallback, and Portainer operations.
   - `infrastructure/minio/` — historical MinIO-to-RustFS migration record.
@@ -75,6 +76,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Docker Registry | `https://registry.l3b.cc.cd` |
 | Frigate UI | `https://frigate.l3b.cc.cd` |
 | Motrix Server (private) | `https://downloads.l3b.cc.cd` |
+| Sonarr, Radarr, Prowlarr, Bazarr, Seerr, qBittorrent (private) | `https://sonarr.l3b.cc.cd`, `https://radarr.l3b.cc.cd`, `https://prowlarr.l3b.cc.cd`, `https://bazarr.l3b.cc.cd`, `https://seerr.l3b.cc.cd`, `https://torrent.l3b.cc.cd` |
 | RustFS S3 API | `https://s3.l3b.cc.cd` |
 | RustFS Console | `https://rustfs.l3b.cc.cd` |
 | Cairn S3 API (public, S3-authenticated) | `https://cairn-s3.l3b.cc.cd` |

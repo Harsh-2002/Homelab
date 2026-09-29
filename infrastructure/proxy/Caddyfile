@@ -360,6 +360,56 @@
 	}
 }
 
+(arr) {
+	@sonarr host sonarr.l3b.cc.cd
+	handle @sonarr {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.4:8989
+	}
+
+	@radarr host radarr.l3b.cc.cd
+	handle @radarr {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.4:7878
+	}
+
+	@prowlarr host prowlarr.l3b.cc.cd
+	handle @prowlarr {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.4:9696
+	}
+
+	@bazarr host bazarr.l3b.cc.cd
+	handle @bazarr {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.4:6767
+	}
+
+	@seerr host seerr.l3b.cc.cd
+	handle @seerr {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.4:5055
+	}
+
+	@torrent host torrent.l3b.cc.cd
+	handle @torrent {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.4:8081
+	}
+}
+
 (cairn) {
 	@cairnapi host cairn-s3.l3b.cc.cd
 	handle @cairnapi {
@@ -465,6 +515,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import memory
 	import hermes
 	import n8n
+	import arr
 	import cairn
 	import proxmox
 	import storefront

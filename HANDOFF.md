@@ -65,6 +65,7 @@ Then read only the runbooks related to the task. Examples:
 - Identity: `infrastructure/pocket-id/`
 - Monitoring: `infrastructure/beszel/`, `infrastructure/uptime-kuma/`, `infrastructure/metrics/`
 - Applications: the matching directory under `infrastructure/`, including `infrastructure/n8n/` for the unified n8n application group
+- Media automation: `infrastructure/arr/` for the Portainer stack, SMB paths, application links, and the fixed-memory/no-swap decision on `ctr`
 
 Never assume an untracked or dirty file belongs to the agent. Preserve user changes and inspect the diff before editing.
 

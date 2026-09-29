@@ -1,0 +1,102 @@
+name: arr
+
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Asia/Kolkata
+    ports:
+      - 10.1.1.4:8989:8989
+    volumes:
+      - /data/apps/arr/sonarr:/config
+      - /mnt/AV:/data
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Asia/Kolkata
+    ports:
+      - 10.1.1.4:7878:7878
+    volumes:
+      - /data/apps/arr/radarr:/config
+      - /mnt/AV:/data
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Asia/Kolkata
+    ports:
+      - 10.1.1.4:9696:9696
+    volumes:
+      - /data/apps/arr/prowlarr:/config
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Asia/Kolkata
+    ports:
+      - 10.1.1.4:6767:6767
+    volumes:
+      - /data/apps/arr/bazarr:/config
+      - /mnt/AV/media:/data/media
+
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    container_name: seerr
+    init: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      TZ: Asia/Kolkata
+      PORT: "5055"
+      LOG_LEVEL: info
+    ports:
+      - 10.1.1.4:5055:5055
+    volumes:
+      - /data/apps/arr/seerr:/app/config
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    stop_grace_period: 120s
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Asia/Kolkata
+      WEBUI_PORT: "8081"
+      TORRENTING_PORT: "6881"
+    ports:
+      - 10.1.1.4:8081:8081
+      - 10.1.1.4:6881:6881
+      - 10.1.1.4:6881:6881/udp
+    volumes:
+      - /data/apps/arr/qbittorrent:/config
+      - /mnt/AV:/data

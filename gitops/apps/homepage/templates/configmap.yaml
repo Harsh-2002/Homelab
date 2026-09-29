@@ -27,6 +27,9 @@ data:
       Applications:
         style: row
         columns: 4
+      Media:
+        style: row
+        columns: 4
       Compute:
         style: row
         columns: 4
@@ -157,16 +160,6 @@ data:
             description: Serverless functions
             ping: https://orva.l3b.cc.cd
     - Applications:
-        - Jellyfin:
-            icon: jellyfin.png
-            href: https://media.l3b.cc.cd
-            description: Movies and TV Shows
-            ping: https://media.l3b.cc.cd/health
-        - Motrix:
-            icon: https://downloads.l3b.cc.cd/favicon.ico
-            href: https://downloads.l3b.cc.cd
-            description: Downloads
-            ping: https://downloads.l3b.cc.cd/healthz
         - Immich:
             icon: immich.png
             href: https://photos.l3b.cc.cd
@@ -197,6 +190,47 @@ data:
             href: https://hermes.l3b.cc.cd
             description: Personal agent
             ping: http://10.1.1.5:9119/api/status
+    - Media:
+        - Jellyfin:
+            icon: jellyfin.png
+            href: https://media.l3b.cc.cd
+            description: Movies and TV Shows
+            ping: https://media.l3b.cc.cd/health
+        - Seerr:
+            icon: seerr.png
+            href: https://seerr.l3b.cc.cd
+            description: Media requests
+            ping: http://10.1.1.4:5055
+        - Sonarr:
+            icon: sonarr.png
+            href: https://sonarr.l3b.cc.cd
+            description: Shows
+            ping: http://10.1.1.4:8989
+        - Radarr:
+            icon: radarr.png
+            href: https://radarr.l3b.cc.cd
+            description: Movies
+            ping: http://10.1.1.4:7878
+        - Prowlarr:
+            icon: prowlarr.png
+            href: https://prowlarr.l3b.cc.cd
+            description: Indexers
+            ping: http://10.1.1.4:9696
+        - Bazarr:
+            icon: bazarr.png
+            href: https://bazarr.l3b.cc.cd
+            description: Subtitles
+            ping: http://10.1.1.4:6767
+        - qBittorrent:
+            icon: qbittorrent.png
+            href: https://torrent.l3b.cc.cd
+            description: Download client
+            ping: http://10.1.1.4:8081
+        - Motrix:
+            icon: https://downloads.l3b.cc.cd/favicon.ico
+            href: https://downloads.l3b.cc.cd
+            description: Downloads
+            ping: https://downloads.l3b.cc.cd/healthz
     - Compute:
         - Proxmox:
             icon: proxmox.png
