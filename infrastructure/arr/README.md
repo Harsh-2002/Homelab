@@ -90,6 +90,8 @@ Verified: both containers healthy, roots accessible, app health lists empty, nat
 
 Sources: [fork](https://github.com/Faustvii/Readarr), [v0.10.0](https://github.com/Faustvii/Readarr/releases/tag/v0.10.0), [container workflow](https://github.com/Faustvii/Readarr/blob/develop/.github/workflows/docker-build.yml), [metadata](https://github.com/blampe/rreading-glasses), [retired upstream](https://github.com/Readarr/Readarr).
 
+Final checks: both vault passwords produced native authentication cookies and authenticated UI HTTP 200. Homepage rendered both cards/icons without browser-console errors. A repeat book lookup timed out fetching community BookInfo metadata despite the earlier successful five-result lookup; external metadata reliability remains a limitation, not a qBittorrent login failure. Investigate provider availability before changing credentials or restarting healthy containers. The retired image was removed after the fork was healthy. Guest available memory was about 535 MiB at its balloon minimum; service caps are not a guarantee against VM-wide memory pressure.
+
 ### Cleanuparr and Unpackerr, added 2026-09-30
 
 Both helpers are managed by the existing Portainer stack, using its own default network. Versions are pinned to the verified stable releases: `ghcr.io/cleanuparr/cleanuparr:2.10.8` and `golift/unpackerr:0.16.1`. No extra database, Docker socket, privileged mode, or media-library bind was added. Each has a 256 MiB memory limit; CPU limits are 0.5 for Cleanuparr and 1 for Unpackerr. These limits do not remove the VM's overall memory-pressure risk.
