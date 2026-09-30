@@ -10,7 +10,7 @@ VM 204 `ctr` is the standalone Docker host.
 | Placement | `px20` |
 | Operating system | Debian 13 |
 | CPU | 4 vCPU |
-| Memory | 16 GiB fixed (`memory: 16384`, `balloon: 0`); no swap |
+| Memory | 8 GiB minimum, 16 GiB maximum (`balloon: 8192`, `memory: 16384`); no swap |
 | CPU model | `host` configured; pending next safe reboot |
 | OS disk | 50 GiB `local-zfs` volume |
 | Docker disk | 500 GiB `data` volume |
