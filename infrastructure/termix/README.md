@@ -16,7 +16,7 @@ Owner admin login: `iam.anuragvishwakarma@gmail.com`. Generated password: HomeLa
 
 Use Host Manager → Add Host. For SSH, specify target address, username and authorized SSH key/password. For RDP, select RDP and supply a reachable Windows/RDP server and its login. App login does not authenticate you to targets. Existing dev private keys and all vault credentials were not copied automatically. No OIDC integration was requested in this replacement task; native account login is configured.
 
-Homepage card: Control section, application favicon, URL health ping. No invented stats widget or admin key in Homepage.
+Homepage card: Control section, application favicon, URL health ping. Argo CD synchronized the committed chart and reports Healthy. A real browser verified the card, correct URL and loaded icon, with no Coolify card remaining. No invented stats widget or admin key in Homepage.
 
 ## Operation and verification
 
