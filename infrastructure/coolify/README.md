@@ -24,7 +24,15 @@ Verified after restart: SSH works, system state is running, active kernel is `6.
 
 ## Remaining work
 
-- Coolify application installation, proxy/domain, authentication, replication and backup/monitoring enrollment were not requested or configured in this preparation task. Existing owner-configured HA registration was retained, not created here. Do not describe the named VM as a deployed Coolify application or claim replication/backup coverage without checking.
+## Private Caddy endpoint
+
+On 2026-09-30 at about 19:45 UTC, the owner-installed Coolify application was observed listening on VM 108 port 8000. Added `coolify.l3b.cc.cd` to the existing Caddy wildcard site, proxying to `10.1.1.14:8000`. The handler imports the existing private LAN/Tailscale policy and standard proxy headers/compression. It uses the existing Cloudflare DNS-01 wildcard TLS configuration; no new public DNS record, proxy service or forward-auth gate was created. Coolify retains native authentication. Raw port 8000 is currently listening on all VM interfaces; this task did not add a host firewall restriction or change Coolify's settings.
+
+Compared the live Caddyfile with the repo before editing, validated the candidate using the Cloudflare environment and Caddyfile adapter, installed it and reloaded Caddy without restarting it. Verified HTTPS `/` redirects to `https://coolify.l3b.cc.cd/login`, that login returns HTTP 200, and a real browser renders Coolify's email/password form with registration disabled. This verifies the proxy/login page, not authenticated deployment functionality or application WebSocket endpoints. No app credentials were requested or modified.
+
+## Remaining application work
+
+- Coolify was not installed by the agent in the preparation task; it was subsequently present on port 8000 when the owner requested this proxy. Application authentication configuration, replication and backup/monitoring enrollment were not changed. Existing owner-configured HA registration was retained, not created here. Do not claim tested application deployment functionality or replication/backup coverage without checking.
 
 Check:
 

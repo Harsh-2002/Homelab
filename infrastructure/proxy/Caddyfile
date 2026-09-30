@@ -103,6 +103,15 @@
 	}
 }
 
+(coolify) {
+	@coolify host coolify.l3b.cc.cd
+	handle @coolify {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.14:8000
+	}
+}
+
 (anchor) {
 	@anchor host notes.l3b.cc.cd
 	handle @anchor {
@@ -529,6 +538,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import headlamp
 	import homepage
 	import anchor
+	import coolify
 	import homeassistant
 	import pocketid
 	import tinyauth

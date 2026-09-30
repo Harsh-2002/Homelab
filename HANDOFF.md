@@ -90,7 +90,7 @@ Important roles:
 | `ctr` | Docker application VM managed through Portainer |
 | `dev` | Administrative and build VM; this repository normally lives here |
 | `orva` | Outbound-isolated serverless VM 106 at `10.1.1.11` |
-| `coolify` | Owner-created Debian VM 108 on px10, root SSH at `10.1.1.14`; QEMU agent verified after restart to kernel 6.12.111. Completed cloud-init drive and empty CD-ROM removed; cloud-init disabled, static networking preserved, existing HA registration retained. Application deployment not performed; see `infrastructure/coolify/README.md`. |
+| `coolify` | Owner-created Debian VM 108 on px10, root SSH at `10.1.1.14`; QEMU agent verified after restart to kernel 6.12.111. Cloud-init drive and empty CD-ROM removed, cloud-init disabled, static networking preserved, existing HA registration retained. Owner-installed app is private at `https://coolify.l3b.cc.cd` via Caddy to port 8000; login page browser-verified, authenticated app operation not tested. See `infrastructure/coolify/README.md`. |
 
 `slate` is a GCP free-tier VM in the US with Tailscale IP `100.122.33.37` and public IP `8.235.70.28`. It is online and offers an exit node. `dev` has a direct Tailscale client and verified `ssh slate` alias for `root@100.122.33.37`; this does not depend on MagicDNS. Native ntfy, a second Uptime Kuma, and custom Caddy now run there as systemd services with public HTTPS at `ntfy.l3b.cc.cd` and `watch.l3b.cc.cd`. Credentials are in separate `ntfy` and `Uptime Kuma - Slate` HomeLab vault items. Docker/Portainer Agent was fully removed, and `ctr` was not enrolled in Tailscale. See `infrastructure/slate/README.md`.
 
