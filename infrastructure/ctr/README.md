@@ -1,5 +1,20 @@
 # ctr SMB media mount
 
+## VM memory: fixed 16 GiB with GPU passthrough
+
+On 2026-09-30, the owner approved `memory: 16384` and `balloon: 16384` for VM 204. The balloon device remains enabled for statistics, but equal minimum/maximum means fixed allocation. This supersedes the earlier 8 GiB minimum / 16 GiB maximum policy. Leave the Kubernetes and Orva VM settings unchanged. There is no guest swap.
+
+The Intel iGPU uses full PCI passthrough (`hostpci0: mapping=intel-igpu`). Inspection found ctr's QEMU process occupied about 16.04 GiB RSS with about 16.02 GiB locked, while the guest reported only 7.6 GiB usable under the old balloon target. VFIO must keep guest RAM mapped for device DMA: reducing guest-visible RAM did not return the corresponding memory to the host. Dynamic ballooning is therefore not an effective host-memory saving mechanism for this VM. See the [Proxmox staff explanation](https://forum.proxmox.com/threads/proxmox-balloon-does-not-seem-to-work-properly-in-pve8.134202/).
+
+Applied persistently with `qm set 204 --balloon 16384` on px20. The configuration update alone left the live target at 8 GiB, so the existing balloon device was adjusted through the supported monitor API:
+
+```bash
+pvesh create /nodes/px20/qemu/204/monitor --command 'balloon 16384'
+qm status 204 --verbose
+```
+
+No reboot was needed. Verification at about 12:20 UTC: actual balloon allocation 17179869184 bytes, guest total 15999 MiB with 8659 MiB available, host available about 3273 MiB, and unchanged QEMU RSS around 16.04 GiB. `/data` remained ext4, `/mnt/AV` remained CIFS, and running containers were not restarted by this change. The pre-existing `gitea-mirror` restart loop remains a separate unresolved issue; do not claim every container is healthy. Fixed RAM prevents this specific balloon restriction, not future OOM from unbounded application growth.
+
 VM 204 `ctr` mounts Store's encrypted SMB3 share `//smb.l3b.cc.cd/AV` at `/mnt/AV`. This is the external Crucial SSD's `external/share` volume on `store`, not `ctr`'s local 500 GB `/data` disk. Motrix defaults to `/mnt/AV/downloads` and can also save under `/mnt/AV/media`; Jellyfin indexes `/mnt/AV/media/movies` and `/mnt/AV/media/shows`. Application configuration and databases stay under `/data/apps`. The mount intentionally uses the internal DNS hostname. `ctr`'s Proxmox cloud-init nameserver and Netplan configuration use only internal resolver `10.1.1.2`; a public fallback resolver returned the wildcard proxy address for this private SMB name during the 2026-09-27 outage. The checked-in `50-cloud-init.yaml` records the guest network settings.
 
 `cifs-utils` provides the client. The root-only `/etc/samba/credentials-av` file (mode `0600`) uses the existing `Store SMB` item from the HomeLab 1Password vault; never commit or print it. The tracked `mnt-AV.mount` pins SMB 3.1.1 and requires encryption (`seal`), with UID/GID 1000, no device files, setuid, or execution. `mnt-AV.automount` starts at boot and retries on access after an outage. The Docker service drop-in makes the automount ready before Docker starts, so a missing share cannot silently become a writable directory on the 50 GB OS disk. The automount does not make the physical SSD highly available: if `store` loses the USB disk, media stays unavailable until the disk is reattached.
