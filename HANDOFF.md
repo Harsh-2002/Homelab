@@ -140,6 +140,8 @@ On 2026-09-28 the owner retired the separate outbound gateway: `10.1.1.9`, Keepa
 
 ## Deployed versus planned
 
+Music follow-up on 2026-09-30 supersedes the initial Lidarr integration-only test: public torrent searches found no source for the owner's single. Metadata now includes singles/EPs/soundtracks; Soularr 1.2.2 and slskd 0.26.0 were added to the existing Portainer `arr` stack with internal-only ports, no shared library files, one Soulseek vault item, and persistent config/download paths. The actual `Angels for Each Other` FLAC downloaded and imported automatically. A missing Jellyfin Music folder and obsolete `/mediabrowser` import-notification endpoint were corrected; Lidarr now uses a tested direct Music-library refresh webhook. Jellyfin lists and serves the track, and full-track FFmpeg decode passed. See `infrastructure/arr/README.md` for runtime template rendering, limits, metadata monitoring and validation boundaries. No source guarantees, inbound peer port forwarding or public music-file sharing are implied.
+
 Lidarr and owner-approved Faustvii Readarr 0.10.0 were added to Portainer `arr` stack 153 on 2026-09-30. Both connect to Prowlarr, qBittorrent, Cleanuparr and Unpackerr; Lidarr updates Jellyfin's new Music library. Private URLs are `lidarr.l3b.cc.cd` and `readarr.l3b.cc.cd`, credentials are in canonical vault items, and music/books have separate AV directories/categories. Lookup and connection tests passed; no actual music/book download was initiated. Do not restore retired original Readarr, whose qBittorrent HTTP 204 handling and Goodreads lookup failed. See `infrastructure/arr/README.md` for versions, profiles and limitations.
 
 Do not present a documented design as an applied change.

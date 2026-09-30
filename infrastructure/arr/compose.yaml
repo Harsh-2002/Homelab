@@ -1,6 +1,68 @@
 name: arr
 
 services:
+  slskd:
+    image: slskd/slskd:0.26.0
+    container_name: slskd
+    user: "1000:1000"
+    restart: unless-stopped
+    mem_limit: 192m
+    cpus: 0.5
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      TZ: Asia/Kolkata
+      SLSKD_UMASK: "007"
+      SLSKD_SLSK_USERNAME: ${SOULSEEK_USERNAME:?required}
+      SLSKD_SLSK_PASSWORD: ${SOULSEEK_PASSWORD:?required}
+      SLSKD_USERNAME: ${SOULSEEK_USERNAME:?required}
+      SLSKD_PASSWORD: ${SLSKD_PASSWORD:?required}
+      SLSKD_API_KEY: role=ReadWrite;${SLSKD_API_KEY:?required}
+      SLSKD_REMOTE_CONFIGURATION: "false"
+      SLSKD_NO_HTTPS: "true"
+      SLSKD_SLSK_DNET_NO_CHILDREN: "true"
+      SLSKD_DOWNLOADS_DIR: /data/downloads/soulseek/complete
+      SLSKD_INCOMPLETE_DIR: /data/downloads/soulseek/incomplete
+    volumes:
+      - /data/apps/arr/slskd:/app
+      - /mnt/AV/downloads/soulseek:/data/downloads/soulseek
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:5030/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+  soularr:
+    image: ghcr.io/mrusse/soularr:1.2.2
+    container_name: soularr
+    user: "1000:1000"
+    restart: unless-stopped
+    mem_limit: 128m
+    cpus: 0.5
+    depends_on:
+      slskd:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      TZ: Asia/Kolkata
+      SCRIPT_INTERVAL: "300"
+      WEBUI_ENABLED: "false"
+      LIDARR_API_KEY: ${LIDARR_API_KEY:?required}
+      SLSKD_API_KEY: ${SLSKD_API_KEY:?required}
+    command:
+      - /bin/sh
+      - -c
+      - |
+        umask 077
+        python -c 'import os,pathlib; text=pathlib.Path("/etc/soularr.ini").read_text(); text=text.replace("$${LIDARR_API_KEY}",os.environ["LIDARR_API_KEY"]).replace("$${SLSKD_API_KEY}",os.environ["SLSKD_API_KEY"]); pathlib.Path("/data/config.ini").write_text(text)'
+        exec /app/run.sh
+    volumes:
+      - /data/apps/arr/soularr:/data
+      - /data/apps/arr/soularr/template.ini:/etc/soularr.ini:ro
+      - /mnt/AV/downloads/soulseek:/data/downloads/soulseek
+
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
     container_name: lidarr

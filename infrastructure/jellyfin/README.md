@@ -1,5 +1,7 @@
 # Jellyfin
 
+Music correction on 2026-09-30: the existing Music library now has the verified `/media/music` location. The earlier creation request incorrectly supplied top-level `Paths`, which the Jellyfin 12.1 API did not use; `MediaPathDto` at `/Library/VirtualFolders/Paths` correctly added the location. Lidarr's legacy Emby notification also failed on real import at `/mediabrowser/Library/MediaFolders`. Its existing `Jellyfin` notification is now a direct authenticated Webhook to POST `/Items/<Music-library-ID>/Refresh?Recursive=true`, refreshing Music after imports/upgrades/renames. No custom Jellyfin code or proxy compatibility route was added. The actual requested `Angels for Each Other` FLAC downloaded through Soularr/slskd, imported automatically, appeared on the Jellyfin homepage, and played in a real browser with advancing audio and no player/page errors. Full-track FFmpeg decode also passed. Runtime details and limitations are in `infrastructure/arr/README.md`.
+
 Portainer stack 94 on `ctr` is the fresh Jellyfin instance. The old stack definition used LinuxServer.io, ran as root with `privileged: true`, referenced the erased `/EX` tree and an old domain, and was not running. The replacement uses the official Jellyfin 12.1 image pinned by digest, UID/GID 1000 with only the render GID 991 and `/dev/dri/renderD128`. No whole-GPU device, privileged mode, host networking, or automatic image updater is used.
 
 | Purpose | Path |
