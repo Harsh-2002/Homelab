@@ -216,6 +216,16 @@ data:
             href: https://prowlarr.l3b.cc.cd
             description: Indexers
             ping: http://10.1.1.4:9696
+        - Lidarr:
+            icon: lidarr.png
+            href: https://lidarr.l3b.cc.cd
+            description: Music
+            ping: http://10.1.1.4:8686/ping
+        - Readarr:
+            icon: readarr.png
+            href: https://readarr.l3b.cc.cd
+            description: Books
+            ping: http://10.1.1.4:8787/ping
         - Bazarr:
             icon: bazarr.png
             href: https://bazarr.l3b.cc.cd

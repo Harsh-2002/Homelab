@@ -63,6 +63,33 @@ The setup follows the [Servarr Docker guide](https://wiki.servarr.com/docker-gui
 
 ## Operations
 
+### Lidarr and Readarr, added 2026-09-30
+
+Stack 153 now also owns Lidarr 3.1.0.4875 and owner-approved community fork `ghcr.io/faustvii/readarr:0.10.0`. Private URLs: `https://lidarr.l3b.cc.cd` and `https://readarr.l3b.cc.cd`. Existing Caddy/Tinyauth/Pocket ID and app-specific ACLs protect them; native Forms login protects direct LAN ports 8686/8787. Single HomeLab vault items `Lidarr` and `Readarr` hold the email username, strong passwords and concealed API keys. No secrets belong in Git.
+
+Each service is limited to 512 MiB and one CPU, uses the stack's default network, and persists SQLite/config in `/data/apps/arr/{lidarr,readarr}`. The fork runs explicitly as UID/GID 1000 and uses its installed `wget` for health checks. Watchtower updates are disabled for pinned Readarr; back up configuration and inspect migration changes before upgrading. No new database, privileged container or Docker socket was added.
+
+The original Readarr retired in June 2025. Its archived LinuxServer image failed two verified tests: qBittorrent 5.2.4 returns successful HTTP 204 with a SID cookie, which original Readarr rejects; original Goodreads lookup also failed. The approved Faustvii fork contains the login fix and working community search. It uses external metadata `https://api.bookinfo.pro`, a community dependency rather than an official Servarr service. Do not downgrade qBittorrent or bypass authentication to restore the retired version.
+
+| Purpose | Host path | Container path/category |
+| --- | --- | --- |
+| Music library | `/mnt/AV/media/music` | `/data/media/music`; Jellyfin `/media/music` |
+| Books library | `/mnt/AV/media/books` | `/data/media/books` |
+| Music staging | `/mnt/AV/downloads/music` | `/data/downloads/music`, category `music` |
+| Books staging | `/mnt/AV/downloads/books` | `/data/downloads/books`, category `books` |
+
+Lidarr's `Music - MP3 and FLAC` profile accepts MP3-256/320, VBR V0/V2 and FLAC, upgrading toward FLAC. Readarr's `Books - EPUB and PDF` profile accepts EPUB/PDF with automatic upgrades disabled. Renaming and hardlink imports are enabled, with a 1 GB free-space floor. Keep the common AV bind so staging and library imports share a filesystem.
+
+Prowlarr owns full-sync connections: music receives TorrentDownload and The Pirate Bay; books receives TorrentDownload's supported ebook category. Existing reported-seeder rules remain unchanged. Add artists/albums in Lidarr and authors/books in Readarr: Seerr handles only movies/TV. Source availability and transfer speed are not guaranteed by passing tests; obtain only content you are authorized to access.
+
+Jellyfin now has a Music library at `/media/music`; Lidarr's tested native connection triggers updates after import/upgrade/rename using its dedicated persistent Jellyfin API key. Readarr is a manager, not a book-reading client. Use an appropriate reader with the AV files; no Calibre service was added.
+
+Cleanuparr connects to both new apps without changing the conservative policy or enabling failed-import deletion. Unpackerr polls all four queues. `LIDARR_API_KEY` and `READARR_API_KEY` are stored alongside existing Radarr/Sonarr keys in Portainer Stack Env, not Git; original archive deletion remains disabled.
+
+Verified: both containers healthy, roots accessible, app health lists empty, native unauthenticated settings APIs rejected, qBittorrent and Prowlarr tests passed, artist search for Arijit Singh and book search for The Little Prince returned results, Lidarr's Jellyfin update test passed, and Unpackerr successfully polled both empty queues. Existing movie/TV services remained healthy. No music/book download was initiated, so no actual acquisition-to-playback/reading test is claimed. Homepage Media cards are GitOps-managed.
+
+Sources: [fork](https://github.com/Faustvii/Readarr), [v0.10.0](https://github.com/Faustvii/Readarr/releases/tag/v0.10.0), [container workflow](https://github.com/Faustvii/Readarr/blob/develop/.github/workflows/docker-build.yml), [metadata](https://github.com/blampe/rreading-glasses), [retired upstream](https://github.com/Readarr/Readarr).
+
 ### Cleanuparr and Unpackerr, added 2026-09-30
 
 Both helpers are managed by the existing Portainer stack, using its own default network. Versions are pinned to the verified stable releases: `ghcr.io/cleanuparr/cleanuparr:2.10.8` and `golift/unpackerr:0.16.1`. No extra database, Docker socket, privileged mode, or media-library bind was added. Each has a 256 MiB memory limit; CPU limits are 0.5 for Cleanuparr and 1 for Unpackerr. These limits do not remove the VM's overall memory-pressure risk.

@@ -140,6 +140,8 @@ On 2026-09-28 the owner retired the separate outbound gateway: `10.1.1.9`, Keepa
 
 ## Deployed versus planned
 
+Lidarr and owner-approved Faustvii Readarr 0.10.0 were added to Portainer `arr` stack 153 on 2026-09-30. Both connect to Prowlarr, qBittorrent, Cleanuparr and Unpackerr; Lidarr updates Jellyfin's new Music library. Private URLs are `lidarr.l3b.cc.cd` and `readarr.l3b.cc.cd`, credentials are in canonical vault items, and music/books have separate AV directories/categories. Lookup and connection tests passed; no actual music/book download was initiated. Do not restore retired original Readarr, whose qBittorrent HTTP 204 handling and Goodreads lookup failed. See `infrastructure/arr/README.md` for versions, profiles and limitations.
+
 Do not present a documented design as an applied change.
 
 Deployed and verified:

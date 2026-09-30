@@ -361,6 +361,22 @@
 }
 
 (arr) {
+	@lidarr host lidarr.l3b.cc.cd
+	handle @lidarr {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.4:8686
+	}
+
+	@readarr host readarr.l3b.cc.cd
+	handle @readarr {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.4:8787
+	}
+
 	@cleanuparr host cleanuparr.l3b.cc.cd
 	handle @cleanuparr {
 		import private

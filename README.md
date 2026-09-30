@@ -77,6 +77,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Frigate UI | `https://frigate.l3b.cc.cd` |
 | Motrix Server (private) | `https://downloads.l3b.cc.cd` |
 | Sonarr, Radarr, Prowlarr, Bazarr, Seerr, qBittorrent (private) | `https://sonarr.l3b.cc.cd`, `https://radarr.l3b.cc.cd`, `https://prowlarr.l3b.cc.cd`, `https://bazarr.l3b.cc.cd`, `https://seerr.l3b.cc.cd`, `https://torrent.l3b.cc.cd` |
+| Lidarr, Readarr (private) | `https://lidarr.l3b.cc.cd`, `https://readarr.l3b.cc.cd` |
 | RustFS S3 API | `https://s3.l3b.cc.cd` |
 | RustFS Console | `https://rustfs.l3b.cc.cd` |
 | Cairn S3 API (public, S3-authenticated) | `https://cairn-s3.l3b.cc.cd` |
