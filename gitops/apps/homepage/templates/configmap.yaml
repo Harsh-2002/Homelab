@@ -221,6 +221,11 @@ data:
             href: https://bazarr.l3b.cc.cd
             description: Subtitles
             ping: http://10.1.1.4:6767
+        - Cleanuparr:
+            icon: cleanuparr.png
+            href: https://cleanuparr.l3b.cc.cd
+            description: Stalled download recovery
+            ping: http://10.1.1.4:11011/health
         - qBittorrent:
             icon: qbittorrent.png
             href: https://torrent.l3b.cc.cd

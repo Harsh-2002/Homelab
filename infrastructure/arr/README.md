@@ -1,6 +1,6 @@
 # Media automation
 
-Portainer stack `arr` (ID 153, endpoint 2) runs on `ctr` at `10.1.1.4`. Its tracked source is [`compose.yaml`](compose.yaml). The stack contains Sonarr, Radarr, Prowlarr, Bazarr, Seerr, and qBittorrent. Each service has its own persistent configuration under `/data/apps/arr/<service>` and shares only the paths it needs from the encrypted SMB AV mount. No service uses the old `docknet` network.
+Portainer stack `arr` (ID 153, endpoint 2) runs on `ctr` at `10.1.1.4`. Its tracked source is [`compose.yaml`](compose.yaml). The stack contains Sonarr, Radarr, Prowlarr, Bazarr, Seerr, qBittorrent, Cleanuparr, and Unpackerr. Each service has its own persistent configuration under `/data/apps/arr/<service>` and shares only the paths it needs from the encrypted SMB AV mount. No service uses the old `docknet` network.
 
 `ctr` is Proxmox VM 204. It has four vCPUs and ballooned RAM with an 8 GB minimum and 16 GB maximum (`balloon: 8192`, `memory: 16384`), selected by the owner on 2026-09-30 after a guest-global OOM killed OpenViking. This supersedes the briefly applied fixed 16 GB configuration. Host pressure can reclaim RAM toward 8 GB, so the maximum is not guaranteed and guest OOM remains possible under pressure. There is no swapfile or active swap. Do not re-create the temporary `/data/swapfile` or its systemd unit. The VM reboot on 2026-09-29 confirmed that Docker and the AV mount returned and all six containers restarted. Check memory after changing this stack because it shares the VM with other applications.
 
@@ -62,6 +62,27 @@ If a requested movie has no approved release, first check whether a genuine digi
 The setup follows the [Servarr Docker guide](https://wiki.servarr.com/docker-guide), [Prowlarr quick-start](https://wiki.servarr.com/prowlarr/quick-start-guide), [Seerr service settings](https://docs.seerr.dev/using-seerr/settings/services/), and [TRaSH hardlink guide](https://trash-guides.info/File-and-Folder-Structure/Hardlinks-and-Instant-Moves/): one shared filesystem/mount for atomic imports and hardlinks, one indexer manager, separate qBittorrent categories, and quality profiles that reject poor sources. No FlareSolverr or extra database is required for the three working indexers.
 
 ## Operations
+
+### Cleanuparr and Unpackerr, added 2026-09-30
+
+Both helpers are managed by the existing Portainer stack, using its own default network. Versions are pinned to the verified stable releases: `ghcr.io/cleanuparr/cleanuparr:2.10.8` and `golift/unpackerr:0.16.1`. No extra database, Docker socket, privileged mode, or media-library bind was added. Each has a 256 MiB memory limit; CPU limits are 0.5 for Cleanuparr and 1 for Unpackerr. These limits do not remove the VM's overall memory-pressure risk.
+
+Cleanuparr is private at `https://cleanuparr.l3b.cc.cd`, behind the existing Caddy/Tinyauth/Pocket ID gate, with native authentication also enabled. Its credentials and concealed API key are in the single HomeLab 1Password item `Cleanuparr`. Configuration and SQLite state persist in `/data/apps/arr/cleanuparr`. Caddy routes to LAN port 11011; `/health` is deliberately unauthenticated at the backend, but configuration APIs require authentication. The Homepage Media card links to the private UI.
+
+Its live policy is intentionally conservative:
+
+- Radarr, Sonarr and qBittorrent are connected by Docker service name, and all three connection tests passed.
+- QueueCleaner runs every five minutes. The single public-torrent stall rule permits 24 strikes, approximately two hours of repeated stalled checks, and resets strikes when progress resumes. Its completion range is 0–99 percent; completed/seeding downloads are not its target.
+- Metadata stalls also allow 24 strikes. Failed-import cleanup/force import, slow-download rules, download/seeding cleanup, orphaned-file cleanup and no-content-ID processing are disabled. Private torrents are not targeted by the public stall rule.
+- Seeker replacement searches are enabled, on a ten-minute schedule, but proactive searches are disabled. Existing Radarr/Sonarr quality and seed-count policies remain authoritative. This does not guarantee healthy peers or replace every merely slow download.
+
+Unpackerr is a background worker, not a Web UI. It polls the existing Radarr/Sonarr queues every two minutes, waits one minute before extraction, and extracts one archive at a time. It runs as UID/GID 1000, creates files with mode `0660` and directories with `0770`, and mounts only `/mnt/AV/downloads` at `/data/downloads`. Radarr's path is `/data/downloads/movies`; Sonarr's is `/data/downloads/shows`. Original-archive deletion is disabled. Its own configuration directory is `/data/apps/arr/unpackerr`; runtime configuration is supplied by Compose. Webserver and generic folder watching are disabled in the permanent service.
+
+Portainer stack environment variables `RADARR_API_KEY` and `SONARR_API_KEY` contain the existing native app keys; keep their values out of Git. The scratch Unpackerr image has no shell/curl, so no fabricated HTTP health check is assigned. Verify successful queue polling in its logs rather than confusing “running” with a functional extraction. Cleanuparr has a real HTTP health check.
+
+Sources: [Cleanuparr deployment](https://cleanuparr.github.io/Cleanuparr/docs/installation/docker/), [Cleanuparr release source](https://github.com/Cleanuparr/Cleanuparr/tree/v2.10.8), [Unpackerr configuration for v0.16.1](https://github.com/Unpackerr/unpackerr/blob/v0.16.1/examples/unpackerr.conf.example). Configuration API contracts were verified against Cleanuparr's exact release, not an older configuration format. Live policy resides in its persistent database; recreating an empty `/config` requires repeating app initialization, connections and rules.
+
+Validation: Cleanuparr's real health check passed, all three integration health states were healthy, and both its native settings API and its unauthenticated Caddy route returned 401. Unpackerr successfully polled both app queues. An isolated temporary container using the same image and UID/GID extracted a generated tar.gz archive on the actual AV downloads mount, preserved the original, and produced byte-identical content owned by 1000:1000 with mode 0660. The temporary container and only its generated test directory were removed. This verifies extraction and SMB permissions; no live stalled torrent was deliberately removed and no real archived movie was available to claim a complete archive → import → playback test.
 
 Manage updates and restarts through Portainer stack `arr`. Keep `compose.yaml` in Git aligned with the Portainer Stackfile before redeployment. Do not run a second Compose project for the same service names.
 

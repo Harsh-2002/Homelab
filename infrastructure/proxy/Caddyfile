@@ -361,6 +361,14 @@
 }
 
 (arr) {
+	@cleanuparr host cleanuparr.l3b.cc.cd
+	handle @cleanuparr {
+		import private
+		import authenticate
+		import proxy
+		reverse_proxy 10.1.1.4:11011
+	}
+
 	@sonarr host sonarr.l3b.cc.cd
 	handle @sonarr {
 		import private
