@@ -114,7 +114,7 @@ Personal identity conventions:
 
 ## Current architecture snapshot
 
-VM 204 `ctr` now uses fixed 16 GiB (`memory: 16384`, `balloon: 16384`), owner-approved and live-applied on 2026-09-30 without reboot. Full Intel iGPU PCI passthrough kept its 16 GiB locked on PX20 even when ballooning restricted the guest to 8 GiB. Do not restore the earlier 8–16 GiB dynamic policy for this passthrough VM. The balloon device stays enabled for statistics. See `infrastructure/ctr/README.md`; other guests' policies remain unchanged. Anchor at `notes.l3b.cc.cd` remains requested/planned, not yet deployed or added to Homepage.
+VM 204 `ctr` now uses fixed 16 GiB (`memory: 16384`, `balloon: 16384`), owner-approved and live-applied on 2026-09-30 without reboot. Full Intel iGPU PCI passthrough kept its 16 GiB locked on PX20 even when ballooning restricted the guest to 8 GiB. Do not restore the earlier 8–16 GiB dynamic policy for this passthrough VM. The balloon device stays enabled for statistics. See `infrastructure/ctr/README.md`; other guests' policies remain unchanged. Anchor v0.17.2 is Portainer stack 154 at private `https://notes.l3b.cc.cd`, with native Pocket ID, a same-email recovery account, local persistent `/data/apps/anchor`, and a Homepage Applications card. Native login and note/image persistence across restart were tested. Read `infrastructure/anchor/README.md` before upgrades or recovery; credentials are in the single HomeLab item `Anchor`.
 
 Read the main README for the full endpoint table. Key infrastructure facts:
 

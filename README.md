@@ -83,6 +83,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Cairn S3 API (public, S3-authenticated) | `https://cairn-s3.l3b.cc.cd` |
 | Cairn Console (private) | `https://cairn.l3b.cc.cd` |
 | n8n UI | `https://n8n.l3b.cc.cd` |
+| Anchor notes (private, Pocket ID) | `https://notes.l3b.cc.cd` |
 | OpenViking API/MCP (private) | `https://memory.l3b.cc.cd` (`/mcp`) |
 | OpenCloud files | `https://drive.l3b.cc.cd` |
 | Orva serverless | `https://orva.l3b.cc.cd` (`10.1.1.11:8443`) |

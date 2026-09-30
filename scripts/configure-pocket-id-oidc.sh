@@ -78,6 +78,7 @@ create_client headlamp 'Headlamp' 'https://headlamp.l3b.cc.cd' '["https://headla
 create_client argocd 'Argo CD' 'https://argocd.l3b.cc.cd' '["https://argocd.l3b.cc.cd/auth/callback"]'
 create_client proxmox 'Proxmox' 'https://px.l3b.cc.cd' '["https://px.l3b.cc.cd","https://px10.l3b.cc.cd","https://px20.l3b.cc.cd","https://px30.l3b.cc.cd"]'
 create_client portainer 'Portainer' 'https://portainer.l3b.cc.cd/' '["https://portainer.l3b.cc.cd/"]'
+create_client anchor 'Anchor' 'https://notes.l3b.cc.cd' '["https://notes.l3b.cc.cd/api/auth/oidc/callback"]' '["https://notes.l3b.cc.cd"]' true
 create_client s3 'RustFS' 'https://rustfs.l3b.cc.cd' '["https://rustfs.l3b.cc.cd/rustfs/admin/v3/oidc/callback/default"]'
 create_client tinyauth 'Tinyauth' 'https://login.l3b.cc.cd' '["https://login.l3b.cc.cd/api/oauth/callback/pocketid"]'
 create_client beszel 'Beszel' 'https://beszel.l3b.cc.cd' '["https://beszel.l3b.cc.cd/api/oauth2-redirect"]'

@@ -1,0 +1,36 @@
+services:
+  anchor:
+    image: ghcr.io/zhfahim/anchor:0.17.2@sha256:e6e791ab834794516bc05d8967607c4db4ea1565a658548930421382c4e48a0a
+    container_name: anchor
+    restart: unless-stopped
+    stop_grace_period: 60s
+    mem_limit: 768m
+    cpus: 1.0
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      TZ: Asia/Kolkata
+      APP_URL: https://notes.l3b.cc.cd
+      DATA_DIR: /data
+      CORS_ORIGINS: https://notes.l3b.cc.cd
+      JWT_SECRET: ${JWT_SECRET:?required}
+      PG_PASSWORD: ${PG_PASSWORD:?required}
+      USER_SIGNUP: disabled
+      OIDC_ENABLED: "true"
+      OIDC_PROVIDER_NAME: Pocket ID
+      OIDC_ISSUER_URL: https://auth.l3b.cc.cd
+      OIDC_CLIENT_ID: anchor
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:?required}
+      DISABLE_INTERNAL_AUTH: "false"
+    ports:
+      - "10.1.1.4:3010:3000"
+    volumes:
+      - /data/apps/anchor:/data
+    healthcheck:
+      test: [CMD, curl, -fsS, http://127.0.0.1:3000/api/health]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+    labels:
+      com.centurylinklabs.watchtower.enable: "false"
