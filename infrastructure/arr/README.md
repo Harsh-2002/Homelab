@@ -2,7 +2,7 @@
 
 Portainer stack `arr` (ID 153, endpoint 2) runs on `ctr` at `10.1.1.4`. Its tracked source is [`compose.yaml`](compose.yaml). The stack contains Sonarr, Radarr, Prowlarr, Bazarr, Seerr, and qBittorrent. Each service has its own persistent configuration under `/data/apps/arr/<service>` and shares only the paths it needs from the encrypted SMB AV mount. No service uses the old `docknet` network.
 
-`ctr` is Proxmox VM 204. It has four vCPUs and a fixed 8 GB RAM (`memory: 8192`, `balloon: 0`). There is no swapfile or active swap. Do not re-create the temporary `/data/swapfile` or its systemd unit. The VM reboot on 2026-09-29 confirmed that Docker and the AV mount returned and all six containers restarted. Check memory after changing this stack because it shares the VM with other applications.
+`ctr` is Proxmox VM 204. It has four vCPUs and a fixed 16 GB RAM (`memory: 16384`, `balloon: 0`), increased from 8 GB on 2026-09-30 after a guest-global OOM killed OpenViking. There is no swapfile or active swap. Do not re-create the temporary `/data/swapfile` or its systemd unit. The VM reboot on 2026-09-29 confirmed that Docker and the AV mount returned and all six containers restarted. Check memory after changing this stack because it shares the VM with other applications.
 
 ## Paths
 
