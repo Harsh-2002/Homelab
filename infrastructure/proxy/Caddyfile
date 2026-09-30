@@ -103,12 +103,12 @@
 	}
 }
 
-(coolify) {
-	@coolify host coolify.l3b.cc.cd
-	handle @coolify {
+(termix) {
+	@termix host remote.l3b.cc.cd
+	handle @termix {
 		import private
 		import proxy
-		reverse_proxy 10.1.1.14:8000
+		reverse_proxy 10.1.1.4:8090
 	}
 }
 
@@ -538,7 +538,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import headlamp
 	import homepage
 	import anchor
-	import coolify
+	import termix
 	import homeassistant
 	import pocketid
 	import tinyauth

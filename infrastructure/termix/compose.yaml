@@ -1,0 +1,49 @@
+services:
+  termix:
+    image: ghcr.io/lukegus/termix:2.8.0
+    container_name: termix
+    command: ["/bin/sh", "-c", "umask 077; exec /entrypoint.sh"]
+    restart: unless-stopped
+    ports:
+      - "10.1.1.4:8090:8080"
+    volumes:
+      - /data/apps/termix:/app/data
+    environment:
+      PORT: "8080"
+      PUID: "1000"
+      PGID: "1000"
+      ENABLE_TELEMETRY: "false"
+      ALLOW_REGISTRATION: "false"
+      ALLOW_PASSWORD_LOGIN: "true"
+      ENABLE_GUACAMOLE: "true"
+      GUACD_HOST: guacd
+      GUACD_PORT: "4822"
+      GUACD_TUNNEL_HOST: termix
+    depends_on:
+      - guacd
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 1g
+    cpus: 1.0
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      com.centurylinklabs.watchtower.enable: "false"
+  guacd:
+    image: guacamole/guacd:1.6.0
+    container_name: guacd
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    cpus: 1.0
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      com.centurylinklabs.watchtower.enable: "false"
