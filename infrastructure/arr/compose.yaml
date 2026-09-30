@@ -13,6 +13,12 @@ services:
       TZ: Asia/Kolkata
     ports:
       - 10.1.1.4:8989:8989
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "--max-time", "5", "-o", "/dev/null", "http://127.0.0.1:8989/ping"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
     volumes:
       - /data/apps/arr/sonarr:/config
       - /mnt/AV:/data
@@ -29,6 +35,12 @@ services:
       TZ: Asia/Kolkata
     ports:
       - 10.1.1.4:7878:7878
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "--max-time", "5", "-o", "/dev/null", "http://127.0.0.1:7878/ping"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
     volumes:
       - /data/apps/arr/radarr:/config
       - /mnt/AV:/data
@@ -45,6 +57,12 @@ services:
       TZ: Asia/Kolkata
     ports:
       - 10.1.1.4:9696:9696
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "--max-time", "5", "-o", "/dev/null", "http://127.0.0.1:9696/ping"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
     volumes:
       - /data/apps/arr/prowlarr:/config
 
@@ -60,6 +78,12 @@ services:
       TZ: Asia/Kolkata
     ports:
       - 10.1.1.4:6767:6767
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "--max-time", "5", "-o", "/dev/null", "http://127.0.0.1:6767/"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
     volumes:
       - /data/apps/arr/bazarr:/config
       - /mnt/AV/media:/data/media
@@ -77,6 +101,12 @@ services:
       LOG_LEVEL: info
     ports:
       - 10.1.1.4:5055:5055
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:5055/api/v1/status',{signal:AbortSignal.timeout(5000)}).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
     volumes:
       - /data/apps/arr/seerr:/app/config
 
@@ -97,6 +127,12 @@ services:
       - 10.1.1.4:8081:8081
       - 10.1.1.4:6881:6881
       - 10.1.1.4:6881:6881/udp
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "--max-time", "5", "-o", "/dev/null", "http://127.0.0.1:8081/"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
     volumes:
       - /data/apps/arr/qbittorrent:/config
       - /mnt/AV:/data

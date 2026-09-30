@@ -1,5 +1,11 @@
 # Current infrastructure verification and open items
 
+## 2026-09-30 media and model-auth follow-up
+
+The ARR/Jellyfin audit repaired a real playback failure, not just a missing library entry. The CIFS client refused opening the library hardlink with `EINVAL`; persistent `nolease` on `ctr`'s AV mount corrected it while preserving encryption and hardlinks. Actual browser QSV playback and seeking passed. Native Radarr/Sonarr Jellyfin update connections, Seerr Movies/TV Shows selection, naming/sidecar handling and bounded seeding are configured. All six ARR containers and Jellyfin remained healthy on the 2026-09-30 recheck. See [the detailed RCA](../arr/RCA-2026-09-29.md). Series playback is not yet tested because the Shows library is empty; public torrent availability remains outside this configuration's control.
+
+The owner's fresh dev Codex login was imported into OpenViking's protected persisted auth store using `scripts/refresh-openviking-codex.sh`. VLM `openai-codex/gpt-6-luna` and CPU-local Ollama `all-minilm` probes passed without changing the memory/index data or restarting the container. Doctor reported a separate bot-client key warning, which must not be mistaken for a successful Agent chat test.
+
 ## 2026-09-29 follow-up
 
 The 2026-09-28 ISO and backup failures below are historical observations, not current open incidents. Live Samba password drift from the `Store SMB` vault credential was corrected, stale CIFS mounts were cleared, and fresh `ISO`/`BACKUP` mounts and `pvesm list` succeeded on px10, px20, and px30. Store CT 109 now has 4 GiB RAM/1 GiB swap and `smbd` restart-on-failure. `ISO` now accepts `iso,vztmpl,images` for shared installer/template/VM-image staging.
