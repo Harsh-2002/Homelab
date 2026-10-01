@@ -10,9 +10,6 @@ data:
     headerStyle: underlined
     statusStyle: dot
     hideVersion: true
-    providers:
-      longhorn:
-        url: http://longhorn-frontend.longhorn-system.svc.cluster.local
     layout:
       Monitoring:
         style: row
@@ -24,6 +21,7 @@ data:
       Platform:
         style: row
         columns: 3
+        useEqualHeights: true
       Applications:
         style: row
         columns: 4
@@ -130,11 +128,49 @@ data:
             href: https://headlamp.l3b.cc.cd
             description: Kubernetes
             ping: https://headlamp.l3b.cc.cd
+            widget:
+              type: prometheusmetric
+              url: http://10.1.1.7:8428
+              username: "{{ "{{HOMEPAGE_VAR_VICTORIA_USERNAME}}" }}"
+              password: "{{ "{{HOMEPAGE_VAR_VICTORIA_PASSWORD}}" }}"
+              refreshInterval: 60000
+              metrics:
+                - label: Nodes
+                  query: count(kube_node_info)
+                  format:
+                    type: number
+                - label: Ready
+                  query: sum(kube_node_status_condition{condition="Ready",status="true"})
+                  format:
+                    type: number
+                - label: Running Pods
+                  query: sum(kube_pod_status_phase{phase="Running"})
+                  format:
+                    type: number
         - Longhorn:
             icon: longhorn.png
             href: https://longhorn.l3b.cc.cd
             description: Storage
             ping: https://longhorn.l3b.cc.cd
+            widget:
+              type: prometheusmetric
+              url: http://10.1.1.7:8428
+              username: "{{ "{{HOMEPAGE_VAR_VICTORIA_USERNAME}}" }}"
+              password: "{{ "{{HOMEPAGE_VAR_VICTORIA_PASSWORD}}" }}"
+              refreshInterval: 60000
+              metrics:
+                - label: Total
+                  query: sum(max by(node) (longhorn_node_storage_capacity_bytes))
+                  format:
+                    type: bytes
+                - label: Used
+                  query: sum(max by(node) (longhorn_node_storage_usage_bytes))
+                  format:
+                    type: bytes
+                - label: Free
+                  query: sum(max by(node) (longhorn_node_storage_capacity_bytes)) - sum(max by(node) (longhorn_node_storage_usage_bytes))
+                  format:
+                    type: bytes
         - RustFS:
             icon: rustfs.png
             href: https://rustfs.l3b.cc.cd
@@ -330,11 +366,6 @@ data:
           label: K8s
         nodes:
           show: false
-    - longhorn:
-        expanded: true
-        total: true
-        labels: true
-        nodes: false
   kubernetes.yaml: |
     mode: cluster
     ingress: false
@@ -354,16 +385,6 @@ data:
       const setText = (element, value) => {
         if (element && element.textContent !== value) element.textContent = value;
       };
-      const bytes = (value) => {
-        const match = value.trim().match(/^([\d,.]+)\s*(B|KB|MB|GB|TB|PB)$/);
-        if (!match) return null;
-        const amount = Number(match[1].replace(/,/g, ""));
-        return Number.isFinite(amount) ? amount * 1000 ** units.indexOf(match[2]) : null;
-      };
-      const display = (value) => {
-        const index = Math.min(units.length - 1, Math.floor(Math.log(value) / Math.log(1000)));
-        return `${(value / 1000 ** index).toFixed(index ? 2 : 0)} ${units[index]}`;
-      };
       const decimal = (value) => {
         const match = value.trim().match(/^([\d,.]+)\s*(KiB|MiB|GiB|TiB)$/);
         if (!match) return null;
@@ -381,19 +402,6 @@ data:
         if (value) setText(memory, value);
       };
       const render = () => {
-        document.querySelectorAll(".information-widget-longhorn-node").forEach((widget) => {
-          const details = widget.querySelector("svg + div");
-          const rows = details ? Array.from(details.children).filter((row) => row.classList.contains("flex-row")) : [];
-          if (rows.length < 2 || rows[0].lastElementChild?.textContent !== "Free" || rows[1].lastElementChild?.textContent !== "Total") return;
-          const free = bytes(rows[0].firstElementChild?.textContent || "");
-          const total = bytes(rows[1].firstElementChild?.textContent || "");
-          if (free === null || total === null || total < free) return;
-          setText(rows[0].firstElementChild, display(total));
-          setText(rows[0].lastElementChild, "Total");
-          setText(rows[1].firstElementChild, display(total - free));
-          setText(rows[1].lastElementChild, "Used");
-          setText(details.querySelector(".information-widget-label"), "Longhorn");
-        });
         renderK8s();
       };
       const start = () => {
