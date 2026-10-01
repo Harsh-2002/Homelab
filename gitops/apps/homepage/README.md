@@ -12,7 +12,7 @@ Homepage is the stateless, Git-managed portal served at `https://l3b.cc.cd`.
 
 Anchor is an Applications card at private `https://notes.l3b.cc.cd`, with its own official served icon and `/api/health` check. It has native Pocket ID login and no invented statistics widget. See `infrastructure/anchor/README.md`.
 
-The Control row groups Pocket ID, Portainer, and Home Assistant in three equal-height statistics cards. Hermes and Warpgate sit with the general Applications. Warpgate has no native Homepage service widget; its authenticated session-management API is not a ready-made monitoring widget. Keep its official icon, URL and availability check without adding an administrative token or custom adapter just for layout consistency. This placement was explicitly requested on 2026-10-01. Media services have their own four-column row so downloads and automation are discoverable together without crowding Applications.
+The Control row groups Pocket ID, Portainer, and Home Assistant in three equal-height statistics cards. Hermes sits with the general Applications. Termix and Warpgate were completely removed on 2026-10-01; neither has a Homepage card or active reverse-proxy route. Media services have their own four-column row so downloads and automation are discoverable together without crowding Applications.
 
 Home Assistant has a native widget for people, lights and switches, authenticated by `HOMEPAGE_VAR_HOMEASSISTANT_TOKEN` in the live `homepage-widgets` Secret. The API token is held in the existing `Home Assistant` HomeLab 1Password item, never in Git. OpenViking and Hermes have health-checked cards; neither has a native Homepage statistics widget, so the portal does not invent counts from unrelated endpoints.
 

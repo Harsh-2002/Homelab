@@ -103,21 +103,6 @@
 	}
 }
 
-(warpgate) {
-	@warpgate host remote.l3b.cc.cd
-	handle @warpgate {
-		import private
-		import proxy
-		reverse_proxy https://10.1.1.4:8091 {
-			header_up Host {host}
-			transport http {
-				tls_server_name warpgate.local
-				tls_trust_pool file /etc/caddy/warpgate-upstream.pem
-			}
-		}
-	}
-}
-
 (anchor) {
 	@anchor host notes.l3b.cc.cd
 	handle @anchor {
@@ -544,7 +529,6 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import headlamp
 	import homepage
 	import anchor
-	import warpgate
 	import homeassistant
 	import pocketid
 	import tinyauth

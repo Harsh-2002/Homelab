@@ -196,11 +196,6 @@ data:
             description: Serverless functions
             ping: https://orva.l3b.cc.cd
     - Applications:
-        - Warpgate:
-            icon: https://remote.l3b.cc.cd/@warpgate/assets/favicon.svg
-            href: https://remote.l3b.cc.cd
-            description: Browser SSH gateway
-            ping: https://remote.l3b.cc.cd
         - Anchor:
             icon: https://notes.l3b.cc.cd/icons/anchor_icon.png
             href: https://notes.l3b.cc.cd
