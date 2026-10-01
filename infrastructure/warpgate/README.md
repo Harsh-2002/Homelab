@@ -14,7 +14,7 @@ HomeLab vault item `Warpgate` contains the owner password, encryption key and Po
 
 Owner: `iam.anuragvishwakarma@gmail.com`, display name Anurag Vishwakarma. The initial admin was renamed rather than creating a second owner. Its Pocket ID SSO credential is linked by provider `pocketid` and the same email. Auto-creation of users is disabled. Pocket ID client `warpgate` is confidential with PKCE and restricted to `infrastructure-admins`. Callback: `https://remote.l3b.cc.cd/@warpgate/api/sso/return`.
 
-Temporary bootstrap admin access was removed from the running command/environment. A temporary bootstrap-token field in the vault must not be reused as a permanent client API key.
+Temporary bootstrap admin access was removed from the running command/environment and its temporary token was deleted from the vault. It is not a permanent client API key.
 
 ## Verification and pending work
 
