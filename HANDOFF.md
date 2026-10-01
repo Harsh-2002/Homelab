@@ -94,7 +94,7 @@ Important roles:
 
 ## Secret handling
 
-Coolify VM 108, disks, HA registration, SSH alias, vault credentials and Caddy route were removed at the owner's request on 2026-09-30. Recheck `10.1.1.14` before reassignment. Replacement Termix runs in Portainer stack `termix` (155, endpoint 2) on ctr, private `https://remote.l3b.cc.cd`, backend `10.1.1.4:8090`, state `/data/apps/termix`. Its internal-only `guacd` enables browser RDP/VNC. Login is HomeLab vault item `Termix`; registration is disabled. See `infrastructure/termix/README.md` and historical `infrastructure/coolify/README.md`.
+Coolify VM 108, disks, HA registration, SSH alias, vault credentials and Caddy route were removed at the owner's request on 2026-09-30. Recheck `10.1.1.14` before reassignment. Termix was completely removed on 2026-10-01: Portainer stack 155, both containers, network, data directory, images, vault item and active manifests. Warpgate replaces it in Portainer stack `warpgate` (156, endpoint 2) on ctr, private `https://remote.l3b.cc.cd`, HTTPS backend `10.1.1.4:8091`, state `/data/apps/warpgate`. Login credentials are in HomeLab vault item `Warpgate`. Pocket ID is configured without automatic account creation. Browser SSH target setup and full owner SSO verification remain pending; do not claim end-to-end access is complete. See `infrastructure/warpgate/README.md` and historical `infrastructure/coolify/README.md`.
 
 The existing Homelab 1Password service account is loaded only through:
 

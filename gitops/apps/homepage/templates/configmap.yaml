@@ -104,10 +104,10 @@ data:
               env: 2
               key: "{{ "{{HOMEPAGE_VAR_PORTAINER_API_KEY}}" }}"
               fields: ["running", "stopped", "total"]
-        - Termix:
-            icon: https://remote.l3b.cc.cd/favicon.ico
+        - Warpgate:
+            icon: https://remote.l3b.cc.cd/@warpgate/assets/favicon.svg
             href: https://remote.l3b.cc.cd
-            description: Browser SSH and RDP
+            description: Browser SSH gateway
             ping: https://remote.l3b.cc.cd
         - Home Assistant:
             icon: home-assistant.png

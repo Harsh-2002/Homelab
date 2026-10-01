@@ -1,0 +1,30 @@
+services:
+  warpgate:
+    image: ghcr.io/warp-tech/warpgate:0.29.1
+    container_name: warpgate
+    command: ["run"]
+    restart: unless-stopped
+    user: "1000:1000"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    ports:
+      - "10.1.1.4:8091:8888"
+    volumes:
+      - /data/apps/warpgate:/data
+    environment:
+      WARPGATE_CONFIG: /data/warpgate.yaml
+      WARPGATE_ENCRYPTION_KEY: ${WARPGATE_ENCRYPTION_KEY:?Required from HomeLab vault}
+    mem_limit: 512m
+    cpus: 1.0
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      com.centurylinklabs.watchtower.enable: "false"

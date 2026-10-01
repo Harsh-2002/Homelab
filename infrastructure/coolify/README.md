@@ -8,4 +8,4 @@ Removed the Coolify handler/import from Caddy and its SSH alias from dev. Coolif
 
 `10.1.1.14` is no longer assigned to this VM. Verify network use before allocating it. The deleted VM disk is not recoverable through Proxmox; no backup job covered it.
 
-Replacement: [Termix](../termix/README.md), private `https://remote.l3b.cc.cd`, on ctr through Portainer. This is a historical decommission record, not an active runbook.
+Termix was also completely removed at the owner's request on 2026-10-01. Current replacement: [Warpgate](../warpgate/README.md), private `https://remote.l3b.cc.cd`, on ctr through Portainer. This is a historical decommission record, not an active runbook.
