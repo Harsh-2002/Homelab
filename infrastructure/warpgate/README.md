@@ -12,6 +12,8 @@ HomeLab vault item `Warpgate` contains the owner password, encryption key and Po
 
 ## Authentication
 
+Homepage placement: Applications, not Control. The Control row is reserved for the existing statistics cards. There is no native Homepage Warpgate widget; session data is available through its authenticated administrative API but would require a custom integration. The owner chose the simple application card instead, retaining the official icon and availability check. No additional monitoring credential or adapter was created.
+
 Owner: `iam.anuragvishwakarma@gmail.com`, display name Anurag Vishwakarma. The initial admin was renamed rather than creating a second owner. Its Pocket ID SSO credential is linked by provider `pocketid` and the same email. Auto-creation of users is disabled. Pocket ID client `warpgate` is confidential with PKCE and restricted to `infrastructure-admins`. Callback: `https://remote.l3b.cc.cd/@warpgate/api/sso/return`.
 
 Temporary bootstrap admin access was removed from the running command/environment and its temporary token was deleted from the vault. It is not a permanent client API key.

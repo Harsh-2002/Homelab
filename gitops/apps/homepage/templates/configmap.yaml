@@ -104,11 +104,6 @@ data:
               env: 2
               key: "{{ "{{HOMEPAGE_VAR_PORTAINER_API_KEY}}" }}"
               fields: ["running", "stopped", "total"]
-        - Warpgate:
-            icon: https://remote.l3b.cc.cd/@warpgate/assets/favicon.svg
-            href: https://remote.l3b.cc.cd
-            description: Browser SSH gateway
-            ping: https://remote.l3b.cc.cd
         - Home Assistant:
             icon: home-assistant.png
             href: https://home.l3b.cc.cd
@@ -165,6 +160,11 @@ data:
             description: Serverless functions
             ping: https://orva.l3b.cc.cd
     - Applications:
+        - Warpgate:
+            icon: https://remote.l3b.cc.cd/@warpgate/assets/favicon.svg
+            href: https://remote.l3b.cc.cd
+            description: Browser SSH gateway
+            ping: https://remote.l3b.cc.cd
         - Anchor:
             icon: https://notes.l3b.cc.cd/icons/anchor_icon.png
             href: https://notes.l3b.cc.cd
