@@ -33,3 +33,8 @@ The existing account email was changed to `iam.anuragvishwakarma@gmail.com` befo
 ## Operations
 
 Use Portainer to redeploy Stack `80`; change this tracked Compose definition before updating the stack. Do not enable automatic image updaters. A planned update requires release review, a copy of `/data/apps/karakeep/data`, and a fresh browser check.
+# Hermes CLI and search credential mapping
+
+As of 2026-10-03, Hermes on dev uses the official CLI 0.33.2 and a dedicated scoped API key saved in HomeLab → Karakeep → Hermes API Key. See [the Hermes runbook](../hermes/README.md#karakeep-cli-integration-2026-10-03) for protected configuration, scopes and validation.
+
+Both the app and Meilisearch services must receive the same `MEILI_MASTER_KEY` from Portainer stack environment variables. The missing app mapping caused `missing_authorization_header` search failures; it was corrected through stack 80 without changing secrets or resetting data. Bookmark indexing and full-text/tag search passed after the correction.

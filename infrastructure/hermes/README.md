@@ -34,3 +34,28 @@ hermes gateway status
 ```
 
 Update the pinned Hermes release deliberately after reviewing its release notes, then recheck Codex auth, OpenViking memory, Groq STT, and Telegram access. Never place secrets in tracked configuration or automatic memory transcripts.
+
+## Karakeep CLI integration (2026-10-03)
+
+Hermes uses the official `@karakeep/cli@0.33.2`, not an additional MCP server, to manage the owner's bookmarks at https://pin.l3b.cc.cd. The package lives in `/home/dev/.local/share/karakeep-cli`; `/home/dev/.local/bin/karakeep` is on the gateway's existing PATH.
+
+The dedicated key is saved in HomeLab → Karakeep → `Hermes API Key`, with its ID and scopes in adjacent fields. It was created through native Karakeep authentication using the existing vault login. Its scopes are `users:read`, `bookmarks:readwrite`, `lists:readwrite`, `tags:readwrite`, `highlights:readwrite`, and `assets:readwrite`, without administrative access. Do not generate another key during routine setup or put it in Git, prompts, or memory.
+
+The CLI reads `/home/dev/.config/karakeep/config.json` (0600, parent directory 0700). No additional `.hermes/.env` secret or shell export is necessary. Preserve this file across upgrades; restore its secret from the same vault field if needed.
+
+The official skill from `karakeep-app/karakeep`, tag `v0.33.2`, is installed at `/home/dev/.hermes/skills/productivity/karakeep/SKILL.md`. A small local section tells Hermes to reuse the protected CLI configuration, avoid printing credentials, resolve IDs before modifications, and use positional `lists get <id>` syntax. Preserve that section when updating the upstream skill.
+
+Validation passed: native account authentication, temporary text bookmark creation/update/read, tagging, private list creation/membership, full-text search and tag-filtered search. Only the temporary test bookmark, tag and list were deleted afterward. These tests validate the CLI integration, not a live Telegram/iMessage conversation.
+
+Search initially failed because the Karakeep app service did not receive `MEILI_MASTER_KEY`, although Portainer already supplied the secret to Meilisearch. Added the missing environment mapping in the tracked Compose and updated stack 80 through the Portainer API, preserving existing environment values without an image pull. Retesting confirmed actual indexing and retrieval. Keep this mapping on future redeployments; no database/index reset was needed.
+
+Useful checks, without exposing credentials:
+
+```sh
+karakeep --version
+karakeep --json whoami
+karakeep --json bookmarks search 'your search terms' --limit 5
+stat -c '%a %n' /home/dev/.config/karakeep /home/dev/.config/karakeep/config.json
+```
+
+Sources: [official CLI](https://docs.karakeep.app/integrations/command-line/), [official agent skill](https://github.com/karakeep-app/karakeep/tree/v0.33.2/skills).
