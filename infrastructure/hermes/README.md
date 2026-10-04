@@ -35,6 +35,16 @@ hermes gateway status
 
 Update the pinned Hermes release deliberately after reviewing its release notes, then recheck Codex auth, OpenViking memory, Groq STT, and Telegram access. Never place secrets in tracked configuration or automatic memory transcripts.
 
+## shadcn MCP integration (2026-10-04)
+
+Codex and Hermes on dev both have an MCP server named `shadcn`, using the official stdio command `npx -y shadcn@latest mcp`. Codex stores it in `~/.codex/config.toml`; Hermes stores it in `~/.hermes/config.yaml` under `mcp_servers`. Existing servers and credentials are preserved. No API key, public port, Docker service or reverse proxy is required for the public registry.
+
+Restart Codex to load the new server. Hermes can reload MCP connections or restart its user gateway/dashboard services. Registries are selected from the active project's `components.json`; do not pin the server working directory to the homelab repository or initialize UI components here. The public `@shadcn` registry works without custom credentials. Private registries need their own project-specific authentication.
+
+The upstream-recommended `@latest` is intentional and may resolve newer CLI releases later. On setup, npm resolved shadcn 4.21.1. Check registry search and tool discovery after future changes. Source: [official shadcn MCP documentation](https://ui.shadcn.com/docs/mcp).
+
+Validated stdio initialization, seven tools, and a real public-registry `button` search returning results. The 4.21.1 search result has an upstream formatting defect (`[object Promise]` in inline add-command hints); component search itself succeeds. Do not copy those hints as shell commands. No project components were installed during verification.
+
 ## Karakeep CLI integration (2026-10-03)
 
 Hermes uses the official `@karakeep/cli@0.33.2`, not an additional MCP server, to manage the owner's bookmarks at https://pin.l3b.cc.cd. The package lives in `/home/dev/.local/share/karakeep-cli`; `/home/dev/.local/bin/karakeep` is on the gateway's existing PATH.
