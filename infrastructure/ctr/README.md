@@ -1,5 +1,7 @@
 # ctr SMB media mount
 
+Jellyfin-specific startup recovery (2026-10-05): install `jellyfin-mount-recovery.sh` as `/usr/local/sbin/jellyfin-mount-recovery` (0755), and its service/timer in `/etc/systemd/system` (0644). Run `systemctl daemon-reload` and `systemctl enable --now jellyfin-mount-recovery.timer`. This retries only the recorded AV mount-related Docker startup failure, checks real CIFS access, and preserves deliberate stops. The Docker automount dependency remains unchanged; it does not guarantee NAS availability at boot. An actual future reboot/outage recovery is not yet tested.
+
 ## VM memory: fixed 16 GiB with GPU passthrough
 
 On 2026-09-30, the owner approved `memory: 16384` and `balloon: 16384` for VM 204. The balloon device remains enabled for statistics, but equal minimum/maximum means fixed allocation. This supersedes the earlier 8 GiB minimum / 16 GiB maximum policy. Leave the Kubernetes and Orva VM settings unchanged. There is no guest swap.

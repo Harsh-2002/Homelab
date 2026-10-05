@@ -1,0 +1,8 @@
+[Unit]
+Description=Recover Jellyfin after AV mount startup failure
+After=docker.service mnt-AV.automount
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/jellyfin-mount-recovery
+TimeoutStartSec=30
