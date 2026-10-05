@@ -520,8 +520,17 @@
 	}
 }
 
+(devtesting) {
+	@devtesting host dev.l3b.cc.cd
+	handle @devtesting {
+		import proxy
+		reverse_proxy 10.1.1.5:3000
+	}
+}
+
 l3b.cc.cd, *.l3b.cc.cd {
 	import cloudflare
+	import devtesting
 	import adguard
 	import argocd
 	import karakeep

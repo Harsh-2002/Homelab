@@ -2,6 +2,8 @@
 
 The tracked `Caddyfile` is the desired configuration for proxy LXC `10.1.1.3`.
 
+`https://dev.l3b.cc.cd` is an owner-approved public development endpoint (2026-10-05), forwarding to dev VM `10.1.1.5:3000` without Tinyauth or the private-source gate. Public DNS uses the same DNS-only household WAN address as the storefront; internal Unbound points to Caddy `10.1.1.3`. The dev VM and port3000 are not directly published through DNS/router changes. The owner manages whichever application runs on that port, including authentication and allowed-host settings. Caddy provides TLS and native WebSocket proxying; do not assume this is safe for an unauthenticated administrative application. SSH alias `dev` remains the direct VM address.
+
 Home Assistant OS VM 107 is privately served at `https://home.l3b.cc.cd` from `10.1.1.13:80`. It uses the existing wildcard DNS and TLS certificate, Caddy's LAN/Tailscale source restriction, and Home Assistant's own login. Home Assistant trusts forwarded client IPs only from `10.1.1.3/32`; do not add a public Cloudflare DNS record. The route was verified with HTTP 200 for the page, HTTP 401 for an unauthenticated API call, and HTTP 101 WebSocket upgrade.
 
 `grafana.l3b.cc.cd` is a private native-OIDC UI for the infrastructure metrics stack in Beszel CT 104. `metrics.l3b.cc.cd` is a private, write-only endpoint: Caddy forwards only `POST /api/v1/write` to authenticated VictoriaMetrics, for Kubernetes vmagent. Other paths are not exposed through this hostname. See `infrastructure/metrics/README.md`.

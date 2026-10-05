@@ -31,7 +31,7 @@ Direct-host exceptions use AdGuard CNAME-exception entries that pass through to 
 
 | Name | Answer |
 | --- | --- |
-| `dev.l3b.cc.cd` | `10.1.1.5` |
+| `dev.l3b.cc.cd` | `10.1.1.3` (public HTTPS development route to dev:3000) |
 | `store.l3b.cc.cd` | `10.1.1.3` (public static storefront via Caddy) |
 | `ntfy.l3b.cc.cd` | `8.235.70.28` (external ntfy on slate) |
 | `watch.l3b.cc.cd` | `8.235.70.28` (external Uptime Kuma on slate) |

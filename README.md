@@ -6,6 +6,8 @@ Start a new agent or chat with [`HANDOFF.md`](HANDOFF.md). It lists the authorit
 
 ## Administrator identity
 
+Public development endpoint: `https://dev.l3b.cc.cd` → existing Caddy → dev VM `10.1.1.5:3000`. Owner-approved public exposure on 2026-10-05; backend application authentication/configuration is owner-managed. See `infrastructure/dev/README.md` and `infrastructure/proxy/README.md`.
+
 Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts an email address or OIDC identity. Use `iam-anuragvishwakarma` when a conventional username is required. Do not create new personal accounts with dotted or underscored username variants. Keep operating-system accounts, Kubernetes service accounts, and application service users distinct because they are machine identities.
 
 ## Repository layout
