@@ -14,6 +14,14 @@ A minimal actual model request returned AUTH_OK. A fresh interactive launch reac
 
 ## Verification
 
+## User settings and shell shortcut
+
+Merged the owner's settings into `~/.claude/settings.json`, preserving the OpenViking marketplace and enabled plugin. Theme auto, effort xhigh (supported by installed CLI), always-thinking enabled, gitignore respected, latest update channel, 30-day cleanup, turn duration and terminal progress bar enabled, spinner tips disabled, English language, and empty commit/PR attribution. `defaultMode` is correctly nested as `permissions.defaultMode: acceptEdits`; `skipDangerousModePermissionPrompt` is true.
+
+Persistent Bash alias in `~/.bashrc`: `alias cc='claude --dangerously-skip-permissions'`. A fresh interactive Bash resolves it correctly. Use `source ~/.bashrc` in an existing terminal. `cc` bypasses Claude permission checks and can execute destructive commands without approval; this is explicitly requested for the trusted dev environment, not a security boundary. Normal `claude` retains acceptEdits. Tokens are unchanged.
+
+## Connection checks
+
 `claude mcp list` reported all six integrations connected, plus the existing Claude Docs connection. OpenViking's bundled memory doctor reported no problems,16 upstream MCP tools, healthy storage/embedding components, successful session injection/recall, and two captured test messages with no failures. This does not claim that every browser workflow or Orva mutation was tested. No browser navigation, deployment or application data mutation was part of the connection checks.
 
 ```sh
