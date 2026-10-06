@@ -2,6 +2,8 @@
 
 Orva is the dedicated VM for running serverless functions. VM 106 runs on `px20` and uses `10.1.1.11/24`, gateway `10.1.1.1`, AdGuard `10.1.1.2`, fallback resolver `1.1.1.1`, and search domain `l3b.cc.cd`. The Debian login is `orva`; SSH key authentication is enabled and no login password is required. The administrative SSH alias is `ssh orva`.
 
+Temporary artifact sharing is implemented by [Quick Share](quick-share/README.md), using the existing Orva URL, private Cairn storage, a one-hour default expiry, and scheduled deletion. Its current safe file limit is 4 MiB under the 6 MiB platform request cap.
+
 | Property | Value |
 | --- | --- |
 | VM ID and name | `106`, `orva` |
