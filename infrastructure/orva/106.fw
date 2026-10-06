@@ -12,6 +12,7 @@ ipfilter: 0
 
 OUT ACCEPT -dest 10.1.1.2 -p udp -dport 53 # AdGuard DNS UDP
 OUT ACCEPT -dest 10.1.1.2 -p tcp -dport 53 # AdGuard DNS TCP
+OUT ACCEPT -dest 10.1.1.3 -p tcp -dport 443 # Caddy HTTPS for Cairn S3 quick-share
 OUT DROP -dest 10.0.0.0/8 -log info # Block RFC1918 10/8
 OUT DROP -dest 172.16.0.0/12 -log info # Block RFC1918 172.16/12
 OUT DROP -dest 192.168.0.0/16 -log info # Block RFC1918 192.168/16
