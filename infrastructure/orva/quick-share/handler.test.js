@@ -12,6 +12,7 @@ function fixture() {
   class Client {
     async send(command) {
       if (command instanceof Put) objects.set(command.input.Key, command.input.Body);
+      if (command instanceof Get) return {Body: (async function*(){yield objects.get(command.input.Key);})()};
       if (command instanceof Delete) {
         if (failDelete) throw new Error('storage offline');
         objects.delete(command.input.Key);
@@ -20,6 +21,7 @@ function fixture() {
     }
   }
   const kv = {
+    async get(key, fallback) { return records.get(key) ?? fallback; },
     async put(key, value, options) { assert.equal(options.ttlSeconds, 0); records.set(key, value); },
     async delete(key) { records.delete(key); },
     async list() { return {keys: [...records].map(([key, value]) => ({key, value})), nextCursor: ''}; }
@@ -38,7 +40,8 @@ function fixture() {
   };
   vm.runInNewContext(fs.readFileSync(__dirname + '/handler.js', 'utf8'), context);
   const request = (body, headers = {}) => context.exports.handler({method: 'POST', body: JSON.stringify(body), headers});
-  return {request, records, objects, advance(ms) { now += ms; }, failDelete() { failDelete = true; }};
+  const get = (url) => context.exports.handler({method: 'GET', path: new URL(url).pathname.replace(/^\/fn\/[^/]+/, ''), headers: {}});
+  return {request, get, records, objects, advance(ms) { now += ms; }, failDelete() { failDelete = true; }};
 }
 
 const file = {name: 'test.png', type: 'image/png', size: 3, data: 'YWJj'};
@@ -47,7 +50,7 @@ test('default expiry and storage namespace', async () => {
   const f = fixture(), r = await f.request(file);
   assert.equal(r.statusCode, 200);
   assert.equal(r.body.expiresIn, 3600);
-  assert.match(r.body.url, /quick-share\/[a-f0-9]{48}\.png/);
+  assert.match(r.body.url, /^https:\/\/orva\.l3b\.cc\.cd\/fn\/01a110c1-cc79-7292-997d-11ac2d58d81e\/s\/[A-Za-z0-9_-]{22}$/);
   assert.equal([...f.objects.values()][0].toString(), 'abc');
 });
 
@@ -91,4 +94,30 @@ test('failed deletion keeps manifest for retry', async () => {
 
 test('ordinary HTTP cannot invoke cleanup', async () => {
   assert.equal((await fixture().request({action: 'cleanup'})).statusCode, 403);
+});
+
+test('short link proxies bytes without redirect or backend URL', async () => {
+  const f = fixture(), upload = await f.request(file);
+  const stream = await f.get(upload.body.url), parts = [];
+  let head;
+  for await(const item of stream) { if(item.statusCode) head=item; else parts.push(item); }
+  assert.equal(head.statusCode, 200);
+  assert.equal(head.headers['Content-Type'], 'image/png');
+  assert.equal(head.headers['Cache-Control'], 'no-store');
+  assert.equal(head.headers.Location, undefined);
+  assert.equal(Buffer.concat(parts).toString(), 'abc');
+  assert.equal(JSON.stringify(head).includes('storage.test'), false);
+});
+
+test('expired short link stops immediately before cleanup', async () => {
+  const f = fixture(), upload = await f.request({...file, expiresIn:60});
+  f.advance(61000);
+  assert.equal((await f.get(upload.body.url)).statusCode, 410);
+  assert.equal(f.objects.size, 1);
+});
+
+test('unknown or malformed short tokens return 404', async () => {
+  const f=fixture();
+  assert.equal((await f.get('https://orva.l3b.cc.cd/s/invalid')).statusCode,404);
+  assert.equal((await f.get('https://orva.l3b.cc.cd/s/abcdefghijklmnopqrstuv')).statusCode,404);
 });
