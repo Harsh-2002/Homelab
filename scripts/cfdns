@@ -3,15 +3,15 @@
 
 set -eu
 
-die() { printf '%s\n' "cf: $*" >&2; exit 1; }
+die() { printf '%s\n' "cfdns: $*" >&2; exit 1; }
 
 help() {
   printf '%s\n' \
-    'Usage: cf list [type|name] [--plain]' \
-    '       cf get <name> [--plain]' \
-    '       cf add <type> <name> <value> [--proxy] [--ttl N]' \
-    '       cf set <type> <name> <value> [--proxy] [--ttl N]' \
-    '       cf rm <type> <name> [--yes]' \
+    'Usage: cfdns list [type|name] [--plain]' \
+    '       cfdns get <name> [--plain]' \
+    '       cfdns add <type> <name> <value> [--proxy] [--ttl N]' \
+    '       cfdns set <type> <name> <value> [--proxy] [--ttl N]' \
+    '       cfdns rm <type> <name> [--yes]' \
     '' \
     'Environment: CF_API_TOKEN, CF_ZONE, CF_ENV_FILE (default /etc/caddy/cloudflare.env),' \
     '             CF_CACHE_FILE (default ~/.cf-zone-id)'
@@ -113,7 +113,7 @@ case $command in
     shift
     filter=
     while [ "$#" -gt 0 ]; do
-      case $1 in --plain) plain=true ;; *) [ -z "$filter" ] || die 'usage: cf list [type|name] [--plain]'; filter=$1 ;; esac
+      case $1 in --plain) plain=true ;; *) [ -z "$filter" ] || die 'usage: cfdns list [type|name] [--plain]'; filter=$1 ;; esac
       shift
     done
     data=$(records)
@@ -124,13 +124,13 @@ case $command in
     fi
     printf '%s' "$data" | table ;;
   get)
-    shift; [ "$#" -ge 1 ] || die 'usage: cf get <name> [--plain]'
+    shift; [ "$#" -ge 1 ] || die 'usage: cfdns get <name> [--plain]'
     name=$(fqdn "$1"); shift
     [ "${1:-}" = --plain ] && plain=true && shift
-    [ "$#" -eq 0 ] || die 'usage: cf get <name> [--plain]'
+    [ "$#" -eq 0 ] || die 'usage: cfdns get <name> [--plain]'
     records | jq --arg name "$name" '.result |= map(select(.name == $name))' | table ;;
   add|set)
-    [ "$#" -ge 4 ] || die "usage: cf $command <type> <name> <value> [--proxy] [--ttl N]"
+    [ "$#" -ge 4 ] || die "usage: cfdns $command <type> <name> <value> [--proxy] [--ttl N]"
     type=$2 name=$(fqdn "$3") value=$4; shift 4; options "$@"
     body=$(payload)
     if [ "$command" = add ]; then
@@ -142,10 +142,10 @@ case $command in
     fi
     printf '%s %s -> %s\n' "$type" "$name" "$value" ;;
   rm)
-    [ "$#" -ge 3 ] || die 'usage: cf rm <type> <name> [--yes]'
+    [ "$#" -ge 3 ] || die 'usage: cfdns rm <type> <name> [--yes]'
     type=$2 name=$(fqdn "$3"); yes=false
     [ "${4:-}" = --yes ] && yes=true
-    [ "$#" -le 4 ] || die 'usage: cf rm <type> <name> [--yes]'
+    [ "$#" -le 4 ] || die 'usage: cfdns rm <type> <name> [--yes]'
     data=$(records | jq --arg type "$type" --arg name "$name" '.result |= map(select(.type == $type and .name == $name))')
     id=$(printf '%s' "$data" | jq -r '.result[0].id // empty')
     [ -n "$id" ] || die 'record not found'

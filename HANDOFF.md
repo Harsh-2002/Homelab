@@ -42,6 +42,8 @@ NOTION_KEYRING=0 ntn pages get 3e5d3ccf-b520-818b-8546-c4dbca0ecdce
 
 Prefer appending a concise dated section through the block-children API. Do not replace the entire large main page merely to add an update.
 
+The local Cloudflare DNS helper on `dev` is `cfdns`, not `cf` (renamed 2026-10-08). Source: `scripts/cfdns`; installed command: `/usr/local/bin/cfdns`; Bash completion: `scripts/completions/cfdns.bash`, installed under `~/.local/share/bash-completion/completions/cfdns`. Configuration and zone cache are unchanged. Do not recreate an old `cf` alias or symlink, as that name is reserved for the separate CLI. See `infrastructure/proxy/README.md` for installation and shell refresh.
+
 ## Initial orientation checklist
 
 Before changing anything:

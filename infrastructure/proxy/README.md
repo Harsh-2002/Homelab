@@ -16,7 +16,24 @@ Secrets are not stored in Git. The proxy loads `/etc/caddy/cloudflare.env` throu
 
 The proxy host resolves normal traffic through internal AdGuard `10.1.1.2` only. The `cloudflare` TLS snippet's public `resolvers` are scoped to ACME DNS-01 TXT propagation checks; they are not host DNS or upstream DNS for proxied requests. Keep this exception when renewing the wildcard certificate.
 
-The minimal `cf` CLI is tracked at `scripts/cf` and installed on `dev` as `/usr/local/bin/cf`. It reads `CF_API_TOKEN` and `CF_ZONE` from the environment, or from `CF_ENV_FILE` (default `/etc/caddy/cloudflare.env`). The default cache is `~/.cf-zone-id`; override it with `CF_CACHE_FILE`. Keep `CF_ZONE=l3b.cc.cd` alongside the existing Cloudflare token in `/etc/caddy/cloudflare.env` so Caddy and `cf` use one non-Git configuration path.
+The minimal `cfdns` CLI is tracked at `scripts/cfdns` and installed on `dev` as `/usr/local/bin/cfdns`. It reads `CF_API_TOKEN` and `CF_ZONE` from the environment, or from `CF_ENV_FILE` (default `/etc/caddy/cloudflare.env`). The default cache remains `~/.cf-zone-id`; override it with `CF_CACHE_FILE`. Keep `CF_ZONE=l3b.cc.cd` alongside the existing Cloudflare token in `/etc/caddy/cloudflare.env` so Caddy and `cfdns` use one non-Git configuration path. The helper was renamed from `cf` to avoid conflicting with the separate Cloudflare CLI; do not create a `cf` compatibility alias or symlink.
+
+### DNS helper installation and shell completion
+
+The `cf` to `cfdns` rename was applied on dev on 2026-10-08. Credentials, arguments, DNS records, and the zone-cache path were preserved. Read-only listing verified access to the existing zone. No old `cf` alias, executable, or completion remains from this helper; installation of a separate CLI is outside this change.
+
+Bash completion is tracked at `scripts/completions/cfdns.bash` and installed at `~/.local/share/bash-completion/completions/cfdns`. It completes subcommands, record types, TTL suggestions, and flags without API requests. The old helper had no registered completion. Install or refresh from the repository root:
+
+```bash
+sudo install -o root -g root -m 755 scripts/cfdns /usr/local/bin/cfdns
+install -D -m 644 scripts/completions/cfdns.bash "$HOME/.local/share/bash-completion/completions/cfdns"
+hash -r
+source "$HOME/.local/share/bash-completion/completions/cfdns"
+cfdns help
+complete -p cfdns
+```
+
+New interactive Bash shells load completion through the existing bash-completion setup. Already-open shells must run the `hash -r` and `source` lines themselves; another process cannot reload their state. Do not blindly remove an executable named `cf` if the separate CLI has since been installed.
 
 Deploy and validate:
 

@@ -38,7 +38,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/orva/` — Orva serverless VM, Proxmox firewall, HA, and replication runbook.
   - `infrastructure/restored-services/` — recovered Portainer workloads, storage paths, and validation state.
 - `scripts/` — administrative helper scripts.
-  - `scripts/cf` — minimal POSIX Cloudflare DNS CLI; token and zone remain in the environment or the non-Git Cloudflare environment file.
+  - `scripts/cfdns` — minimal POSIX Cloudflare DNS CLI; token and zone remain in the environment or the non-Git Cloudflare environment file.
 
 ## Safety rules
 

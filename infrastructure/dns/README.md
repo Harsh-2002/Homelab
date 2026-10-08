@@ -25,7 +25,9 @@ Cloudflare is intentionally private by default. Its apex A record is DNS-only an
 
 To expose a deliberate exception, add an explicit DNS-only public A record for that hostname in Cloudflare. Current records pointing to `150.129.31.154` are `argocd`, `photos`, `pin`, `registry`, `orva`, `media`, `store`, and `cairn-s3`. External monitoring records `ntfy` and `watch` instead point to slate at `8.235.70.28`; their exact internal exceptions match. Caddy keeps every Argo CD path private except its signed webhook, while the public application routes rely on their native authentication. Do not proxy these records through Cloudflare until Caddy is explicitly configured to trust Cloudflare client-IP headers.
 
-Use `/usr/local/bin/cf` on `dev` to inspect or change Cloudflare records. It defaults to a responsive bordered table; add `--plain` to `list` or `get` for tab-separated script output. Its configuration is `/etc/caddy/cloudflare.env`, with `CF_ZONE=l3b.cc.cd`; the API token remains outside Git.
+Use `/usr/local/bin/cfdns` on `dev` to inspect or change Cloudflare records. It defaults to a responsive bordered table; add `--plain` to `list` or `get` for tab-separated script output. Its configuration is `/etc/caddy/cloudflare.env`, with `CF_ZONE=l3b.cc.cd`; the API token remains outside Git. The command name `cf` is reserved for the separate Cloudflare CLI.
+
+For Bash autocomplete and refreshing an already-open shell after the rename, see [DNS helper installation and shell completion](../proxy/README.md#dns-helper-installation-and-shell-completion). Completion performs no DNS/API calls.
 
 Direct-host exceptions use AdGuard CNAME-exception entries that pass through to exact local A records in Unbound:
 
