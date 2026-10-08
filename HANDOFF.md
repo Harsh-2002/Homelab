@@ -44,6 +44,8 @@ Prefer appending a concise dated section through the block-children API. Do not 
 
 The local Cloudflare DNS helper on `dev` is `cfdns`, not `cf` (renamed 2026-10-08). Source: `scripts/cfdns`; installed command: `/usr/local/bin/cfdns`; Bash completion: `scripts/completions/cfdns.bash`, installed under `~/.local/share/bash-completion/completions/cfdns`. Configuration and zone cache are unchanged. Do not recreate an old `cf` alias or symlink, as that name is reserved for the separate CLI. See `infrastructure/proxy/README.md` for installation and shell refresh.
 
+The owner subsequently installed the separate `cf` CLI (`1.0.0-beta.13`) and completed OAuth on 2026-10-08. Codex, Claude Code and Hermes running as `dev` can reuse the protected `/home/dev/.config/cloudflare/config/default.json` login. Check `cf auth whoami` before operations; never print or store the credential contents in memory or Git. Shared memory does not grant credentials to agents on another machine/user. See `infrastructure/proxy/README.md` and `infrastructure/hermes/README.md`.
+
 ## Initial orientation checklist
 
 Before changing anything:

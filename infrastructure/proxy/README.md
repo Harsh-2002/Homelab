@@ -18,6 +18,14 @@ The proxy host resolves normal traffic through internal AdGuard `10.1.1.2` only.
 
 The minimal `cfdns` CLI is tracked at `scripts/cfdns` and installed on `dev` as `/usr/local/bin/cfdns`. It reads `CF_API_TOKEN` and `CF_ZONE` from the environment, or from `CF_ENV_FILE` (default `/etc/caddy/cloudflare.env`). The default cache remains `~/.cf-zone-id`; override it with `CF_CACHE_FILE`. Keep `CF_ZONE=l3b.cc.cd` alongside the existing Cloudflare token in `/etc/caddy/cloudflare.env` so Caddy and `cfdns` use one non-Git configuration path. The helper was renamed from `cf` to avoid conflicting with the separate Cloudflare CLI; do not create a `cf` compatibility alias or symlink.
 
+### Cloudflare CLI access for agents
+
+On 2026-10-08 the owner installed the separate Cloudflare `cf` CLI, version `1.0.0-beta.13`, and completed OAuth login under Linux user `dev`. `cf auth whoami` verified authentication and a valid token for the existing Cloudflare account. The protected credential file is `/home/dev/.config/cloudflare/config/default.json` (mode `0600`); never print, commit, or copy its token into agent memory or prompts.
+
+Codex, Claude Code, and Hermes running as `dev` can reuse this CLI login. Hermes is an active dev-user service, not a separate Linux account. Shared OpenViking memory records availability and procedures, not credentials. Agents on another host or under another user do not automatically inherit access. Run `cf auth whoami` before work; token validity is time-dependent and the original expiry is not a permanent access guarantee. The OAuth session has broad read/write permissions, so use read-only inspection first and make changes only within the owner's requested scope.
+
+Keep the commands distinct: `cf` is the separately installed Cloudflare CLI; `cfdns` is the existing minimal DNS helper with its independent `CF_*` configuration. The previously documented statement that no separate CLI was installed applied only to the rename task and is superseded by this owner-installed OAuth setup.
+
 ### DNS helper installation and shell completion
 
 The `cf` to `cfdns` rename was applied on dev on 2026-10-08. Credentials, arguments, DNS records, and the zone-cache path were preserved. Read-only listing verified access to the existing zone. No old `cf` alias, executable, or completion remains from this helper; installation of a separate CLI is outside this change.
