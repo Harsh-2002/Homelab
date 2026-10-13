@@ -23,7 +23,23 @@ Adding a new Caddy hostname requires only a Caddy route; no additional AdGuard r
 
 Cloudflare is intentionally private by default. Its apex A record is DNS-only and points `l3b.cc.cd` to the proxy's private address `10.1.1.3`; the existing wildcard CNAME therefore resolves all otherwise-unlisted public names to that private address. Public clients cannot use private RFC1918 addresses, so a new Caddy hostname is not internet-reachable merely because it exists.
 
-To expose a deliberate exception, add an explicit DNS-only public A record for that hostname in Cloudflare. Current records pointing to `150.129.31.154` are `argocd`, `photos`, `pin`, `registry`, `orva`, `media`, `store`, and `cairn-s3`. External monitoring records `ntfy` and `watch` instead point to slate at `8.235.70.28`; their exact internal exceptions match. Caddy keeps every Argo CD path private except its signed webhook, while the public application routes rely on their native authentication. Do not proxy these records through Cloudflare until Caddy is explicitly configured to trust Cloudflare client-IP headers.
+To expose a deliberate exception, add an explicit DNS-only public A record for that hostname in Cloudflare. Current records pointing to `150.129.31.154` are `argocd`, `photos`, `pin`, `registry`, `orva`, `media`, `store`, `dev`, and `cairn-s3`. External monitoring records `ntfy` and `watch` instead point to slate at `8.235.70.28`; their exact internal exceptions match. Caddy keeps every Argo CD path private except its signed webhook, while the public application routes rely on their native authentication. Do not proxy these records through Cloudflare until Caddy is explicitly configured to trust Cloudflare client-IP headers.
+
+### Public-resolver compatibility for private direct-host services
+
+On 2026-10-13 the owner requested matching direct-host answers in Cloudflare because a corporate VPN uses public DNS. Cloudflare had no exact `smb` record, so its wildcard returned the Caddy apex at `10.1.1.3` instead of Store at `10.1.1.12`. The same omission affected the Kubernetes API VIP and three node names. These five DNS-only A records now match Unbound, with TTL 300:
+
+| Name | Cloudflare and internal A answer |
+| --- | --- |
+| `smb.l3b.cc.cd` | `10.1.1.12` |
+| `k8s.l3b.cc.cd` | `10.1.1.200` |
+| `k8s-201.l3b.cc.cd` | `10.1.1.201` |
+| `k8s-202.l3b.cc.cd` | `10.1.1.202` |
+| `k8s-203.l3b.cc.cd` | `10.1.1.203` |
+
+The complete desired Cloudflare inventory is [cloudflare-records.tsv](cloudflare-records.tsv). It contains record data, not credentials; TTL `1` means Cloudflare automatic TTL. Update this inventory and the local DNS fragments together when a direct-host address changes. Audit live DNS before applying changes; this is a maintained inventory, not an unattended sync job. After the change, all 18 live Cloudflare records matched the inventory; 46 DNS checks passed across internal DNS, Cloudflare's authoritative nameserver, wildcard routing and public-resolver answers for the five corrected names.
+
+Alignment does not mean replacing public website addresses with LAN IPs. Keep public WAN records, private Caddy apex/wildcard, and intended local proxy rewrites intact. Exact direct-host records override the wildcard; private web services still use the proxy via the wildcard. The new private-IP records do not expose SMB or Kubernetes to the internet and add no router/firewall/Caddy rules. They do publish those hostnames and their LAN addresses in public DNS, explicitly requested here. Access still requires a working LAN/Tailscale route; corporate VPN routing or DNS-rebinding filters may independently prevent access. A cached old wildcard/CNAME answer may persist until its TTL expires; flushing the Mac cache cannot flush an upstream corporate resolver.
 
 Use `/usr/local/bin/cfdns` on `dev` to inspect or change Cloudflare records. It defaults to a responsive bordered table; add `--plain` to `list` or `get` for tab-separated script output. Its configuration is `/etc/caddy/cloudflare.env`, with `CF_ZONE=l3b.cc.cd`; the API token remains outside Git. The command name `cf` is reserved for the separate Cloudflare CLI.
 

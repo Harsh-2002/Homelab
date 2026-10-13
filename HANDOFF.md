@@ -46,6 +46,8 @@ The local Cloudflare DNS helper on `dev` is `cfdns`, not `cf` (renamed 2026-10-0
 
 The owner subsequently installed the separate `cf` CLI (`1.0.0-beta.13`) and completed OAuth on 2026-10-08. Codex, Claude Code and Hermes running as `dev` can reuse the protected `/home/dev/.config/cloudflare/config/default.json` login. Check `cf auth whoami` before operations; never print or store the credential contents in memory or Git. Shared memory does not grant credentials to agents on another machine/user. See `infrastructure/proxy/README.md` and `infrastructure/hermes/README.md`.
 
+DNS correction on 2026-10-13: Cloudflare now explicitly publishes DNS-only private A records for `smb` (`10.1.1.12`), `k8s` (`10.1.1.200`) and `k8s-201/202/203` (`10.1.1.201/202/203`), matching local Unbound for clients using public DNS through a corporate VPN. The former wildcard sent these direct-host names to Caddy. Preserve public website WAN addresses and the private proxy apex/wildcard; do not make all split-horizon answers identical. Desired Cloudflare inventory: `infrastructure/dns/cloudflare-records.tsv`. DNS publication does not grant LAN reachability or authorize public ports. No unattended sync job is installed.
+
 ## Initial orientation checklist
 
 Before changing anything:

@@ -72,7 +72,9 @@ I use the default blocking mode, with no custom allowlist or user rules in the s
 
 ### Local DNS and split horizon
 
-An apex A rewrite points `<INTERNAL_DOMAIN>` to `<PROXY_LAN_IP>`, and a wildcard CNAME rewrite points `*.<INTERNAL_DOMAIN>` back to that apex. New reverse-proxy services therefore need a proxy route but usually no new local DNS record. A few direct-host names use AdGuard CNAME exceptions and exact A records in Unbound instead. Public DNS is private-by-default; only explicitly published names receive public A records. Keep direct-host, SMB and management names private.
+An apex A rewrite points `<INTERNAL_DOMAIN>` to `<PROXY_LAN_IP>`, and a wildcard CNAME rewrite points `*.<INTERNAL_DOMAIN>` back to that apex. New reverse-proxy services therefore need a proxy route but usually no new local DNS record. A few direct-host names use AdGuard CNAME exceptions and exact A records in Unbound instead. Public DNS is private-by-default; only explicitly published internet-facing names receive publicly routable A records. Keep direct-host, SMB and management services private.
+
+For a client whose corporate VPN forces public DNS, deliberately publishing an exact DNS-only A record with the direct host's private LAN address can keep that name consistent with internal DNS and override the proxy wildcard. This publishes hostname/address metadata but does not open ports or make a private address internet-routable. The client still needs LAN or VPN routing, and its resolver may apply DNS-rebinding protection. Keep public websites' WAN records intact rather than copying all local answers into public DNS.
 
 ## Unbound: complete current config
 
