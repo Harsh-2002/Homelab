@@ -11,6 +11,7 @@ services:
       - "10.1.1.4:1933:1933"
     volumes:
       - /data/apps/openviking/state:/app/.openviking
+      - /data/apps/openviking/state/hotfixes/session_commit_processor.py:/app/.venv/lib/python3.13/site-packages/openviking/storage/queuefs/session_commit_processor.py:ro
     depends_on:
       ollama:
         condition: service_healthy
