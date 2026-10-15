@@ -100,7 +100,7 @@ Important roles:
 
 ## Secret handling
 
-Coolify VM 108 was removed on 2026-09-30; recheck `10.1.1.14` before reassignment. Termix (stack 155) and Warpgate (stack 156) were completely removed on 2026-10-01 at the owner's request, including containers, dedicated networks, data, unused images, credentials and active manifests. Warpgate's Pocket ID client, dev authorized SSH key, Homepage card, Caddy route and upstream trust certificate are also removed. There is no current browser SSH replacement; earlier Warpgate target/SSO setup tasks are cancelled. Historical records: `infrastructure/warpgate/README.md` and `infrastructure/coolify/README.md`.
+Coolify VM 108 was removed on 2026-09-30; `10.1.1.14` was reallocated to ZimaOS on 2026-10-15. Termix (stack 155) and Warpgate (stack 156) were completely removed on 2026-10-01 at the owner's request, including containers, dedicated networks, data, unused images, credentials and active manifests. Warpgate's Pocket ID client, dev authorized SSH key, Homepage card, Caddy route and upstream trust certificate are also removed. There is no current browser SSH replacement; earlier Warpgate target/SSO setup tasks are cancelled. Historical records: `infrastructure/warpgate/README.md` and `infrastructure/coolify/README.md`.
 
 The existing Homelab 1Password service account is loaded only through:
 
@@ -122,7 +122,7 @@ Personal identity conventions:
 
 ## Current architecture snapshot
 
-VM 204 `ctr` now uses fixed 16 GiB (`memory: 16384`, `balloon: 16384`), owner-approved and live-applied on 2026-09-30 without reboot. Full Intel iGPU PCI passthrough kept its 16 GiB locked on PX20 even when ballooning restricted the guest to 8 GiB. Do not restore the earlier 8–16 GiB dynamic policy for this passthrough VM. The balloon device stays enabled for statistics. See `infrastructure/ctr/README.md`; other guests' policies remain unchanged. Anchor v0.17.2 is Portainer stack 154 at private `https://notes.l3b.cc.cd`, with native Pocket ID, a same-email recovery account, local persistent `/data/apps/anchor`, and a Homepage Applications card. Native login and note/image persistence across restart were tested. Read `infrastructure/anchor/README.md` before upgrades or recovery; credentials are in the single HomeLab item `Anchor`.
+VM 204 `ctr` now uses fixed 16 GiB (`memory: 16384`, `balloon: 16384`), owner-approved and live-applied on 2026-09-30 without reboot. Full Intel iGPU PCI passthrough kept its 16 GiB locked on PX20 even when ballooning restricted the guest to 8 GiB. Do not restore the earlier 8–16 GiB dynamic policy for this passthrough VM. The balloon device stays enabled for statistics. See `infrastructure/ctr/README.md`; other guests' policies remain unchanged. Anchor v0.17.2 remains Portainer stack 154 at private `https://anchor.l3b.cc.cd`, with native Pocket ID, persistent `/data/apps/anchor`, and its Homepage Applications card. Nivra v2026.10.15 is Portainer-managed on CTR at private `https://notes.l3b.cc.cd`, with encryption disabled at first initialization and persistent `/data/apps/nivra`; public DNS/Caddy exposure waits until the owner finishes first-run authentication and saves the recovery code. Read `infrastructure/nivra/README.md` before onboarding or upgrades and `infrastructure/anchor/README.md` before Anchor recovery.
 
 Read the main README for the full endpoint table. Key infrastructure facts:
 
@@ -133,6 +133,7 @@ Read the main README for the full endpoint table. Key infrastructure facts:
 - Cairn S3/API is deliberately public at `cairn-s3.l3b.cc.cd` with native S3 authentication/policies; its console `cairn.l3b.cc.cd` remains private. The temporary `share` hostname and RustFS public bucket were removed. The sanitized DNS guide is a separate [Notion page](https://app.notion.com/p/AdGuard-Home-Unbound-my-DNS-setup-3e5d3ccfb520818b8546c4dbca0ecdce) and `infrastructure/dns/SHAREABLE-SETUP.md`, not an S3 object. The historical Unbound listener/cache drift was corrected with persistent `recursive.conf` on 2026-09-27; see the later DNS runbook correction and verify live state before a restart.
 - Public `store.l3b.cc.cd` is a static Astro storefront from `git@github.com:Harsh-2002/store.git`, built with `npm ci && npm run build` and served by Caddy from `/srv/store` on `proxy`. Cloudflare's explicit DNS-only A record targets `150.129.31.154`; internal Unbound resolves the name to `10.1.1.3`. This web name is distinct from the `store` SSH alias and SMB CT at `10.1.1.12`. See `infrastructure/proxy/README.md`.
 - Orva serverless VM: `10.1.1.11` (VM 106; outbound-isolated by Proxmox firewall)
+- ZimaOS: `10.1.1.14`, private Caddy proxy `https://zima.l3b.cc.cd` to HTTP port 80
 - Kubernetes API VIP: `10.1.1.200`
 - Cilium LoadBalancer pool: `10.1.1.170-10.1.1.190`
 - Tailscale: px10/px20/px30 are approved subnet routers for `10.1.1.0/24`; `dev` is a direct tailnet client. The former `10.1.1.9` gateway VIP was removed.

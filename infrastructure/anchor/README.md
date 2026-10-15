@@ -1,6 +1,6 @@
 # Anchor notes
 
-Anchor v0.17.2 runs on `ctr` in Portainer stack `anchor` (ID 154, endpoint 2). Its private URL is `https://notes.l3b.cc.cd`. Caddy uses the existing wildcard certificate and private LAN/Tailscale policy, without a second proxy or Tinyauth login layer. Backend port `10.1.1.4:3010` maps to container port 3000; it is not published on all interfaces or exposed by a public Caddy handler.
+Anchor v0.17.2 runs on `ctr` in Portainer stack `anchor` (ID 154, endpoint 2). Its private URL is `https://anchor.l3b.cc.cd`. Caddy uses the existing wildcard certificate and private LAN/Tailscale policy, without a second proxy or Tinyauth login layer. Backend port `10.1.1.4:3010` maps to container port 3000; it is not published on all interfaces or exposed by a public Caddy handler.
 
 ## Runtime and persistence
 
@@ -10,9 +10,9 @@ All state is bind-mounted from `/data/apps/anchor` to `/data`, including `/data/
 
 ## Identity and secrets
 
-The canonical HomeLab 1Password item is `Anchor`, with the exact URL `https://notes.l3b.cc.cd` and owner email `iam.anuragvishwakarma@gmail.com`. It contains the recovery password, `jwt-secret`, `database-password`, and `oidc-client-secret`. Portainer stack environment contains `JWT_SECRET`, `PG_PASSWORD`, and `OIDC_CLIENT_SECRET`; no secret value belongs in Git, Notion, or Homepage. The item was created once, not duplicated. Never reset the DB password only in Compose after the database is initialized: PostgreSQL's initialization password does not update existing roles.
+The canonical HomeLab 1Password item is `Anchor`, with the exact URL `https://anchor.l3b.cc.cd` and owner email `iam.anuragvishwakarma@gmail.com`. It contains the recovery password, `jwt-secret`, `database-password`, and `oidc-client-secret`. Portainer stack environment contains `JWT_SECRET`, `PG_PASSWORD`, and `OIDC_CLIENT_SECRET`; no secret value belongs in Git, Notion, or Homepage. The item was created once, not duplicated. Never reset the DB password only in Compose after the database is initialized: PostgreSQL's initialization password does not update existing roles.
 
-Pocket ID client `anchor` is confidential with PKCE and restricted to `infrastructure-admins`. Issuer is `https://auth.l3b.cc.cd`, callback is `https://notes.l3b.cc.cd/api/auth/oidc/callback`, and launch/logout URL is `https://notes.l3b.cc.cd`. `DISABLE_INTERNAL_AUTH=false` preserves a local recovery login. Anchor links the existing account by its matching email during OIDC sign-in rather than creating a second owner.
+Pocket ID client `anchor` is confidential with PKCE and restricted to `infrastructure-admins`. Issuer is `https://auth.l3b.cc.cd`, callback is `https://anchor.l3b.cc.cd/api/auth/oidc/callback`, and launch/logout URL is `https://anchor.l3b.cc.cd`. `DISABLE_INTERNAL_AUTH=false` preserves a local recovery login. Anchor links the existing account by its matching email during OIDC sign-in rather than creating a second owner.
 
 Bootstrap used a temporary Portainer Stackfile with loopback-only `127.0.0.1:3010` and signup enabled. The first owner was registered through the native API and verified active/admin. The stack was then updated to the permanent tracked Compose with signup disabled and the private LAN bind before Caddy was enabled. On a completely fresh restore, repeat this bootstrap; the permanent `USER_SIGNUP=disabled` prevents creating the first password account. Pocket ID group restrictions are also important: v0.17.2's OIDC user-creation path does not visibly enforce the native signup setting, despite the README's general signup description. Do not rely on disabled native signup alone as OIDC authorization.
 
@@ -25,8 +25,8 @@ The Pocket ID authorization redirect uses client `anchor`, the exact HTTPS callb
 Manage redeployment/restarts through Portainer, not a second Compose project. Check:
 
 ```sh
-curl -fsS https://notes.l3b.cc.cd/api/health
-curl -fsS https://notes.l3b.cc.cd/api/auth/registration-mode
+curl -fsS https://anchor.l3b.cc.cd/api/health
+curl -fsS https://anchor.l3b.cc.cd/api/auth/registration-mode
 ssh ctr 'sudo docker inspect anchor --format "{{.State.Health.Status}} {{.State.OOMKilled}}"'
 ```
 

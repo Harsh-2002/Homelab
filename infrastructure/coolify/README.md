@@ -6,6 +6,6 @@ Removed HA resource `vm:108`, cleanly shut down VM 108 on px10, then destroyed i
 
 Removed the Coolify handler/import from Caddy and its SSH alias from dev. Coolify had not been added to Homepage. Deleted the exact HomeLab vault item `Coolify`; 1Password retains deleted items for 30 days. No Coolify-specific OIDC client or project wildcard namespace had been created.
 
-`10.1.1.14` is no longer assigned to this VM. Verify network use before allocating it. The deleted VM disk is not recoverable through Proxmox; no backup job covered it.
+At retirement time `10.1.1.14` was released from this VM. It was subsequently assigned to ZimaOS on 2026-10-15; see `infrastructure/zima/README.md`. The deleted VM disk is not recoverable through Proxmox; no backup job covered it.
 
 Termix and its subsequent replacement Warpgate were both completely removed at the owner's request on 2026-10-01. There is no replacement browser SSH service. See the [Warpgate decommission record](../warpgate/README.md). This is a historical decommission record, not an active runbook.

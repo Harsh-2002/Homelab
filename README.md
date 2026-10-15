@@ -24,6 +24,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/metrics/` — Grafana, VictoriaMetrics, exporters, storage inventory, and Kubernetes collection.
   - `infrastructure/uptime-kuma/` — native Uptime Kuma service, private proxy authentication, and recovery runbook.
   - `infrastructure/slate/` — external ntfy, Uptime Kuma, Caddy, and recovery runbook.
+  - `infrastructure/zima/` — ZimaOS address, private Caddy route, and access checks.
   - `infrastructure/immich/` — Immich Compose deployment and safe restore procedure.
   - `infrastructure/portainer/` — Portainer EE Compose deployment and safe restore procedure.
   - `infrastructure/registry/` — public Docker Registry and its RustFS-backed restore procedure.
@@ -85,10 +86,12 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | Cairn S3 API (public, S3-authenticated) | `https://cairn-s3.l3b.cc.cd` |
 | Cairn Console (private) | `https://cairn.l3b.cc.cd` |
 | n8n UI | `https://n8n.l3b.cc.cd` |
-| Anchor notes (private, Pocket ID) | `https://notes.l3b.cc.cd` |
+| Nivra notes (native owner login) | `https://notes.l3b.cc.cd` |
+| Anchor notes (private, Pocket ID) | `https://anchor.l3b.cc.cd` |
 | OpenViking API/MCP (private) | `https://memory.l3b.cc.cd` (`/mcp`) |
 | OpenCloud files | `https://drive.l3b.cc.cd` |
 | Orva serverless | `https://orva.l3b.cc.cd` (`10.1.1.11:8443`) |
+| ZimaOS | `10.1.1.14` (`https://zima.l3b.cc.cd`, private) |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |
 | Proxmox px20 | `https://px20.l3b.cc.cd` |

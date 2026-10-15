@@ -10,9 +10,9 @@ services:
       - no-new-privileges:true
     environment:
       TZ: Asia/Kolkata
-      APP_URL: https://notes.l3b.cc.cd
+      APP_URL: https://anchor.l3b.cc.cd
       DATA_DIR: /data
-      CORS_ORIGINS: https://notes.l3b.cc.cd
+      CORS_ORIGINS: https://anchor.l3b.cc.cd
       JWT_SECRET: ${JWT_SECRET:?required}
       PG_PASSWORD: ${PG_PASSWORD:?required}
       USER_SIGNUP: disabled

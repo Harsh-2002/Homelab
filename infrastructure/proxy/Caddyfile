@@ -103,8 +103,26 @@
 	}
 }
 
+(zima) {
+	@zima host zima.l3b.cc.cd
+	handle @zima {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.14:80
+	}
+}
+
+(nivra) {
+	@nivra host notes.l3b.cc.cd
+	handle @nivra {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.4:3020
+	}
+}
+
 (anchor) {
-	@anchor host notes.l3b.cc.cd
+	@anchor host anchor.l3b.cc.cd
 	handle @anchor {
 		import private
 		import proxy
@@ -536,7 +554,9 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import karakeep
 	import longhorn
 	import headlamp
+	import zima
 	import homepage
+	import nivra
 	import anchor
 	import homeassistant
 	import pocketid

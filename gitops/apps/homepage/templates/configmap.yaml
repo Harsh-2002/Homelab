@@ -196,11 +196,16 @@ data:
             description: Serverless functions
             ping: https://orva.l3b.cc.cd
     - Applications:
-        - Anchor:
-            icon: https://notes.l3b.cc.cd/icons/anchor_icon.png
+        - Nivra:
+            icon: https://notes.l3b.cc.cd/favicon.ico
             href: https://notes.l3b.cc.cd
+            description: Notes, tasks and bookmarks
+            ping: https://notes.l3b.cc.cd/health
+        - Anchor:
+            icon: https://anchor.l3b.cc.cd/icons/anchor_icon.png
+            href: https://anchor.l3b.cc.cd
             description: Notes
-            ping: https://notes.l3b.cc.cd/api/health
+            ping: https://anchor.l3b.cc.cd/api/health
         - Immich:
             icon: immich.png
             href: https://photos.l3b.cc.cd
