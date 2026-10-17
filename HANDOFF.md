@@ -2,6 +2,8 @@
 
 **Active storage recovery, 2026-10-17, updated October 18 IST:** ISO is disabled after USB/SCSI failure and ext4 journal abort on px10. VM 108 ZimaOS is stopped; its system disk is on ISO and must be recovered/moved to PX30 local ZFS before restart. CT 109 currently serves AV/BACKUP without ISO `mp2`. The initial direct-read recovery failed when the disk went offline again. After USB reconnection, identity and size were verified, write protection reapplied, and resumable imaging restarted as `iso-rescue-20261018-reconnect.service`, targeting the same `/data/iso-recovery-20261017` image/map with stricter error-stop checks. Do not mount/repair the source while copying. Read `infrastructure/store/INCIDENT-2026-10-17.md` and inspect current map/unit state before continuing. This overrides older healthy ISO statements below.
 
+Latest attempt: reconnect/pass1 runs also failed or left untried data. The owner moved the SSD from USB `2-7` to `2-8`, verified in kernel logs at 01:36 IST October 18. Recovery resumed as `iso-rescue-20261018-port8.service` with the same write-protected source/image/map and explicit first pass. Check this unit and `ddrescue-port8.log`; do not infer completion from earlier units exiting normally.
+
 This is the reusable entry point for a new agent or a new chat. Clone this repository, open this file first, read the relevant service runbooks, and inspect the live systems before making changes. The repository and Notion are the Homelab's operational memory; neither should be treated as disposable notes.
 
 ## Ready-to-paste prompt
