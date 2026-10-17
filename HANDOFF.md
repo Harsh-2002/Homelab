@@ -1,5 +1,7 @@
 # Homelab agent handoff
 
+**Active storage recovery, 2026-10-17:** ISO is disabled after USB/SCSI failure and ext4 journal abort on px10. VM 108 ZimaOS is stopped; its system disk is on ISO and must be recovered/moved to PX30 local ZFS before restart. CT 109 currently serves AV/BACKUP without ISO `mp2`. Resumable ddrescue imaging runs on px10 as `iso-rescue-20261017-direct.service`, targeting `/data/iso-recovery-20261017`. Do not mount/repair the source while copying. Read `infrastructure/store/INCIDENT-2026-10-17.md` and inspect current map/unit state before continuing. This overrides older healthy ISO statements below.
+
 This is the reusable entry point for a new agent or a new chat. Clone this repository, open this file first, read the relevant service runbooks, and inspect the live systems before making changes. The repository and Notion are the Homelab's operational memory; neither should be treated as disposable notes.
 
 ## Ready-to-paste prompt

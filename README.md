@@ -4,6 +4,8 @@ This repository is the reproducible configuration brain for the homelab. The Not
 
 Start a new agent or chat with [`HANDOFF.md`](HANDOFF.md). It lists the authoritative Notion pages, access conventions, deployed architecture, pending work, safety rules, and the ready-to-paste continuation prompt.
 
+Storage incident, 2026-10-17: ISO is isolated after a USB/SCSI failure; ZimaOS VM 108 is stopped while its disk is recovered. AV/BACKUP remain available. See the [active recovery record](infrastructure/store/INCIDENT-2026-10-17.md) before storage changes.
+
 ## Administrator identity
 
 Public development endpoint: `https://dev.l3b.cc.cd` → existing Caddy → dev VM `10.1.1.5:3000`. Owner-approved public exposure on 2026-10-05; backend application authentication/configuration is owner-managed. See `infrastructure/dev/README.md` and `infrastructure/proxy/README.md`.
