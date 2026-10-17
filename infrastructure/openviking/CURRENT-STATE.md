@@ -2,6 +2,8 @@
 
 ## 2026-10-18 IST ISO recovery and restoration
 
+Import visibility correction: added `import` to cluster ISO storage's existing content types. Installed Proxmox9.2.20 GUI supports raw/QCOW2/VMDK through Import Hard Disk; all3node APIs now list the Debian cloud image as import content. Use VM → Hardware → Add → Import Hard Disk, source ISO, target local-zfs. Older statements implying CLI-only import are superseded; full-VM OVF/OVA import is a separate workflow. No VM changed.
+
 Supersedes earlier ISO-unavailable/running-copy states: complete 256,059,448,832-byte image recovered, no unread ranges, raw/repaired ZFS snapshots retained. Original SSD/share is now restored using `usb-storage` for Realtek adapter `0bda:9201` only after repeated UAS timeouts. Source fsck and existing ISO/template hashes passed; all three nodes passed SMB listings and read/write checks. CT109 ISO bind was hot-added without restarting Samba/Store, preserving AV/BACKUP. PX10 quirk is persistent; full reboot/endurance verification and PX20 equivalent configuration for physical failover remain pending. See `../store/INCIDENT-2026-10-17.md` for evidence, limits and recovery locations.
 
 Owner deleted ZimaOS VM108; its orphaned QCOW2 remains on ISO and was not restored or deleted. Debian 13 stable amd64 genericcloud QCOW2 is downloaded under `/mnt/pve/ISO/import`, SHA-512 verified and QCOW2-checked, available on all nodes. It is a standalone disk image, not an ISO/OVA appliance; import into a manually created VM's local storage and configure Cloud-Init. No VM was created. Supabase full suite is prepared, not deployed, awaiting the owner's dedicated VM; see `../supabase/README.md`.

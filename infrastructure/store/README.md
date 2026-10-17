@@ -27,13 +27,15 @@ Connect to `AV` using `smb://smb.l3b.cc.cd/AV` on macOS or `\\smb.l3b.cc.cd\AV` 
 
 Debian stable amd64 cloud image staged October 18 IST: `/mnt/pve/ISO/import/debian-13-genericcloud-amd64.qcow2`, accessible through the same shared path from every node. Official source is `https://cloud.debian.org/images/cloud/trixie/latest/` (Debian 13 stable; image built October 17, 2026). Download is 342,818,816 bytes, virtual size 3 GiB, SHA-512 verified against the official HTTPS manifest and `qemu-img check` passed. The adjacent `.sha512` file is the captured checksum. This is checksum verification, not detached-signature verification. Reproduce downloads with the tracked `download-debian-cloud.sh`; it refuses existing images/partials and publishes the file only after checksum and QCOW2 checks. It does not create a VM or download a testing/unstable release.
 
-This standalone QCOW2 is a **disk image, not a bootable CD-ROM ISO or LXC template**. The current Proxmox OVF/OVA import wizard does not treat a standalone QCOW2 as a full VM appliance. It may therefore not appear in `pvesm list ISO` or the ISO Images tab, even though the file is available on SMB. For a manually created VM, import from any node into that VM's normal local storage:
+This standalone QCOW2 is a **disk image, not a bootable CD-ROM ISO or LXC template**. Proxmox **9.2.20 supports it in the GUI's Import Hard Disk workflow**. The cluster ISO storage now includes `import` content alongside `iso,vztmpl,images`, and all three nodes list `ISO:import/debian-13-genericcloud-amd64.qcow2` as a QCOW2 import source. Refresh the UI and use **VM → Hardware → Add → Import Hard Disk**, select Import Storage `ISO`, select this image, and choose `local-zfs` as Target Storage. Alternatively open **node → ISO → Import**, select the image and choose Import. The full-VM OVF/OVA appliance importer is a different path; its restrictions do not mean raw/QCOW2 disk import is unavailable.
+
+Equivalent CLI for a manually created VM:
 
 ```bash
 qm disk import <VMID> /mnt/pve/ISO/import/debian-13-genericcloud-amd64.qcow2 local-zfs
 ```
 
-Then attach the imported unused disk, set disk boot order, expand the **VM's imported disk** as needed, add a Cloud-Init drive and configure user/SSH key/network before boot. Do not boot the QCOW2 as CD-ROM, run its live disk on ISO SMB, or resize/modify the shared master image. No VM was created during staging. `/import/` here is file staging; it does not claim the GUI supports arbitrary QCOW2 appliance import.
+Then attach the imported unused disk if using the CLI, set disk boot order, expand the **VM's imported disk** as needed, add a Cloud-Init drive and configure user/SSH key/network before boot. Do not boot the QCOW2 as CD-ROM, run its live disk on ISO SMB, or resize/modify the shared master image. No VM was created during staging. Reproduce the storage setting with `pvesm set ISO --content vztmpl,iso,images,import`; preserve existing required content types when changing storage configuration. This supersedes older three-content-type inventory below.
 
 For physical recovery/failover with the ISO adapter, install `usb-storage-iso.conf` as `/etc/modprobe.d/usb-storage-iso.conf` and refresh the target host's initramfs before moving the SSD. This config is currently deployed on PX10 only. Never globally blacklist UAS or reset the Crucial AV/BACKUP adapter. The first reboot after the change still needs explicit verification of driver, UUID mount, CT bind and actual SMB reads/writes.
 
