@@ -4,7 +4,7 @@ This repository is the reproducible configuration brain for the homelab. The Not
 
 Start a new agent or chat with [`HANDOFF.md`](HANDOFF.md). It lists the authoritative Notion pages, access conventions, deployed architecture, pending work, safety rules, and the ready-to-paste continuation prompt.
 
-Storage incident, 2026-10-17: ISO is isolated after a USB/SCSI failure; ZimaOS VM 108 is stopped while its disk is recovered. AV/BACKUP remain available. See the [active recovery record](infrastructure/store/INCIDENT-2026-10-17.md) before storage changes.
+Storage incident, 2026-10-17, restored October 18 IST: ISO is available again on the same SSD with an adapter-specific USB transport workaround, tested from all three nodes. Full raw/repaired recovery images are retained. ZimaOS VM 108 was deleted by the owner; an orphaned disk file remains, not an active VM. See the [recovery record](infrastructure/store/INCIDENT-2026-10-17.md) for validation limits and reboot/failover requirements.
 
 ## Administrator identity
 

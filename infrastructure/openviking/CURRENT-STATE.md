@@ -1,5 +1,11 @@
 # Current infrastructure verification and open items
 
+## 2026-10-18 IST ISO recovery and restoration
+
+Supersedes earlier ISO-unavailable/running-copy states: complete 256,059,448,832-byte image recovered, no unread ranges, raw/repaired ZFS snapshots retained. Original SSD/share is now restored using `usb-storage` for Realtek adapter `0bda:9201` only after repeated UAS timeouts. Source fsck and existing ISO/template hashes passed; all three nodes passed SMB listings and read/write checks. CT109 ISO bind was hot-added without restarting Samba/Store, preserving AV/BACKUP. PX10 quirk is persistent; full reboot/endurance verification and PX20 equivalent configuration for physical failover remain pending. See `../store/INCIDENT-2026-10-17.md` for evidence, limits and recovery locations.
+
+Owner deleted ZimaOS VM108; its orphaned QCOW2 remains on ISO and was not restored or deleted. Debian 13 stable amd64 genericcloud QCOW2 is downloaded under `/mnt/pve/ISO/import`, SHA-512 verified and QCOW2-checked, available on all nodes. It is a standalone disk image, not an ISO/OVA appliance; import into a manually created VM's local storage and configure Cloud-Init. No VM was created. Supabase full suite is prepared, not deployed, awaiting the owner's dedicated VM; see `../supabase/README.md`.
+
 ## 2026-09-30 media and model-auth follow-up
 
 Latest owner decision, applied around 12:20 UTC: fixed 16384 MiB RAM with `balloon: 16384` and `memory: 16384`. The balloon device is retained for statistics; equal minimum/maximum prevents automatic restriction to 8 GiB. This supersedes the earlier same-day 8192 MiB minimum / 16384 MiB maximum policy. Intel iGPU PCI passthrough kept about 16 GiB locked in the host QEMU process even while the guest saw only 8 GiB. The persistent configuration plus a live monitor `balloon 16384` adjustment restored guest total 15999 MiB with about 8.5 GiB available, without a reboot or a corresponding increase in host QEMU RSS. `/data` and `/mnt/AV` remained mounted. See `infrastructure/ctr/README.md` for the RCA and exact verification. There is still no guest swap, and this does not eliminate future OOM risk. The pre-existing `gitea-mirror` restart loop is unrelated and unresolved.
