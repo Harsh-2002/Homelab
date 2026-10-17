@@ -1,0 +1,20 @@
+services:
+  watchtower:
+    image: nickfedor/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Kolkata
+      WATCHTOWER_SCHEDULE: "0 0 4 * * *"
+      WATCHTOWER_MONITOR_ONLY: "false"
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_LABEL_ENABLE: "true"
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    logging:
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: "3"

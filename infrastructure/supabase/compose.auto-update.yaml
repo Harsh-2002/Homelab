@@ -1,0 +1,44 @@
+# Owner-approved mutable version tags. The digest lock remains a restore baseline.
+x-watchtower-labels: &watchtower-labels
+  com.centurylinklabs.watchtower.enable: "true"
+
+services:
+  analytics:
+    image: docker.io/supabase/logflare:1.50.15
+    labels: *watchtower-labels
+  api-gw:
+    image: docker.io/envoyproxy/envoy:v1.39.1
+    labels: *watchtower-labels
+  auth:
+    image: docker.io/supabase/gotrue:v2.197.0
+    labels: *watchtower-labels
+  db:
+    image: docker.io/supabase/postgres:17.6.1.136
+    labels: *watchtower-labels
+  functions:
+    image: docker.io/supabase/edge-runtime:v1.77.4
+    labels: *watchtower-labels
+  imgproxy:
+    image: docker.io/darthsim/imgproxy:v3.31.4
+    labels: *watchtower-labels
+  meta:
+    image: docker.io/supabase/postgres-meta:v0.100.0
+    labels: *watchtower-labels
+  realtime:
+    image: docker.io/supabase/realtime:v2.143.3
+    labels: *watchtower-labels
+  rest:
+    image: docker.io/postgrest/postgrest:v14.18
+    labels: *watchtower-labels
+  storage:
+    image: docker.io/supabase/storage-api:v1.81.0
+    labels: *watchtower-labels
+  studio:
+    image: docker.io/supabase/studio:2026.10.12-sha-3699278
+    labels: *watchtower-labels
+  supavisor:
+    image: docker.io/supabase/supavisor:2.9.13
+    labels: *watchtower-labels
+  vector:
+    image: docker.io/timberio/vector:0.53.0-alpine
+    labels: *watchtower-labels

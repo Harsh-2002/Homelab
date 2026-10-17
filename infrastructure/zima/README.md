@@ -1,5 +1,7 @@
 # ZimaOS
 
+**Superseded October18 IST:** VM108/address10.1.1.14 now belong to a new owner-created Supabase VM, not ZimaOS. The old Zima Caddy handler has been removed/replaced with private Supabase8000. Do not run historical origin commands below against the new service or restore the orphaned ISO-backed Zima disk. See `../supabase/README.md`.
+
 **Removed by owner, reported October 18 IST:** VM 108 and its data were deleted. Verified that the VM configuration and PX30 local-ZFS volumes for VM 108 are absent. Do not restore/recreate it during ISO storage recovery. Historical endpoint details below are not evidence of a live service; proxy/DNS cleanup has not been verified in this change.
 
 ZimaOS is assigned `10.1.1.14` on the homelab LAN. Its web gateway listens on HTTP port 80. The existing Caddy proxy exposes the UI privately at `https://zima.l3b.cc.cd` and forwards requests to `10.1.1.14:80`.

@@ -15,18 +15,26 @@ services:
   studio:
     logging: *log-rotation
   auth:
+    environment:
+      GOTRUE_JWT_KEYS: ${JWT_KEYS:?Generate signing keys first}
     logging: *log-rotation
   rest:
     logging: *log-rotation
   realtime:
+    environment:
+      API_JWT_JWKS: ${JWT_JWKS:?Generate public JWKS first}
     logging: *log-rotation
   storage:
+    environment:
+      JWT_JWKS: ${JWT_JWKS:?Generate public JWKS first}
     logging: *log-rotation
   imgproxy:
     logging: *log-rotation
   meta:
     logging: *log-rotation
   functions:
+    environment:
+      SUPABASE_JWKS: ${JWT_JWKS:?Generate public JWKS first}
     logging: *log-rotation
   db:
     logging: *log-rotation

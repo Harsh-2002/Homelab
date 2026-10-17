@@ -103,12 +103,12 @@
 	}
 }
 
-(zima) {
-	@zima host zima.l3b.cc.cd
-	handle @zima {
+(supabase) {
+	@supabase host supabase.l3b.cc.cd
+	handle @supabase {
 		import private
 		import proxy
-		reverse_proxy 10.1.1.14:80
+		reverse_proxy 10.1.1.14:8000
 	}
 }
 
@@ -554,7 +554,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import karakeep
 	import longhorn
 	import headlamp
-	import zima
+	import supabase
 	import homepage
 	import nivra
 	import anchor

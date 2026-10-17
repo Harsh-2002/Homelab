@@ -1,5 +1,7 @@
 # Homepage
 
+Supabase appears in Applications at `https://supabase.l3b.cc.cd` with the supported `supabase.svg` catalog icon. It is a direct private application link, not an unauthenticated health check or invented metrics widget. Existing layout/section styling is preserved. See `infrastructure/supabase/README.md` for the full stack and credentials.
+
 Homepage is the stateless, Git-managed portal served at `https://l3b.cc.cd`.
 
 - Argo CD deploys this Helm chart into the `homepage` namespace.

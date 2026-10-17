@@ -26,7 +26,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/metrics/` — Grafana, VictoriaMetrics, exporters, storage inventory, and Kubernetes collection.
   - `infrastructure/uptime-kuma/` — native Uptime Kuma service, private proxy authentication, and recovery runbook.
   - `infrastructure/slate/` — external ntfy, Uptime Kuma, Caddy, and recovery runbook.
-  - `infrastructure/zima/` — ZimaOS address, private Caddy route, and access checks.
+  - `infrastructure/zima/` — historical ZimaOS deployment, removed by the owner.
   - `infrastructure/immich/` — Immich Compose deployment and safe restore procedure.
   - `infrastructure/portainer/` — Portainer EE Compose deployment and safe restore procedure.
   - `infrastructure/registry/` — public Docker Registry and its RustFS-backed restore procedure.
@@ -34,7 +34,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/motrix/` — Motrix Server Compose deployment, SMB download path, and recovery runbook.
   - `infrastructure/arr/` — Portainer-managed media automation stack, access, storage paths, and recovery checks.
   - `infrastructure/n8n/` — unified n8n, PostgreSQL, SearXNG, and isolated Assistant/Agent sandbox Stack.
-  - `infrastructure/supabase/` — prepared full Supabase suite with logs/analytics, pinned source/images and direct Compose; awaiting a dedicated VM, not deployed.
+  - `infrastructure/supabase/` — full Supabase suite on VM108/PX30, direct Compose in `/srv/supabase`, logs/analytics, automatic image replacement, backups and replication.
   - `infrastructure/openviking/` — shared agent memory, local embeddings, Groq/Cerebras fallback, and Portainer operations.
   - `infrastructure/minio/` — historical MinIO-to-RustFS migration record.
   - `infrastructure/rustfs/` — native RustFS S3 service, OIDC, HA, and upgrade runbook.
@@ -94,7 +94,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | OpenViking API/MCP (private) | `https://memory.l3b.cc.cd` (`/mcp`) |
 | OpenCloud files | `https://drive.l3b.cc.cd` |
 | Orva serverless | `https://orva.l3b.cc.cd` (`10.1.1.11:8443`) |
-| ZimaOS | `10.1.1.14` (`https://zima.l3b.cc.cd`, private) |
+| Supabase | `10.1.1.14` (`https://supabase.l3b.cc.cd`, private; VM108/PX30) |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |
 | Proxmox px20 | `https://px20.l3b.cc.cd` |

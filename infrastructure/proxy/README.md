@@ -1,5 +1,7 @@
 # Caddy proxy
 
+Supabase: private `https://supabase.l3b.cc.cd` → `10.1.1.14:8000` (Envoy), existing wildcard TLS and LAN/Tailscale gate. Native Studio Basic auth/API authentication, no Tinyauth API redirects. The retired ZimaOS handler using this address was removed. Source/config validated and Caddy reloaded October18 IST; direct8000 from dev is blocked by the VM firewall while Caddy can reach it. See `../supabase/README.md`.
+
 The tracked `Caddyfile` is the desired configuration for proxy LXC `10.1.1.3`.
 
 `https://dev.l3b.cc.cd` is an owner-approved public development endpoint (2026-10-05), forwarding to dev VM `10.1.1.5:3000` without Tinyauth or the private-source gate. Public DNS uses the same DNS-only household WAN address as the storefront; internal Unbound points to Caddy `10.1.1.3`. The dev VM and port3000 are not directly published through DNS/router changes. The owner manages whichever application runs on that port, including authentication and allowed-host settings. Caddy provides TLS and native WebSocket proxying; do not assume this is safe for an unauthenticated administrative application. SSH alias `dev` remains the direct VM address.

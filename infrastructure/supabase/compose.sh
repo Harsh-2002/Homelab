@@ -17,8 +17,8 @@ case "${1:-}" in
 esac
 if [ -f compose.images.yml ]; then
     exec docker compose --project-name supabase --env-file .env --env-file homelab.env \
-        -f docker-compose.yml -f docker-compose.logs.yml -f compose.homelab.yaml \
-        -f compose.images.yml "$@"
+        -f docker-compose.yaml -f docker-compose.logs.yml -f compose.homelab.yaml \
+        -f compose.images.yml -f compose.auto-update.yaml -f compose.watchtower.yaml "$@"
 fi
 exec docker compose --project-name supabase --env-file .env --env-file homelab.env \
-    -f docker-compose.yml -f docker-compose.logs.yml -f compose.homelab.yaml "$@"
+    -f docker-compose.yaml -f docker-compose.logs.yml -f compose.homelab.yaml -f compose.auto-update.yaml -f compose.watchtower.yaml "$@"

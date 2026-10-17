@@ -23,10 +23,17 @@ git -C "$target/.upstream" fetch --depth=1 --filter=blob:none origin "$commit"
 git -C "$target/.upstream" checkout -q --detach FETCH_HEAD
 test "$(git -C "$target/.upstream" rev-parse HEAD)" = "$commit"
 cp -a "$target/.upstream/docker/." "$target/"
+mv "$target/docker-compose.yml" "$target/docker-compose.yaml"
+# Git checkout inherits the protective umask. Non-secret bind-mounted upstream
+# assets must still be readable by unprivileged container users.
+find "$target/volumes" -type d -exec chmod 755 {} +
+find "$target/volumes" -type f -exec chmod 644 {} +
 cp "$base/compose.homelab.yaml" "$target/compose.homelab.yaml"
 cp "$base/compose.sh" "$target/compose.sh"
 cp "$base/compose.images.yml" "$target/compose.images.yml"
-cp "$base/homelab.env.example" "$target/homelab.env.example"
+cp "$base/compose.watchtower.yaml" "$target/compose.watchtower.yaml"
+cp "$base/compose.auto-update.yaml" "$target/compose.auto-update.yaml"
+cp "$base/site.env.example" "$target/site.env.example"
 chmod 700 "$target/compose.sh"
 printf 'ref=self-hosted/v0.8.3\ncommit=%s\n' "$commit" > "$target/.supabase-version"
 printf 'Prepared %s from verified commit %s. No secrets generated, images pulled or services started.\n' "$target" "$commit"

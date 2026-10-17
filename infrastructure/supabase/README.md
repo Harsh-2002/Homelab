@@ -1,82 +1,78 @@
-# Supabase: prepared, not deployed
+# Supabase
 
-Owner-approved design: dedicated Debian VM on PX30, direct Docker Compose over SSH, full self-hosted suite including Logflare/Vector. No Portainer registration/agent or remote Docker API. Existing Caddy on `10.1.1.3` terminates HTTPS and proxies to Envoy on the VM's LAN port 8000. No additional proxy container, database or object-storage dependency is added.
+Dedicated Debian VM **108**, `supabase`, **PX30**, `10.1.1.14`. Direct Docker Compose over SSH, not Portainer. Main file: **`/srv/supabase/docker-compose.yaml`**. Existing Caddy proxies **https://supabase.l3b.cc.cd** to Envoy on `10.1.1.14:8000`. LAN/Tailscale only; no public DNS exception. Retired ZimaOS no longer owns this address or Caddy route. Its old orphaned ISO disk was not touched.
 
-The VM, ID, address, hostnames, application redirect URLs, SMTP account and public/private API exposure are **not assigned yet**. Do not reuse deleted ZimaOS VM 108 or its address without checking allocation. No service, DNS, Caddy, firewall, HA or backup configuration was applied during preparation. Container startup and end-to-end validation await the owner's ready VM.
+## Access and ownership
 
-## Reproducible inputs
+- `ssh supabase` uses the password-locked `supabase` OS administrator with key authentication and passwordless sudo. Root key-only access remains break-glass. The administrator is not in the Docker group; Docker management is root-equivalent.
+- Stack/config/data: `/srv/supabase`, root-owned, mode0700. Protected `.env` and `homelab.env`:0600. Upstream non-secret bind assets must be readable by container UIDs; the initial staging umask issue is fixed in `prepare.sh`.
+- Credentials/signing/encryption keys: canonical **HomeLab → Supabase** 1Password item, including concealed `deployment-env`, dashboard login and new publishable/secret API keys. Never print the rendered Compose config or reuse backend secret/service-role keys in browsers.
+- Studio username: `supabase`; retrieve its password from the vault. Studio uses Envoy Basic authentication. Application Auth is separate. Public sign-up/anonymous/phone login and email auto-confirm are disabled. Google SMTP is configured using the existing protected vault credential; actual mail delivery remains an explicit verification item.
+- VM:2vCPU,4GiB balloon minimum/8GiB maximum,50GB local-ZFS disk. Debian13, Docker29.9.1, Compose5.6.0, guest agent and NTP. Host/Docker use internal DNS10.1.1.2 only. Docker/containerd retain standard `/var/lib/docker` and `/var/lib/containerd` on the same persistent VM disk.
 
-- Upstream release `self-hosted/v0.8.3`, verified commit `bc27d2661edd09a5d0b8d76ce33da6d4071a756e`. `prepare.sh` fetches this immutable revision, checks HEAD, retains upstream source and copies its complete `docker/` tree, including initialization SQL, Envoy, logs and functions configuration. It refuses an existing destination and never pulls/starts images or generates secrets.
-- `compose.homelab.yaml` layers over upstream base **and** `docker-compose.logs.yml`; the wrapper always includes all three, with project name `supabase`.
-- `compose.images.yml` locks all 13 upstream image references to registry SHA-256 digests, resolved and reviewed during preparation. `prepare.sh` copies this lock; the wrapper refuses to start without it. Verify architecture compatibility on the new VM before pulling. Source pinning alone does not make mutable image tags immutable. Change the lock only as an intentional reviewed upgrade.
-- `homelab.env.example` contains only unset site inputs and deliberate policy defaults. Actual `.env` and `homelab.env` are root-owned mode 0600, outside Git. Store all generated credentials/signing/encryption keys in one canonical HomeLab 1Password item at deployment. Rebuilding an existing installation must **restore** those keys, not generate replacements.
+## Matched full suite
 
-Full suite: PostgreSQL 17, Studio, Envoy, Auth, PostgREST, Realtime, Storage, imgproxy, postgres-meta, Edge Runtime, Supavisor, Logflare and Vector. Logflare uses the included PostgreSQL backend; no BigQuery account is needed. Studio's Logs feature is enabled by the official logs override.
+Initial upstream release **self-hosted/v0.8.3**, commit **bc27d2661edd09a5d0b8d76ce33da6d4071a756e**. Includes all13 services: PostgreSQL17, Studio, Envoy, Auth, PostgREST, Realtime, Storage, imgproxy, postgres-meta, Edge Runtime, Supavisor, Logflare and Vector. Analytics uses included PostgreSQL, not BigQuery. Watchtower is the14th maintenance container.
 
-## VM and networking
+Only Envoy publishes LAN port8000. Proxmox VM firewall permits that port only from Caddy10.1.1.3; SSH permits LAN/Tailscale. PostgreSQL/pooler/analytics/Studio are not directly published. Vector and Watchtower have trusted Docker-socket access; a read-only socket mount is not a read-only Docker API.
 
-Recommended starting allocation: 4 vCPU, 8 GiB RAM and 80 GiB SSD-backed local-ZFS storage, subject to cluster/failover capacity checks. Two vCPU is a smaller starting option, not an equivalent production capacity guarantee. Do not rely on ballooning to recover memory already consumed by the full suite. OS and containers use the internal DNS resolver; no public DNS fallback. Enable guest agent, time sync, Docker boot startup, host monitoring and firewall rules during VM provisioning.
+Signing uses ES256 for user sessions plus legacy HS256 compatibility. The override supplies private signing JWKs only to Auth, public JWKS/legacy verification material to validators. `initialize.mjs` implements the pinned upstream key formats, including `key_ops`; it refuses existing secrets/database state. `repair-key-metadata.py` records the one-time metadata-only initialization repair without changing keys.
 
-Persist the deployment at `/data/apps/supabase`. Upstream relative mounts keep PostgreSQL data, Storage files, database configuration/key material, functions and snippets under that directory or the documented Compose volumes. Back up all of these, including named volumes `db-config` and `deno-cache` as appropriate; the latter is a regenerable cache. Container recreation is not a database restore. Keep live data off USB/CIFS/ISO storage.
+## Daily operation
 
-Only Envoy is published, bound to `SUPABASE_BIND_IP:8000`. Firewall access to that port to Caddy and explicitly approved test clients; Docker publishing requires checking Docker-aware host rules and Proxmox firewall, not assuming UFW blocks it. PostgreSQL/pooler ports are deliberately not published. Add narrowly bound database access later only if a documented client needs it. Vector has the official Docker-socket mount: even read-only socket mounting does not make Docker API access read-only; keep this trusted collector private.
-
-Caddy forwards HTTPS to `http://<VM-IP>:8000` with normal forwarded headers and WebSocket support. Configure final `SUPABASE_PUBLIC_URL`, `API_EXTERNAL_URL=<base>/auth/v1`, `SITE_URL=<frontend URL>` and exact redirect allowlist. Keep Studio/admin/MCP private and protected; do not put interactive Tinyauth redirects in front of application API routes. Public API exposure requires explicit owner approval, DNS and path-policy review. Do not deploy a broad public root route assuming Studio's default Basic auth is the complete production security boundary.
-
-## Preparation and first deployment
-
-Prerequisites on the new VM: supported Debian, Git, OpenSSL, jq, Docker Engine and Compose supporting `!override` (Compose 2.24.4+). Docker requires no public TCP socket; manage via SSH and its local Unix socket. Review upstream scripts before running them.
+The wrapper supplies the explicit project name, both protected env files, and every required override. Do not use upstream `run.sh` or bare `docker compose up` to bypass logs/security/update settings.
 
 ```bash
-# Run on the new VM from this cloned repository, only when ready.
-sudo sh infrastructure/supabase/prepare.sh /data/apps/supabase
-cd /data/apps/supabase
-sudo cp .env.example .env
-sudo cp homelab.env.example homelab.env
-sudo chmod 600 .env homelab.env
+ssh supabase
+sudo sh -c 'cd /srv/supabase && sh compose.sh ps'
+sudo sh -c 'cd /srv/supabase && sh compose.sh logs --tail=80 auth'
+sudo sh -c 'cd /srv/supabase && sh compose.sh config --quiet'
+sudo sh -c 'cd /srv/supabase && sh compose.sh up -d --wait'
 ```
 
-Before starting:
+Layer order: `docker-compose.yaml`, upstream `docker-compose.logs.yml`, `compose.homelab.yaml`, initial `compose.images.yml` digest baseline, owner-approved `compose.auto-update.yaml` version tags, then `compose.watchtower.yaml`. Immutable upstream checkout stays in `.upstream`.
 
-1. Set a strong unique PostgreSQL password and dashboard password, meaningful pooler tenant ID and real SMTP configuration in `.env`. Do not retain sample mail credentials or the fake SMTP host. SMTP credentials stay in the protected runtime file/vault, never Git.
-2. For a **fresh installation only**, use upstream `utils/generate-keys.sh --update-env` and `utils/add-new-auth-keys.sh` according to their pinned help/source. They print secrets, so redirect their output into a protected temporary location, do not capture it in agent logs, and save the final material to the vault. Verify asymmetric keys are wired into all relevant services as upstream requires. Never regenerate encryption/JWT secrets against an existing data directory.
-3. Populate `homelab.env` with VM IP and final HTTPS/frontend URLs. Defaults disable public sign-up, anonymous/phone login and email auto-confirm. Enable only the application features explicitly needed. JWT verification defaults on for Edge Functions; test the actual chosen API-key/JWT flow, rather than assuming every key type is interchangeable.
-4. Verify URLs, password/key strength, SMTP, disk ownership/space and no sample credentials. Do not print the rendered Compose configuration: it contains secrets. Configure log database retention/size monitoring before production; Docker's 10 MiB × 3 rotation bounds container logs, **not** PostgreSQL analytics table growth.
-5. Review the included digest lock and validate final configuration, then pull/start:
+## Automatic updates: owner-approved override
 
-```bash
-sudo sh compose.sh config --quiet
-sudo sh compose.sh config --images
-sudo sh compose.sh pull
-sudo sh compose.sh up -d --wait
-sudo sh compose.sh ps
-```
+Owner explicitly chose automatic replacement and image cleanup on October18 IST, superseding monitor-only. Maintained **nickfedor/watchtower:latest**, upstream **nicholas-fedor/watchtower**, currently1.23.1. Original containrrr image is not used.
 
-The wrapper's startup checks are guardrails, not comprehensive production certification. Do not use upstream `run.sh start` to bypass the homelab override. Use `sh compose.sh logs --tail=100 SERVICE` for bounded inspection; logs can still contain private user data.
+- Schedule **04:00 IST daily**. `WATCHTOWER_MONITOR_ONLY=false`, `WATCHTOWER_CLEANUP=true`, `WATCHTOWER_LABEL_ENABLE=true`.
+- All13 Supabase services and Watchtower are explicitly opted in. No volume removal, broad image prune, or exposed Docker API.
+- Supabase follows its matched **current version tags**, not unrelated `latest` versions. Watchtower replaces an image when that tag's registry digest changes. It does **not** discover/bump newer version tags or run coordinated Supabase configuration/migration upgrades.
+- `compose.images.yml` preserves the initial exact image set for investigation/rebuild. The later auto-update overlay intentionally removes digest pinning at runtime. Exact reproduction after automatic updates requires capturing deployed image digests, not assuming the initial lock describes the current deployment.
+- Automatic per-image replacement can interrupt service or introduce an incompatible rebuild. Watchtower is not a database backup, rollback system or multi-service upgrade orchestrator. Changed image cleanup may require repulling a prior digest for recovery. No external update notifications are configured; inspect Watchtower logs.
 
-## Acceptance before calling it usable
+## Persistence, HA and backups
 
-- All 13 services start and their defined health checks pass; no restart loop, OOM or migration errors.
-- Caddy HTTPS and WebSocket forwarding work, raw published ports are inaccessible from unauthorized networks, and Studio/admin/MCP do not leak publicly.
-- Authenticate a disposable user with configured mail delivery; test session refresh/logout, denial without credentials and RLS isolation between two users. Revoke/remove test accounts afterward.
-- Create/read/update/delete a test table row through the SDK/REST API with appropriate RLS; never use a secret/service-role key in frontend code.
-- Upload/download/delete a private test object and verify unauthorized access fails, including signed URL expiry.
-- Subscribe to and observe an authorized Realtime change; test denied subscriptions.
-- Invoke an authenticated test Edge Function and verify unauthenticated rejection under its intended policy.
-- Generate requests/errors and confirm their events are visible through Logflare/Vector in Studio Logs, with intended retention. Health checks alone do not prove ingestion.
-- Restart/recreate containers and reboot the VM; verify database rows, uploaded files, functions and authentication material persist.
-- Restore a consistent database + files/config backup into an isolated temporary deployment and validate it before declaring production readiness.
+Database: `volumes/db/data`; files:`volumes/storage`; functions:`volumes/functions`; snippets:`volumes/snippets`. Named volumes:`supabase_db-config` (includes PostgreSQL encryption/root-key configuration) and `supabase_deno-cache` (regenerable). Preserve keys and both databases, including platform/log database `_supabase`.
 
-This is the complete self-hosted suite, not Supabase Cloud's multi-project platform, managed PITR or branching. Separate production and development stacks/data/keys/hostnames. A single Compose stack is one project.
+HA resource `vm:108`: primaryPX30, replica/recoveryPX10, strict affinity `vm108-replica-nodes`, failback/auto-rebalance off,2local restarts/1relocation. Replication **108-0**, PX30→PX10, every5minutes,20MB/s. Initial and post-install replication succeeded; the large image-download delta took longer than5minutes. Replication is asynchronous, may lose writes after the last completed sync and is not a backup. No destructive failover/fencing drill has been performed; target capacity still matters.
 
-## Backup, upgrade and recovery
+Backups:
 
-Before production, configure VM-level backups plus an independent PostgreSQL backup strategy, uploaded-file backup and protected configuration/key backup. Plan retention, off-site copy, recovery point/time targets and an actual restore test. PostgreSQL logical backup must include required roles/globals and all relevant databases (including `_supabase` for platform/log data), not only the application schema; validate extension/role restore instructions for this exact version. Do not archive a live PostgreSQL data directory and call it a consistent backup.
+- `supabase-backup.timer`: **03:50 IST**, keeps3complete sets under `/srv/supabase/backups`. `backup.sh` briefly stops application writers, takes globals plus both custom-format database dumps, Storage/functions/config and named db-config archive, then starts and waits for the full suite. This scheduled maintenance causes downtime. Failed sets remain for inspection. These local dumps alone are not independent off-host protection.
+- Proxmox job **supabase-to-backup**: **04:30**, VM108, snapshot+zstd, storage **BACKUP**, keep-last3, follows VM across eligible nodes. Includes whole VM disk and local logical backups; guest-agent filesystem freeze is available.
+- `supabase-log-retention.timer`: **03:15 IST**, removes analytics events older than7days, only `_analytics.log_events_<uuid>` tables. Docker logs independently use local10MiB×3 rotation. SQL deletion does not immediately shrink allocated PostgreSQL files; monitor space and autovacuum. It never deletes application tables or Storage files.
 
-For file/database consistency, quiesce writes for a coordinated backup or use a tested database-aware backup procedure. Proxmox replication is asynchronous and is neither a backup nor database-native HA. HA requires eligible nodes with a recoverable disk and enough RAM/CPU; do not claim zero downtime or zero lost writes.
+Both timers are enabled persistently. Inspect `systemctl list-timers 'supabase-*'`. Logical backups contain secrets and private files; keep mode0700/0600 and the existing BACKUP access controls. Reboot/VM restart is not a backup test. Database dump restore was tested in isolated databases; a complete replacement-VM disaster-recovery drill remains pending.
 
-Upgrade deliberately: preserve a verified data/config backup, review the new upstream release/migrations, update the tracked commit in `prepare.sh`, stage it into a **new** directory, review differences and overlay compatibility, resolve/review new image digests, test an isolated restore and migration, then apply during a maintenance window. Never copy template data directories over live ones. Upstream `update.sh` backs up configuration but explicitly excludes database/storage data; that is not rollback protection. A migrated database may need full restore rather than an older container image.
+## Reproduction and recovery
 
-Preparation validation: pinned-source fetch/HEAD verification succeeded; Compose rendered 13 services with Studio Logs enabled, only Envoy LAN port 8000 published, persistent database/storage mounts and bounded local logging for every service. All 13 registry image digests resolved. ShellCheck, shell syntax, Compose validation, existing-destination refusal and example-credential startup refusal passed. No Docker containers were started. The VM and all runtime acceptance checks remain pending.
+1. Provision Debian, root public key and internal DNS; verify SSH host fingerprint through the trusted Proxmox guest console/agent. `bootstrap-vm.sh` uses the official Docker installer pinned to commit ada7a567e59b3935bd601bb21e422da50e80e376, creates the administrator, key-only SSH, Docker logging/DNS and guest agent. It refuses an existing Docker daemon configuration.
+2. Run `sudo sh infrastructure/supabase/prepare.sh /srv/supabase` from this repo. It fetches/verifies the pinned upstream commit and refuses an existing destination. Main upstream file is renamed to `docker-compose.yaml`; upstream assets stay unmodified otherwise.
+3. For a **fresh** project only, `sudo node infrastructure/supabase/initialize.mjs /srv/supabase`. For recovery, **restore existing `.env` and encryption keys instead**. Never regenerate keys against data.
+4. Copy `site.env.example` to protected `homelab.env`. Configure site/SMTP with `configure.py` and a protected vault-item JSON input; delete that temporary input afterward. Save final env using `save-vault.py` without printing values. Reuse the canonical Supabase vault item, not duplicate items.
+5. Copy/install `backup.sh`, `log-retention.sql`, corresponding systemd units/timers, VM firewall108.fw, HA/replication and Caddy route. `bootstrap-vm.sh` is a provisioning tool, not an idempotent full rebuild orchestrator. Restore DB roles, both databases, data/files/config and named db-config before admitting traffic. Docker pull/start does not restore user data.
+6. Use wrapper `config --quiet`, `pull`, `up -d --wait`. Validate with `validate.py --keep` (Debian package `python3-websocket` is a test dependency) and `validate-logs.py`. Scripts never print API keys. Acceptance fixtures live in protected `.acceptance.json`; `validate.py --cleanup` removes only those fixtures.
 
-Sources: [official Docker guide](https://supabase.com/docs/guides/self-hosting/docker), [HTTPS/reverse proxy](https://supabase.com/docs/guides/self-hosting/self-hosted-proxy-https), [pinned upstream tree](https://github.com/supabase/supabase/tree/bc27d2661edd09a5d0b8d76ce33da6d4071a756e/docker).
+For a new Supabase release, review upstream release/migrations; update source pin, matched image versions and initial locks, test a restored isolated stack, then deploy the matched set in a maintenance window. An old image may not understand migrated data; rollback may require restoring a consistent backup. Do not copy upstream example data directories over live data. Restore the initial locks only deliberately, not as an automatic downgrade.
+
+## Acceptance record
+
+On October18 IST all13 Supabase services and Watchtower reached healthy. HTTPS, dashboard Basic auth, missing/invalid API auth denial, ES256 sessions, refresh, two-user REST RLS CRUD/isolation, private Storage upload/read and signed expiry, Edge Function auth/execution, Realtime update delivery/RLS/invalid-token denial passed. Tests passed again after complete container recreation. Logflare query returned real Auth events ingested through Vector. Reboot issued and VM boot verified at03:34IST; final post-reboot validation is recorded in CURRENT-STATE.md.
+
+First coordinated backup completed; PostgreSQL application dump restored into isolated `acceptance_restore` and contained2test rows/1Storage metadata object; platform dump restored into isolated `acceptance_platform_restore`. This is not a full replacement-VM restore or proven mail delivery. Temporary fixtures/restore databases are removed after final validation.
+
+An exploratory Logflare `/api/sources` management request hit upstream1.50.15's nil BigQuery-project formatting path on this PostgreSQL-only installation. Studio's actual SQL query API and ingestion passed; no dummy Google project/cloud service was introduced to mask that unrelated endpoint limitation. Initial first-boot seed cache error disappeared after seeding/restart.
+
+Sources: [official Docker deployment](https://supabase.com/docs/guides/self-hosting/docker), [reverse proxy](https://supabase.com/docs/guides/self-hosting/self-hosted-proxy-https), [pinned source](https://github.com/supabase/supabase/tree/bc27d2661edd09a5d0b8d76ce33da6d4071a756e/docker), [maintained Watchtower](https://github.com/nicholas-fedor/watchtower).
