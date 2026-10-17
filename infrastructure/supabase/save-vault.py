@@ -30,6 +30,15 @@ item = {
         {"id": "secret-key", "label": "secret-key", "type": "CONCEALED", "value": values["SUPABASE_SECRET_KEY"]},
     ],
 }
+if values.get('SUPABASE_MCP_API_KEY'):
+    item['fields'].extend([
+        {'id': 'mcp-api-key', 'label': 'mcp-api-key', 'type': 'CONCEALED', 'value': values['SUPABASE_MCP_API_KEY']},
+        {'id': 'mcp-url', 'label': 'mcp-url', 'type': 'STRING', 'value': 'https://supabase.l3b.cc.cd/mcp'},
+    ])
+if items:
+    previous = subprocess.run([str(op), 'item', 'get', items[0]['id'], '--vault', 'HomeLab', '--format', 'json'], check=True, capture_output=True, text=True)
+    replaced = {field['id'] for field in item['fields']}
+    item['fields'].extend(field for field in json.loads(previous.stdout)['fields'] if field['id'] not in replaced)
 command = [str(op), "item", "edit", items[0]["id"]] if items else [str(op), "item", "create", "--vault", "HomeLab"]
 result = subprocess.run(command + ["--format", "json", "-"], input=json.dumps(item), text=True, capture_output=True)
 if result.returncode:

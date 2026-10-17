@@ -20,6 +20,20 @@ Signing uses ES256 for user sessions plus legacy HS256 compatibility. The overri
 
 ## Daily operation
 
+### Agent MCP access
+
+Native Streamable HTTP endpoint **`https://supabase.l3b.cc.cd/mcp`**, LAN/Tailscale only. Agents send **`Authorization: Bearer <dedicated-key>`**. Retrieve the concealed **`mcp-api-key`** field from the existing HomeLab **Supabase** item; `mcp-url` stores the endpoint. This is a separately generated256-bit key, not a publishable/secret/service-role key and not a Supabase Cloud personal token. No browser/OAuth exchange required for MCP. Authentication is enforced by existing Caddy, not natively by self-hosted Studio.
+
+This key permits powerful single-project administrative tools, including SQL and migrations; do not give it to frontend code or untrusted agents. The optional `?read_only=true` server mode can reduce accidental writes, but a caller holding this unrestricted key can omit that option: it is not a separate read-only credential boundary. Scope narrower credentials/routes separately if needed. Current toolset:11tools for docs, tables/extensions/migrations, SQL, logs/advisors, project URL/publishable keys and TypeScript types. Self-hosted MCP is not Supabase Cloud's entire multi-project management API.
+
+`enable-mcp.py /srv/supabase` generates the key once into protected `.env`, backs up the pinned Envoy template and allows `/mcp` only from direct peer **10.1.1.3/32**. It preserves the separate `/api/mcp` deny and refuses unknown upstream template changes. Restart only `supabase-envoy` to render the template; no database/container-data recreation. Other LAN hosts are blocked from raw8000 by the VM firewall, and internal Docker peers are not allowlisted by this MCP RBAC rule.
+
+Run `sync-mcp-auth.py` on dev to copy the key via SSH stdin into protected proxy `/etc/caddy/cloudflare.env`; restart Caddy after adding/changing env, then test normal reload. Save the updated deployment environment using `save-vault.py`; it preserves unrelated existing vault fields and adds MCP metadata. Restore/rotation must keep both copies synchronized. Missing/incorrect keys return401 Bearer, never redirect to Pocket ID. SSO cookies or app API keys do not authorize this route. Caddy strips the dedicated key and cookies before forwarding to Studio, avoiding leakage into downstream handlers. `Cache-Control: no-store` is set. `/api/mcp` remains denied independently; do not open it as a shortcut.
+
+Validation: `python3 infrastructure/supabase/validate-mcp.py` from dev reads the key securely without printing it and checks missing/invalid keys, initialize,11-tool discovery, read-only health SQL, temporary-table write and alternate-route denial. MCP protocol2025-03-26 verified. Native server is stateless POST/JSON Streamable HTTP; GET returning405 is not failed authentication. No client configuration was changed by enabling the server.
+
+Reproduction order: initialize/restore protected env, run enable helper, save vault/sync key, validate/apply Caddy route with protected env loaded, restart Caddy for env, restart Envoy, run validation. Existing backup.sh includes the modified gateway templates and `.env`; Supabase VM backup also preserves them. Do not expose this upstream MCP directly to the Internet: native OAuth/PAT protection is absent. Keep the source-network boundary even with the proxy key.
+
 ### Studio SSO reproduction and credential rotation
 
 `tinyauth.rules` installs as `/etc/tinyauth/supabase.env` on auth, with `tinyauth.conf` at `/etc/systemd/system/tinyauth.service.d/supabase.conf`. It adds the exact Supabase domain, owner email whitelist and required admin group without replacing other application rules or OAuth secrets. Restart Tinyauth after changing its rules.

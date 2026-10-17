@@ -1,5 +1,11 @@
 # Supabase verified state: October18 2026 IST
 
+## Agent MCP enabled
+
+Native `/mcp` is now exposed through the existing private HTTPS hostname using a dedicated Caddy-enforced Bearer API key. Concealed `mcp-api-key` plus `mcp-url` stored in canonical HomeLab Supabase item; full protected env updated. No OAuth/browser login for agents, no public exposure and no new services/ports. Backend /mcp accepts only Caddy10.1.1.3/32; /api/mcp remains denied. Missing/wrong keys401 with Bearer challenge and no login redirect. Initialize protocol2025-03-26,11tools, actual database health SQL passed. Full read/write administrative scope; do not treat this as a frontend key. Only Envoy restarted; Caddy restarted once for the new env key. All14containers healthy. Scripts/restore/rotation instructions in README. This supersedes earlier MCP-disabled statements.
+
+Owner confirmed Pocket ID→Studio login works. The previous pending passkey verification below is now satisfied.
+
 ## Studio authentication override
 
 Owner requested removal of the frustrating browser Basic-auth popup. Studio/admin routes now require existing Pocket ID/Tinyauth SSO, exact owner email and infrastructure-admins group. Caddy supplies the backend credential privately after authorization; Envoy remains protected. No image or Supabase container changes/restarts needed. Tinyauth rule added persistently and Caddy restarted once for the new protected environment variable; a subsequent normal reload passed. Browser navigated to Pocket ID instead of a Basic popup. Old Basic credential/spoofed identity headers fail to bypass the gate. Core API tests passed again and all14containers remain healthy. Standard API paths avoid SSO; Realtime admin paths are excluded. Actual passkey-authenticated Studio session awaits owner verification. This supersedes the original browser/dashboard Basic-auth acceptance below.

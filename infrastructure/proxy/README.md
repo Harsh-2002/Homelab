@@ -1,5 +1,7 @@
 # Caddy proxy
 
+Supabase MCP exception: exact `/mcp` and its subpaths use the dedicated Bearer-key gate, not Tinyauth. The existing private LAN/Tailscale gate still applies. Protected `SUPABASE_MCP_API_KEY` comes from the canonical service vault item via `../supabase/sync-mcp-auth.py`; keep it out of Git and client-facing responses/logs. Missing/wrong key401, no browser redirect. Credential/cookie stripped upstream; Envoy permits only Caddy's direct IP and independently denies `/api/mcp`. See the Supabase agent-access runbook before restore/rotation.
+
 Supabase: private `https://supabase.l3b.cc.cd` → `10.1.1.14:8000` (Envoy), existing wildcard TLS and LAN/Tailscale gate. Studio/admin paths use Pocket ID/Tinyauth with exact owner-email/admin-group rules; API paths retain API-key/JWT authentication without SSO redirects. After SSO only, Caddy injects the protected backend credential from `SUPABASE_STUDIO_AUTH` in `/etc/caddy/cloudflare.env`, removing the browser Basic-auth prompt without disabling backend protection. Use Supabase's tracked `sync-studio-auth.py` after backend dashboard credential rotation; validate and restart Caddy when changing that variable. The retired ZimaOS handler is removed; raw8000 remains restricted to Caddy. See `../supabase/README.md`.
 
 The tracked `Caddyfile` is the desired configuration for proxy LXC `10.1.1.3`.

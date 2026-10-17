@@ -108,6 +108,21 @@
 	handle @supabase {
 		import private
 		import proxy
+		@supabase_mcp path /mcp /mcp/*
+		handle @supabase_mcp {
+			header Cache-Control "no-store"
+			@supabase_mcp_key header Authorization "Bearer {$SUPABASE_MCP_API_KEY}"
+			handle @supabase_mcp_key {
+				reverse_proxy 10.1.1.14:8000 {
+					header_up -Authorization
+					header_up -Cookie
+				}
+			}
+			handle {
+				header WWW-Authenticate "Bearer realm=\"supabase-mcp\""
+				respond "MCP API key required" 401
+			}
+		}
 		@supabase_api {
 			path /auth/v1/* /rest/v1/* /graphql/v1 /realtime/v1/* /storage/v1/* /functions/v1/*
 			not path /realtime/v1/api*
