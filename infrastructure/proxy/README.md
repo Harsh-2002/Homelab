@@ -1,6 +1,6 @@
 # Caddy proxy
 
-Supabase: private `https://supabase.l3b.cc.cd` → `10.1.1.14:8000` (Envoy), existing wildcard TLS and LAN/Tailscale gate. Native Studio Basic auth/API authentication, no Tinyauth API redirects. The retired ZimaOS handler using this address was removed. Source/config validated and Caddy reloaded October18 IST; direct8000 from dev is blocked by the VM firewall while Caddy can reach it. See `../supabase/README.md`.
+Supabase: private `https://supabase.l3b.cc.cd` → `10.1.1.14:8000` (Envoy), existing wildcard TLS and LAN/Tailscale gate. Studio/admin paths use Pocket ID/Tinyauth with exact owner-email/admin-group rules; API paths retain API-key/JWT authentication without SSO redirects. After SSO only, Caddy injects the protected backend credential from `SUPABASE_STUDIO_AUTH` in `/etc/caddy/cloudflare.env`, removing the browser Basic-auth prompt without disabling backend protection. Use Supabase's tracked `sync-studio-auth.py` after backend dashboard credential rotation; validate and restart Caddy when changing that variable. The retired ZimaOS handler is removed; raw8000 remains restricted to Caddy. See `../supabase/README.md`.
 
 The tracked `Caddyfile` is the desired configuration for proxy LXC `10.1.1.3`.
 

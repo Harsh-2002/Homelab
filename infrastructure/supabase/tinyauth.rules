@@ -1,0 +1,3 @@
+TINYAUTH_APPS_SUPABASE_CONFIG_DOMAIN=supabase.l3b.cc.cd
+TINYAUTH_APPS_SUPABASE_OAUTH_WHITELIST=iam.anuragvishwakarma@gmail.com
+TINYAUTH_APPS_SUPABASE_OAUTH_GROUPS=infrastructure-admins

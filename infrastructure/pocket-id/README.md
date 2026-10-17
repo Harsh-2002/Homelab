@@ -68,6 +68,8 @@ systemctl restart pocket-id
 
 ## Tinyauth
 
+Supabase Studio/admin paths also use this gateway. Rules: `../supabase/tinyauth.rules` → `/etc/tinyauth/supabase.env`, loaded by the dedicated `supabase.conf` systemd drop-in. Exact owner email plus `infrastructure-admins` required. Supabase application API paths do not use interactive SSO. Caddy privately supplies the existing backend dashboard credential after authorization, so no browser Basic-auth popup appears. See the Supabase runbook for credential sync/restore.
+
 Tinyauth v5.2.0 runs in the same container as a separate systemd service and provides Caddy forward authentication for applications without native OIDC. Its public endpoint is `https://login.l3b.cc.cd`; Homepage, Longhorn, AdGuard Home, Frigate, Uptime Kuma, and the private media automation apps are protected by the `infrastructure-admins` Pocket ID group.
 
 Tinyauth uses the global `deny` ACL policy. Each protected application therefore has both an explicit OAuth email whitelist and the required `infrastructure-admins` group. In Tinyauth v5 these are separate checks: the application whitelist must allow the user before the OAuth group rule is evaluated.

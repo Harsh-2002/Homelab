@@ -1,5 +1,9 @@
 # Supabase verified state: October18 2026 IST
 
+## Studio authentication override
+
+Owner requested removal of the frustrating browser Basic-auth popup. Studio/admin routes now require existing Pocket ID/Tinyauth SSO, exact owner email and infrastructure-admins group. Caddy supplies the backend credential privately after authorization; Envoy remains protected. No image or Supabase container changes/restarts needed. Tinyauth rule added persistently and Caddy restarted once for the new protected environment variable; a subsequent normal reload passed. Browser navigated to Pocket ID instead of a Basic popup. Old Basic credential/spoofed identity headers fail to bypass the gate. Core API tests passed again and all14containers remain healthy. Standard API paths avoid SSO; Realtime admin paths are excluded. Actual passkey-authenticated Studio session awaits owner verification. This supersedes the original browser/dashboard Basic-auth acceptance below.
+
 - New owner-created Debian VM108, PX30,10.1.1.14,2vCPU,4/8GiB ballooning,50GB local-ZFS. `ssh supabase` key-only administrator works. SSH host key independently verified through Proxmox guest agent.
 - `/srv/supabase/docker-compose.yaml` is the standard main file. Use protected Compose wrapper to include logs/security/update overrides. Caddy private HTTPS endpoint: https://supabase.l3b.cc.cd. No Portainer or Docker TCP endpoint.
 - Full13 services plus Watchtower healthy. VM reboot verified03:34IST; final post-reboot/auto-update-policy acceptance passed. No data lost across recreation/reboot.

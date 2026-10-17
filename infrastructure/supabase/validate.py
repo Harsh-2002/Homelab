@@ -70,15 +70,33 @@ if '--cleanup' in sys.argv:
     cleanup()
     sys.exit()
 
-request('/', anonymous=True, expected=(401,))
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+def check_studio_sso(extra_headers=None):
+    headers = {'Accept': 'text/html'}
+    headers.update(extra_headers or {})
+    opener = urllib.request.build_opener(NoRedirect)
+    try:
+        opener.open(urllib.request.Request(BASE + '/', headers=headers), timeout=15)
+        raise AssertionError('Studio accessible without SSO')
+    except urllib.error.HTTPError as response:
+        assert response.code in (302, 303, 307, 401)
+        target = response.headers.get('Location') or response.headers.get('X-Tinyauth-Location', '')
+        assert target.startswith('https://login.l3b.cc.cd/')
+        assert not response.headers.get('WWW-Authenticate'), 'Browser Basic-auth challenge remains'
+
+check_studio_sso()
 request('/rest/v1/homelab_acceptance', anonymous=True, expected=(401,))
 basic = base64.b64encode((ENV['DASHBOARD_USERNAME'] + ':' + ENV['DASHBOARD_PASSWORD']).encode()).decode()
-request('/', anonymous=True, headers={'Authorization': 'Basic ' + basic}, raw=True)
+check_studio_sso({'Authorization': 'Basic ' + basic})
+check_studio_sso({'Remote-User': 'admin', 'Remote-Email': 'iam.anuragvishwakarma@gmail.com', 'Remote-Groups': 'infrastructure-admins'})
 request('/auth/v1/health')
 jwks = request('/auth/v1/.well-known/jwks.json')
 assert jwks['keys'] and all(key.get('kty') == 'EC' and 'd' not in key and 'k' not in key for key in jwks['keys']), 'Public JWKS contains secret key material'
 request('/functions/v1/hello', anonymous=True, expected=(401,))
-print('PASS: HTTPS, Studio credentials and API authentication enforced')
+print('PASS: HTTPS, Studio SSO redirect/no Basic popup, spoof/Basic bypass denial and API authentication')
 
 if STATE.exists():
     state = json.loads(STATE.read_text())

@@ -108,7 +108,20 @@
 	handle @supabase {
 		import private
 		import proxy
-		reverse_proxy 10.1.1.14:8000
+		@supabase_api {
+			path /auth/v1/* /rest/v1/* /graphql/v1 /realtime/v1/* /storage/v1/* /functions/v1/*
+			not path /realtime/v1/api*
+		}
+		handle @supabase_api {
+			reverse_proxy 10.1.1.14:8000
+		}
+		handle {
+			import authenticate
+			reverse_proxy 10.1.1.14:8000 {
+				header_up Authorization "{$SUPABASE_STUDIO_AUTH}"
+				header_down -WWW-Authenticate
+			}
+		}
 	}
 }
 
