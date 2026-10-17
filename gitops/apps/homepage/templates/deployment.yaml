@@ -103,6 +103,9 @@ spec:
               mountPath: /etc/ssl/certs/trusted-cas.crt
               subPath: trusted-cas.crt
               readOnly: true
+            - name: icons
+              mountPath: /app/public/icons
+              readOnly: true
             - name: logs
               mountPath: /app/config/logs
             - name: tmp
@@ -111,6 +114,12 @@ spec:
         - name: config
           configMap:
             name: homepage-config
+        - name: icons
+          configMap:
+            name: homepage-config
+            items:
+              - key: nivra.png
+                path: nivra.png
         - name: logs
           emptyDir: {}
         - name: tmp
