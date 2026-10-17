@@ -53,14 +53,17 @@ def sql(query):
     return result.stdout.strip()
 
 def cleanup():
+    # Remove fixture foreign keys before deleting the disposable Auth users.
+    sql('DROP TABLE IF EXISTS public.homelab_acceptance;')
     if STATE.exists():
         state = json.loads(STATE.read_text())
-        request('/storage/v1/object/acceptance-private', 'DELETE', {'prefixes': ['fixture.txt']}, admin=True)
-        request('/storage/v1/bucket/acceptance-private', 'DELETE', admin=True)
+        bucket_status, _ = request('/storage/v1/bucket/acceptance-private', admin=True, raw=True, expected=(200, 400, 404))
+        if bucket_status == 200:
+            request('/storage/v1/object/acceptance-private', 'DELETE', {'prefixes': ['fixture.txt']}, admin=True)
+            request('/storage/v1/bucket/acceptance-private', 'DELETE', admin=True)
         for user in state['users']:
-            request('/auth/v1/admin/users/' + user['id'], 'DELETE', admin=True)
+            request('/auth/v1/admin/users/' + user['id'], 'DELETE', admin=True, expected=(200, 204, 404))
         STATE.unlink()
-    sql('DROP TABLE IF EXISTS public.homelab_acceptance;')
     print('PASS: disposable acceptance fixtures removed')
 
 if '--cleanup' in sys.argv:
