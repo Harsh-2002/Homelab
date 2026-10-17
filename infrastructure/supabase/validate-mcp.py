@@ -6,7 +6,7 @@ import subprocess
 import urllib.error
 import urllib.request
 
-URL = 'https://supabase.l3b.cc.cd/mcp'
+URL = 'https://sb.l3b.cc.cd/mcp'
 raw = subprocess.check_output(['ssh', 'supabase', 'sudo cat /srv/supabase/.env'], text=True)
 key = next(shlex.split(line.split('=', 1)[1])[0] for line in raw.splitlines() if line.startswith('SUPABASE_MCP_API_KEY='))
 

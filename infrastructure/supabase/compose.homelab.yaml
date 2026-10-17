@@ -37,6 +37,8 @@ services:
       SUPABASE_JWKS: ${JWT_JWKS:?Generate public JWKS first}
     logging: *log-rotation
   db:
+    ports: !override
+      - "${SUPABASE_BIND_IP:?Set VM LAN IP}:5432:5432"
     logging: *log-rotation
   analytics:
     logging: *log-rotation

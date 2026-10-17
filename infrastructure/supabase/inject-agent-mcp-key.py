@@ -25,7 +25,7 @@ for path in paths:
     old = path.read_text()
     doc = tomllib.loads(old) if path.suffix == '.toml' else json.loads(old) if path.suffix == '.json' else yaml.safe_load(old)
     server = doc.get('mcp_servers', doc.get('mcpServers'))['supabase']
-    assert server['url'] == 'https://supabase.l3b.cc.cd/mcp'
+    assert server['url'] == 'https://sb.l3b.cc.cd/mcp'
     current = server.get('headers', server.get('http_headers'))['Authorization']
     if current == auth:
         continue

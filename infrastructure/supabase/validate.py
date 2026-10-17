@@ -23,7 +23,8 @@ for line in (ROOT / '.env').read_text().splitlines():
     if line and not line.startswith('#') and '=' in line:
         key, value = line.split('=', 1)
         ENV[key] = shlex.split(value)[0] if value else ''
-BASE = 'https://supabase.l3b.cc.cd'
+BASE = 'https://sb.l3b.cc.cd'
+STUDIO = 'https://supabase.l3b.cc.cd'
 STATE = ROOT / '.acceptance.json'
 
 def request(path, method='GET', data=None, user=None, admin=False, anonymous=False, raw=False, headers=None, expected=(200, 201, 204)):
@@ -79,7 +80,7 @@ def check_studio_sso(extra_headers=None):
     headers.update(extra_headers or {})
     opener = urllib.request.build_opener(NoRedirect)
     try:
-        opener.open(urllib.request.Request(BASE + '/', headers=headers), timeout=15)
+        opener.open(urllib.request.Request(STUDIO + '/', headers=headers), timeout=15)
         raise AssertionError('Studio accessible without SSO')
     except urllib.error.HTTPError as response:
         assert response.code in (302, 303, 307, 401)

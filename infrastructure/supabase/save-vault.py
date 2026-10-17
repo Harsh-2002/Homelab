@@ -33,7 +33,9 @@ item = {
 if values.get('SUPABASE_MCP_API_KEY'):
     item['fields'].extend([
         {'id': 'mcp-api-key', 'label': 'mcp-api-key', 'type': 'CONCEALED', 'value': values['SUPABASE_MCP_API_KEY']},
-        {'id': 'mcp-url', 'label': 'mcp-url', 'type': 'STRING', 'value': 'https://supabase.l3b.cc.cd/mcp'},
+        {'id': 'mcp-url', 'label': 'mcp-url', 'type': 'STRING', 'value': 'https://sb.l3b.cc.cd/mcp'},
+        {'id': 'api-url', 'label': 'api-url', 'type': 'STRING', 'value': 'https://sb.l3b.cc.cd'},
+        {'id': 'postgres-host', 'label': 'postgres-host', 'type': 'STRING', 'value': 'sb.l3b.cc.cd'},
     ])
 if items:
     previous = subprocess.run([str(op), 'item', 'get', items[0]['id'], '--vault', 'HomeLab', '--format', 'json'], check=True, capture_output=True, text=True)

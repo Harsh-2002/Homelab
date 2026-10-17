@@ -1,5 +1,15 @@
 # Supabase
 
+## Current endpoint split (October18 IST)
+
+Studio stays **https://supabase.l3b.cc.cd** behind existing Pocket ID/Tinyauth. Canonical application API **https://sb.l3b.cc.cd** and MCP **https://sb.l3b.cc.cd/mcp**. Studio's runtime project settings and database-connect metadata were checked: endpoint/db_host `sb.l3b.cc.cd`, db_port5432, db_user `postgres`, database `postgres`, REST URL `https://sb.l3b.cc.cd/rest/v1/`. Internal POSTGRES_HOST remains `db`. The old Supabase-domain API/MCP routes remain authenticated compatibility aliases; no duplicate stack. On `sb`, unrelated dashboard/admin paths return404, not an unprotected Studio. Existing agents on dev now use `sb` with their unchanged dedicated Bearer key; all3 configs authenticate and discover11tools. Hermes graceful gateway reload requested; new Codex/Claude sessions load the new URL.
+
+PostgreSQL: **sb.l3b.cc.cd:5432**, DB **postgres**, user **postgres**, password from the concealed deployment-env POSTGRES_PASSWORD field in HomeLab→Supabase. Use **sslmode=verify-full** and your system CA bundle. `sb` resolves to Caddy10.1.1.3, not directly to the VM. Existing caddy-l4 v0.1.2 negotiates PostgreSQL SSLRequest, requires TLS (ALPNpostgresql), and forwards to10.1.1.14:5432. Source allowlist LAN/Tailscale, listener bound only10.1.1.3. VM firewall allows backend5432 only from Caddy. Caddy→database hop is plaintext on the trusted LAN, like existing HTTP upstreams; this is client-to-Caddy TLS, not end-to-end DB TLS. No router/public-port exposure added. Plaintext startup does not match the TLS-only route. Supavisor remains internal and its tenant-suffixed session username is NOT used on this direct-database endpoint. Transaction pooler6543 remains unpublished.
+
+`SUPABASE_PUBLIC_URL` and `API_EXTERNAL_URL` changed in protected `.env` and homelab.env via `set-endpoints.py`, with pre-change backups. Current Auth issuer is `https://sb.l3b.cc.cd/auth/v1`; previously issued sessions may need fresh sign-in after this issuer change. Database/user data and signing/API/MCP keys were not regenerated. Compose recreated only affected services; publishing the direct DB port required a brief DB-container restart, not a VM reboot. TLS hostname/certificate plus real password SQL and invalid-password rejection passed; `validate-postgres.py` reproduces the checks. The explicit endpoint/port statements here supersede older no-published-DB and Supabase-domain API statements below.
+
+Same VM also hosts independent [PocketBase](../pocketbase/README.md), with separate `/srv/pocketbase` project/data/credentials and private `pocketbase.l3b.cc.cd`. Do not treat Supabase SQL dumps as PocketBase backups.
+
 Dedicated Debian VM **108**, `supabase`, **PX30**, `10.1.1.14`. Direct Docker Compose over SSH, not Portainer. Main file: **`/srv/supabase/docker-compose.yaml`**. Existing Caddy proxies **https://supabase.l3b.cc.cd** to Envoy on `10.1.1.14:8000`. LAN/Tailscale only; no public DNS exception. Retired ZimaOS no longer owns this address or Caddy route. Its old orphaned ISO disk was not touched.
 
 ## Access and ownership
