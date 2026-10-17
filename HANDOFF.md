@@ -199,6 +199,8 @@ Deployed and verified:
 
 Planned but **not yet applied** at the time of this handoff:
 
+- Supabase full suite (including Logflare/Vector) is prepared under `infrastructure/supabase/`, with immutable upstream commit and all 13 image digests, safe staging and a Compose wrapper. Owner chose direct Compose over SSH, **not Portainer or exposed Docker API**, for the future dedicated Debian VM on PX30. Wait for the owner to provide the ready VM; ID/IP/domains/exposure/SMTP remain unassigned. Preparation tests are not deployment/runtime verification. Reuse existing Caddy to Envoy and preserve private admin access. See the runbook for reproduction, secrets, validation and backup/upgrade gates.
+
 - Extend independent backup coverage for application data, especially both OpenCloud metadata and its RustFS bucket. The current `BACKUP` archives and `AV` files share one physical SSD and are not an off-site backup; the former whole-system recovery tar no longer exists.
 - Test ntfy iOS background delivery after subscribing to the self-hosted `infra` topic; server-side upstream push and restricted publishing are configured, but mobile delivery cannot be verified without the owner's device.
 - Optionally invite `iam.anuragvishwakarma@gmail.com` to Tailscale as Admin. The current Gmail owner cannot be replaced through the API.

@@ -34,6 +34,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/motrix/` — Motrix Server Compose deployment, SMB download path, and recovery runbook.
   - `infrastructure/arr/` — Portainer-managed media automation stack, access, storage paths, and recovery checks.
   - `infrastructure/n8n/` — unified n8n, PostgreSQL, SearXNG, and isolated Assistant/Agent sandbox Stack.
+  - `infrastructure/supabase/` — prepared full Supabase suite with logs/analytics, pinned source/images and direct Compose; awaiting a dedicated VM, not deployed.
   - `infrastructure/openviking/` — shared agent memory, local embeddings, Groq/Cerebras fallback, and Portainer operations.
   - `infrastructure/minio/` — historical MinIO-to-RustFS migration record.
   - `infrastructure/rustfs/` — native RustFS S3 service, OIDC, HA, and upgrade runbook.

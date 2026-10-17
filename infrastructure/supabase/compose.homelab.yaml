@@ -1,0 +1,36 @@
+x-log-rotation: &log-rotation
+  driver: local
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  api-gw:
+    ports: !override
+      - "${SUPABASE_BIND_IP:?Set VM LAN IP}:8000:8000"
+    logging: *log-rotation
+  supavisor:
+    ports: !override []
+    logging: *log-rotation
+  studio:
+    logging: *log-rotation
+  auth:
+    logging: *log-rotation
+  rest:
+    logging: *log-rotation
+  realtime:
+    logging: *log-rotation
+  storage:
+    logging: *log-rotation
+  imgproxy:
+    logging: *log-rotation
+  meta:
+    logging: *log-rotation
+  functions:
+    logging: *log-rotation
+  db:
+    logging: *log-rotation
+  analytics:
+    logging: *log-rotation
+  vector:
+    logging: *log-rotation
