@@ -1,5 +1,9 @@
 # Supabase verified state: October18 2026 IST
 
+## Local MCP clients configured
+
+Owner requested Codex, Claude Code and Hermes on dev. Global server name supabase added to ~/.codex/config.toml, ~/.claude.json and ~/.hermes/config.yaml with direct Bearer headers; all0600, protected originals backed up. Parsed configs each authenticated/discovered11tools; Codex native parser recognized entry, Claude native Connected, Hermes native Connected/11tools. Existing configs/settings/servers compared equal excluding the added entry. Hermes graceful user-service reload completed with new active PID420310 at22:39:15UTC; new Codex/Claude sessions needed. Secrets never printed or committed; inject-agent-mcp-key.py supports safe header rotation from vault. This supersedes earlier agents-not-configured notes.
+
 ## Agent MCP enabled
 
 Native `/mcp` is now exposed through the existing private HTTPS hostname using a dedicated Caddy-enforced Bearer API key. Concealed `mcp-api-key` plus `mcp-url` stored in canonical HomeLab Supabase item; full protected env updated. No OAuth/browser login for agents, no public exposure and no new services/ports. Backend /mcp accepts only Caddy10.1.1.3/32; /api/mcp remains denied. Missing/wrong keys401 with Bearer challenge and no login redirect. Initialize protocol2025-03-26,11tools, actual database health SQL passed. Full read/write administrative scope; do not treat this as a frontend key. Only Envoy restarted; Caddy restarted once for the new env key. All14containers healthy. Scripts/restore/rotation instructions in README. This supersedes earlier MCP-disabled statements.
