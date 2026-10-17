@@ -10,7 +10,7 @@ Homepage is the stateless, Git-managed portal served at `https://l3b.cc.cd`.
 
 ## Live metrics
 
-Nivra is an Applications card at `https://notes.l3b.cc.cd`, with its `/health` check. Anchor remains private at `https://anchor.l3b.cc.cd`, with its own official served icon and `/api/health` check. See `infrastructure/nivra/README.md` and `infrastructure/anchor/README.md`.
+Nivra is an Applications card at `https://notes.l3b.cc.cd`, with its `/health` check. Its official N-mark SVG is served by Nivra at `/icon.svg?v=5`, matching the installed application's declared icon; do not use the nonexistent `/favicon.ico`. Anchor remains private at `https://anchor.l3b.cc.cd`, with its own official served icon and `/api/health` check. See `infrastructure/nivra/README.md` and `infrastructure/anchor/README.md`.
 
 The Control row groups Pocket ID, Portainer, and Home Assistant in three equal-height statistics cards. Hermes sits with the general Applications. Termix and Warpgate were completely removed on 2026-10-01; neither has a Homepage card or active reverse-proxy route. Media services have their own four-column row so downloads and automation are discoverable together without crowding Applications.
 

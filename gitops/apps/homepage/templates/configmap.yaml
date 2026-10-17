@@ -197,7 +197,7 @@ data:
             ping: https://orva.l3b.cc.cd
     - Applications:
         - Nivra:
-            icon: https://notes.l3b.cc.cd/favicon.ico
+            icon: https://notes.l3b.cc.cd/icon.svg?v=5
             href: https://notes.l3b.cc.cd
             description: Notes, tasks and bookmarks
             ping: https://notes.l3b.cc.cd/health
