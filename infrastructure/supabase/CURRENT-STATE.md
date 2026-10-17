@@ -18,3 +18,5 @@
 - Old Zima route removed; old orphaned ISO-backed Zima disk left untouched. Initial failed database initialization retained at volumes/db/failed-initialization-20261017 for inspection; no pre-existing user data was present in it.
 
 Pending gates: actual SMTP delivery, full replacement-VM restore, safe HA failover exercise, workload/capacity testing and update replacement test when an upstream tag changes. Separate production/dev projects need separate stacks/data/keys/hostnames.
+
+Owner explicitly deferred SMTP setup until later. Core database/Storage/Realtime/Functions APIs remain usable. Email confirmation/reset/magic-link/OTP flows are not ready; public signup remains disabled and email auto-confirm remains off. Already-confirmed users can use password login.
