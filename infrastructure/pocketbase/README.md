@@ -2,6 +2,8 @@
 
 Private **https://pocketbase.l3b.cc.cd/_/** dashboard, API base **https://pocketbase.l3b.cc.cd**. Same Debian VM108, PX30,10.1.1.14 as Supabase. Separate Docker Compose project `pocketbase`, container `pocketbase`, persistent state **`/srv/pocketbase/pb_data`**. No shared database or Supabase credentials, no extra proxy/database.
 
+Homepage lists PocketBase beside Supabase in Applications, using the project's official logo and `/api/health` status check. No PocketBase credentials are added to Homepage. Configuration remains in the existing Homepage Helm chart, deployed through Argo CD.
+
 ## Access and security
 
 - Credentials: **HomeLab → PocketBase - VM108**, item `lbfxefhqh4mohpisoavspfuqem`. Older differently capitalized `Pocketbase` item belongs to previous context and was not modified. Use the exact new title/ID to avoid ambiguous CLI lookups.

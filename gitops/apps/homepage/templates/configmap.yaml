@@ -200,6 +200,11 @@ data:
             icon: supabase.svg
             href: https://supabase.l3b.cc.cd
             description: Database, auth and APIs
+        - PocketBase:
+            icon: https://pocketbase.io/images/logo.svg
+            href: https://pocketbase.l3b.cc.cd/_/
+            description: Database, auth and files
+            ping: https://pocketbase.l3b.cc.cd/api/health
         - Nivra:
             icon: /icons/nivra.png
             href: https://notes.l3b.cc.cd
