@@ -1,6 +1,17 @@
 # Nivra
 
-Nivra v2026.10.15 is deployed on `ctr` as the Portainer stack `nivra` (endpoint 2). It uses the official multi-architecture image pinned to release commit `b52a1d7` and digest `sha256:fdcb28a35356ab57257ab4e9ffc705840913dcb64bf6f2cb6ddeca3391ad781d`. Nivra is staged at `https://notes.l3b.cc.cd` behind Caddy's private LAN/Tailscale policy until the owner completes first-run setup. Do not publish its Cloudflare record before creating the owner.
+Nivra **v2026.10.16**, commit `8a761e26728f6a5ccb6bd97cce29acd96beb05e2`, is deployed on `ctr` as Portainer stack **157**, `nivra` (endpoint2). At the owner's explicit request, the Compose image is **`ghcr.io/harsh-2002/nivra:latest`**, without a digest pin. The image observed during this upgrade matches the published release. CI run38905049889 succeeded for that exact release commit. No upstream release/tag/CI settings were modified. Caddy access policy and DNS were left unchanged: existing private LAN/Tailscale route at `https://notes.l3b.cc.cd`.
+
+## October18 IST upgrade acceptance
+
+- Pre-pulled the replacement while the old container served requests, then upgraded through the Portainer API, not an unmanaged Docker replacement.
+- Stopped the application writer for a consistent full-directory backup at **`/data/nivra-upgrade-backups/20261017T230737Z/data.tar.gz`**. Root-only directory0700/archive0600; saved previous Portainer stack/environment alongside it. SQLite integrity and every archive member were checked before deployment.
+- New image uses the same `/data/apps/nivra` bind mount, port3020, encryption setting and proxy. No VM restart, data reset or unrelated service changes.
+- Container healthy; HTTPS `/health`200; unauthenticated notes and MCP denied. Browser login surface loads. Both extension migrations0054/0055 are present.
+- All11 checked existing tables, including owner, note, attachments, tasks, bookmarks, artifacts, forms and API-key/OAuth-client data, have identical row counts and content hashes after migration. Encryption key/mode, auth secret and installation metadata are byte-identical to the backup. No private contents or credential values were printed.
+- **Native owner login could not be verified:** the existing HomeLab→Nivra login returned401 before the upgrade. No password reset, MFA bypass or account change was attempted. `validate.py` reproduces the read-only owner-login check using the protected vault credential. Authenticated UI/MCP operations need the correct existing credential; do not claim these were tested.
+- Prior image retained for rollback. If migrations make a downgrade incompatible, stop Nivra and restore the consistent pre-upgrade data plus previous stack together; do not blindly run an older binary against migrated data. Backup restore itself was not drilled.
+- `latest` is mutable. Record runtime version/commit on each update; a tag in Compose does not automatically pull new releases by itself. Run the controlled Portainer update after backup. No automatic updater was added.
 
 ## Runtime and persistence
 
@@ -27,6 +38,6 @@ curl -fsS https://notes.l3b.cc.cd/health
 
 Before an upgrade or recovery, use Nivra's application backup and retain a consistent copy of `/data/apps/nivra`. Because at-rest encryption is disabled, filesystem-level copies contain plaintext notes and uploads; protect backups accordingly. Do not copy the live SQLite directory while the application is writing to it.
 
-For upgrades, read the exact release notes, take and validate a backup, then pin the new official release digest in this file and the Portainer stack together. Keep the existing data directory. Verify health, native login, note and attachment persistence, and MCP access after each upgrade.
+For upgrades, read the exact release notes and pre-pull the official `latest` image, then use `python3 infrastructure/nivra/upgrade.py` from dev. It obtains the Portainer operator key without printing it, locates the existing stack, preserves its environment, stops the writer, creates/checks the backup and deploys the tracked Compose through Portainer. It refuses missing images or ambiguous stack identity. Keep the data directory and verify actual image release/commit, health, native login, note/attachment persistence and MCP access afterward. Use `latest` without a SHA pin per the owner's October18 instruction, superseding the original digest-pinning policy.
 
-Sources: [v2026.10.15 release](https://github.com/Harsh-2002/Nivra/releases/tag/v2026.10.15), [tagged README](https://github.com/Harsh-2002/Nivra/blob/v2026.10.15/README.md), [tagged architecture and recovery](https://github.com/Harsh-2002/Nivra/blob/v2026.10.15/docs/architecture.md).
+Sources: [v2026.10.16 release](https://github.com/Harsh-2002/Nivra/releases/tag/v2026.10.16), [verified CI](https://github.com/Harsh-2002/Nivra/actions/runs/38905049889), [tagged README](https://github.com/Harsh-2002/Nivra/blob/v2026.10.16/README.md), [tagged architecture and recovery](https://github.com/Harsh-2002/Nivra/blob/v2026.10.16/docs/architecture.md).

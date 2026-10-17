@@ -1,6 +1,6 @@
 services:
   nivra:
-    image: ghcr.io/harsh-2002/nivra:latest@sha256:fdcb28a35356ab57257ab4e9ffc705840913dcb64bf6f2cb6ddeca3391ad781d
+    image: ghcr.io/harsh-2002/nivra:latest
     container_name: nivra
     restart: unless-stopped
     init: true
