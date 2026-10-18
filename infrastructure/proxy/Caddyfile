@@ -14,7 +14,12 @@
 						alpn postgresql
 					}
 				}
-				proxy 10.1.1.14:5432
+				proxy 10.1.1.201:32432 10.1.1.202:32432 10.1.1.203:32432 {
+					health_interval 5s
+					health_timeout 1s
+					lb_try_duration 3s
+					lb_try_interval 100ms
+				}
 			}
 		}
 	}
@@ -120,9 +125,19 @@
 	}
 }
 
+(supabase_node_health) {
+	health_uri /auth/v1/health
+	health_status 401
+	health_interval 5s
+	health_timeout 1s
+	fail_duration 10s
+	lb_try_duration 3s
+	lb_try_interval 100ms
+}
+
 (supabase) {
-	@supabase host supabase.l3b.cc.cd sb.l3b.cc.cd
-	handle @supabase {
+	@supabaseprod host supabase.l3b.cc.cd sb.l3b.cc.cd
+	handle @supabaseprod {
 		import private
 		import proxy
 		@supabase_mcp path /mcp /mcp/*
@@ -130,7 +145,8 @@
 			header Cache-Control "no-store"
 			@supabase_mcp_key header Authorization "Bearer {$SUPABASE_MCP_API_KEY}"
 			handle @supabase_mcp_key {
-				reverse_proxy 10.1.1.14:8000 {
+				reverse_proxy 10.1.1.201:32080 10.1.1.202:32080 10.1.1.203:32080 {
+					import supabase_node_health
 					header_up -Authorization
 					header_up -Cookie
 				}
@@ -140,51 +156,18 @@
 				respond "MCP API key required" 401
 			}
 		}
-		@supabase_api {
-			path /auth/v1/* /rest/v1/* /graphql/v1 /realtime/v1/* /storage/v1/* /functions/v1/*
-			not path /realtime/v1/api*
-		}
-		handle @supabase_api {
-			reverse_proxy 10.1.1.14:8000
-		}
-		@api_hostname host sb.l3b.cc.cd
-		handle @api_hostname {
-			respond "Supabase API. Studio: https://supabase.l3b.cc.cd" 404
-		}
-		handle {
-			import authenticate
-			reverse_proxy 10.1.1.14:8000 {
-				header_up Authorization "{$SUPABASE_STUDIO_AUTH}"
-				header_down -WWW-Authenticate
-			}
-		}
-	}
-}
-
-(pocketbase) {
-	@pocketbase host pocketbase.l3b.cc.cd
-	handle @pocketbase {
-		import private
-		import proxy
-		reverse_proxy 10.1.1.14:8090
-	}
-}
-
-(supabaseprod) {
-	@supabaseprod host supabase-prod.l3b.cc.cd sb-prod.l3b.cc.cd
-	handle @supabaseprod {
-		import private
-		import proxy
 		@production_api {
 			path /auth/v1/* /rest/v1/* /graphql/v1 /realtime/v1/* /storage/v1/* /functions/v1/*
 			not path /realtime/v1/api*
 		}
 		handle @production_api {
-			reverse_proxy 10.1.1.175:8000
+			reverse_proxy 10.1.1.201:32080 10.1.1.202:32080 10.1.1.203:32080 {
+				import supabase_node_health
+			}
 		}
-		@production_api_host host sb-prod.l3b.cc.cd
+		@production_api_host host sb.l3b.cc.cd
 		handle @production_api_host {
-			respond "Supabase Production API. Studio: https://supabase-prod.l3b.cc.cd" 404
+			respond "Supabase Production API. Studio: https://supabase.l3b.cc.cd" 404
 		}
 		handle {
 			forward_auth 10.1.1.6:3000 {
@@ -195,8 +178,9 @@
 					redir {rp.header.X-Tinyauth-Location} 302
 				}
 			}
-			reverse_proxy 10.1.1.175:8000 {
-				header_up Authorization "{$SUPABASE_PROD_STUDIO_AUTH}"
+			reverse_proxy 10.1.1.201:32080 10.1.1.202:32080 10.1.1.203:32080 {
+				import supabase_node_health
+				header_up Authorization "{$SUPABASE_STUDIO_AUTH}"
 				header_down -WWW-Authenticate
 			}
 		}
@@ -646,8 +630,6 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import longhorn
 	import headlamp
 	import supabase
-	import supabaseprod
-	import pocketbase
 	import homepage
 	import nivra
 	import anchor

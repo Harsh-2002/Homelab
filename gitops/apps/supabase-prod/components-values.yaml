@@ -452,13 +452,13 @@ environment:
     value: +S 2:2
   auth:
   - name: API_EXTERNAL_URL
-    value: https://sb-prod.l3b.cc.cd
+    value: https://sb.l3b.cc.cd
   - name: GOTRUE_API_HOST
     value: 0.0.0.0
   - name: GOTRUE_API_PORT
     value: '9999'
   - name: GOTRUE_SITE_URL
-    value: https://supabase-prod.l3b.cc.cd
+    value: https://supabase.l3b.cc.cd
   - name: GOTRUE_URI_ALLOW_LIST
     value: ''
   - name: GOTRUE_DISABLE_SIGNUP
@@ -498,7 +498,7 @@ environment:
   - name: GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE
     value: /auth/v1/verify
   - name: GOTRUE_JWT_ISSUER
-    value: https://sb-prod.l3b.cc.cd/auth/v1
+    value: https://sb.l3b.cc.cd/auth/v1
   db:
   - name: POSTGRES_HOST
     value: /var/run/postgresql
@@ -622,7 +622,7 @@ environment:
   - name: DEFAULT_PROJECT_NAME
     value: Production
   - name: SUPABASE_PUBLIC_URL
-    value: https://sb-prod.l3b.cc.cd
+    value: https://sb.l3b.cc.cd
   - name: NEXT_ANALYTICS_BACKEND_PROVIDER
     value: postgres
   vector: []

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: supabase-prod-functions-hello
+  namespace: supabase-prod
+data:
+  index.ts: |
+{{ .Files.Get "files/hello.ts" | indent 4 }}

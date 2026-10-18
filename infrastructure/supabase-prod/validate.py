@@ -18,7 +18,7 @@ import urllib.request
 import websocket
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-item = json.loads(subprocess.check_output([str(ROOT / 'scripts/op-sa'), 'item', 'get', 'Supabase Production', '--vault', 'HomeLab', '--format', 'json']))
+item = json.loads(subprocess.check_output([str(ROOT / 'scripts/op-sa'), 'item', 'get', 'Supabase', '--vault', 'HomeLab', '--format', 'json']))
 values = json.loads(next(field['value'] for field in item['fields'] if field.get('label') == 'deployment-secrets'))
 ENV = {
     'SUPABASE_SECRET_KEY': values['secretKey'],
@@ -26,8 +26,8 @@ ENV = {
     'DASHBOARD_USERNAME': values['username'],
     'DASHBOARD_PASSWORD': values['dashboardPassword'],
 }
-BASE = 'https://sb-prod.l3b.cc.cd'
-STUDIO = 'https://supabase-prod.l3b.cc.cd'
+BASE = 'https://sb.l3b.cc.cd'
+STUDIO = 'https://supabase.l3b.cc.cd'
 STATE = pathlib.Path.home() / '.local/state/homelab/supabase-prod-acceptance.json'
 STATE.parent.mkdir(parents=True, exist_ok=True)
 

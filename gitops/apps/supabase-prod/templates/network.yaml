@@ -3,17 +3,37 @@ kind: Service
 metadata:
   name: supabase-prod-gateway
   namespace: supabase-prod
-  annotations:
-    lbipam.cilium.io/ips: 10.1.1.175
 spec:
-  type: LoadBalancer
+  type: NodePort
+  externalTrafficPolicy: Local
   ports:
     - name: http
       port: 8000
       targetPort: 8000
+      nodePort: 32080
   selector:
     app.kubernetes.io/instance: supabase-prod
     app.kubernetes.io/name: supabase-kong
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: supabase-prod-postgres-gateway
+  namespace: supabase-prod
+spec:
+  type: NodePort
+  externalTrafficPolicy: Local
+  ports:
+    - name: session
+      port: 5432
+      targetPort: 5432
+      nodePort: 32432
+    - name: transaction
+      port: 6543
+      targetPort: 6543
+      nodePort: 32643
+  selector:
+    app: supabase-prod-pooler
 ---
 apiVersion: v1
 kind: Service

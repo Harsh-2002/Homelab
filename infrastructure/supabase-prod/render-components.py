@@ -23,6 +23,12 @@ for obj in objects:
         script=script.replace("const VERIFY_JWT", "const JWKS = jose.createLocalJWKSet(JSON.parse(Deno.env.get('SUPABASE_JWKS')!))\nconst VERIFY_JWT",1)
         script=script.replace('await jose.jwtVerify(jwt, secretKey)', "const { alg } = jose.decodeProtectedHeader(jwt)\n    if (alg === 'HS256') await jose.jwtVerify(jwt, secretKey, { algorithms: ['HS256'] })\n    else await jose.jwtVerify(jwt, JWKS, { algorithms: ['ES256'] })")
         obj['data']['index.ts']=script
+    if obj['kind']=='ConfigMap' and obj['metadata']['name']=='supabase-prod-kong':
+        gateway=yaml.safe_load(obj['data']['kong.yml'])
+        for service in gateway['services']:
+            if service['name']=='mcp':
+                service['plugins']=[{'name':'ip-restriction','config':{'allow':['10.1.1.3/32']}}]
+        obj['data']['kong.yml']=yaml.safe_dump(gateway,sort_keys=False)
     if obj['kind']!='Deployment':
         continue
     pod=obj['spec']['template']['spec']
@@ -72,6 +78,8 @@ for obj in objects:
             env.append({'name':'DB_SSL_CA_CERT','value':'/etc/supabase-tls/ca.crt'})
         if name.endswith('-functions'):
             env.append({'name':'SUPABASE_JWKS','valueFrom':{'secretKeyRef':{'name':'supabase-prod-apikey','key':'jwtJwks'}}})
+            container.setdefault('volumeMounts',[]).append({'name':'hello-function','mountPath':'/home/deno/functions/hello','readOnly':True})
+            pod.setdefault('volumes',[]).append({'name':'hello-function','configMap':{'name':'supabase-prod-functions-hello'}})
         container.setdefault('volumeMounts',[]).append({'name':'postgres-ca','mountPath':'/etc/supabase-tls','readOnly':True})
     pod.setdefault('volumes',[]).append({'name':'postgres-ca','secret':{'secretName':'supabase-db-ca','items':[{'key':'ca.crt','path':'ca.crt'}]}})
     pdb={'apiVersion':'policy/v1','kind':'PodDisruptionBudget','metadata':{'name':name,'namespace':'supabase-prod'},'spec':{'minAvailable':0 if name.endswith(('-storage','-imgproxy')) else 1,'selector':obj['spec']['selector']}}

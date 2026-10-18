@@ -16,7 +16,7 @@ def run(args,data=None):
         raise SystemExit('Operation failed (private output withheld): '+args[0])
     return result.stdout
 items=json.loads(run([op,'item','list','--vault','HomeLab','--format','json']))
-items=[item for item in items if item['title']=='Supabase Production']
+items=[item for item in items if item['title']=='Supabase']
 assert len(items)<=1, 'Duplicate canonical items'
 if items:
     item=json.loads(run([op,'item','get',items[0]['id'],'--vault','HomeLab','--format','json']))
@@ -31,7 +31,7 @@ else:
     existing=json.loads(run(['kubectl','--context','k8s','get','pvc','-A','-o','json']))
     assert not any(p['metadata']['namespace']=='supabase-prod' for p in existing['items']), 'Existing PVCs without canonical vault keys'
     values=json.loads(run(['node',str(root/'infrastructure/supabase-prod/generate-secrets.mjs')]))
-    payload={'title':'Supabase Production','category':'LOGIN','urls':[{'href':'https://supabase-prod.l3b.cc.cd','primary':True}], 'fields':[
+    payload={'title':'Supabase','category':'LOGIN','urls':[{'href':'https://supabase.l3b.cc.cd','primary':True}], 'fields':[
         {'id':'username','type':'STRING','purpose':'USERNAME','value':values['username']},
         {'id':'password','type':'CONCEALED','purpose':'PASSWORD','value':values['dashboardPassword']},
         {'id':'deployment-secrets','label':'deployment-secrets','type':'CONCEALED','value':json.dumps(values)},
