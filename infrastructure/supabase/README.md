@@ -44,7 +44,9 @@ Secret data, rendered runtime environments or client Authorization headers.
 - Synchronous quorum requires one standby acknowledgement. Writes can stop when
   no eligible synchronous standby remains; do not silently weaken durability.
 - Each database has its own 30Gi Longhorn RWO PVC, with the existing two-replica
-  Longhorn policy. Logical replication slots are synchronized for Realtime.
+  Longhorn policy. Native logical failover-slot synchronization is configured,
+  but Realtime's intentionally temporary slots are recreated on reconnect, not
+  synchronized durable slots. Do not claim lossless transient-event replay.
 - Auth, REST, Realtime, Kong, Meta, Studio, Edge Functions, Logflare and Supavisor
   each have two replicas. Supavisor uses IPv4 Erlang distribution, a shared
   protected cookie and pod-IP node names. Realtime uses headless DNS discovery.
@@ -94,12 +96,13 @@ No cluster-wide Cilium mode was changed and no source allowlist was broadened.
 
 The first repair's tests missed Studio Query Performance. Live inspection then
 found `pg_stat_statements` preloaded but absent as a SQL extension in `postgres`.
-The image's `00-extension.sql` includes its creation and the original bootstrap
-logged that file, so historical evidence does not establish exactly when/why the
-extension became absent. Do not claim it was certainly skipped or blame DNS.
-The confirmed deployment defect was missing functional dependency validation.
+The image seed includes its creation. A subsequent HA drill established the
+recurrence mechanism: CNPG's managed-extension reconciliation removed its SQL
+objects because no pg_stat_statements.* parameter enabled them. The Cluster now
+declares pg_stat_statements.track:top. Manual CREATE/preload alone was insufficient;
+do not blame DNS. See the audit for the promotion test and exact evidence.
 
-GitOps job `supabase-observability-init-v4` now creates the extension in
+GitOps job `supabase-observability-init-v5` supersedes v4, keeps the extension in
 `extensions`, checks preload and calls its statistics view. No database restart,
 reset of statistics, broad grants, or application-data changes are required.
 The acceptance script checks the full required platform extension inventory,
@@ -107,7 +110,7 @@ callable statistics on every database instance, and Studio's query/role/metrics/
 cache-hit-rate SQL routes. A browser test verified the real Query Performance
 page shows rows and metrics, no missing-extension/relation error, and HTTP200
 for the data requests. Optional extensions remain optional. Fresh deployments
-must complete v3 then v4 and pass these tests, not merely become pod-ready.
+must complete v3 then v5 and pass these tests, not merely become pod-ready.
 
 The initial CNPG bootstrap enumerated SQL files bundled in the database image,
 but did not run the official Docker overlay files `98-webhooks.sql`,
