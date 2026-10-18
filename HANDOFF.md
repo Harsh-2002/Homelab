@@ -1,5 +1,37 @@
 # Homelab agent handoff
 
+## Current override: Supabase consolidation, 2026-10-18
+
+Only Kubernetes Supabase remains. VM108 and its owned local-ZFS disks, PX10
+replication copy, HA resource/affinity rule, backup job and two VM backup archives
+were removed at the owner's request. PocketBase was removed with its data; no
+PocketBase Kubernetes deployment was created. Ignore older VM/PocketBase setup
+instructions below. SSH alias `supabase` was removed;10.1.1.14 is no longer the
+Supabase host. Existing Caddy serves Studio at `supabase.l3b.cc.cd`, APIs/MCP and
+TLS PostgreSQL5432 at `sb.l3b.cc.cd`. Argo application/service name is Supabase;
+some storage-bound Kubernetes IDs retain legacy `supabase-prod` names, not a
+second environment. Desired state: `gitops/apps/supabase`; current runbook:
+`infrastructure/supabase/README.md`. Canonical HomeLab→Supabase keys and existing
+agent MCP credential are retained safely, not exposed. PostgreSQL17.6 has one
+primary and two synchronous-quorum standbys. Storage is a single replica on
+replicated Longhorn RWO, with automatic restart/recovery, not active/active.
+Primary-pod failover kept the acknowledged SQL marker; SQL recovery123.6s and
+three DB instances healthy afterward. Full node failure/DR remain untested.
+No independent backups/PITR by owner choice; replication is not backup.
+
+Homelab email: Anurag Vishwakarma (l3b), `l3bctl@gmail.com`. App password source:
+HomeLab→Google→concealed smtp field. Supabase STARTTLS login, SMTP submission and
+real Auth invitation returned success; inbox receipt not independently observed.
+Public signup remains disabled and auto-confirm off. Existing Pocket ID login
+identity is unchanged. Nivra MCP is configured on dev in Codex, Claude and Hermes
+at `https://notes.l3b.cc.cd/mcp`; authentication/discovery97tools passed, native
+Codex/Claude entry checks passed, Hermes native connection passed and gateway was
+gracefully reloaded. Credentials stay only in protected local client configs;
+new Codex/Claude sessions pick up the new server. Older Nivra MCP-401 statements
+are superseded, while native owner-password login remains separately unverified.
+
+## Historical notes below, overridden where they conflict
+
 **Supabase agent MCP:** `/mcp` is enabled at private https://supabase.l3b.cc.cd/mcp with a dedicated Caddy-enforced Bearer key, concealed mcp-api-key in HomeLab→Supabase. No OAuth/browser for agents, no public exposure. Backend Envoy allows only Caddy10.1.1.3/32; /api/mcp stays denied. initialize/tools-list/database SQL verified. Full admin-capable key, not app credentials. Reproducible enable/sync/validation scripts in infrastructure/supabase; preserve proxy env and patched gateway template on restore. Owner confirmed Studio Pocket ID login works, superseding pending sign-in notes.
 
 **Supabase Studio SSO override:** Owner rejected browser Basic-auth popup. Existing Caddy/Tinyauth now protects Studio/admin paths with exact owner email + infrastructure-admins; standard application API routes keep API-key/JWT access without SSO. Backend Envoy credentials remain private and Caddy injects them only after SSO; dashboard WWW-Authenticate stripped. Credential sync helper and Tinyauth rules/drop-in are tracked in infrastructure/supabase. Caddy protected SUPABASE_STUDIO_AUTH must be derived/synced on restore/password rotation, then Caddy restarted for changed env. No Supabase image/container changes. Browser reaches Pocket ID; backend credential/active injection, bypass denial and API regression checked. Owner's passkey-authenticated Studio session still awaits confirmation. SMTP remains explicitly deferred.

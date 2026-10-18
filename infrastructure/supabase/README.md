@@ -1,118 +1,169 @@
 # Supabase
 
-## Current endpoint split (October18 IST)
+The single active Supabase instance runs on Kubernetes, managed through Argo CD
+application **supabase**. VM108, PocketBase, VM HA/replication/backup jobs and the
+two VM backup archives were removed on 2026-10-18 at the owner's request.
 
-Studio stays **https://supabase.l3b.cc.cd** behind existing Pocket ID/Tinyauth. Canonical application API **https://sb.l3b.cc.cd** and MCP **https://sb.l3b.cc.cd/mcp**. Studio's runtime project settings and database-connect metadata were checked: endpoint/db_host `sb.l3b.cc.cd`, db_port5432, db_user `postgres`, database `postgres`, REST URL `https://sb.l3b.cc.cd/rest/v1/`. Internal POSTGRES_HOST remains `db`. The old Supabase-domain API/MCP routes remain authenticated compatibility aliases; no duplicate stack. On `sb`, unrelated dashboard/admin paths return404, not an unprotected Studio. Existing agents on dev now use `sb` with their unchanged dedicated Bearer key; all3 configs authenticate and discover11tools. Hermes graceful gateway reload requested; new Codex/Claude sessions load the new URL.
+## Access
 
-PostgreSQL: **sb.l3b.cc.cd:5432**, DB **postgres**, user **postgres**, password from the concealed deployment-env POSTGRES_PASSWORD field in HomeLab→Supabase. Use **sslmode=verify-full** and your system CA bundle. `sb` resolves to Caddy10.1.1.3, not directly to the VM. Existing caddy-l4 v0.1.2 negotiates PostgreSQL SSLRequest, requires TLS (ALPNpostgresql), and forwards to10.1.1.14:5432. Source allowlist LAN/Tailscale, listener bound only10.1.1.3. VM firewall allows backend5432 only from Caddy. Caddy→database hop is plaintext on the trusted LAN, like existing HTTP upstreams; this is client-to-Caddy TLS, not end-to-end DB TLS. No router/public-port exposure added. Plaintext startup does not match the TLS-only route. Supavisor remains internal and its tenant-suffixed session username is NOT used on this direct-database endpoint. Transaction pooler6543 remains unpublished.
+| Interface | Endpoint |
+| --- | --- |
+| Studio | https://supabase.l3b.cc.cd |
+| APIs | https://sb.l3b.cc.cd |
+| MCP | https://sb.l3b.cc.cd/mcp |
+| PostgreSQL session pooler | sb.l3b.cc.cd:5432 |
 
-`SUPABASE_PUBLIC_URL` and `API_EXTERNAL_URL` changed in protected `.env` and homelab.env via `set-endpoints.py`, with pre-change backups. Current Auth issuer is `https://sb.l3b.cc.cd/auth/v1`; previously issued sessions may need fresh sign-in after this issuer change. Database/user data and signing/API/MCP keys were not regenerated. Compose recreated only affected services; publishing the direct DB port required a brief DB-container restart, not a VM reboot. TLS hostname/certificate plus real password SQL and invalid-password rejection passed; `validate-postgres.py` reproduces the checks. The explicit endpoint/port statements here supersede older no-published-DB and Supabase-domain API statements below.
+All access remains private to LAN/Tailscale through existing Caddy. Studio uses
+Pocket ID/Tinyauth; Caddy injects the protected backend credential after SSO.
+Applications use publishable/secret keys and user JWTs. MCP uses a separate
+administrative Bearer key, not browser OAuth. `/api/mcp` is explicitly denied.
+PostgreSQL requires TLS, e.g. `sslmode=verify-full`, with system CA trust.
+The administrative pooler username is `postgres.homelab-production`, database
+`postgres`. This is not a frontend credential. The tenant suffix is an existing
+internal ID, not a second environment.
 
-Same VM also hosts independent [PocketBase](../pocketbase/README.md), with separate `/srv/pocketbase` project/data/credentials and private `pocketbase.l3b.cc.cd`. Do not treat Supabase SQL dumps as PocketBase backups.
+**One deployment is one Supabase project.** Apps can use separate schemas, grants,
+RLS policies and buckets, but Auth, keys and lifecycle are shared. A service-role
+key bypasses RLS. Independent projects require separate deployments.
 
-Dedicated Debian VM **108**, `supabase`, **PX30**, `10.1.1.14`. Direct Docker Compose over SSH, not Portainer. Main file: **`/srv/supabase/docker-compose.yaml`**. Existing Caddy proxies **https://supabase.l3b.cc.cd** to Envoy on `10.1.1.14:8000`. LAN/Tailscale only; no public DNS exception. Retired ZimaOS no longer owns this address or Caddy route. Its old orphaned ISO disk was not touched.
+Credentials live in **HomeLab → Supabase**, concealed `deployment-secrets` plus
+labelled API/MCP/database fields. Existing Codex/Claude/Hermes MCP URLs and their
+dedicated Bearer key were preserved. Never print vault contents, Kubernetes
+Secret data, rendered runtime environments or client Authorization headers.
 
-## Access and ownership
+## Architecture and persistence
 
-- `ssh supabase` uses the password-locked `supabase` OS administrator with key authentication and passwordless sudo. Root key-only access remains break-glass. The administrator is not in the Docker group; Docker management is root-equivalent.
-- Stack/config/data: `/srv/supabase`, root-owned, mode0700. Protected `.env` and `homelab.env`:0600. Upstream non-secret bind assets must be readable by container UIDs; the initial staging umask issue is fixed in `prepare.sh`.
-- Credentials/signing/encryption keys: canonical **HomeLab → Supabase** 1Password item, including concealed `deployment-env`, dashboard login and new publishable/secret API keys. Never print the rendered Compose config or reuse backend secret/service-role keys in browsers.
-- **Studio login is Pocket ID through existing Tinyauth**, not the browser Basic-auth popup. Exact owner email plus `infrastructure-admins` group required. Dashboard credentials in the vault are now backend-only; Caddy supplies them after SSO. Application Auth is separate. Public sign-up/anonymous/phone login and email auto-confirm are disabled. Google SMTP inputs were configured, but Gmail rejects the existing vault password with534/5.7.9. A valid Google app password is required; email delivery is deferred by owner. Store it as concealed `app-password` in HomeLab→Google SMTP, then run `configure.py`, update the canonical deployment credential and recreate Auth. Do not mark email or production readiness complete until delivery is tested.
-- VM:2vCPU,4GiB balloon minimum/8GiB maximum,50GB local-ZFS disk. Debian13, Docker29.9.1, Compose5.6.0, guest agent and NTP. Host/Docker use internal DNS10.1.1.2 only. Docker/containerd retain standard `/var/lib/docker` and `/var/lib/containerd` on the same persistent VM disk.
+- CloudNativePG 1.30.1, two operator replicas. PostgreSQL 17.6, official
+  `supabase/postgres:17.6.1.136`, one primary and two standbys across three nodes.
+- Synchronous quorum requires one standby acknowledgement. Writes can stop when
+  no eligible synchronous standby remains; do not silently weaken durability.
+- Each database has its own 30Gi Longhorn RWO PVC, with the existing two-replica
+  Longhorn policy. Logical replication slots are synchronized for Realtime.
+- Auth, REST, Realtime, Kong, Meta, Studio, Edge Functions, Logflare and Supavisor
+  each have two replicas. Supavisor uses IPv4 Erlang distribution, a shared
+  protected cookie and pod-IP node names. Realtime uses headless DNS discovery.
+- Storage is **one replica**, on `supabase-prod-storage-block`, 20Gi Longhorn RWO.
+  One imgproxy replica is colocated and mounts the same filesystem. Kubernetes
+  restarts these after failure; file service pauses during recovery. This is
+  recovery HA, not active/active storage.
+- Longhorn RWX uses NFS without the extended attributes required by Supabase's
+  file backend. Do not switch Storage back to RWX or add Storage replicas against
+  this RWO claim. The unsuccessful bootstrap RWX volume was deleted only after
+  confirming no active workload used it.
+- Functions and Studio snippets use separate 1Gi Longhorn RWX claims. Persistent
+  JWT/crypto/pgsodium keys are restored from the canonical vault item, never
+  regenerated against an existing database.
+- Vector runs on every node in a separate privileged-policy logging namespace;
+  its actual container drops capabilities and mounts logs read-only. It receives
+  only Logflare's ingestion token, not database/admin credentials. Logflare uses
+  PostgreSQL rather than BigQuery. Event retention is seven days via pg_cron.
+- No new proxy, Redis, MinIO or external object store was deployed. No Longhorn
+  backup target was added. Replicas are **not backups**; there is currently no
+  independent backup/PITR protection for this instance by owner choice.
 
-## Matched full suite
+### Existing internal identifiers
 
-Initial upstream release **self-hosted/v0.8.3**, commit **bc27d2661edd09a5d0b8d76ce33da6d4071a756e**. Includes all13 services: PostgreSQL17, Studio, Envoy, Auth, PostgREST, Realtime, Storage, imgproxy, postgres-meta, Edge Runtime, Supavisor, Logflare and Vector. Analytics uses included PostgreSQL, not BigQuery. Watchtower is the14th maintenance container.
+The namespace remains `supabase-prod`, and some existing Kubernetes resource IDs
+and the Helm release name retain `supabase-prod`. They are storage-bound legacy
+identifiers, not an additional deployment. Public/service/Studio/Homepage/Argo CD
+names are **Supabase**. Namespace/PVC identity changes require a planned data
+migration and must not be implemented by deleting/recreating the live database.
 
-Only Envoy publishes LAN port8000. Proxmox VM firewall permits that port only from Caddy10.1.1.3; SSH permits LAN/Tailscale. PostgreSQL/pooler/analytics/Studio are not directly published. Vector and Watchtower have trusted Docker-socket access; a read-only socket mount is not a read-only Docker API.
+### Gateway RCA
 
-Signing uses ES256 for user sessions plus legacy HS256 compatibility. The override supplies private signing JWKs only to Auth, public JWKS/legacy verification material to validators. `initialize.mjs` implements the pinned upstream key formats, including `key_ops`; it refuses existing secrets/database state. `repair-key-metadata.py` records the one-time metadata-only initialization repair without changing keys.
+Cilium's default cross-node external service routing source-NATed Caddy requests
+to a node's Cilium address. The Caddy-only ingress policy then rejected some
+requests. Confirmed by Cilium policy-drop events showing a rewritten source.
+The service now uses NodePort with `externalTrafficPolicy: Local`. Caddy health
+checks all three nodes and selects those with local healthy pods. HTTP port32080
+and PostgreSQL session port32432 accept only Caddy's source10.1.1.3. The internal
+transaction pooler NodePort32643 is reserved, not exposed as a Caddy listener.
+No cluster-wide Cilium mode was changed and no source allowlist was broadened.
 
-## Daily operation
+## Reproduce and operate
 
-### Agent MCP access
+Desired manifests: `gitops/apps/supabase`; app-of-apps entry:
+`gitops/clusters/platform/applications/supabase.yaml`. Public component manifests
+are generated from community chart source commit
+`14806daa859670133b1139faebb473855806899a`, chart0.8.0, plus tracked compatibility
+patches. The published0.8.0 package differs from that reviewed source; do not
+silently substitute it. Components use the chart's pinned stable version tags.
 
-Native Streamable HTTP endpoint **`https://supabase.l3b.cc.cd/mcp`**, LAN/Tailscale only. Agents send **`Authorization: Bearer <dedicated-key>`**. Retrieve the concealed **`mcp-api-key`** field from the existing HomeLab **Supabase** item; `mcp-url` stores the endpoint. This is a separately generated256-bit key, not a publishable/secret/service-role key and not a Supabase Cloud personal token. No browser/OAuth exchange required for MCP. Authentication is enforced by existing Caddy, not natively by self-hosted Studio.
+1. Restore the canonical HomeLab Supabase vault item before provisioning.
+2. Run `python3 infrastructure/supabase/bootstrap.py` from dev. This reuses keys
+   and refuses to generate fresh keys if database PVCs already exist.
+3. Sync the CloudNativePG operator Argo application, then the Supabase application.
+   The bootstrap job waits for PostgreSQL, runs bundled Supabase migrations and
+   records `homelab_bootstrap.state=v1`. It refuses a partial existing database.
+4. Supabase image migrations clear service passwords, so the tracked final SQL
+   reconciles them after migrations. CNPG requires its management `postgres`
+   role to remain SUPERUSER; only the image's demotion statement is filtered.
+5. Keep the pgsodium/Vault key helper configured for both extensions. Image
+   UID/GID100:101, not CNPG's default user26. Realtime release commands run as
+   nobody directly because its stock sudo entrypoint conflicts with dropped caps.
+6. Sync Studio auth with `python3 infrastructure/supabase/sync-studio-auth.py`.
+   Apply the tracked Caddy config with its protected env loaded, validate first,
+   then reload. Tinyauth rules use the existing owner identity/admin group.
+7. Run acceptance tools below. Do not mark deployment complete from TCP probes
+   or Argo health alone. Check database quorum, actual APIs and persisted data.
 
-This key permits powerful single-project administrative tools, including SQL and migrations; do not give it to frontend code or untrusted agents. The optional `?read_only=true` server mode can reduce accidental writes, but a caller holding this unrestricted key can omit that option: it is not a separate read-only credential boundary. Scope narrower credentials/routes separately if needed. Current toolset:11tools for docs, tables/extensions/migrations, SQL, logs/advisors, project URL/publishable keys and TypeScript types. Self-hosted MCP is not Supabase Cloud's entire multi-project management API.
+To regenerate component YAML, clone the reviewed upstream commit, run
+`python3 infrastructure/supabase/render-components.py /path/to/upstream`, review
+the public output and update `gitops/apps/supabase/files/components.yaml` through
+the normal Git workflow. The generator refuses Secret objects. Config checksums
+roll Kong/Functions when their configuration changes. Preserve upstream Kong Lua
+quoting; its entrypoint shell-expands the file before parsing YAML.
 
-`enable-mcp.py /srv/supabase` generates the key once into protected `.env`, backs up the pinned Envoy template and allows `/mcp` only from direct peer **10.1.1.3/32**. It preserves the separate `/api/mcp` deny and refuses unknown upstream template changes. Restart only `supabase-envoy` to render the template; no database/container-data recreation. Other LAN hosts are blocked from raw8000 by the VM firewall, and internal Docker peers are not allowlisted by this MCP RBAC rule.
-
-Run `sync-mcp-auth.py` on dev to copy the key via SSH stdin into protected proxy `/etc/caddy/cloudflare.env`; restart Caddy after adding/changing env, then test normal reload. Save the updated deployment environment using `save-vault.py`; it preserves unrelated existing vault fields and adds MCP metadata. Restore/rotation must keep both copies synchronized. Missing/incorrect keys return401 Bearer, never redirect to Pocket ID. SSO cookies or app API keys do not authorize this route. Caddy strips the dedicated key and cookies before forwarding to Studio, avoiding leakage into downstream handlers. `Cache-Control: no-store` is set. `/api/mcp` remains denied independently; do not open it as a shortcut.
-
-Validation: `python3 infrastructure/supabase/validate-mcp.py` from dev reads the key securely without printing it and checks missing/invalid keys, initialize,11-tool discovery, read-only health SQL, temporary-table write and alternate-route denial. MCP protocol2025-03-26 verified. Native server is stateless POST/JSON Streamable HTTP; GET returning405 is not failed authentication.
-
-### Local agent clients on dev
-
-At owner's request, server **supabase** is configured globally for the dev account in Codex `/home/dev/.codex/config.toml`, Claude Code `/home/dev/.claude.json` (user-scope `mcpServers`) and Hermes `/home/dev/.hermes/config.yaml` (`mcp_servers`). Each uses the native HTTP endpoint and a direct Authorization Bearer header. No shell export or browser login needed. Real credentials stay only in protected live configs, never repository templates. These files are mode0600; private pre-change backups are under `/home/dev/.local/state/supabase-mcp-config-backups/` (0700).
-
-The public server entries were added using apply_patch; `inject-agent-mcp-key.py` then mechanically injected only the unique header values from the canonical vault item without exposing them in command arguments/output. It also supports rotation of existing Supabase header values after the server/proxy/vault key is updated. It intentionally refuses absent/ambiguous entries or an unrelated current credential. It preserves file text, other settings and server entries; parse-and-compare checks confirmed all unrelated settings unchanged.
-
-Verification: each parsed client config authenticated and discovered11tools; Codex native config parser recognized the server; Claude's native `mcp get supabase` reported Connected and Hermes `mcp test supabase` connected/discovered11tools. Hermes gateway completed its existing graceful SIGUSR1/systemctl user reload, with a new active process at22:39:15UTC. Existing Codex/Claude processes need a new session/restart to load the server. The current Codex chat cannot acquire new MCP tools merely by writing its config.
-
-Reproduction order: initialize/restore protected env, run enable helper, save vault/sync key, validate/apply Caddy route with protected env loaded, restart Caddy for env, restart Envoy, run validation. Existing backup.sh includes the modified gateway templates and `.env`; Supabase VM backup also preserves them. Do not expose this upstream MCP directly to the Internet: native OAuth/PAT protection is absent. Keep the source-network boundary even with the proxy key.
-
-### Studio SSO reproduction and credential rotation
-
-`tinyauth.rules` installs as `/etc/tinyauth/supabase.env` on auth, with `tinyauth.conf` at `/etc/systemd/system/tinyauth.service.d/supabase.conf`. It adds the exact Supabase domain, owner email whitelist and required admin group without replacing other application rules or OAuth secrets. Restart Tinyauth after changing its rules.
-
-Run `python3 infrastructure/supabase/sync-studio-auth.py` from dev to derive the backend Basic credential from the protected Supabase environment and securely sync `SUPABASE_STUDIO_AUTH` to proxy's `/etc/caddy/cloudflare.env`. It sends the secret via SSH stdin, never argv/stdout. No secret is tracked in Git. After adding/changing that environment variable, validate with the protected env loaded and restart Caddy once so normal systemd reloads inherit the updated environment. Existing Caddy systemd EnvironmentFile already loads it. On a restored proxy, sync this value **before** applying the Caddy route. Rotate dashboard credentials only with this sync step; mismatches fail closed with401. Caddy strips the backend dashboard challenge header so even a credential mismatch cannot restore the browser popup.
-
-Caddy allows standard Auth/REST/GraphQL/Realtime/Storage/Functions API paths through without interactive SSO, preserving API keys and JWTs. Realtime administrative `/realtime/v1/api*`, `/pg`, Studio `/api/*`, MCP and all other dashboard paths pass through SSO first; Envoy's existing RBAC still applies. Backend Envoy Basic authentication remains defense-in-depth, but browsers never enter those credentials. Missing SSO fails closed. No image patches, new proxy, new ports, or changes to application Auth users. Browser navigation reaches Pocket ID; programmatic requests may get401 with `X-Tinyauth-Location`, never `WWW-Authenticate: Basic` from the normal frontend. Confirmed root old-Basic/spoofed-identity bypass attempts fail; final passkey-authenticated dashboard check requires the owner.
-
-The wrapper supplies the explicit project name, both protected env files, and every required override. Do not use upstream `run.sh` or bare `docker compose up` to bypass logs/security/update settings.
-
-```bash
-ssh supabase
-sudo sh -c 'cd /srv/supabase && sh compose.sh ps'
-sudo sh -c 'cd /srv/supabase && sh compose.sh logs --tail=80 auth'
-sudo sh -c 'cd /srv/supabase && sh compose.sh config --quiet'
-sudo sh -c 'cd /srv/supabase && sh compose.sh up -d --wait'
+```sh
+kubectl --context k8s -n supabase-prod get cluster,pods,pvc
+kubectl --context k8s -n argocd get applications supabase cloudnative-pg
+python3 infrastructure/supabase/validate-mcp.py
+/home/dev/.local/share/homelab-tools/venv/bin/python infrastructure/supabase/validate.py
+/home/dev/.local/share/homelab-tools/venv/bin/python infrastructure/supabase/validate-postgres.py
 ```
 
-Layer order: `docker-compose.yaml`, upstream `docker-compose.logs.yml`, `compose.homelab.yaml`, initial `compose.images.yml` digest baseline, owner-approved `compose.auto-update.yaml` version tags, then `compose.watchtower.yaml`. Immutable upstream checkout stays in `.upstream`.
+The acceptance venv requires `websocket-client==1.8.0` and
+`psycopg[binary]==3.2.10`. Test fixtures are under the protected user state path
+`~/.local/state/homelab/supabase-prod-acceptance.json`; `--keep` retains fixtures,
+`--cleanup` removes only those fixtures. `validate-postgres.py --failover`
+deliberately deletes the current primary pod, so use only in an approved window.
 
-## Automatic updates: owner-approved override
+## SMTP
 
-Owner explicitly chose automatic replacement and image cleanup on October18 IST, superseding monitor-only. Maintained **nickfedor/watchtower:latest**, upstream **nicholas-fedor/watchtower**, currently1.23.1. Original containrrr image is not used.
+Sender **Anurag Vishwakarma (l3b)**, `l3bctl@gmail.com`, smtp.gmail.com:587 STARTTLS.
+The canonical source is **HomeLab → Google → smtp**, a concealed Google app
+password. `configure-smtp.py` validates login and updates the protected Supabase
+vault record/Kubernetes Secret without printing it. Restart/roll Auth after
+changing an existing Secret because process environment is not hot-reloaded.
+Public signup remains disabled and email auto-confirm remains off.
 
-- Schedule **04:00 IST daily**. `WATCHTOWER_MONITOR_ONLY=false`, `WATCHTOWER_CLEANUP=true`, `WATCHTOWER_LABEL_ENABLE=true`.
-- All13 Supabase services and Watchtower are explicitly opted in. No volume removal, broad image prune, or exposed Docker API.
-- Supabase follows its matched **current version tags**, not unrelated `latest` versions. Watchtower replaces an image when that tag's registry digest changes. It does **not** discover/bump newer version tags or run coordinated Supabase configuration/migration upgrades.
-- `compose.images.yml` preserves the initial exact image set for investigation/rebuild. The later auto-update overlay intentionally removes digest pinning at runtime. Exact reproduction after automatic updates requires capturing deployed image digests, not assuming the initial lock describes the current deployment.
-- Automatic per-image replacement can interrupt service or introduce an incompatible rebuild. Watchtower is not a database backup, rollback system or multi-service upgrade orchestrator. Changed image cleanup may require repulling a prior digest for recovery. No external update notifications are configured; inspect Watchtower logs.
+SMTP authentication and submission to the homelab mailbox passed. A real
+Supabase Auth invitation also returned success through Gmail; its disposable
+Auth user was removed afterward. Inbox receipt was not independently observed.
 
-## Persistence, HA and backups
+## Verified 2026-10-18 and limits
 
-Database: `volumes/db/data`; files:`volumes/storage`; functions:`volumes/functions`; snippets:`volumes/snippets`. Named volumes:`supabase_db-config` (includes PostgreSQL encryption/root-key configuration) and `supabase_deno-cache` (regenerable). Preserve keys and both databases, including platform/log database `_supabase`.
+- Studio SSO redirect/no Basic-auth prompt; spoofed identity and Basic bypass
+  denied. Owner's passkey-authenticated Studio browser session still needs their
+  confirmation; it was not bypassed or impersonated for testing.
+- ES256 Auth and refresh, REST CRUD/two-user RLS isolation, private Storage and
+  signed URL expiry, authenticated Edge Function, Realtime WebSocket changes/RLS.
+- Database rows and private file survived Storage pod recreation and database
+  primary failover. One acknowledged SQL marker survived automatic promotion
+  from supabase-db-1 to supabase-db-2. SQL recovery measured123.6s for normal pod
+  termination with graceful shutdown. This is not a zero-downtime guarantee or a
+  full node/network-partition/fencing drill. Three DB instances returned healthy.
+- TLS PostgreSQL access through sb:5432 and Supavisor SQL writes passed. Supavisor
+  replica clustering was checked through its runtime node list.
+- MCP auth, discovery and real database queries/writes tested independently.
+- Node-local gateway routing preserves Caddy's source identity. Direct requests
+  from dev to the raw backend must remain denied.
+- Kubernetes1.37 is listed as tested, not formally supported by CNPG1.30.1; owner
+  explicitly accepted this limitation. Supported upstream range is1.34–1.36.
+- Full disaster recovery, independent backups, sustained load/capacity and whole
+  node failure remain untested. No blanket production-readiness claim is made.
 
-HA resource `vm:108`: primaryPX30, replica/recoveryPX10, strict affinity `vm108-replica-nodes`, failback/auto-rebalance off,2local restarts/1relocation. Replication **108-0**, PX30→PX10, every5minutes,20MB/s. Initial and post-install replication succeeded; the large image-download delta took longer than5minutes. Replication is asynchronous, may lose writes after the last completed sync and is not a backup. No destructive failover/fencing drill has been performed; target capacity still matters.
-
-Backups:
-
-- `supabase-backup.timer`: **03:50 IST**, keeps3complete sets under `/srv/supabase/backups`. `backup.sh` briefly stops application writers, takes globals plus both custom-format database dumps, Storage/functions/config and named db-config archive, then starts and waits for the full suite. This scheduled maintenance causes downtime. Failed sets remain for inspection. These local dumps alone are not independent off-host protection.
-- Proxmox job **supabase-to-backup**: **04:30**, VM108, snapshot+zstd, storage **BACKUP**, keep-last3, follows VM across eligible nodes. Includes whole VM disk and local logical backups; guest-agent filesystem freeze is available.
-- `supabase-log-retention.timer`: **03:15 IST**, removes analytics events older than7days, only `_analytics.log_events_<uuid>` tables. Docker logs independently use local10MiB×3 rotation. SQL deletion does not immediately shrink allocated PostgreSQL files; monitor space and autovacuum. It never deletes application tables or Storage files.
-
-Both timers are enabled persistently. Inspect `systemctl list-timers 'supabase-*'`. Logical backups contain secrets and private files; keep mode0700/0600 and the existing BACKUP access controls. Reboot/VM restart is not a backup test. Database dump restore was tested in isolated databases; a complete replacement-VM disaster-recovery drill remains pending.
-
-## Reproduction and recovery
-
-1. Provision Debian, root public key and internal DNS; verify SSH host fingerprint through the trusted Proxmox guest console/agent. `bootstrap-vm.sh` uses the official Docker installer pinned to commit ada7a567e59b3935bd601bb21e422da50e80e376, creates the administrator, key-only SSH, Docker logging/DNS and guest agent. It refuses an existing Docker daemon configuration.
-2. Run `sudo sh infrastructure/supabase/prepare.sh /srv/supabase` from this repo. It fetches/verifies the pinned upstream commit and refuses an existing destination. Main upstream file is renamed to `docker-compose.yaml`; upstream assets stay unmodified otherwise.
-3. For a **fresh** project only, `sudo node infrastructure/supabase/initialize.mjs /srv/supabase`. For recovery, **restore existing `.env` and encryption keys instead**. Never regenerate keys against data.
-4. Copy `site.env.example` to protected `homelab.env`. Configure site/SMTP with `configure.py` and a protected vault-item JSON input; delete that temporary input afterward. Save final env using `save-vault.py` without printing values. Reuse the canonical Supabase vault item, not duplicate items.
-5. Copy/install `backup.sh`, `log-retention.sql`, corresponding systemd units/timers, VM firewall108.fw, HA/replication and Caddy route. `bootstrap-vm.sh` is a provisioning tool, not an idempotent full rebuild orchestrator. Restore DB roles, both databases, data/files/config and named db-config before admitting traffic. Docker pull/start does not restore user data.
-6. Use wrapper `config --quiet`, `pull`, `up -d --wait`. Validate with `validate.py --keep` (Debian package `python3-websocket` is a test dependency) and `validate-logs.py`. Scripts never print API keys. Acceptance fixtures live in protected `.acceptance.json`; `validate.py --cleanup` removes only those fixtures.
-
-For a new Supabase release, review upstream release/migrations; update source pin, matched image versions and initial locks, test a restored isolated stack, then deploy the matched set in a maintenance window. An old image may not understand migrated data; rollback may require restoring a consistent backup. Do not copy upstream example data directories over live data. Restore the initial locks only deliberately, not as an automatic downgrade.
-
-## Acceptance record
-
-On October18 IST all13 Supabase services and Watchtower reached healthy. HTTPS, dashboard Basic auth, missing/invalid API auth denial, ES256 sessions, refresh, two-user REST RLS CRUD/isolation, private Storage upload/read and signed expiry, Edge Function auth/execution, Realtime update delivery/RLS/invalid-token denial passed. Tests passed again after complete container recreation. Logflare query returned real Auth events ingested through Vector. Reboot issued and VM boot verified at03:34IST; final post-reboot validation is recorded in CURRENT-STATE.md.
-
-First coordinated backup completed; PostgreSQL application dump restored into isolated `acceptance_restore` and contained2test rows/1Storage metadata object; platform dump restored into isolated `acceptance_platform_restore`. This is not a full replacement-VM restore or proven mail delivery. Temporary fixtures/restore databases are removed after final validation.
-
-An exploratory Logflare `/api/sources` management request hit upstream1.50.15's nil BigQuery-project formatting path on this PostgreSQL-only installation. Studio's actual SQL query API and ingestion passed; no dummy Google project/cloud service was introduced to mask that unrelated endpoint limitation. Initial first-boot seed cache error disappeared after seeding/restart.
-
-Sources: [official Docker deployment](https://supabase.com/docs/guides/self-hosting/docker), [reverse proxy](https://supabase.com/docs/guides/self-hosting/self-hosted-proxy-https), [pinned source](https://github.com/supabase/supabase/tree/bc27d2661edd09a5d0b8d76ce33da6d4071a756e/docker), [maintained Watchtower](https://github.com/nicholas-fedor/watchtower).
+Sources: [Supabase self-hosting](https://supabase.com/docs/guides/self-hosting),
+[community Kubernetes chart](https://github.com/supabase-community/supabase-kubernetes),
+[CloudNativePG](https://cloudnative-pg.io/docs/1.30/),
+[Cilium source preservation](https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/).

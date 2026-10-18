@@ -1,9 +1,0 @@
-[Unit]
-Description=Daily Supabase logical backup before VM backup
-
-[Timer]
-OnCalendar=*-*-* 03:50:00 Asia/Kolkata
-Persistent=false
-
-[Install]
-WantedBy=timers.target

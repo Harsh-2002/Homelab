@@ -1,9 +1,0 @@
-[Unit]
-Description=Coordinated Supabase logical and file backup
-After=docker.service
-Requires=docker.service
-
-[Service]
-Type=oneshot
-ExecStart=/bin/sh /srv/supabase/backup.sh
-TimeoutStartSec=30min

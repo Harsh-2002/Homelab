@@ -140,6 +140,10 @@
 	handle @supabaseprod {
 		import private
 		import proxy
+		@supabase_mcp_alias path /api/mcp /api/mcp/*
+		handle @supabase_mcp_alias {
+			respond "Use the authenticated /mcp endpoint" 403
+		}
 		@supabase_mcp path /mcp /mcp/*
 		handle @supabase_mcp {
 			header Cache-Control "no-store"

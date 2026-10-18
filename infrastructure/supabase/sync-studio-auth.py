@@ -1,32 +1,25 @@
 #!/usr/bin/env python3
-"""Operator helper: sync backend Studio credential to Caddy, never display it.
-
-Run on dev with trusted supabase/proxy SSH aliases. Caddy expands this variable
-at config-adaptation time; source the protected file when validating/reloading.
-"""
+"""Sync only production Studio's backend header into protected Caddy env."""
 import base64
-import shlex
+import json
+from pathlib import Path
 import subprocess
 
-raw = subprocess.check_output(['ssh', 'supabase', 'sudo cat /srv/supabase/.env'], text=True)
-env = {}
-for line in raw.splitlines():
-    if line and not line.startswith('#') and '=' in line:
-        key, value = line.split('=', 1)
-        if key in ('DASHBOARD_USERNAME', 'DASHBOARD_PASSWORD'):
-            env[key] = shlex.split(value)[0] if value else ''
-assert all(env.get(key) for key in ('DASHBOARD_USERNAME', 'DASHBOARD_PASSWORD'))
-credential = 'Basic ' + base64.b64encode((env['DASHBOARD_USERNAME'] + ':' + env['DASHBOARD_PASSWORD']).encode()).decode()
-remote = '''import pathlib, re, sys
-path = pathlib.Path('/etc/caddy/cloudflare.env')
-text = path.read_text()
-value = sys.stdin.read().strip()
-assert value.startswith('Basic ') and "'" not in value and '\\n' not in value
-line = "SUPABASE_STUDIO_AUTH='" + value + "'"
-pattern = r'^SUPABASE_STUDIO_AUTH=.*$'
-text = re.sub(pattern, lambda _: line, text, flags=re.M) if re.search(pattern, text, re.M) else text.rstrip() + '\\n' + line + '\\n'
-path.write_text(text)
-path.chmod(0o600)
+op=Path(__file__).resolve().parents[2]/'scripts/op-sa'
+item=json.loads(subprocess.check_output([str(op),'item','get','Supabase','--vault','HomeLab','--format','json']))
+values=json.loads(next(f['value'] for f in item['fields'] if f.get('label')=='deployment-secrets'))
+header='Basic '+base64.b64encode((values['username']+':'+values['dashboardPassword']).encode()).decode()
+program='''import pathlib,sys,os
+p=pathlib.Path('/etc/caddy/cloudflare.env')
+value=sys.stdin.read().strip()
+old=p.read_text().splitlines()
+key='SUPABASE_STUDIO_AUTH'
+new=[line for line in old if not line.startswith(key+'=')]
+new.append(key+'="'+value+'"')
+p.write_text('\\n'.join(new)+'\\n')
+os.chmod(p,0o640)
 '''
-subprocess.run(['ssh', 'proxy', 'python3 -c ' + shlex.quote(remote)], input=credential, text=True, check=True)
-print('Synced protected Studio backend credential to Caddy; no secret displayed')
+import shlex
+command='python3 -c '+shlex.quote(program)
+subprocess.run(['ssh','proxy',command],input=header,text=True,check=True)
+print('Production Studio backend credential synchronized; no secret output')

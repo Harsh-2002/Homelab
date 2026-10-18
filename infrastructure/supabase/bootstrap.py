@@ -65,4 +65,4 @@ logging_secret=secret('supabase-prod-vector',{'publicAccessToken':values['public
 logging_secret['metadata']['namespace']='supabase-prod-logging'
 objects.append(logging_secret)
 run(['kubectl','--context','k8s','apply','-f','-'],json.dumps({'apiVersion':'v1','kind':'List','items':objects}))
-print('Production secrets provisioned from canonical HomeLab / Supabase Production; no secret values displayed')
+print('Secrets provisioned from canonical HomeLab / Supabase; no secret values displayed')

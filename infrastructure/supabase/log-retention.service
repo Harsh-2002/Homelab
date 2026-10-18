@@ -1,8 +1,0 @@
-[Unit]
-Description=Supabase analytics seven-day retention
-After=docker.service
-Requires=docker.service
-
-[Service]
-Type=oneshot
-ExecStart=/bin/sh -c '/usr/bin/docker exec -i supabase-db psql -v ON_ERROR_STOP=1 -U supabase_admin -d _supabase < /srv/supabase/log-retention.sql'

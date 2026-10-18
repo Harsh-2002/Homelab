@@ -5,10 +5,13 @@ import shlex
 import subprocess
 import urllib.error
 import urllib.request
+import uuid
 
 URL = 'https://sb.l3b.cc.cd/mcp'
-raw = subprocess.check_output(['ssh', 'supabase', 'sudo cat /srv/supabase/.env'], text=True)
-key = next(shlex.split(line.split('=', 1)[1])[0] for line in raw.splitlines() if line.startswith('SUPABASE_MCP_API_KEY='))
+from pathlib import Path
+root=Path(__file__).resolve().parents[2]
+item=json.loads(subprocess.check_output([str(root/'scripts/op-sa'),'item','get','Supabase','--vault','HomeLab','--format','json']))
+key=next(f['value'] for f in item['fields'] if f.get('id')=='mcp-api-key')
 
 def call(method, params=None, token=key, endpoint=URL):
     body = {'jsonrpc': '2.0', 'id': 1, 'method': method}
@@ -38,7 +41,8 @@ status, result, _ = call('tools/call', {'name': 'execute_sql', 'arguments': {'qu
 assert status == 200 and 'result' in result and not result['result'].get('isError'), 'Read-only SQL tool invocation failed'
 assert 'mcp_health' in json.dumps(result['result'])
 print('PASS: execute_sql ran a read-only health query against the real database')
-status, result, _ = call('tools/call', {'name': 'execute_sql', 'arguments': {'query': 'create temporary table homelab_mcp_validation (value integer) on commit drop; insert into homelab_mcp_validation values (1); select value from homelab_mcp_validation;'}})
+table = 'homelab_mcp_validation_' + uuid.uuid4().hex[:12]
+status, result, _ = call('tools/call', {'name': 'execute_sql', 'arguments': {'query': f'create temporary table {table} (value integer) on commit drop; insert into {table} values (1); select value from {table};'}})
 assert status == 200 and 'result' in result and not result['result'].get('isError'), 'Temporary SQL write test failed'
 print('PASS: agent SQL writes work using a temporary table; no application data changed')
 status, _, _ = call('tools/list', endpoint='https://supabase.l3b.cc.cd/api/mcp')

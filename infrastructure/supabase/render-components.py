@@ -14,7 +14,7 @@ root=pathlib.Path(__file__).resolve().parents[2]
 upstream=pathlib.Path(sys.argv[1])
 commit=subprocess.check_output(['git','-C',str(upstream),'rev-parse','HEAD'],text=True).strip()
 assert commit=='14806daa859670133b1139faebb473855806899a','Unexpected upstream source revision'
-raw=subprocess.check_output(['helm','template','supabase-prod',str(upstream/'charts/supabase'),'-n','supabase-prod','--skip-tests','-f',str(root/'gitops/apps/supabase-prod/components-values.yaml')],text=True)
+raw=subprocess.check_output(['helm','template','supabase-prod',str(upstream/'charts/supabase'),'-n','supabase-prod','--skip-tests','-f',str(root/'gitops/apps/supabase/components-values.yaml')],text=True)
 objects=[x for x in yaml.safe_load_all(raw) if x]
 assert not any(x['kind']=='Secret' for x in objects),'Refusing generated credentials in Git'
 for obj in objects:
@@ -44,7 +44,7 @@ for obj in objects:
     if config_name:
         config=next(item['data'] for item in objects if item['kind']=='ConfigMap' and item['metadata']['name']==config_name)
         content=yaml.safe_dump(config)
-        if name.endswith('-functions'):content+=(root/'gitops/apps/supabase-prod/files/hello.ts').read_text()
+        if name.endswith('-functions'):content+=(root/'gitops/apps/supabase/files/hello.ts').read_text()
         obj['spec']['template']['metadata'].setdefault('annotations',{})['checksum/config']=hashlib.sha256(content.encode()).hexdigest()
     if name.endswith(('-storage','-imgproxy')):
         obj['spec']['strategy']={'type':'Recreate','rollingUpdate':None}

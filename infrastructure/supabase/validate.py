@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Disposable end-to-end acceptance test. Run as root on the Supabase VM.
+"""Disposable end-to-end acceptance test. Run on dev with the k8s kubectl context and vault access.
 
-Reads credentials only from the protected deployment file. Never prints tokens.
+Reads credentials only from the canonical 1Password item. Never prints tokens.
 Use --keep to retain fixtures for the restart persistence test; --cleanup removes
 only these explicitly named acceptance fixtures.
 """
@@ -17,15 +17,19 @@ import urllib.error
 import urllib.request
 import websocket
 
-ROOT = pathlib.Path('/srv/supabase')
-ENV = {}
-for line in (ROOT / '.env').read_text().splitlines():
-    if line and not line.startswith('#') and '=' in line:
-        key, value = line.split('=', 1)
-        ENV[key] = shlex.split(value)[0] if value else ''
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+item = json.loads(subprocess.check_output([str(ROOT / 'scripts/op-sa'), 'item', 'get', 'Supabase', '--vault', 'HomeLab', '--format', 'json']))
+values = json.loads(next(field['value'] for field in item['fields'] if field.get('label') == 'deployment-secrets'))
+ENV = {
+    'SUPABASE_SECRET_KEY': values['secretKey'],
+    'SUPABASE_PUBLISHABLE_KEY': values['publishableKey'],
+    'DASHBOARD_USERNAME': values['username'],
+    'DASHBOARD_PASSWORD': values['dashboardPassword'],
+}
 BASE = 'https://sb.l3b.cc.cd'
 STUDIO = 'https://supabase.l3b.cc.cd'
-STATE = ROOT / '.acceptance.json'
+STATE = pathlib.Path.home() / '.local/state/homelab/supabase-prod-acceptance.json'
+STATE.parent.mkdir(parents=True, exist_ok=True)
 
 def request(path, method='GET', data=None, user=None, admin=False, anonymous=False, raw=False, headers=None, expected=(200, 201, 204)):
     head = {} if anonymous else {'apikey': ENV['SUPABASE_SECRET_KEY'] if admin else ENV['SUPABASE_PUBLISHABLE_KEY']}
@@ -49,7 +53,8 @@ def request(path, method='GET', data=None, user=None, admin=False, anonymous=Fal
     return json.loads(body) if body[:1] in (b'{', b'[') else body
 
 def sql(query):
-    result = subprocess.run(['docker', 'exec', '-i', 'supabase-db', 'psql', '-v', 'ON_ERROR_STOP=1', '-U', 'postgres', '-d', 'postgres', '-At'], input=query, text=True, capture_output=True)
+    pod = subprocess.check_output(['kubectl', '--context', 'k8s', '-n', 'supabase-prod', 'get', 'pods', '-l', 'cnpg.io/cluster=supabase-db,role=primary', '-o', 'jsonpath={.items[0].metadata.name}'], text=True)
+    result = subprocess.run(['kubectl', '--context', 'k8s', '-n', 'supabase-prod', 'exec', '-i', pod, '-c', 'postgres', '--', 'psql', '-v', 'ON_ERROR_STOP=1', '-U', 'postgres', '-d', 'postgres', '-At'], input=query, text=True, capture_output=True)
     assert result.returncode == 0, 'Acceptance SQL failed; inspect protected database logs'
     return result.stdout.strip()
 

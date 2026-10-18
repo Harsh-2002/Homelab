@@ -36,7 +36,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
   - `infrastructure/motrix/` — Motrix Server Compose deployment, SMB download path, and recovery runbook.
   - `infrastructure/arr/` — Portainer-managed media automation stack, access, storage paths, and recovery checks.
   - `infrastructure/n8n/` — unified n8n, PostgreSQL, SearXNG, and isolated Assistant/Agent sandbox Stack.
-  - `infrastructure/supabase/` — full Supabase suite on VM108/PX30, direct Compose in `/srv/supabase`, logs/analytics, automatic image replacement, backups and replication.
+  - `infrastructure/supabase/` — single Kubernetes Supabase suite, CloudNativePG hot standbys, Longhorn block storage, SMTP and API/MCP access. VM108 and PocketBase are removed.
   - `infrastructure/openviking/` — shared agent memory, local embeddings, Groq/Cerebras fallback, and Portainer operations.
   - `infrastructure/minio/` — historical MinIO-to-RustFS migration record.
   - `infrastructure/rustfs/` — native RustFS S3 service, OIDC, HA, and upgrade runbook.
@@ -96,7 +96,8 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 | OpenViking API/MCP (private) | `https://memory.l3b.cc.cd` (`/mcp`) |
 | OpenCloud files | `https://drive.l3b.cc.cd` |
 | Orva serverless | `https://orva.l3b.cc.cd` (`10.1.1.11:8443`) |
-| Supabase | `10.1.1.14` (`https://supabase.l3b.cc.cd`, private; VM108/PX30) |
+| Supabase Studio (private) | `https://supabase.l3b.cc.cd`, Kubernetes |
+| Supabase API/MCP/PostgreSQL (private) | `https://sb.l3b.cc.cd`, `/mcp`, PostgreSQL port5432 |
 | Proxmox cluster | `https://px.l3b.cc.cd` |
 | Proxmox px10 | `https://px10.l3b.cc.cd` |
 | Proxmox px20 | `https://px20.l3b.cc.cd` |

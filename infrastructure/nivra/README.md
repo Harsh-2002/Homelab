@@ -1,5 +1,20 @@
 # Nivra
 
+## Agent MCP, verified 2026-10-18
+
+The owner-provided access key now authenticates successfully at
+`https://notes.l3b.cc.cd/mcp`. Global Codex, Claude Code and Hermes configurations
+on dev contain the server named `nivra`; all three passed initialization and
+discovery of97tools. Codex/Claude native config commands recognize the entry;
+Hermes native MCP test connected and its gateway was gracefully reloaded.
+New Codex/Claude sessions load the added server. Credentials are held only in
+mode0600 local config files, with protected backups under
+`~/.local/state/nivra-mcp-backups`. They are not stored in this repository or
+memory. `configure-agent-mcp.py` takes a fresh owner key on stdin, preserves other
+settings, refuses an existing entry and tests initialization/discovery. The
+older failed-MCP-credential statements below are superseded; native UI password
+login remains separately unverified.
+
 Nivra **v2026.10.16**, commit `8a761e26728f6a5ccb6bd97cce29acd96beb05e2`, is deployed on `ctr` as Portainer stack **157**, `nivra` (endpoint2). At the owner's explicit request, the Compose image is **`ghcr.io/harsh-2002/nivra:latest`**, without a digest pin. The image observed during this upgrade matches the published release. CI run38905049889 succeeded for that exact release commit. No upstream release/tag/CI settings were modified. Caddy access policy and DNS were left unchanged: existing private LAN/Tailscale route at `https://notes.l3b.cc.cd`.
 
 ## October18 IST upgrade acceptance

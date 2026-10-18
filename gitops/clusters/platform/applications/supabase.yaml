@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: supabase-prod-infrastructure
+  name: supabase
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/Harsh-2002/Homelab.git
     targetRevision: main
-    path: gitops/apps/supabase-prod
+    path: gitops/apps/supabase
     helm:
       releaseName: supabase-prod
   destination:

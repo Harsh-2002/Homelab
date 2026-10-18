@@ -20,6 +20,7 @@ data:
     ALTER DATABASE postgres SET search_path TO public, extensions;
     ALTER ROLE authenticator SET search_path TO public, extensions;
     ALTER ROLE postgres SUPERUSER;
+    \i /seed/99-log-retention.sql
 ---
 apiVersion: batch/v1
 kind: Job
