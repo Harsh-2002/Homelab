@@ -18,6 +18,11 @@ objects=[x for x in yaml.safe_load_all(raw) if x]
 assert not any(x['kind']=='Secret' for x in objects),'Refusing generated credentials in Git'
 for obj in objects:
     obj['metadata']['namespace']='supabase-prod'
+    if obj['kind']=='ConfigMap' and obj['metadata']['name']=='supabase-prod-functions-main':
+        script=obj['data']['index.ts']
+        script=script.replace("const VERIFY_JWT", "const JWKS = jose.createLocalJWKSet(JSON.parse(Deno.env.get('SUPABASE_JWKS')!))\nconst VERIFY_JWT",1)
+        script=script.replace('await jose.jwtVerify(jwt, secretKey)', "const { alg } = jose.decodeProtectedHeader(jwt)\n    if (alg === 'HS256') await jose.jwtVerify(jwt, secretKey, { algorithms: ['HS256'] })\n    else await jose.jwtVerify(jwt, JWKS, { algorithms: ['ES256'] })")
+        obj['data']['index.ts']=script
     if obj['kind']!='Deployment':
         continue
     pod=obj['spec']['template']['spec']
@@ -53,6 +58,8 @@ for obj in objects:
             container['command']=['/bin/sh','-c']
             container['args']=['/app/bin/migrate && /app/bin/realtime eval "Realtime.Release.seeds(Realtime.Repo)" && exec /app/bin/server']
             env.append({'name':'DB_SSL_CA_CERT','value':'/etc/supabase-tls/ca.crt'})
+        if name.endswith('-functions'):
+            env.append({'name':'SUPABASE_JWKS','valueFrom':{'secretKeyRef':{'name':'supabase-prod-apikey','key':'jwtJwks'}}})
         container.setdefault('volumeMounts',[]).append({'name':'postgres-ca','mountPath':'/etc/supabase-tls','readOnly':True})
     pod.setdefault('volumes',[]).append({'name':'postgres-ca','secret':{'secretName':'supabase-db-ca','items':[{'key':'ca.crt','path':'ca.crt'}]}})
     pdb={'apiVersion':'policy/v1','kind':'PodDisruptionBudget','metadata':{'name':name,'namespace':'supabase-prod'},'spec':{'minAvailable':1,'selector':obj['spec']['selector']}}

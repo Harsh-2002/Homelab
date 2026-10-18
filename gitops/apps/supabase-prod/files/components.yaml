@@ -121,36 +121,39 @@ metadata:
 data:
   index.ts: "import * as jose from 'https://deno.land/x/jose@v4.14.4/index.ts'\n\n\
     console.log('main function started')\n\nconst JWT_SECRET = Deno.env.get('JWT_SECRET')\n\
+    const JWKS = jose.createLocalJWKSet(JSON.parse(Deno.env.get('SUPABASE_JWKS')!))\n\
     const VERIFY_JWT = Deno.env.get('VERIFY_JWT') === 'true'\n\nfunction getAuthToken(req:\
     \ Request) {\nconst authHeader = req.headers.get('authorization')\nif (!authHeader)\
     \ {\n    throw new Error('Missing authorization header')\n}\nconst [bearer, token]\
     \ = authHeader.split(' ')\nif (bearer !== 'Bearer') {\n    throw new Error(`Auth\
     \ header is not 'Bearer {token}'`)\n}\nreturn token\n}\n\nasync function verifyJWT(jwt:\
     \ string): Promise<boolean> {\nconst encoder = new TextEncoder()\nconst secretKey\
-    \ = encoder.encode(JWT_SECRET)\ntry {\n    await jose.jwtVerify(jwt, secretKey)\n\
-    } catch (err) {\n    console.error(err)\n    return false\n}\nreturn true\n}\n\
-    \nDeno.serve(async (req: Request) => {\nif (req.method !== 'OPTIONS' && VERIFY_JWT)\
-    \ {\n    try {\n    const token = getAuthToken(req)\n    const isValidJWT = await\
-    \ verifyJWT(token)\n\n    if (!isValidJWT) {\n        return new Response(JSON.stringify({\
-    \ msg: 'Invalid JWT' }), {\n        status: 401,\n        headers: { 'Content-Type':\
-    \ 'application/json' },\n        })\n    }\n    } catch (e) {\n    console.error(e)\n\
-    \    return new Response(JSON.stringify({ msg: e.toString() }), {\n        status:\
-    \ 401,\n        headers: { 'Content-Type': 'application/json' },\n    })\n   \
-    \ }\n}\n\nconst url = new URL(req.url)\nconst { pathname } = url\nconst path_parts\
-    \ = pathname.split('/')\nconst service_name = path_parts[1]\n\nif (!service_name\
-    \ || service_name === '') {\n    const error = { msg: 'missing function name in\
-    \ request' }\n    return new Response(JSON.stringify(error), {\n    status: 400,\n\
-    \    headers: { 'Content-Type': 'application/json' },\n    })\n}\n\nconst servicePath\
-    \ = `/home/deno/functions/${service_name}`\nconsole.error(`serving the request\
-    \ with ${servicePath}`)\n\nconst memoryLimitMb = 150\nconst workerTimeoutMs =\
-    \ 1 * 60 * 1000\nconst noModuleCache = false\nconst importMapPath = null\nconst\
-    \ envVarsObj = Deno.env.toObject()\nconst envVars = Object.keys(envVarsObj).map((k)\
-    \ => [k, envVarsObj[k]])\n\ntry {\n    const worker = await EdgeRuntime.userWorkers.create({\n\
-    \    servicePath,\n    memoryLimitMb,\n    workerTimeoutMs,\n    noModuleCache,\n\
-    \    importMapPath,\n    envVars,\n    })\n    return await worker.fetch(req)\n\
-    } catch (e) {\n    const error = { msg: e.toString() }\n    return new Response(JSON.stringify(error),\
-    \ {\n    status: 500,\n    headers: { 'Content-Type': 'application/json' },\n\
-    \    })\n}\n})\n"
+    \ = encoder.encode(JWT_SECRET)\ntry {\n    const { alg } = jose.decodeProtectedHeader(jwt)\n\
+    \    if (alg === 'HS256') await jose.jwtVerify(jwt, secretKey, { algorithms: ['HS256']\
+    \ })\n    else await jose.jwtVerify(jwt, JWKS, { algorithms: ['ES256'] })\n} catch\
+    \ (err) {\n    console.error(err)\n    return false\n}\nreturn true\n}\n\nDeno.serve(async\
+    \ (req: Request) => {\nif (req.method !== 'OPTIONS' && VERIFY_JWT) {\n    try\
+    \ {\n    const token = getAuthToken(req)\n    const isValidJWT = await verifyJWT(token)\n\
+    \n    if (!isValidJWT) {\n        return new Response(JSON.stringify({ msg: 'Invalid\
+    \ JWT' }), {\n        status: 401,\n        headers: { 'Content-Type': 'application/json'\
+    \ },\n        })\n    }\n    } catch (e) {\n    console.error(e)\n    return new\
+    \ Response(JSON.stringify({ msg: e.toString() }), {\n        status: 401,\n  \
+    \      headers: { 'Content-Type': 'application/json' },\n    })\n    }\n}\n\n\
+    const url = new URL(req.url)\nconst { pathname } = url\nconst path_parts = pathname.split('/')\n\
+    const service_name = path_parts[1]\n\nif (!service_name || service_name === '')\
+    \ {\n    const error = { msg: 'missing function name in request' }\n    return\
+    \ new Response(JSON.stringify(error), {\n    status: 400,\n    headers: { 'Content-Type':\
+    \ 'application/json' },\n    })\n}\n\nconst servicePath = `/home/deno/functions/${service_name}`\n\
+    console.error(`serving the request with ${servicePath}`)\n\nconst memoryLimitMb\
+    \ = 150\nconst workerTimeoutMs = 1 * 60 * 1000\nconst noModuleCache = false\n\
+    const importMapPath = null\nconst envVarsObj = Deno.env.toObject()\nconst envVars\
+    \ = Object.keys(envVarsObj).map((k) => [k, envVarsObj[k]])\n\ntry {\n    const\
+    \ worker = await EdgeRuntime.userWorkers.create({\n    servicePath,\n    memoryLimitMb,\n\
+    \    workerTimeoutMs,\n    noModuleCache,\n    importMapPath,\n    envVars,\n\
+    \    })\n    return await worker.fetch(req)\n} catch (e) {\n    const error =\
+    \ { msg: e.toString() }\n    return new Response(JSON.stringify(error), {\n  \
+    \  status: 500,\n    headers: { 'Content-Type': 'application/json' },\n    })\n\
+    }\n})\n"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -1084,6 +1087,11 @@ spec:
           value: /etc/supabase-tls/ca.crt
         - name: NODE_EXTRA_CA_CERTS
           value: /etc/supabase-tls/ca.crt
+        - name: SUPABASE_JWKS
+          valueFrom:
+            secretKeyRef:
+              name: supabase-prod-apikey
+              key: jwtJwks
         resources:
           limits:
             memory: 512Mi

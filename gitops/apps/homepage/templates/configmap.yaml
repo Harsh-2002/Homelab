@@ -196,10 +196,15 @@ data:
             description: Serverless functions
             ping: https://orva.l3b.cc.cd
     - Applications:
-        - Supabase:
+        - Supabase Dev:
             icon: supabase.svg
             href: https://supabase.l3b.cc.cd
-            description: Database, auth and APIs
+            description: Development database and APIs
+        - Supabase Production:
+            icon: supabase.svg
+            href: https://supabase-prod.l3b.cc.cd
+            description: Kubernetes HA database and APIs
+            ping: https://sb-prod.l3b.cc.cd/auth/v1/health
         - PocketBase:
             icon: https://pocketbase.io/images/logo.svg
             href: https://pocketbase.l3b.cc.cd/_/
