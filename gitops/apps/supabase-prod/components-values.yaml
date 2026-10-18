@@ -480,9 +480,9 @@ environment:
   - name: GOTRUE_SMTP_ADMIN_EMAIL
     value: l3bctl@gmail.com
   - name: GOTRUE_SMTP_HOST
-    value: 127.0.0.1
+    value: smtp.gmail.com
   - name: GOTRUE_SMTP_PORT
-    value: '1025'
+    value: '587'
   - name: GOTRUE_EXTERNAL_PHONE_ENABLED
     value: 'false'
   - name: GOTRUE_SMS_AUTOCONFIRM

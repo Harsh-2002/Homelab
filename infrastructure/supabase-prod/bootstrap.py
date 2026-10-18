@@ -50,7 +50,7 @@ groups={
  'dashboard':{'username':values['username'],'password':values['dashboardPassword'],'openAiApiKey':''},
  'realtime':{k:values[k] for k in ['secretKeyBase','dbEncKey']},
  'meta':{'cryptoKey':values['cryptoKey']},
- 'smtp':{'username':'','password':''},
+ 'smtp':{'username':values.get('smtpUsername',''),'password':values.get('smtpPassword','')},
  's3':{k:values[k] for k in ['keyId','accessKey']},
  'pgsodium':{'root.key':values['rootKey']},
  'pooler':{'vaultEncKey':values['vaultEncKey'],'secretKeyBase':values['secretKeyBase']},

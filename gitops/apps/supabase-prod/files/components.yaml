@@ -888,9 +888,9 @@ spec:
         - name: GOTRUE_SMTP_ADMIN_EMAIL
           value: l3bctl@gmail.com
         - name: GOTRUE_SMTP_HOST
-          value: 127.0.0.1
+          value: smtp.gmail.com
         - name: GOTRUE_SMTP_PORT
-          value: '1025'
+          value: '587'
         - name: GOTRUE_EXTERNAL_PHONE_ENABLED
           value: 'false'
         - name: GOTRUE_SMS_AUTOCONFIRM
@@ -967,7 +967,7 @@ spec:
         app.kubernetes.io/instance: supabase-prod
         homelab.l3b.cc/supabase-production: 'true'
       annotations:
-        checksum/config: 635ecfff85d5a162c4ed2dcfa180909d3607040b35225c207d913d6be201481d
+        checksum/config: 654b50c0d72c6a8e1fec438eec529c74c5d29f196739a9320313fd13613bdb8e
     spec:
       serviceAccountName: supabase-prod-functions
       automountServiceAccountToken: false
@@ -1074,7 +1074,8 @@ spec:
           name: functions-main
           subPath: index.ts
         - name: hello-function
-          mountPath: /home/deno/functions/hello
+          mountPath: /home/deno/functions/hello/index.ts
+          subPath: index.ts
           readOnly: true
         - name: postgres-ca
           mountPath: /etc/supabase-tls
@@ -1236,7 +1237,7 @@ spec:
         app.kubernetes.io/instance: supabase-prod
         homelab.l3b.cc/supabase-production: 'true'
       annotations:
-        checksum/config: 7d379151e7a7b5a5982c7874897dc1d4e3dcc279af65220e678057eb677df762
+        checksum/config: a483867e82ed4c30b8a72dde96fe2df55eeddc92eeebaa2a4dcd8d2724f5a0b7
     spec:
       serviceAccountName: supabase-prod-kong
       automountServiceAccountToken: false

@@ -5,6 +5,7 @@ Print public manifests to stdout; apply through apply_patch, never print Secrets
 Usage: python3 render-components.py /path/to/supabase-kubernetes
 """
 import pathlib
+import hashlib
 import subprocess
 import sys
 import yaml
@@ -35,6 +36,12 @@ for obj in objects:
     obj['spec']['template']['metadata'].setdefault('labels',{})['homelab.l3b.cc/supabase-production']='true'
     pod['securityContext']=dict(pod.get('securityContext') or {},fsGroup=1000,fsGroupChangePolicy='OnRootMismatch',seccompProfile={'type':'RuntimeDefault'})
     name=obj['metadata']['name']
+    config_name=name if name.endswith('-kong') else name+'-main' if name.endswith('-functions') else None
+    if config_name:
+        config=next(item['data'] for item in objects if item['kind']=='ConfigMap' and item['metadata']['name']==config_name)
+        content=yaml.safe_dump(config)
+        if name.endswith('-functions'):content+=(root/'gitops/apps/supabase-prod/files/hello.ts').read_text()
+        obj['spec']['template']['metadata'].setdefault('annotations',{})['checksum/config']=hashlib.sha256(content.encode()).hexdigest()
     if name.endswith(('-storage','-imgproxy')):
         obj['spec']['strategy']={'type':'Recreate','rollingUpdate':None}
     for container in pod.get('containers',[]):
@@ -78,7 +85,7 @@ for obj in objects:
             env.append({'name':'DB_SSL_CA_CERT','value':'/etc/supabase-tls/ca.crt'})
         if name.endswith('-functions'):
             env.append({'name':'SUPABASE_JWKS','valueFrom':{'secretKeyRef':{'name':'supabase-prod-apikey','key':'jwtJwks'}}})
-            container.setdefault('volumeMounts',[]).append({'name':'hello-function','mountPath':'/home/deno/functions/hello','readOnly':True})
+            container.setdefault('volumeMounts',[]).append({'name':'hello-function','mountPath':'/home/deno/functions/hello/index.ts','subPath':'index.ts','readOnly':True})
             pod.setdefault('volumes',[]).append({'name':'hello-function','configMap':{'name':'supabase-prod-functions-hello'}})
         container.setdefault('volumeMounts',[]).append({'name':'postgres-ca','mountPath':'/etc/supabase-tls','readOnly':True})
     pod.setdefault('volumes',[]).append({'name':'postgres-ca','secret':{'secretName':'supabase-db-ca','items':[{'key':'ca.crt','path':'ca.crt'}]}})

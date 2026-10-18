@@ -120,6 +120,10 @@ spec:
               value: "4000"
             - name: ERL_FLAGS
               value: +S 2:2
+            - name: ERL_AFLAGS
+              value: -proto_dist inet_tcp
+            - name: ECTO_IPV6
+              value: "false"
           resources:
             requests:
               cpu: 50m
