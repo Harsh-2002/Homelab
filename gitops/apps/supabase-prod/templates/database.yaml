@@ -60,6 +60,8 @@ spec:
       max_replication_slots: "20"
       max_wal_senders: "20"
       max_slot_wal_keep_size: 2GB
+      hot_standby_feedback: "on"
+      sync_replication_slots: "on"
       cron.database_name: postgres
       pgsodium.getkey_script: /projected/getkey.sh
       session_preload_libraries: supautils

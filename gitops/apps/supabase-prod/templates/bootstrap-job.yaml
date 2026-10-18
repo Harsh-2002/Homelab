@@ -1,0 +1,121 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: supabase-prod-seed-sql
+  namespace: supabase-prod
+data:
+{{ range $path, $_ := .Files.Glob "files/db/*.sql" }}
+  {{ base $path }}: |
+{{ $.Files.Get $path | indent 4 }}
+{{ end }}
+  service-passwords.sql: |
+    \set pgpass `echo "$POSTGRES_PASSWORD"`
+    ALTER ROLE supabase_admin PASSWORD :'pgpass';
+    ALTER ROLE supabase_replication_admin PASSWORD :'pgpass';
+    ALTER ROLE supabase_read_only_user PASSWORD :'pgpass';
+    ALTER DATABASE postgres SET search_path TO public, extensions;
+    ALTER ROLE authenticator SET search_path TO public, extensions;
+    ALTER ROLE postgres SUPERUSER;
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: supabase-prod-bootstrap-v1
+  namespace: supabase-prod
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 1200
+  template:
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 100
+        runAsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: seed
+          image: supabase/postgres:17.6.1.136
+          command: [/bin/bash, -c]
+          args:
+            - |
+              set -euo pipefail
+              until pg_isready -q; do sleep 3; done
+              if psql -Atc "SELECT version FROM homelab_bootstrap.state WHERE id=1" 2>/dev/null | grep -qx 'v1'; then
+                echo 'Bootstrap already completed; refusing to repeat SQL'; exit 0
+              fi
+              if psql -Atc "SELECT to_regclass('public.schema_migrations') IS NOT NULL OR EXISTS(SELECT 1 FROM pg_roles WHERE rolname='authenticator')" | grep -qx t; then
+                echo 'Partial or existing Supabase state requires operator review'; exit 1
+              fi
+              for file in /docker-entrypoint-initdb.d/init-scripts/*.sql; do
+                name=$(basename "$file")
+                if [ -f "/seed/$name" ]; then file="/seed/$name"; fi
+                echo "Initializing $name"
+                psql -v ON_ERROR_STOP=1 -f "$file" >/dev/null
+              done
+              for file in /docker-entrypoint-initdb.d/migrations/*.sql; do
+                name=$(basename "$file")
+                echo "Migrating $name"
+                if [ "$name" = 10000000000000_demote-postgres.sql ]; then
+                  sed '/^ALTER ROLE postgres NOSUPERUSER/d' "$file" | psql -v ON_ERROR_STOP=1 >/dev/null
+                else
+                  psql -v ON_ERROR_STOP=1 -f "$file" >/dev/null
+                fi
+              done
+              for file in 97-_supabase.sql 99-logs.sql 99-realtime.sql 99-pooler.sql service-passwords.sql; do
+                echo "Finalizing $file"
+                psql -v ON_ERROR_STOP=1 -f "/seed/$file" >/dev/null
+              done
+              psql -v ON_ERROR_STOP=1 -c "CREATE SCHEMA homelab_bootstrap; CREATE TABLE homelab_bootstrap.state(id integer primary key, version text); INSERT INTO homelab_bootstrap.state VALUES(1,'v1');" >/dev/null
+              echo 'Supabase bootstrap complete; PostgreSQL management role preserved for CNPG'
+          env:
+            - name: PGHOST
+              value: supabase-db-rw
+            - name: PGPORT
+              value: "5432"
+            - name: PGDATABASE
+              value: postgres
+            - name: PGUSER
+              value: postgres
+            - name: PGSSLMODE
+              value: require
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-prod-db
+                  key: password
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-prod-db
+                  key: password
+            - name: POSTGRES_DB
+              value: postgres
+            - name: POSTGRES_USER
+              value: postgres
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-prod-jwt
+                  key: secret
+            - name: JWT_EXP
+              value: "3600"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+          volumeMounts:
+            - name: seed
+              mountPath: /seed
+              readOnly: true
+      volumes:
+        - name: seed
+          configMap:
+            name: supabase-prod-seed-sql

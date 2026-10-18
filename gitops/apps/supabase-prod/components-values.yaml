@@ -1,0 +1,713 @@
+ingress:
+  enabled: false
+secret:
+  jwt:
+    secretRef: supabase-prod-jwt
+  apikey:
+    secretRef: supabase-prod-apikey
+  db:
+    secretRef: supabase-prod-db
+    host: supabase-db-rw.supabase-prod.svc.cluster.local
+    port: '5432'
+  analytics:
+    secretRef: supabase-prod-analytics
+  bigquery:
+    secretRef: supabase-prod-bigquery
+  smtp:
+    secretRef: supabase-prod-smtp
+  dashboard:
+    secretRef: supabase-prod-dashboard
+  s3:
+    secretRef: supabase-prod-s3
+  realtime:
+    secretRef: supabase-prod-realtime
+  meta:
+    secretRef: supabase-prod-meta
+  minio:
+    secretRef: supabase-prod-minio
+deployment:
+  analytics:
+    enabled: true
+    fullnameOverride: supabase-prod-analytics
+    replicaCount: 2
+    automountServiceAccountToken: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 384Mi
+      limits:
+        memory: 1Gi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: supabase-prod
+              app.kubernetes.io/name: supabase-analytics
+          topologyKey: kubernetes.io/hostname
+    readinessProbe:
+      tcpSocket:
+        port: 4000
+      periodSeconds: 10
+      timeoutSeconds: 3
+    startupProbe:
+      tcpSocket:
+        port: 4000
+      periodSeconds: 5
+      failureThreshold: 60
+  auth:
+    enabled: true
+    fullnameOverride: supabase-prod-auth
+    replicaCount: 2
+    automountServiceAccountToken: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 384Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: supabase-prod
+              app.kubernetes.io/name: supabase-auth
+          topologyKey: kubernetes.io/hostname
+    readinessProbe:
+      tcpSocket:
+        port: 9999
+      periodSeconds: 10
+      timeoutSeconds: 3
+    startupProbe:
+      tcpSocket:
+        port: 9999
+      periodSeconds: 5
+      failureThreshold: 60
+  db:
+    enabled: false
+    fullnameOverride: supabase-prod-db
+    replicaCount: 2
+    automountServiceAccountToken: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 384Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: supabase-prod
+              app.kubernetes.io/name: supabase-db
+          topologyKey: kubernetes.io/hostname
+  functions:
+    enabled: true
+    fullnameOverride: supabase-prod-functions
+    replicaCount: 2
+    automountServiceAccountToken: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: supabase-prod
+              app.kubernetes.io/name: supabase-functions
+          topologyKey: kubernetes.io/hostname
+    readinessProbe:
+      tcpSocket:
+        port: 9000
+      periodSeconds: 10
+      timeoutSeconds: 3
+    startupProbe:
+      tcpSocket:
+        port: 9000
+      periodSeconds: 5
+      failureThreshold: 60
+  imgproxy:
+    enabled: true
+    fullnameOverride: supabase-prod-imgproxy
+    replicaCount: 2
+    automountServiceAccountToken: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 384Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: supabase-prod
+              app.kubernetes.io/name: supabase-imgproxy
+          topologyKey: kubernetes.io/hostname
+    readinessProbe:
+      tcpSocket:
+        port: 5001
+      periodSeconds: 10
+      timeoutSeconds: 3
+    startupProbe:
+      tcpSocket:
+        port: 5001
+      periodSeconds: 5
+      failureThreshold: 60
+  kong:
+    enabled: true
+    fullnameOverride: supabase-prod-kong
+    replicaCount: 2
+    automountServiceAccountToken: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: supabase-prod
+              app.kubernetes.io/name: supabase-kong
+          topologyKey: kubernetes.io/hostname
+    readinessProbe:
+      tcpSocket:
+        port: 8000
+      periodSeconds: 10
+      timeoutSeconds: 3
+    startupProbe:
+      tcpSocket:
+        port: 8000
+      periodSeconds: 5
+      failureThreshold: 60
+  meta:
+    enabled: true
+    fullnameOverride: supabase-prod-meta
+    replicaCount: 2
+    automountServiceAccountToken: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 384Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: supabase-prod
+              app.kubernetes.io/name: supabase-meta
+          topologyKey: kubernetes.io/hostname
+    readinessProbe:
+      tcpSocket:
+        port: 8080
+      periodSeconds: 10
+      timeoutSeconds: 3
+    startupProbe:
+      tcpSocket:
+        port: 8080
+      periodSeconds: 5
+      failureThreshold: 60
+  minio:
+    enabled: false
+    fullnameOverride: supabase-prod-minio
+    replicaCount: 2
+    automountServiceAccountToken: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 384Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: supabase-prod
+              app.kubernetes.io/name: supabase-minio
+          topologyKey: kubernetes.io/hostname
+  realtime:
+    enabled: true
+    fullnameOverride: supabase-prod-realtime
+    replicaCount: 2
+    automountServiceAccountToken: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 256Mi
+      limits:
+        memory: 768Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: supabase-prod
+              app.kubernetes.io/name: supabase-realtime
+          topologyKey: kubernetes.io/hostname
+    readinessProbe:
+      tcpSocket:
+        port: 4000
+      periodSeconds: 10
+      timeoutSeconds: 3
+    startupProbe:
+      tcpSocket:
+        port: 4000
+      periodSeconds: 5
+      failureThreshold: 60
+  rest:
+    enabled: true
+    fullnameOverride: supabase-prod-rest
+    replicaCount: 2
+    automountServiceAccountToken: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 384Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: supabase-prod
+              app.kubernetes.io/name: supabase-rest
+          topologyKey: kubernetes.io/hostname
+    readinessProbe:
+      tcpSocket:
+        port: 3000
+      periodSeconds: 10
+      timeoutSeconds: 3
+    startupProbe:
+      tcpSocket:
+        port: 3000
+      periodSeconds: 5
+      failureThreshold: 60
+  storage:
+    enabled: true
+    fullnameOverride: supabase-prod-storage
+    replicaCount: 2
+    automountServiceAccountToken: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 384Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: supabase-prod
+              app.kubernetes.io/name: supabase-storage
+          topologyKey: kubernetes.io/hostname
+    readinessProbe:
+      tcpSocket:
+        port: 5000
+      periodSeconds: 10
+      timeoutSeconds: 3
+    startupProbe:
+      tcpSocket:
+        port: 5000
+      periodSeconds: 5
+      failureThreshold: 60
+  studio:
+    enabled: true
+    fullnameOverride: supabase-prod-studio
+    replicaCount: 2
+    automountServiceAccountToken: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 256Mi
+      limits:
+        memory: 768Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: supabase-prod
+              app.kubernetes.io/name: supabase-studio
+          topologyKey: kubernetes.io/hostname
+    readinessProbe:
+      tcpSocket:
+        port: 3000
+      periodSeconds: 10
+      timeoutSeconds: 3
+    startupProbe:
+      tcpSocket:
+        port: 3000
+      periodSeconds: 5
+      failureThreshold: 60
+  vector:
+    enabled: false
+    fullnameOverride: supabase-prod-vector
+    replicaCount: 2
+    automountServiceAccountToken: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 384Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: supabase-prod
+              app.kubernetes.io/name: supabase-vector
+          topologyKey: kubernetes.io/hostname
+environment:
+  analytics:
+  - name: LOGFLARE_NODE_HOST
+    value: 127.0.0.1
+  - name: DB_SCHEMA
+    value: _analytics
+  - name: POSTGRES_BACKEND_SCHEMA
+    value: _analytics
+  - name: LOGFLARE_SINGLE_TENANT
+    value: 'true'
+  - name: LOGFLARE_SUPABASE_MODE
+    value: 'true'
+  - name: LOGFLARE_FEATURE_FLAG_OVERRIDE
+    value: multibackend=true
+  - name: ERL_FLAGS
+    value: +S 2:2
+  auth:
+  - name: API_EXTERNAL_URL
+    value: https://sb-prod.l3b.cc.cd
+  - name: GOTRUE_API_HOST
+    value: 0.0.0.0
+  - name: GOTRUE_API_PORT
+    value: '9999'
+  - name: GOTRUE_SITE_URL
+    value: https://supabase-prod.l3b.cc.cd
+  - name: GOTRUE_URI_ALLOW_LIST
+    value: ''
+  - name: GOTRUE_DISABLE_SIGNUP
+    value: 'true'
+  - name: GOTRUE_JWT_DEFAULT_GROUP_NAME
+    value: authenticated
+  - name: GOTRUE_JWT_ADMIN_ROLES
+    value: service_role
+  - name: GOTRUE_JWT_AUD
+    value: authenticated
+  - name: GOTRUE_JWT_EXP
+    value: '3600'
+  - name: GOTRUE_EXTERNAL_EMAIL_ENABLED
+    value: 'true'
+  - name: GOTRUE_MAILER_AUTOCONFIRM
+    value: 'false'
+  - name: GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED
+    value: 'false'
+  - name: GOTRUE_SMTP_ADMIN_EMAIL
+    value: notifications@l3b.cc.cd
+  - name: GOTRUE_SMTP_HOST
+    value: 127.0.0.1
+  - name: GOTRUE_SMTP_PORT
+    value: '1025'
+  - name: GOTRUE_EXTERNAL_PHONE_ENABLED
+    value: 'false'
+  - name: GOTRUE_SMS_AUTOCONFIRM
+    value: 'false'
+  - name: GOTRUE_SMTP_SENDER_NAME
+    value: L3B
+  - name: GOTRUE_MAILER_URLPATHS_INVITE
+    value: /auth/v1/verify
+  - name: GOTRUE_MAILER_URLPATHS_CONFIRMATION
+    value: /auth/v1/verify
+  - name: GOTRUE_MAILER_URLPATHS_RECOVERY
+    value: /auth/v1/verify
+  - name: GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE
+    value: /auth/v1/verify
+  - name: GOTRUE_JWT_ISSUER
+    value: https://sb-prod.l3b.cc.cd/auth/v1
+  db:
+  - name: POSTGRES_HOST
+    value: /var/run/postgresql
+  - name: PGPORT
+    value: '5432'
+  - name: POSTGRES_PORT
+    value: '5432'
+  - name: JWT_EXP
+    value: 3600
+  functions:
+  - name: VERIFY_JWT
+    value: 'true'
+  imgproxy:
+  - name: IMGPROXY_BIND
+    value: :5001
+  - name: IMGPROXY_LOCAL_FILESYSTEM_ROOT
+    value: /
+  - name: IMGPROXY_USE_ETAG
+    value: 'true'
+  - name: IMGPROXY_ENABLE_WEBP_DETECTION
+    value: 'true'
+  kong:
+  - name: KONG_DATABASE
+    value: 'off'
+  - name: KONG_DECLARATIVE_CONFIG
+    value: /usr/local/kong/kong.yml
+  - name: KONG_ROUTER_FLAVOR
+    value: expressions
+  - name: KONG_DNS_ORDER
+    value: LAST,A,CNAME
+  - name: KONG_DNS_NOT_FOUND_TTL
+    value: '1'
+  - name: KONG_DNS_VALID_TTL
+    value: '5'
+  - name: KONG_PLUGINS
+    value: request-transformer,cors,key-auth,acl,basic-auth,request-termination,ip-restriction,post-function
+  - name: KONG_NGINX_PROXY_PROXY_BUFFER_SIZE
+    value: 160k
+  - name: KONG_NGINX_PROXY_PROXY_BUFFERS
+    value: 64 160k
+  - name: KONG_PROXY_ACCESS_LOG
+    value: /dev/stdout combined
+  - name: KONG_LOG_LEVEL
+    value: warn
+  - name: KONG_NGINX_WORKER_PROCESSES
+    value: '2'
+  meta:
+  - name: DB_DRIVER
+    value: postgres
+  - name: PG_META_PORT
+    value: '8080'
+  minio: []
+  realtime:
+  - name: DB_USER
+    value: supabase_admin
+  - name: DB_SSL
+    value: false
+  - name: PORT
+    value: '4000'
+  - name: FLY_ALLOC_ID
+    value: fly123
+  - name: FLY_APP_NAME
+    value: realtime
+  - name: ENABLE_TAILSCALE
+    value: 'false'
+  - name: DB_AFTER_CONNECT_QUERY
+    value: SET search_path TO _realtime
+  - name: ERL_AFLAGS
+    value: -proto_dist inet_tcp
+  - name: DNS_NODES
+    value: supabase-prod-realtime-headless.supabase-prod.svc.cluster.local
+  - name: RLIMIT_NOFILE
+    value: '10000'
+  - name: APP_NAME
+    value: realtime
+  - name: SEED_SELF_HOST
+    value: true
+  - name: RUN_JANITOR
+    value: true
+  - name: CLUSTER_STRATEGIES
+    value: DNS
+  - name: POD_IP
+    valueFrom:
+      fieldRef:
+        fieldPath: status.podIP
+  - name: RELEASE_NODE
+    value: realtime@$(POD_IP)
+  - name: ERL_FLAGS
+    value: +S 2:2
+  rest:
+  - name: PGRST_DB_SCHEMAS
+    value: public,storage,graphql_public
+  - name: PGRST_DB_ANON_ROLE
+    value: anon
+  - name: PGRST_DB_USE_LEGACY_GUCS
+    value: false
+  - name: PGRST_APP_SETTINGS_JWT_EXP
+    value: 3600
+  storage:
+  - name: REQUEST_ALLOW_X_FORWARDED_PATH
+    value: 'true'
+  - name: FILE_SIZE_LIMIT
+    value: '52428800'
+  - name: FILE_STORAGE_BACKEND_PATH
+    value: /var/lib/storage
+  - name: TENANT_ID
+    value: stub
+  - name: REGION
+    value: stub
+  - name: GLOBAL_S3_BUCKET
+    value: stub
+  - name: ENABLE_IMAGE_TRANSFORMATION
+    value: 'true'
+  studio:
+  - name: HOSTNAME
+    value: '::'
+  - name: STUDIO_PORT
+    value: '3000'
+  - name: DEFAULT_ORGANIZATION_NAME
+    value: Homelab
+  - name: DEFAULT_PROJECT_NAME
+    value: Production
+  - name: SUPABASE_PUBLIC_URL
+    value: https://sb-prod.l3b.cc.cd
+  - name: NEXT_ANALYTICS_BACKEND_PROVIDER
+    value: postgres
+  vector: []
+persistence:
+  db:
+    enabled: false
+    storageClassName: longhorn
+    size: 1Gi
+    accessModes:
+    - ReadWriteMany
+    annotations:
+      argocd.argoproj.io/sync-options: Prune=false,Delete=false
+      helm.sh/resource-policy: keep
+  functions:
+    enabled: true
+    storageClassName: longhorn
+    size: 1Gi
+    accessModes:
+    - ReadWriteMany
+    annotations:
+      argocd.argoproj.io/sync-options: Prune=false,Delete=false
+      helm.sh/resource-policy: keep
+  imgproxy:
+    enabled: true
+    storageClassName: longhorn
+    size: 1Gi
+    accessModes:
+    - ReadWriteMany
+    annotations:
+      argocd.argoproj.io/sync-options: Prune=false,Delete=false
+      helm.sh/resource-policy: keep
+    existingClaim: supabase-prod-storage
+  minio:
+    enabled: false
+    storageClassName: longhorn
+    size: 1Gi
+    accessModes:
+    - ReadWriteMany
+    annotations:
+      argocd.argoproj.io/sync-options: Prune=false,Delete=false
+      helm.sh/resource-policy: keep
+  snippets:
+    enabled: true
+    storageClassName: longhorn
+    size: 1Gi
+    accessModes:
+    - ReadWriteMany
+    annotations:
+      argocd.argoproj.io/sync-options: Prune=false,Delete=false
+      helm.sh/resource-policy: keep
+  storage:
+    enabled: true
+    storageClassName: longhorn
+    size: 20Gi
+    accessModes:
+    - ReadWriteMany
+    annotations:
+      argocd.argoproj.io/sync-options: Prune=false,Delete=false
+      helm.sh/resource-policy: keep
+  deno:
+    enabled: false
+    storageClassName: longhorn
+    size: 1Gi
+    accessModes:
+    - ReadWriteMany
+    annotations:
+      argocd.argoproj.io/sync-options: Prune=false,Delete=false
+      helm.sh/resource-policy: keep
+  pgsodium:
+    enabled: false
+    storageClassName: longhorn
+    size: 1Gi
+    accessModes:
+    - ReadWriteMany
+    annotations:
+      argocd.argoproj.io/sync-options: Prune=false,Delete=false
+      helm.sh/resource-policy: keep
+service:
+  kong:
+    type: LoadBalancer
+    annotations:
+      lbipam.cilium.io/ips: 10.1.1.175
+image: {}
+
