@@ -1,5 +1,12 @@
 # Homelab agent handoff
 
+Owner's latest boundary: defer backup/PITR until production; no node shutdown or
+further disruption tests. Use read-only HA configuration/health verification.
+Confirmed3 cross-node DBs and3 distinct underlying Proxmox hosts, healthy quorum
+standbys with zero sampled replay lag, all6 Longhorn volumes healthy/two-replica,
+ready service replicas/PDBs and expected node-local Caddy health behavior. This
+does not resolve the previously observed planned Realtime shutdown blocker.
+
 ## Latest HA audit, 2026-10-18
 
 Read `infrastructure/supabase/AUDIT-2026-10-18.md` before further disruptions.

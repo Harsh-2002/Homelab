@@ -1,5 +1,10 @@
 # Supabase
 
+Owner policy: backup/PITR setup is deferred until production. HA acceptance for
+now is a non-disruptive configuration/live-health review of the chosen homelab
+topology, not node shutdowns or more recovery drills. That review passed; retain
+the documented planned Realtime shutdown limitation rather than claiming it fixed.
+
 Latest functional/HA evidence and open blockers:
 [2026-10-18 audit](AUDIT-2026-10-18.md). MCP's reused-connection transport failure
 has a route-scoped mitigation with repeated passing tests. HA testing exposed a
