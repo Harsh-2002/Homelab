@@ -40,7 +40,7 @@ The owner requested no encryption at rest. The stack sets `NIVRA_ENCRYPTION_ENAB
 
 Nivra has one owner and native password/passkey authentication; public sign-up is disabled. It does not use the Anchor Pocket ID client or Tinyauth. Complete first-run account setup at the HTTPS hostname while it is still private. Verify the UI reports encryption disabled and store the one-time recovery code securely. Only then change the Nivra Caddy handler to public access and create the explicit DNS-only Cloudflare A record `notes.l3b.cc.cd -> 150.129.31.154`. Leave the Caddy origin on the LAN and preserve the internal Unbound answer `10.1.1.3`. Confirm an unauthenticated remote request reaches Nivra's login/setup protection and that private API content is not returned.
 
-The previous Anchor service remains running as Portainer stack `anchor`, at the private alias `https://anchor.l3b.cc.cd`, with its original data in `/data/apps/anchor`. Its Pocket ID client and Homepage entry are kept separate.
+Anchor was retired on 2026-10-18 at the owner's request. Nivra is the remaining notes service; do not recreate Anchor from historical configuration.
 
 ## Operations
 

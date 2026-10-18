@@ -200,15 +200,6 @@
 	}
 }
 
-(anchor) {
-	@anchor host anchor.l3b.cc.cd
-	handle @anchor {
-		import private
-		import proxy
-		reverse_proxy 10.1.1.4:3010
-	}
-}
-
 (homepage) {
 	@homepage host l3b.cc.cd
 	handle @homepage {
@@ -636,7 +627,6 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import supabase
 	import homepage
 	import nivra
-	import anchor
 	import homeassistant
 	import pocketid
 	import tinyauth

@@ -110,7 +110,7 @@ must be completed while the Caddy route is private. Only after first-run
 authentication is established should the Nivra handler become public and a
 DNS-only Cloudflare A record point `notes` to the household WAN address
 `150.129.31.154`. Internal Unbound continues to resolve `notes` to Caddy
-`10.1.1.3`. Anchor remains private at `anchor.l3b.cc.cd`.
+`10.1.1.3`. Anchor was completely retired on 2026-10-18; its handler was removed.
 
 ## Public Docker Registry
 
