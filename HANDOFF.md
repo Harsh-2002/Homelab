@@ -2,6 +2,15 @@
 
 ## Latest verified repair: initialization and Anchor retirement, 2026-10-18
 
+Follow-up: the initial checks missed Query Performance. It failed because
+pg_stat_statements was preloaded but its SQL extension was absent in postgres.
+The image seed includes CREATE EXTENSION, so the exact historical removal/absence
+is not established. Versioned GitOps job supabase-observability-init-v4 installs
+and verifies it without a DB restart or application-data changes. Browser now
+shows query rows and live metrics; data requests200. Expanded acceptance tests
+check required extensions, all three DB instances and the Studio metrics queries.
+Do not equate healthy pods or one extension test with complete Studio validation.
+
 Anchor is completely retired: Portainer154, its owned data/anonymous volume/image,
 network, Caddy route, Pocket ID client/local secret and Homepage card removed.
 Its vault item is archived; Nivra remains unchanged and healthy. Historical

@@ -84,6 +84,25 @@ No cluster-wide Cilium mode was changed and no source allowlist was broadened.
 
 ### Database initialization contract and webhook RCA (2026-10-18)
 
+#### Query Performance follow-up
+
+The first repair's tests missed Studio Query Performance. Live inspection then
+found `pg_stat_statements` preloaded but absent as a SQL extension in `postgres`.
+The image's `00-extension.sql` includes its creation and the original bootstrap
+logged that file, so historical evidence does not establish exactly when/why the
+extension became absent. Do not claim it was certainly skipped or blame DNS.
+The confirmed deployment defect was missing functional dependency validation.
+
+GitOps job `supabase-observability-init-v4` now creates the extension in
+`extensions`, checks preload and calls its statistics view. No database restart,
+reset of statistics, broad grants, or application-data changes are required.
+The acceptance script checks the full required platform extension inventory,
+callable statistics on every database instance, and Studio's query/role/metrics/
+cache-hit-rate SQL routes. A browser test verified the real Query Performance
+page shows rows and metrics, no missing-extension/relation error, and HTTP200
+for the data requests. Optional extensions remain optional. Fresh deployments
+must complete v3 then v4 and pass these tests, not merely become pod-ready.
+
 The initial CNPG bootstrap enumerated SQL files bundled in the database image,
 but did not run the official Docker overlay files `98-webhooks.sql`,
 `99-roles.sql`, and `99-jwt.sql`. Role passwords were reconciled separately,

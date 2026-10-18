@@ -620,7 +620,7 @@ environment:
   - name: DEFAULT_ORGANIZATION_NAME
     value: Homelab
   - name: DEFAULT_PROJECT_NAME
-    value: Production
+    value: Supabase
   - name: SUPABASE_PUBLIC_URL
     value: https://sb.l3b.cc.cd
   - name: NEXT_ANALYTICS_BACKEND_PROVIDER
