@@ -33,7 +33,21 @@ for obj in objects:
         end=original.index('  - name: dashboard\n',start)
         section=original[start:end]
         plugins=section.index('    plugins:\n')
-        section=section[:plugins]+'    plugins:\n      - name: ip-restriction\n        config:\n          allow:\n            - 10.1.1.3/32\n\n'
+        # The bundled Studio MCP transport intermittently closes reused HTTP/1.1
+        # sockets before a response. Scope Connection: close to this route only;
+        # retain normal keepalive for REST/Auth/Storage/Realtime and clients.
+        section=section[:plugins]+'''    plugins:
+      - name: ip-restriction
+        config:
+          allow:
+            - 10.1.1.3/32
+      - name: post-function
+        config:
+          access:
+            - |
+              ngx.var.upstream_connection = 'close'
+
+'''
         obj['data']['kong.yml']=original[:start]+section+original[end:]
     if obj['kind']!='Deployment':
         continue

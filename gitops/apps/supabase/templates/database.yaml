@@ -44,6 +44,7 @@ spec:
       method: any
       number: 1
       dataDurability: required
+      failoverQuorum: true
     shared_preload_libraries:
       - pg_stat_statements
       - pgaudit

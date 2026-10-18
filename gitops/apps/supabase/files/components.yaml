@@ -318,11 +318,13 @@ data:
     \ gateway'\n    url: http://supabase-prod-studio:3000/api/mcp\n    routes:\n \
     \     - name: mcp\n        strip_path: true\n        paths:\n          - /mcp\n\
     \    plugins:\n      - name: ip-restriction\n        config:\n          allow:\n\
-    \            - 10.1.1.3/32\n\n  - name: dashboard\n    _comment: 'Studio: /* ->\
-    \ http://supabase-prod-studio:3000/*'\n    url: http://supabase-prod-studio:3000/\n\
-    \    routes:\n      - name: dashboard-all\n        strip_path: true\n        paths:\n\
-    \          - /\n    plugins:\n      - name: cors\n      - name: basic-auth\n \
-    \       config:\n          hide_credentials: true\n"
+    \            - 10.1.1.3/32\n      - name: post-function\n        config:\n   \
+    \       access:\n            - |\n              ngx.var.upstream_connection =\
+    \ 'close'\n\n  - name: dashboard\n    _comment: 'Studio: /* -> http://supabase-prod-studio:3000/*'\n\
+    \    url: http://supabase-prod-studio:3000/\n    routes:\n      - name: dashboard-all\n\
+    \        strip_path: true\n        paths:\n          - /\n    plugins:\n     \
+    \ - name: cors\n      - name: basic-auth\n        config:\n          hide_credentials:\
+    \ true\n"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -1260,7 +1262,7 @@ spec:
         app.kubernetes.io/instance: supabase-prod
         homelab.l3b.cc/supabase-production: 'true'
       annotations:
-        checksum/config: a4af2921ea48c63c585c91b3310d82cf7246abfb12b10e6780b188c16fd2630e
+        checksum/config: 344cee5cc45720e3b68e35eb89abe4dfccde6449c6934dd71af2f0632a3193e1
     spec:
       serviceAccountName: supabase-prod-kong
       automountServiceAccountToken: false
