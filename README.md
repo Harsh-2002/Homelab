@@ -8,6 +8,8 @@ Storage incident, 2026-10-17, restored October 18 IST: ISO is available again on
 
 ## Administrator identity
 
+Homelab email identity: **Anurag Vishwakarma (l3b)**, `l3bctl@gmail.com`. Use this dedicated Google account for homelab SMTP and related service email. SMTP requires a Google app password held in 1Password, never Git. This sender identity does not replace existing Pocket ID administrator login identities.
+
 Public development endpoint: `https://dev.l3b.cc.cd` → existing Caddy → dev VM `10.1.1.5:3000`. Owner-approved public exposure on 2026-10-05; backend application authentication/configuration is owner-managed. See `infrastructure/dev/README.md` and `infrastructure/proxy/README.md`.
 
 Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts an email address or OIDC identity. Use `iam-anuragvishwakarma` when a conventional username is required. Do not create new personal accounts with dotted or underscored username variants. Keep operating-system accounts, Kubernetes service accounts, and application service users distinct because they are machine identities.

@@ -93,6 +93,15 @@ spec:
                   fieldPath: status.podIP
             - name: RELEASE_NODE
               value: supavisor@$(POD_IP)
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: RELEASE_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-prod-pooler
+                  key: secretKeyBase
             - name: CLUSTER_POSTGRES
               value: "true"
             - name: REGION

@@ -30,7 +30,7 @@ for obj in objects:
     pod['securityContext']=dict(pod.get('securityContext') or {},fsGroup=1000,fsGroupChangePolicy='OnRootMismatch',seccompProfile={'type':'RuntimeDefault'})
     name=obj['metadata']['name']
     if name.endswith(('-storage','-imgproxy')):
-        obj['spec']['strategy']={'type':'Recreate'}
+        obj['spec']['strategy']={'type':'Recreate','rollingUpdate':None}
     for container in pod.get('containers',[]):
         env=container.setdefault('env',[])
         envmap={x['name']:x for x in env}

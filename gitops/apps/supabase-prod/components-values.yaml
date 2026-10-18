@@ -478,7 +478,7 @@ environment:
   - name: GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED
     value: 'false'
   - name: GOTRUE_SMTP_ADMIN_EMAIL
-    value: notifications@l3b.cc.cd
+    value: l3bctl@gmail.com
   - name: GOTRUE_SMTP_HOST
     value: 127.0.0.1
   - name: GOTRUE_SMTP_PORT
@@ -488,7 +488,7 @@ environment:
   - name: GOTRUE_SMS_AUTOCONFIRM
     value: 'false'
   - name: GOTRUE_SMTP_SENDER_NAME
-    value: L3B
+    value: Anurag Vishwakarma (l3b)
   - name: GOTRUE_MAILER_URLPATHS_INVITE
     value: /auth/v1/verify
   - name: GOTRUE_MAILER_URLPATHS_CONFIRMATION
