@@ -24,7 +24,10 @@ secret:
   meta:
     secretRef: supabase-prod-meta
   minio:
-    secretRef: supabase-prod-minio
+    secretRef: supabase-prod-s3
+    secretRefKey:
+      user: keyId
+      password: accessKey
 deployment:
   analytics:
     enabled: true
