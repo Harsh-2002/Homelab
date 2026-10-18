@@ -158,7 +158,7 @@ deployment:
   imgproxy:
     enabled: true
     fullnameOverride: supabase-prod-imgproxy
-    replicaCount: 2
+    replicaCount: 1
     automountServiceAccountToken: false
     resources:
       requests:
@@ -172,12 +172,12 @@ deployment:
         drop:
         - ALL
     affinity:
-      podAntiAffinity:
+      podAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
+              app.kubernetes.io/name: supabase-storage
               app.kubernetes.io/instance: supabase-prod
-              app.kubernetes.io/name: supabase-imgproxy
           topologyKey: kubernetes.io/hostname
     readinessProbe:
       tcpSocket:
@@ -352,7 +352,7 @@ deployment:
   storage:
     enabled: true
     fullnameOverride: supabase-prod-storage
-    replicaCount: 2
+    replicaCount: 1
     automountServiceAccountToken: false
     resources:
       requests:
@@ -365,14 +365,7 @@ deployment:
       capabilities:
         drop:
         - ALL
-    affinity:
-      podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              app.kubernetes.io/instance: supabase-prod
-              app.kubernetes.io/name: supabase-storage
-          topologyKey: kubernetes.io/hostname
+    affinity: {}
     readinessProbe:
       tcpSocket:
         port: 5000
@@ -661,7 +654,7 @@ persistence:
     annotations:
       argocd.argoproj.io/sync-options: Prune=false,Delete=false
       helm.sh/resource-policy: keep
-    existingClaim: supabase-prod-storage
+    existingClaim: supabase-prod-storage-block
   minio:
     enabled: false
     storageClassName: longhorn
@@ -689,6 +682,7 @@ persistence:
     annotations:
       argocd.argoproj.io/sync-options: Prune=false,Delete=false
       helm.sh/resource-policy: keep
+    existingClaim: supabase-prod-storage-block
   deno:
     enabled: false
     storageClassName: longhorn
@@ -713,4 +707,3 @@ service:
     annotations:
       lbipam.cilium.io/ips: 10.1.1.175
 image: {}
-

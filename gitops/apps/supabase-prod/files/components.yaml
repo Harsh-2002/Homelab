@@ -368,27 +368,6 @@ spec:
       storage: 1Gi
 ---
 apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: supabase-prod-storage
-  labels:
-    helm.sh/chart: supabase-0.8.0
-    app.kubernetes.io/name: supabase
-    app.kubernetes.io/instance: supabase-prod
-    app.kubernetes.io/managed-by: Helm
-  annotations:
-    argocd.argoproj.io/sync-options: Prune=false,Delete=false
-    helm.sh/resource-policy: keep
-  namespace: supabase-prod
-spec:
-  storageClassName: longhorn
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 20Gi
----
-apiVersion: v1
 kind: Service
 metadata:
   name: supabase-prod-analytics
@@ -1161,7 +1140,7 @@ metadata:
     app.kubernetes.io/instance: supabase-prod
     app.kubernetes.io/managed-by: Helm
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: supabase-imgproxy
@@ -1183,12 +1162,12 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       affinity:
-        podAntiAffinity:
+        podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
                 app.kubernetes.io/instance: supabase-prod
-                app.kubernetes.io/name: supabase-imgproxy
+                app.kubernetes.io/name: supabase-storage
             topologyKey: kubernetes.io/hostname
       containers:
       - name: supabase-imgproxy
@@ -1241,13 +1220,15 @@ spec:
       volumes:
       - name: imgproxy-volume
         persistentVolumeClaim:
-          claimName: supabase-prod-storage
+          claimName: supabase-prod-storage-block
       - name: postgres-ca
         secret:
           secretName: supabase-db-ca
           items:
           - key: ca.crt
             path: ca.crt
+  strategy:
+    type: Recreate
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -1921,7 +1902,7 @@ metadata:
     app.kubernetes.io/instance: supabase-prod
     app.kubernetes.io/managed-by: Helm
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: supabase-storage
@@ -1942,14 +1923,6 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchLabels:
-                app.kubernetes.io/instance: supabase-prod
-                app.kubernetes.io/name: supabase-storage
-            topologyKey: kubernetes.io/hostname
       initContainers:
       - name: init-db
         image: postgres:17-alpine
@@ -2110,13 +2083,15 @@ spec:
       volumes:
       - name: storage-data
         persistentVolumeClaim:
-          claimName: supabase-prod-storage
+          claimName: supabase-prod-storage-block
       - name: postgres-ca
         secret:
           secretName: supabase-db-ca
           items:
           - key: ca.crt
             path: ca.crt
+  strategy:
+    type: Recreate
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -2314,7 +2289,7 @@ metadata:
   name: supabase-prod-imgproxy
   namespace: supabase-prod
 spec:
-  minAvailable: 1
+  minAvailable: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: supabase-imgproxy
@@ -2374,7 +2349,7 @@ metadata:
   name: supabase-prod-storage
   namespace: supabase-prod
 spec:
-  minAvailable: 1
+  minAvailable: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: supabase-storage

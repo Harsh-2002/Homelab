@@ -29,8 +29,8 @@ for obj in objects:
     obj['spec']['template']['metadata'].setdefault('labels',{})['homelab.l3b.cc/supabase-production']='true'
     pod['securityContext']=dict(pod.get('securityContext') or {},fsGroup=1000,fsGroupChangePolicy='OnRootMismatch',seccompProfile={'type':'RuntimeDefault'})
     name=obj['metadata']['name']
-    if name.endswith('-analytics'):
-        pass
+    if name.endswith(('-storage','-imgproxy')):
+        obj['spec']['strategy']={'type':'Recreate'}
     for container in pod.get('containers',[]):
         env=container.setdefault('env',[])
         envmap={x['name']:x for x in env}
@@ -74,7 +74,7 @@ for obj in objects:
             env.append({'name':'SUPABASE_JWKS','valueFrom':{'secretKeyRef':{'name':'supabase-prod-apikey','key':'jwtJwks'}}})
         container.setdefault('volumeMounts',[]).append({'name':'postgres-ca','mountPath':'/etc/supabase-tls','readOnly':True})
     pod.setdefault('volumes',[]).append({'name':'postgres-ca','secret':{'secretName':'supabase-db-ca','items':[{'key':'ca.crt','path':'ca.crt'}]}})
-    pdb={'apiVersion':'policy/v1','kind':'PodDisruptionBudget','metadata':{'name':name,'namespace':'supabase-prod'},'spec':{'minAvailable':1,'selector':obj['spec']['selector']}}
+    pdb={'apiVersion':'policy/v1','kind':'PodDisruptionBudget','metadata':{'name':name,'namespace':'supabase-prod'},'spec':{'minAvailable':0 if name.endswith(('-storage','-imgproxy')) else 1,'selector':obj['spec']['selector']}}
     # Appended after traversal to keep iteration bounded.
     obj['_pdb']=pdb
 extra=[]
