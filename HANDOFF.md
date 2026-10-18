@@ -1,5 +1,17 @@
 # Homelab agent handoff
 
+## Omni deployment, 2026-10-18
+
+Omni v1.12.4 runs on CTR via Portainer stack `omni` ID158, outside its managed
+cluster. HTTPS `omni.l3b.cc.cd`, machine API `omni-api.l3b.cc.cd`, Kubernetes proxy
+`omni-kube.l3b.cc.cd` use existing Caddy and LAN/Tailscale restrictions. Pocket ID
+client `omni` is infrastructure-admins-only. Persistent state `/data/apps/omni`;
+HomeLab vault `Omni` stores recovery key/config secrets, never print them.
+**PENDING owner EULA acceptance at the UI. No Talos nodes imported or changed.**
+After acceptance, authenticate matching omnictl, dry-run import first, preserve
+Cilium/VIP/DNS/Longhorn/extensions, no force or rebuild. Leave imported cluster
+locked until preservation checks pass. See `infrastructure/omni/README.md`.
+
 Owner's latest boundary: defer backup/PITR until production; no node shutdown or
 further disruption tests. Use read-only HA configuration/health verification.
 Confirmed3 cross-node DBs and3 distinct underlying Proxmox hosts, healthy quorum

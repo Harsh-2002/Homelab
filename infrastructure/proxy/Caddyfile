@@ -608,6 +608,31 @@
 	}
 }
 
+(omni) {
+	@omni host omni.l3b.cc.cd
+	handle @omni {
+		import private
+		import proxy
+		reverse_proxy h2c://10.1.1.4:8180 {
+			header_up X-Forwarded-For {remote_host}
+		}
+	}
+	@omni_api host omni-api.l3b.cc.cd
+	handle @omni_api {
+		import private
+		reverse_proxy h2c://10.1.1.4:8090 {
+			header_up X-Forwarded-For {remote_host}
+		}
+	}
+	@omni_kube host omni-kube.l3b.cc.cd
+	handle @omni_kube {
+		import private
+		reverse_proxy 10.1.1.4:8100 {
+			header_up X-Forwarded-For {remote_host}
+		}
+	}
+}
+
 (devtesting) {
 	@devtesting host dev.l3b.cc.cd
 	handle @devtesting {
@@ -618,6 +643,7 @@
 
 l3b.cc.cd, *.l3b.cc.cd {
 	import cloudflare
+	import omni
 	import devtesting
 	import adguard
 	import argocd

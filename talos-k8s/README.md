@@ -14,6 +14,11 @@ Talos nodes use only AdGuard Home `10.1.1.2` as their resolver. Kubernetes Servi
 
 ## Tracked configuration
 
+Omni management service is deployed separately on CTR. See
+[`infrastructure/omni/README.md`](../infrastructure/omni/README.md) for enrollment
+status and the supported import workflow. As of 2026-10-18, EULA acceptance is
+pending and these nodes have **not** been imported or changed by Omni.
+
 - `cluster-name.patch.yaml` — cluster name.
 - `vip.patch.yaml` — Kubernetes API VIP.
 - `k8s-20x.patch.yaml` — hostname, static address, gateway, and resolver configuration per node.

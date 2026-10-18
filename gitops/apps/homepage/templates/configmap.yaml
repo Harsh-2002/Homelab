@@ -113,6 +113,11 @@ data:
               key: "{{ "{{HOMEPAGE_VAR_HOMEASSISTANT_TOKEN}}" }}"
               fields: ["people_home", "lights_on", "switches_on"]
     - Platform:
+        - Omni:
+            icon: talos.png
+            href: https://omni.l3b.cc.cd
+            description: Talos cluster management
+            ping: https://omni.l3b.cc.cd/healthz
         - Argo CD:
             icon: argo-cd.png
             href: https://argocd.l3b.cc.cd

@@ -1,0 +1,45 @@
+services:
+  omni:
+    image: ghcr.io/siderolabs/omni:v1.12.4
+    container_name: omni
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - "10.1.1.4:8180:8080"
+      - "10.1.1.4:8090:8090"
+      - "10.1.1.4:8100:8100"
+      - "10.1.1.4:50180:50180/udp"
+      - "127.0.0.1:9095:9090"
+    volumes:
+      - /data/apps/omni/config.yaml:/etc/omni/config.yaml:ro
+      - /data/apps/omni/omni.asc:/etc/omni/omni.asc:ro
+      - /data/apps/omni/state:/_out
+    command:
+      - --config-path=/etc/omni/config.yaml
+      - --bind-addr=0.0.0.0:8080
+      - --machine-api-bind-addr=0.0.0.0:8090
+      - --k8s-proxy-bind-addr=0.0.0.0:8100
+      - --metrics-bind-addr=0.0.0.0:9090
+      - --advertised-api-url=https://omni.l3b.cc.cd/
+      - --machine-api-advertised-url=https://omni-api.l3b.cc.cd/
+      - --advertised-kubernetes-proxy-url=https://omni-kube.l3b.cc.cd/
+      - --siderolink-wireguard-bind-addr=0.0.0.0:50180
+      - --siderolink-wireguard-advertised-addr=10.1.1.4:50180
+      - --event-sink-port=8091
+      - --private-key-source=file:///etc/omni/omni.asc
+      - --etcd-embedded-db-path=/_out/etcd
+      - --sqlite-storage-path=/_out/sqlite/omni.db
+      - --enable-cluster-import=true
+      - --workload-proxying-enabled=false
+    mem_limit: 3g
+    cpus: 2
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    labels:
+      com.centurylinklabs.watchtower.enable: "false"
