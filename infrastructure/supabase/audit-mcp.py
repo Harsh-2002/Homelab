@@ -57,5 +57,6 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as pool:
 counts = collections.Counter(str(r['http'])+('/ok' if r['ok'] else '/failed') for r in results)
 print(json.dumps({'calls':args.calls,'workers':args.workers,'elapsed_seconds':round(time.monotonic()-start,2),
     'counts':dict(counts),'max_latency_seconds':max(r['seconds'] for r in results),
-    'failures':[r for r in results if not r['ok']]},indent=2))
+    'failure_count':sum(not r['ok'] for r in results),
+    'failure_sample':[r for r in results if not r['ok']][:10]},indent=2))
 raise SystemExit(0 if all(r['ok'] for r in results) else 1)

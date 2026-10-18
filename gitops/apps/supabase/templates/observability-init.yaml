@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: supabase-observability-init-v4
+  name: supabase-observability-init-v5
   namespace: supabase-prod
   annotations:
     argocd.argoproj.io/sync-wave: "2"

@@ -23,7 +23,7 @@ db_pods = json.loads(subprocess.check_output(K+['get','pods','-l','cnpg.io/clust
 for db_pod in db_pods['items']:
     probe = subprocess.run(K+['exec',db_pod['metadata']['name'],'-c','postgres','--',
         'psql','-U','postgres','-d','postgres','-v','ON_ERROR_STOP=1','-Atc',
-        'SELECT count(*) >= 0 FROM extensions.pg_stat_statements;'],capture_output=True,text=True,check=True)
+        'SELECT count(*) >= 0 FROM pg_stat_statements;'],capture_output=True,text=True,check=True)
     assert probe.stdout.strip() == 't'
 print('PASS: required platform extension inventory and callable query statistics on all database instances')
 pods = json.loads(subprocess.check_output(K+['get','pods','-l','app.kubernetes.io/name=supabase-studio','-o','json'],text=True))
