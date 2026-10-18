@@ -1,5 +1,25 @@
 # Homelab agent handoff
 
+## Latest HA audit, 2026-10-18
+
+Read `infrastructure/supabase/AUDIT-2026-10-18.md` before further disruptions.
+MCP502 reproduced6/60; direct Studio calls isolated reused HTTP sockets. Kong MCP
+route-only Connection:close mitigation passed stable batches150+150+300; other
+routes/auth unchanged. HA switchover db2->db1 retained the committed marker but
+took119.69s and required gracefully restarting the specific stuck Realtime client.
+All3 DBs and application replicas recovered. Planned shutdown blocker remains
+OPEN; no full-node drill/forced DB kill/durability timeout reduction was done.
+Realtime slots are intentionally temporary, not durable failover slots.
+
+Promotion removed pg_stat_statements again: CNPG managed-extension settings were
+missing. Fixed declaratively with pg_stat_statements.track:top; versioned job v5
+keeps its objects in extensions. This supersedes the earlier unknown-history RCA.
+Isolated Storage restart34.4s with preserved file and zero REST errors; first
+overlapping drill was confounded. HA helper now serializes tests and preflights
+all service readiness; don't run tests concurrently. Full application acceptance
+passed after recovery and removed owned fixtures. Independent backups/PITR and
+full node/partition/DR verification remain absent. See audit for precise limits.
+
 ## Latest verified repair: initialization and Anchor retirement, 2026-10-18
 
 Follow-up: the initial checks missed Query Performance. It failed because

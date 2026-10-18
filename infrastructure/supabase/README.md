@@ -1,5 +1,11 @@
 # Supabase
 
+Latest functional/HA evidence and open blockers:
+[2026-10-18 audit](AUDIT-2026-10-18.md). MCP's reused-connection transport failure
+has a route-scoped mitigation with repeated passing tests. HA testing exposed a
+Realtime consumer holding graceful primary shutdown open; planned switchover is
+not yet a clean automatic HA pass. Three healthy replicas do not prove this.
+
 The single active Supabase instance runs on Kubernetes, managed through Argo CD
 application **supabase**. VM108, PocketBase, VM HA/replication/backup jobs and the
 two VM backup archives were removed on 2026-10-18 at the owner's request.
