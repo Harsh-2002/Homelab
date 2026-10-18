@@ -64,6 +64,7 @@ spec:
       sync_replication_slots: "on"
       cron.database_name: postgres
       pgsodium.getkey_script: /projected/getkey.sh
+      vault.getkey_script: /projected/getkey.sh
       session_preload_libraries: supautils
     pg_hba:
       - host all all 10.244.0.0/16 scram-sha-256

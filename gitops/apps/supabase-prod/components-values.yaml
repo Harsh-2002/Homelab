@@ -706,7 +706,7 @@ persistence:
       helm.sh/resource-policy: keep
 service:
   kong:
-    type: LoadBalancer
+    type: ClusterIP
     annotations:
       lbipam.cilium.io/ips: 10.1.1.175
 image: {}
