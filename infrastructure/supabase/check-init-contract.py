@@ -26,6 +26,8 @@ observability_job = yaml.safe_load((chart/'templates/observability-init.yaml').r
 assert 'CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA extensions' in observability
 assert 'PERFORM 1 FROM extensions.pg_stat_statements' in observability
 assert '/seed/ensure-observability.sql' in observability_job['spec']['template']['spec']['containers'][0]['args'][0]
+cluster = next(o for o in yaml.safe_load_all((chart/'templates/database.yaml').read_text()) if o and o['kind']=='Cluster')
+assert cluster['spec']['postgresql']['parameters'].get('pg_stat_statements.track') == 'top', 'CNPG must manage query-statistics extension across promotion/reconciliation'
 if len(sys.argv) == 2:
     # Pass the pinned, reviewed community chart checkout to detect new overlays.
     upstream = Path(sys.argv[1])/'charts/supabase/templates/db/statefulset.yaml'

@@ -59,6 +59,8 @@ spec:
       - supabase_vault
     parameters:
       max_connections: "200"
+      # CNPG manages extension SQL objects from these parameters, not preload alone.
+      pg_stat_statements.track: top
       shared_buffers: 256MB
       wal_level: logical
       max_replication_slots: "20"
