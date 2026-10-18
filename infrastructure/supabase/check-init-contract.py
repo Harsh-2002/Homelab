@@ -21,6 +21,11 @@ env = {e['name'] for e in container['env']}
 assert {'PGPASSWORD','POSTGRES_PASSWORD','JWT_SECRET','JWT_EXP'} <= env
 assert 'pg_advisory_lock' in platform and 'platform_migrations' in platform
 assert 'to_regprocedure' in platform
+observability = (chart/'files/db/ensure-observability.sql').read_text()
+observability_job = yaml.safe_load((chart/'templates/observability-init.yaml').read_text())
+assert 'CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA extensions' in observability
+assert 'PERFORM 1 FROM extensions.pg_stat_statements' in observability
+assert '/seed/ensure-observability.sql' in observability_job['spec']['template']['spec']['containers'][0]['args'][0]
 if len(sys.argv) == 2:
     # Pass the pinned, reviewed community chart checkout to detect new overlays.
     upstream = Path(sys.argv[1])/'charts/supabase/templates/db/statefulset.yaml'
