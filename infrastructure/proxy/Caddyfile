@@ -170,6 +170,32 @@
 	}
 }
 
+(supabaseprod) {
+	@supabaseprod host supabase-prod.l3b.cc.cd sb-prod.l3b.cc.cd
+	handle @supabaseprod {
+		import private
+		import proxy
+		@production_api {
+			path /auth/v1/* /rest/v1/* /graphql/v1 /realtime/v1/* /storage/v1/* /functions/v1/*
+			not path /realtime/v1/api*
+		}
+		handle @production_api {
+			reverse_proxy 10.1.1.175:8000
+		}
+		@production_api_host host sb-prod.l3b.cc.cd
+		handle @production_api_host {
+			respond "Supabase Production API. Studio: https://supabase-prod.l3b.cc.cd" 404
+		}
+		handle {
+			import authenticate
+			reverse_proxy 10.1.1.175:8000 {
+				header_up Authorization "{$SUPABASE_PROD_STUDIO_AUTH}"
+				header_down -WWW-Authenticate
+			}
+		}
+	}
+}
+
 (nivra) {
 	@nivra host notes.l3b.cc.cd
 	handle @nivra {
@@ -613,6 +639,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import longhorn
 	import headlamp
 	import supabase
+	import supabaseprod
 	import pocketbase
 	import homepage
 	import nivra

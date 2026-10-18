@@ -4,6 +4,7 @@
 Never regenerate secrets if the canonical item already exists. Never print them.
 """
 import json
+import secrets
 from pathlib import Path
 import subprocess
 
@@ -20,6 +21,11 @@ assert len(items)<=1, 'Duplicate canonical items'
 if items:
     item=json.loads(run([op,'item','get',items[0]['id'],'--vault','HomeLab','--format','json']))
     values=json.loads(next(f['value'] for f in item['fields'] if f.get('label')=='deployment-secrets'))
+    if 'vaultEncKey' not in values:
+        values['vaultEncKey']=secrets.token_hex(16)
+        for field in item['fields']:
+            if field.get('label')=='deployment-secrets':field['value']=json.dumps(values)
+        run([op,'item','edit',items[0]['id'],'--vault','HomeLab','--format','json','-'],json.dumps(item))
 else:
     # Fail closed if existing database state exists without the original key source.
     existing=json.loads(run(['kubectl','--context','k8s','get','pvc','-A','-o','json']))
@@ -47,6 +53,7 @@ groups={
  'smtp':{'username':'','password':''},
  's3':{k:values[k] for k in ['keyId','accessKey']},
  'pgsodium':{'root.key':values['rootKey']},
+ 'pooler':{'vaultEncKey':values['vaultEncKey'],'secretKeyBase':values['secretKeyBase']},
 }
 groups['jwt']['secret']=values['jwtSecret']
 objects=[secret('supabase-prod-'+group,data) for group,data in groups.items()]

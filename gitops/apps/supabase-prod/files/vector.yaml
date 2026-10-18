@@ -6,7 +6,7 @@ api:
 sources:
   kubernetes_host:
     type: kubernetes_logs
-    extra_label_selector: app.kubernetes.io/instance=supabase-prod,app.kubernetes.io/name!=supabase-vector
+    extra_label_selector: homelab.l3b.cc/supabase-production=true
 
 transforms:
   project_logs:
@@ -32,7 +32,7 @@ transforms:
       realtime: '.appname == "supabase-realtime"'
       storage: '.appname == "supabase-storage"'
       functions: '.appname == "supabase-functions"'
-      db: '.appname == "supabase-db"'
+      db: '.appname == "supabase-db" || .appname == "postgres"'
   # Ignores non nginx errors since they are related with kong booting up
   kong_logs:
     type: remap

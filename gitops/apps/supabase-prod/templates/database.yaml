@@ -10,6 +10,9 @@ spec:
   imageName: supabase/postgres:17.6.1.136
   postgresUID: 100
   postgresGID: 101
+  inheritedMetadata:
+    labels:
+      homelab.l3b.cc/supabase-production: "true"
   enableSuperuserAccess: true
   superuserSecret:
     name: supabase-prod-superuser

@@ -1,0 +1,151 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: supabase-prod-pooler
+  namespace: supabase-prod
+data:
+  pooler.exs: |
+{{ .Files.Get "files/pooler.exs" | indent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: supabase-prod-pooler
+  namespace: supabase-prod
+spec:
+  selector:
+    app: supabase-prod-pooler
+  ports:
+    - name: session
+      port: 5432
+    - name: transaction
+      port: 6543
+    - name: api
+      port: 4000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: supabase-prod-pooler
+  namespace: supabase-prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: supabase-prod-pooler
+  template:
+    metadata:
+      labels:
+        app: supabase-prod-pooler
+        app.kubernetes.io/instance: supabase-prod
+    spec:
+      automountServiceAccountToken: false
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: supabase-prod-pooler
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: supavisor
+          image: supabase/supavisor:2.7.4
+          command: [/bin/sh, -c]
+          args:
+            - /app/bin/migrate && /app/bin/supavisor eval "$(cat /etc/pooler/pooler.exs)" && /app/bin/server
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-prod-db
+                  key: password
+            - name: POSTGRES_HOST
+              value: supabase-db-rw.supabase-prod.svc.cluster.local
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB
+              value: postgres
+            - name: DATABASE_URL
+              value: ecto://supabase_admin:$(POSTGRES_PASSWORD)@supabase-db-rw.supabase-prod.svc.cluster.local:5432/_supabase?ssl=true
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-prod-pooler
+                  key: secretKeyBase
+            - name: VAULT_ENC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-prod-pooler
+                  key: vaultEncKey
+            - name: API_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-prod-jwt
+                  key: secret
+            - name: METRICS_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-prod-jwt
+                  key: secret
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: RELEASE_NODE
+              value: supavisor@$(POD_IP)
+            - name: CLUSTER_POSTGRES
+              value: "true"
+            - name: REGION
+              value: homelab
+            - name: POOLER_TENANT_ID
+              value: homelab-production
+            - name: POOLER_DEFAULT_POOL_SIZE
+              value: "10"
+            - name: POOLER_MAX_CLIENT_CONN
+              value: "200"
+            - name: POOLER_POOL_MODE
+              value: transaction
+            - name: DB_POOL_SIZE
+              value: "5"
+            - name: PORT
+              value: "4000"
+            - name: ERL_FLAGS
+              value: +S 2:2
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 5432
+            periodSeconds: 5
+            failureThreshold: 60
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: config
+              mountPath: /etc/pooler
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: supabase-prod-pooler
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: supabase-prod-pooler
+  namespace: supabase-prod
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: supabase-prod-pooler

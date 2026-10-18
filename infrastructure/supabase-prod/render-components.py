@@ -21,6 +21,7 @@ for obj in objects:
     if obj['kind']!='Deployment':
         continue
     pod=obj['spec']['template']['spec']
+    obj['spec']['template']['metadata'].setdefault('labels',{})['homelab.l3b.cc/supabase-production']='true'
     pod['securityContext']=dict(pod.get('securityContext') or {},fsGroup=1000,fsGroupChangePolicy='OnRootMismatch',seccompProfile={'type':'RuntimeDefault'})
     name=obj['metadata']['name']
     if name.endswith('-analytics'):
@@ -42,8 +43,14 @@ for obj in objects:
             {'name':'NODE_EXTRA_CA_CERTS','value':'/etc/supabase-tls/ca.crt'},
         ])
         if name.endswith('-meta'):
-            env.extend([{'name':'PG_META_DB_SSL','value':'true'},{'name':'PG_META_DB_SSL_ROOT_CERT','value':'/etc/supabase-tls/ca.crt'}])
+            env.extend([{'name':'PG_META_DB_SSL_MODE','value':'verify-full'},{'name':'PG_META_DB_SSL_ROOT_CERT','valueFrom':{'secretKeyRef':{'name':'supabase-db-ca','key':'ca.crt'}}}])
         if name.endswith('-realtime'):
+            # The stock entrypoint uses sudo. Run its documented release commands
+            # directly as nobody instead, retaining the restricted capabilities.
+            container['securityContext']['runAsUser']=65534
+            container['securityContext']['runAsGroup']=65534
+            container['command']=['/bin/sh','-c']
+            container['args']=['/app/bin/migrate && /app/bin/realtime eval "Realtime.Release.seeds(Realtime.Repo)" && exec /app/bin/server']
             env.append({'name':'DB_SSL_CA_CERT','value':'/etc/supabase-tls/ca.crt'})
         container.setdefault('volumeMounts',[]).append({'name':'postgres-ca','mountPath':'/etc/supabase-tls','readOnly':True})
     pod.setdefault('volumes',[]).append({'name':'postgres-ca','secret':{'secretName':'supabase-db-ca','items':[{'key':'ca.crt','path':'ca.crt'}]}})

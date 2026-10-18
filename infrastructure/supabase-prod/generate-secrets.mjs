@@ -28,5 +28,5 @@ console.log(JSON.stringify({
   password:hex(24),database:'postgres',username:'supabase',dashboardPassword:hex(24),
   publicAccessToken:b64(24),privateAccessToken:b64(24),secretKeyBase:b64(48),
   dbEncKey:hex(8),cryptoKey:b64(24),rootKey:hex(32),
-  keyId:hex(16),accessKey:hex(32),mcpKey:'sb_mcp_'+crypto.randomBytes(32).toString('base64url'),
+  keyId:hex(16),accessKey:hex(32),vaultEncKey:hex(16),mcpKey:'sb_mcp_'+crypto.randomBytes(32).toString('base64url'),
 }));

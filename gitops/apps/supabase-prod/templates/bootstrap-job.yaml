@@ -13,6 +13,11 @@ data:
     ALTER ROLE supabase_admin PASSWORD :'pgpass';
     ALTER ROLE supabase_replication_admin PASSWORD :'pgpass';
     ALTER ROLE supabase_read_only_user PASSWORD :'pgpass';
+    ALTER ROLE authenticator PASSWORD :'pgpass';
+    ALTER ROLE pgbouncer PASSWORD :'pgpass';
+    ALTER ROLE supabase_auth_admin PASSWORD :'pgpass';
+    ALTER ROLE supabase_functions_admin PASSWORD :'pgpass';
+    ALTER ROLE supabase_storage_admin PASSWORD :'pgpass';
     ALTER DATABASE postgres SET search_path TO public, extensions;
     ALTER ROLE authenticator SET search_path TO public, extensions;
     ALTER ROLE postgres SUPERUSER;

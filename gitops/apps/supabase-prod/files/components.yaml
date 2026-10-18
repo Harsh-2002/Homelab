@@ -626,6 +626,7 @@ spec:
       labels:
         app.kubernetes.io/name: supabase-analytics
         app.kubernetes.io/instance: supabase-prod
+        homelab.l3b.cc/supabase-production: 'true'
     spec:
       serviceAccountName: supabase-prod-analytics
       automountServiceAccountToken: false
@@ -784,6 +785,7 @@ spec:
       labels:
         app.kubernetes.io/name: supabase-auth
         app.kubernetes.io/instance: supabase-prod
+        homelab.l3b.cc/supabase-production: 'true'
     spec:
       serviceAccountName: supabase-prod-auth
       automountServiceAccountToken: false
@@ -991,6 +993,7 @@ spec:
       labels:
         app.kubernetes.io/name: supabase-functions
         app.kubernetes.io/instance: supabase-prod
+        homelab.l3b.cc/supabase-production: 'true'
       annotations:
         checksum/config: 635ecfff85d5a162c4ed2dcfa180909d3607040b35225c207d913d6be201481d
     spec:
@@ -1146,6 +1149,7 @@ spec:
       labels:
         app.kubernetes.io/name: supabase-imgproxy
         app.kubernetes.io/instance: supabase-prod
+        homelab.l3b.cc/supabase-production: 'true'
     spec:
       serviceAccountName: supabase-prod-imgproxy
       automountServiceAccountToken: false
@@ -1244,6 +1248,7 @@ spec:
       labels:
         app.kubernetes.io/name: supabase-kong
         app.kubernetes.io/instance: supabase-prod
+        homelab.l3b.cc/supabase-production: 'true'
       annotations:
         checksum/config: 7d379151e7a7b5a5982c7874897dc1d4e3dcc279af65220e678057eb677df762
     spec:
@@ -1418,6 +1423,7 @@ spec:
       labels:
         app.kubernetes.io/name: supabase-meta
         app.kubernetes.io/instance: supabase-prod
+        homelab.l3b.cc/supabase-production: 'true'
     spec:
       serviceAccountName: supabase-prod-meta
       automountServiceAccountToken: false
@@ -1485,10 +1491,13 @@ spec:
           value: /etc/supabase-tls/ca.crt
         - name: NODE_EXTRA_CA_CERTS
           value: /etc/supabase-tls/ca.crt
-        - name: PG_META_DB_SSL
-          value: 'true'
+        - name: PG_META_DB_SSL_MODE
+          value: verify-full
         - name: PG_META_DB_SSL_ROOT_CERT
-          value: /etc/supabase-tls/ca.crt
+          valueFrom:
+            secretKeyRef:
+              name: supabase-db-ca
+              key: ca.crt
         resources:
           limits:
             memory: 384Mi
@@ -1543,6 +1552,7 @@ spec:
       labels:
         app.kubernetes.io/name: supabase-realtime
         app.kubernetes.io/instance: supabase-prod
+        homelab.l3b.cc/supabase-production: 'true'
     spec:
       serviceAccountName: supabase-prod-realtime
       automountServiceAccountToken: false
@@ -1704,6 +1714,14 @@ spec:
           capabilities:
             drop:
             - ALL
+          runAsUser: 65534
+          runAsGroup: 65534
+        command:
+        - /bin/sh
+        - -c
+        args:
+        - /app/bin/migrate && /app/bin/realtime eval "Realtime.Release.seeds(Realtime.Repo)"
+          && exec /app/bin/server
         volumeMounts:
         - name: postgres-ca
           mountPath: /etc/supabase-tls
@@ -1737,6 +1755,7 @@ spec:
       labels:
         app.kubernetes.io/name: supabase-rest
         app.kubernetes.io/instance: supabase-prod
+        homelab.l3b.cc/supabase-production: 'true'
     spec:
       serviceAccountName: supabase-prod-rest
       automountServiceAccountToken: false
@@ -1892,6 +1911,7 @@ spec:
       labels:
         app.kubernetes.io/name: supabase-storage
         app.kubernetes.io/instance: supabase-prod
+        homelab.l3b.cc/supabase-production: 'true'
     spec:
       serviceAccountName: supabase-prod-storage
       automountServiceAccountToken: false
@@ -2099,6 +2119,7 @@ spec:
       labels:
         app.kubernetes.io/name: supabase-studio
         app.kubernetes.io/instance: supabase-prod
+        homelab.l3b.cc/supabase-production: 'true'
     spec:
       serviceAccountName: supabase-prod-studio
       automountServiceAccountToken: false
