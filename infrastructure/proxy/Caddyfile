@@ -187,7 +187,14 @@
 			respond "Supabase Production API. Studio: https://supabase-prod.l3b.cc.cd" 404
 		}
 		handle {
-			import authenticate
+			forward_auth 10.1.1.6:3000 {
+				uri /api/auth/caddy
+				copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+				@production_login status 401
+				handle_response @production_login {
+					redir {rp.header.X-Tinyauth-Location} 302
+				}
+			}
 			reverse_proxy 10.1.1.175:8000 {
 				header_up Authorization "{$SUPABASE_PROD_STUDIO_AUTH}"
 				header_down -WWW-Authenticate

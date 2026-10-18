@@ -1,0 +1,22 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: DatabaseRole
+metadata:
+  name: supabase-prod-admin
+  namespace: supabase-prod
+spec:
+  cluster:
+    name: supabase-db
+  name: supabase_admin
+  ensure: present
+  databaseRoleReclaimPolicy: retain
+  login: true
+  inherit: true
+  superuser: true
+  createdb: true
+  createrole: true
+  replication: true
+  bypassrls: true
+  passwordSecret:
+    name: supabase-prod-admin-password
+  clientCertificate:
+    enabled: true

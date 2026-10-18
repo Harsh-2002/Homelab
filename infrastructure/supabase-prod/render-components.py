@@ -38,7 +38,10 @@ for obj in objects:
             # Postgres URL users consume sslmode; Realtime expects a boolean.
             envmap['DB_SSL']['value']='true' if name.endswith('-realtime') else 'verify-full'
         if 'POSTGRES_BACKEND_URL' in envmap:
-            envmap['POSTGRES_BACKEND_URL']['value']+='?ssl=true'
+            # Logflare's dynamic PostgreSQL adaptor does not pass its Repo CA
+            # options to per-source pools. Keep those private-cluster connections
+            # on the upstream default until that adaptor supports a custom CA.
+            pass
         for key in ['GOTRUE_DB_DATABASE_URL','PGRST_DB_URI','DATABASE_URL','SUPABASE_DB_URL']:
             if key in envmap and '?sslmode=' in envmap[key].get('value',''):
                 # URI substitutions must follow the SSL variable definition.
@@ -50,6 +53,15 @@ for obj in objects:
         if name.endswith('-meta'):
             env[:]=[item for item in env if item['name']!='PG_META_DB_SSL_MODE']
             env.extend([{'name':'PG_META_DB_SSL_MODE','value':'verify-full'},{'name':'PG_META_DB_SSL_ROOT_CERT','valueFrom':{'secretKeyRef':{'name':'supabase-db-ca','key':'ca.crt'}}}])
+        if name.endswith('-analytics'):
+            env.extend([
+                {'name':'DB_SSL','value':'true'},
+                {'name':'DB_SSL_CA_CERT_PATH','value':'/etc/supabase-tls/ca.crt'},
+                {'name':'DB_SSL_CLIENT_CERT_PATH','value':'/etc/supabase-client/tls.crt'},
+                {'name':'DB_SSL_CLIENT_KEY_PATH','value':'/etc/supabase-client/tls.key'},
+            ])
+            container.setdefault('volumeMounts',[]).append({'name':'postgres-client','mountPath':'/etc/supabase-client','readOnly':True})
+            pod.setdefault('volumes',[]).append({'name':'postgres-client','secret':{'secretName':'supabase-prod-admin-client-cert'}})
         if name.endswith('-realtime'):
             # The stock entrypoint uses sudo. Run its documented release commands
             # directly as nobody instead, retaining the restricted capabilities.

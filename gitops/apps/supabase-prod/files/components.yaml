@@ -715,7 +715,7 @@ spec:
               name: supabase-prod-analytics
               key: privateAccessToken
         - name: POSTGRES_BACKEND_URL
-          value: $(DB_DRIVER)://$(DB_USERNAME):$(DB_PASSWORD_ENC)@$(DB_HOSTNAME):$(DB_PORT)/$(DB_DATABASE)?ssl=true
+          value: $(DB_DRIVER)://$(DB_USERNAME):$(DB_PASSWORD_ENC)@$(DB_HOSTNAME):$(DB_PORT)/$(DB_DATABASE)
         - name: LOGFLARE_NODE_HOST
           value: 127.0.0.1
         - name: DB_SCHEMA
@@ -734,6 +734,14 @@ spec:
           value: /etc/supabase-tls/ca.crt
         - name: NODE_EXTRA_CA_CERTS
           value: /etc/supabase-tls/ca.crt
+        - name: DB_SSL
+          value: 'true'
+        - name: DB_SSL_CA_CERT_PATH
+          value: /etc/supabase-tls/ca.crt
+        - name: DB_SSL_CLIENT_CERT_PATH
+          value: /etc/supabase-client/tls.crt
+        - name: DB_SSL_CLIENT_KEY_PATH
+          value: /etc/supabase-client/tls.key
         resources:
           limits:
             memory: 1Gi
@@ -756,10 +764,16 @@ spec:
             drop:
             - ALL
         volumeMounts:
+        - name: postgres-client
+          mountPath: /etc/supabase-client
+          readOnly: true
         - name: postgres-ca
           mountPath: /etc/supabase-tls
           readOnly: true
       volumes:
+      - name: postgres-client
+        secret:
+          secretName: supabase-prod-admin-client-cert
       - name: postgres-ca
         secret:
           secretName: supabase-db-ca
