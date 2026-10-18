@@ -1,5 +1,18 @@
 # Homelab agent handoff
 
+## Supabase cron repaired, 2026-10-18 16:10 UTC
+
+Owner approved the restart-dependent repair. cron.use_background_workers=on,
+cron.max_running_jobs=4, max_worker_processes32 unchanged. CNPG rolled standbys
+then primary switched db1->db2 without manual Realtime intervention; all3 Ready,
+both streaming/quorum, sampled lag0. Current primary is **supabase-db-2**, which
+supersedes older primary references below. Pre-restart committed marker retained.
+Real repeated scheduled writes passed in postgres and _supabase, also as Studio
+supabase_admin; owned fixtures removed, original retention job unchanged. External
+PostgreSQL TLS/auth/write and MCP auth/read/write passed after recovery. Static
+guard and platform suite now require actual cron execution. See audit and
+validate-cron.py. This approved repair does not authorize new HA disruption drills.
+
 ## Omni deployment, 2026-10-18
 
 Omni v1.12.4 runs on CTR via Portainer stack `omni` ID158, outside its managed

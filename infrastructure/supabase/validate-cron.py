@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Exercise real pg_cron execution, not just catalog access; clean owned fixtures."""
 import json
-from pathlib import Path
 import subprocess
 import time
 import uuid
@@ -70,7 +69,7 @@ try:
 finally:
     for job in jobs:
         sql(f'SELECT cron.unschedule({job});')
-    # Unschedule first, then wait until the owned workers have finished.
+    # Unschedule before dropping unique fixtures; DDL waits for active inserts.
     for database in databases:
         sql(f'DROP TABLE {schema}.probe; DROP SCHEMA {schema};', database)
     if jobs:

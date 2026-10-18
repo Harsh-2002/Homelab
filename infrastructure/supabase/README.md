@@ -1,5 +1,17 @@
 # Supabase
 
+### Cron execution
+
+`pg_cron` runs jobs as background workers, not passwordless localhost clients.
+GitOps pins `cron.use_background_workers=on` and `cron.max_running_jobs=4` within
+the existing32-worker pool. These settings require a controlled DB rolling
+restart when changed. No database passwords belong in job commands or trust HBA
+rules. `python3 infrastructure/supabase/validate-cron.py` checks settings on all3
+instances and repeated scheduled writes in postgres/_supabase, including Studio's
+supabase_admin role. It removes its own unique fixtures and leaves existing jobs
+unchanged. It is also included in validate-platform-init.py. See the audit for
+the 2026-10-18 connection-authentication RCA and verified repair.
+
 Owner policy: backup/PITR setup is deferred until production. HA acceptance for
 now is a non-disruptive configuration/live-health review of the chosen homelab
 topology, not node shutdowns or more recovery drills. That review passed; retain
