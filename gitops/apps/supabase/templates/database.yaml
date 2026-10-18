@@ -69,6 +69,8 @@ spec:
       hot_standby_feedback: "on"
       sync_replication_slots: "on"
       cron.database_name: postgres
+      cron.use_background_workers: "on"
+      cron.max_running_jobs: "4"
       pgsodium.getkey_script: /projected/getkey.sh
       vault.getkey_script: /projected/getkey.sh
       session_preload_libraries: supautils

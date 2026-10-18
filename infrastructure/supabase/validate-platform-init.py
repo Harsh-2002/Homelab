@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Verify official init contract and real async webhook delivery; remove own fixtures."""
 import json
+from pathlib import Path
 import subprocess
 import time
 import uuid
@@ -26,6 +27,7 @@ for db_pod in db_pods['items']:
         'SELECT count(*) >= 0 FROM pg_stat_statements;'],capture_output=True,text=True,check=True)
     assert probe.stdout.strip() == 't'
 print('PASS: required platform extension inventory and callable query statistics on all database instances')
+subprocess.run(['python3', str(Path(__file__).with_name('validate-cron.py'))], check=True)
 pods = json.loads(subprocess.check_output(K+['get','pods','-l','app.kubernetes.io/name=supabase-studio','-o','json'],text=True))
 pod = next(p for p in pods['items'] if any(c.get('type')=='Ready' and c.get('status')=='True' for c in p['status'].get('conditions',[])))
 name, ip = pod['metadata']['name'], pod['status']['podIP']
