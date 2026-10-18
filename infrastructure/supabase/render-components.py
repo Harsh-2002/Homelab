@@ -14,6 +14,7 @@ root=pathlib.Path(__file__).resolve().parents[2]
 upstream=pathlib.Path(sys.argv[1])
 commit=subprocess.check_output(['git','-C',str(upstream),'rev-parse','HEAD'],text=True).strip()
 assert commit=='14806daa859670133b1139faebb473855806899a','Unexpected upstream source revision'
+subprocess.run([sys.executable,str(root/'infrastructure/supabase/check-init-contract.py'),str(upstream)],check=True,stdout=sys.stderr)
 raw=subprocess.check_output(['helm','template','supabase-prod',str(upstream/'charts/supabase'),'-n','supabase-prod','--skip-tests','-f',str(root/'gitops/apps/supabase/components-values.yaml')],text=True)
 objects=[x for x in yaml.safe_load_all(raw) if x]
 assert not any(x['kind']=='Secret' for x in objects),'Refusing generated credentials in Git'

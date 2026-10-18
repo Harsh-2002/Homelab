@@ -1,8 +1,8 @@
 # Homepage
 
-PocketBase sits beside Supabase in Applications, linking to `https://pocketbase.l3b.cc.cd/_/`. It uses the official `https://pocketbase.io/images/logo.svg` and the unauthenticated `/api/health` endpoint for status. No superuser credential or invented metrics widget is supplied to Homepage. See `infrastructure/pocketbase/README.md` for deployment and credentials.
+PocketBase has been removed completely at the owner's request and has no active card. See `infrastructure/pocketbase/README.md` for the retirement record.
 
-Supabase appears once in Applications at `https://supabase.l3b.cc.cd` with the supported `supabase.svg` catalog icon. The separate Dev/Production entries and PocketBase card were removed after consolidation to Kubernetes. Existing layout/section styling is preserved; no unsupported metrics widget is claimed. See `infrastructure/supabase/README.md` for the full stack and credentials.
+Supabase appears once in Platform at `https://supabase.l3b.cc.cd` with the supported `supabase.svg` catalog icon. The separate Dev/Production entries and PocketBase card were removed after consolidation to Kubernetes. Existing layout/section styling is preserved; no unsupported metrics widget is claimed. See `infrastructure/supabase/README.md` for the full stack and credentials.
 
 Homepage is the stateless, Git-managed portal served at `https://l3b.cc.cd`.
 

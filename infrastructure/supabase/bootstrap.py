@@ -7,8 +7,10 @@ import json
 import secrets
 from pathlib import Path
 import subprocess
+import sys
 
 root=Path(__file__).resolve().parents[2]
+subprocess.run([sys.executable, str(root/'infrastructure/supabase/check-init-contract.py')], check=True)
 op=str(root/'scripts/op-sa')
 def run(args,data=None):
     result=subprocess.run(args,input=data,capture_output=True,text=True)
@@ -30,7 +32,7 @@ else:
     # Fail closed if existing database state exists without the original key source.
     existing=json.loads(run(['kubectl','--context','k8s','get','pvc','-A','-o','json']))
     assert not any(p['metadata']['namespace']=='supabase-prod' for p in existing['items']), 'Existing PVCs without canonical vault keys'
-    values=json.loads(run(['node',str(root/'infrastructure/supabase-prod/generate-secrets.mjs')]))
+    values=json.loads(run(['node',str(root/'infrastructure/supabase/generate-secrets.mjs')]))
     payload={'title':'Supabase','category':'LOGIN','urls':[{'href':'https://supabase.l3b.cc.cd','primary':True}], 'fields':[
         {'id':'username','type':'STRING','purpose':'USERNAME','value':values['username']},
         {'id':'password','type':'CONCEALED','purpose':'PASSWORD','value':values['dashboardPassword']},

@@ -82,6 +82,42 @@ No cluster-wide Cilium mode was changed and no source allowlist was broadened.
 
 ## Reproduce and operate
 
+### Database initialization contract and webhook RCA (2026-10-18)
+
+The initial CNPG bootstrap enumerated SQL files bundled in the database image,
+but did not run the official Docker overlay files `98-webhooks.sql`,
+`99-roles.sql`, and `99-jwt.sql`. Role passwords were reconciled separately,
+but webhook objects and database JWT settings remained absent. This exposed
+Studio's Enable button, which calls a platform `hook-enable` endpoint not
+implemented by the deployed self-hosted Studio image. A direct request inside
+Studio returned the same 404, ruling out Caddy/DNS as the cause.
+
+`supabase-platform-init-v3` now runs the missing official overlays after the
+original bootstrap. It uses a session advisory lock, conditional webhook schema
+creation, explicit object validation and a versioned migration ledger. It can be
+rerun without dropping application data. Argo CD manages this job for existing
+and fresh deployments; do not edit/recreate the completed immutable v1 Job.
+Future migrations get a new version/job, not an empty database or a replay of
+all image initialization scripts. Preserve the original secrets.
+
+`check-init-contract.py` checks every reviewed upstream overlay is present and
+executed. Both secret bootstrap and component rendering invoke it. Supplying the
+pinned upstream checkout additionally checks its declared overlay inventory, so
+new upstream requirements must be reviewed instead of silently skipped.
+
+Validation: `python3 infrastructure/supabase/validate-platform-init.py` verifies
+the initialized objects/settings, exercises Studio's real extension list/query
+routes with transactional hstore enable/disable, and inserts into a disposable
+table with a real webhook trigger. An ephemeral in-memory HTTP receiver verifies
+the POST payload and pg_net HTTP 200 result. It removes only its own fixtures.
+No database or service restart is required for this repair.
+
+This is not a reason to enable every optional extension. Extensions already
+packaged by the image can normally be enabled through Studio/SQL with appropriate
+privileges. New extension binaries or preload requirements need a reviewed image
+and rolling database configuration change across all three instances. Some
+hosted-only platform features are not implemented by self-hosted Studio.
+
 Desired manifests: `gitops/apps/supabase`; app-of-apps entry:
 `gitops/clusters/platform/applications/supabase.yaml`. Public component manifests
 are generated from community chart source commit

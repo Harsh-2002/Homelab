@@ -1,5 +1,25 @@
 # Homelab agent handoff
 
+## Latest verified repair: initialization and Anchor retirement, 2026-10-18
+
+Anchor is completely retired: Portainer154, its owned data/anonymous volume/image,
+network, Caddy route, Pocket ID client/local secret and Homepage card removed.
+Its vault item is archived; Nivra remains unchanged and healthy. Historical
+whole-CTR backups were not deleted. Do not recreate Anchor from older notes.
+Homepage now shows Supabase under Platform, verified in the rendered browser.
+
+Supabase's missing official webhook/JWT init overlays are repaired by GitOps job
+`supabase-platform-init-v3`, completed and repeat-run tested without a DB restart.
+The original seed enumerated only image-bundled SQL, omitting Docker overlays;
+Studio's Enable button then called an unimplemented self-hosted platform route.
+Do not patch proxy routing for that404 or reset storage. Init inventory checks
+run before bootstrap/rendering; use versioned migrations for future upgrades.
+Real INSERT-to-HTTP webhook delivery, Studio extension enable/disable and full
+API/Auth/Storage/Realtime acceptance passed; all fixtures cleaned. MCP discovery
+and SQL passed this run, but earlier intermittent MCP502 remains a separate
+unclosed stability issue. See `infrastructure/supabase/README.md` and
+`validate-platform-init.py` for exact tests and operational boundaries.
+
 ## Current override: Supabase consolidation, 2026-10-18
 
 Only Kubernetes Supabase remains. VM108 and its owned local-ZFS disks, PX10

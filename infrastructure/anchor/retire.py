@@ -3,7 +3,11 @@
 import json
 from pathlib import Path
 import subprocess
+import sys
 import urllib.request
+
+if sys.argv[1:] != ['--execute']:
+    raise SystemExit('Owner-authorized one-time permanent deletion only: retire.py --execute')
 
 ROOT = Path(__file__).resolve().parents[2]
 VOLUME = '7e046962cf1dc044453e241b3ecafbde74e3e5b90d001128acb477a4aae218c4'

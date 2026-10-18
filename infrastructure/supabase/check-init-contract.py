@@ -28,4 +28,7 @@ if len(sys.argv) == 2:
     source = upstream.read_text()
     declared = set(re.findall(r'/custom-init-scripts/([\w-]+\.sql)', source))
     assert declared == expected, f'Upstream init inventory changed: {declared ^ expected}'
+    for name in ('98-webhooks.sql','99-roles.sql','99-jwt.sql'):
+        original = Path(sys.argv[1])/'charts/supabase/files/db/initdb'/name
+        assert original.read_bytes() == (chart/'files/db'/name).read_bytes(), f'Review altered upstream SQL: {name}'
 print('Reviewed upstream init overlays covered; versioned migration and secret references valid')
