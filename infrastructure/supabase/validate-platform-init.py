@@ -51,13 +51,22 @@ async function main() {
     "SET search_path TO public,extensions; SELECT count(*) AS statements, coalesce(sum(calls),0) AS calls FROM pg_stat_statements WHERE dbid=(SELECT oid FROM pg_database WHERE datname=current_database())",
     "SET search_path TO public,extensions; SELECT auth.rolname,statements.calls,statements.total_exec_time+statements.total_plan_time AS total_time,statements.mean_exec_time+statements.mean_plan_time AS mean_time FROM pg_stat_statements AS statements JOIN pg_authid AS auth ON statements.userid=auth.oid WHERE statements.calls>0 ORDER BY total_time DESC LIMIT 20",
     "SET search_path TO public,extensions; SELECT COALESCE(ROUND(AVG(rows::numeric/NULLIF(calls,0)),1),0) AS avg_rows_per_call,COUNT(*) FILTER(WHERE total_exec_time+total_plan_time>1000) AS slow_queries,COALESCE(ROUND(SUM(shared_blks_hit)*100.0/NULLIF(SUM(shared_blks_hit+shared_blks_read),0),2),0) AS cache_hit_rate FROM pg_stat_statements WHERE calls>0",
-    "SELECT 'index hit rate' AS name,sum(idx_blks_hit)/nullif(sum(idx_blks_hit+idx_blks_read),0) AS ratio FROM pg_statio_user_indexes UNION ALL SELECT 'table hit rate',sum(heap_blks_hit)/nullif(sum(heap_blks_hit)+sum(heap_blks_read),0) FROM pg_statio_user_tables"
+    "SELECT 'index hit rate' AS name,sum(idx_blks_hit)/nullif(sum(idx_blks_hit+idx_blks_read),0) AS ratio FROM pg_statio_user_indexes UNION ALL SELECT 'table hit rate',sum(heap_blks_hit)/nullif(sum(heap_blks_hit)+sum(heap_blks_read),0) FROM pg_statio_user_tables",
+    "SELECT count(*) FROM pg_catalog.pg_tables; SELECT count(*) FROM pg_catalog.pg_proc; SELECT count(*) FROM pg_catalog.pg_trigger; SELECT count(*) FROM pg_catalog.pg_indexes",
+    "SELECT count(*) FROM pg_catalog.pg_roles; SELECT count(*) FROM pg_catalog.pg_publication; SELECT count(*) FROM pg_catalog.pg_replication_slots",
+    "SELECT count(*) FROM cron.job; SELECT count(*) FROM vault.secrets; SELECT count(*) FROM supabase_functions.hooks",
+    "SELECT to_regprocedure('extensions.index_advisor(text)') IS NOT NULL AS advisor_available,to_regprocedure('extensions.hypopg_create_index(text)') IS NOT NULL AS hypothetical_indexes_available"
   ];
-  for (const query of queries) {
+  for (const [index,query] of queries.entries()) {
     const response=await fetch(base+'/query',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query})});
-    if(!response.ok || !Array.isArray(await response.json())) throw new Error('Studio observability SQL failed HTTP '+response.status);
+    if(!response.ok) throw new Error('Studio observability SQL failed HTTP '+response.status);
+    const result=await response.json();
+    if(!Array.isArray(result)) throw new Error('Studio SQL did not return rows');
+    if(index===0 && !(Number(result[0]?.statements)>0 && Number(result[0]?.calls)>0)) throw new Error('Query statistics contain no measured calls');
+    if(index===queries.length-1 && !(result[0]?.advisor_available && result[0]?.hypothetical_indexes_available)) throw new Error('Advisor prerequisites absent');
   }
   console.log('PASS: Studio query-statistics, role join, metrics and cache-hit-rate SQL routes return data');
+  console.log('PASS: Studio SQL role can read table/function/trigger/index, role/replication, cron/vault/webhook catalogs; advisor dependencies available');
 } main().catch(e=>{console.error(e.message);process.exit(1)});
 '''
 subprocess.run(K+['exec',name,'--','node','-e',observability_test],check=True)
