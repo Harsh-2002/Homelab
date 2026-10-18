@@ -43,6 +43,7 @@ for obj in objects:
             {'name':'NODE_EXTRA_CA_CERTS','value':'/etc/supabase-tls/ca.crt'},
         ])
         if name.endswith('-meta'):
+            env[:]=[item for item in env if item['name']!='PG_META_DB_SSL_MODE']
             env.extend([{'name':'PG_META_DB_SSL_MODE','value':'verify-full'},{'name':'PG_META_DB_SSL_ROOT_CERT','valueFrom':{'secretKeyRef':{'name':'supabase-db-ca','key':'ca.crt'}}}])
         if name.endswith('-realtime'):
             # The stock entrypoint uses sudo. Run its documented release commands

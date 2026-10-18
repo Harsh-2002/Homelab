@@ -1476,8 +1476,6 @@ spec:
           value: $(DB_USER)
         - name: PG_META_DB_PASSWORD
           value: $(DB_PASSWORD)
-        - name: PG_META_DB_SSL_MODE
-          value: $(DB_SSL)
         - name: CRYPTO_KEY
           valueFrom:
             secretKeyRef:
