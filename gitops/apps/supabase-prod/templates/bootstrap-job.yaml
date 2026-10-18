@@ -16,7 +16,6 @@ data:
     ALTER ROLE authenticator PASSWORD :'pgpass';
     ALTER ROLE pgbouncer PASSWORD :'pgpass';
     ALTER ROLE supabase_auth_admin PASSWORD :'pgpass';
-    ALTER ROLE supabase_functions_admin PASSWORD :'pgpass';
     ALTER ROLE supabase_storage_admin PASSWORD :'pgpass';
     ALTER DATABASE postgres SET search_path TO public, extensions;
     ALTER ROLE authenticator SET search_path TO public, extensions;
