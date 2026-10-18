@@ -195,11 +195,11 @@ data:
             href: https://orva.l3b.cc.cd
             description: Serverless functions
             ping: https://orva.l3b.cc.cd
-    - Applications:
         - Supabase:
             icon: supabase.svg
             href: https://supabase.l3b.cc.cd
             description: Kubernetes HA database and APIs
+    - Applications:
         - Nivra:
             icon: /icons/nivra.png
             href: https://notes.l3b.cc.cd

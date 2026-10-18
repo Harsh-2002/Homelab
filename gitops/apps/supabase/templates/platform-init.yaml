@@ -1,0 +1,74 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: supabase-platform-init-v3
+  namespace: supabase-prod
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  backoffLimit: 2
+  activeDeadlineSeconds: 600
+  template:
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 100
+        runAsGroup: 101
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: initialize
+          image: supabase/postgres:17.6.1.136
+          command: [/bin/bash, -c]
+          args:
+            - |
+              set -euo pipefail
+              until psql -Atc "SELECT version FROM homelab_bootstrap.state WHERE id=1" 2>/dev/null | grep -qx v1; do sleep 3; done
+              psql -v ON_ERROR_STOP=1 -f /seed/ensure-platform.sql >/dev/null
+              echo 'Official webhooks, role passwords and JWT database settings reconciled'
+          env:
+            - name: PGHOST
+              value: supabase-db-rw
+            - name: PGUSER
+              value: postgres
+            - name: PGDATABASE
+              value: postgres
+            - name: PGSSLMODE
+              value: require
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-prod-db
+                  key: password
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-prod-db
+                  key: password
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-prod-jwt
+                  key: secret
+            - name: JWT_EXP
+              value: "3600"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: seed
+              mountPath: /seed
+              readOnly: true
+      volumes:
+        - name: seed
+          configMap:
+            name: supabase-prod-seed-sql
