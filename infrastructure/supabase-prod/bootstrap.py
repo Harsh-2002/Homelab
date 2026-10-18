@@ -51,5 +51,10 @@ groups={
 groups['jwt']['secret']=values['jwtSecret']
 objects=[secret('supabase-prod-'+group,data) for group,data in groups.items()]
 objects.append(secret('supabase-prod-superuser',{'username':'postgres','password':values['password']},'kubernetes.io/basic-auth'))
+namespace=run(['kubectl','--context','k8s','create','namespace','supabase-prod-logging','--dry-run=client','-o','yaml'])
+run(['kubectl','--context','k8s','apply','-f','-'],namespace)
+logging_secret=secret('supabase-prod-vector',{'publicAccessToken':values['publicAccessToken']})
+logging_secret['metadata']['namespace']='supabase-prod-logging'
+objects.append(logging_secret)
 run(['kubectl','--context','k8s','apply','-f','-'],json.dumps({'apiVersion':'v1','kind':'List','items':objects}))
 print('Production secrets provisioned from canonical HomeLab / Supabase Production; no secret values displayed')
