@@ -25,11 +25,15 @@ for obj in objects:
         script=script.replace('await jose.jwtVerify(jwt, secretKey)', "const { alg } = jose.decodeProtectedHeader(jwt)\n    if (alg === 'HS256') await jose.jwtVerify(jwt, secretKey, { algorithms: ['HS256'] })\n    else await jose.jwtVerify(jwt, JWKS, { algorithms: ['ES256'] })")
         obj['data']['index.ts']=script
     if obj['kind']=='ConfigMap' and obj['metadata']['name']=='supabase-prod-kong':
-        gateway=yaml.safe_load(obj['data']['kong.yml'])
-        for service in gateway['services']:
-            if service['name']=='mcp':
-                service['plugins']=[{'name':'ip-restriction','config':{'allow':['10.1.1.3/32']}}]
-        obj['data']['kong.yml']=yaml.safe_dump(gateway,sort_keys=False)
+        # Preserve upstream Lua quoting: its entrypoint evals this text before
+        # Kong parses YAML, so a generic YAML round-trip is unsafe here.
+        original=obj['data']['kong.yml']
+        start=original.index('  - name: mcp\n')
+        end=original.index('  - name: dashboard\n',start)
+        section=original[start:end]
+        plugins=section.index('    plugins:\n')
+        section=section[:plugins]+'    plugins:\n      - name: ip-restriction\n        config:\n          allow:\n            - 10.1.1.3/32\n\n'
+        obj['data']['kong.yml']=original[:start]+section+original[end:]
     if obj['kind']!='Deployment':
         continue
     pod=obj['spec']['template']['spec']
