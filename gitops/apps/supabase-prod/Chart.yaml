@@ -1,0 +1,5 @@
+apiVersion: v2
+name: supabase-prod-infrastructure
+description: Production Supabase database, secrets references and HA infrastructure
+type: application
+version: 0.1.0

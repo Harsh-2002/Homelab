@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: supabase-prod-infrastructure
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Harsh-2002/Homelab.git
+    targetRevision: main
+    path: gitops/apps/supabase-prod
+    helm:
+      releaseName: supabase-prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: supabase-prod
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
