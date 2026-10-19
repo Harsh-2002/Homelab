@@ -1,5 +1,18 @@
 # Homelab agent handoff
 
+## Separate friend's Nivra, 2026-10-19
+
+Public https://theking.l3b.cc.cd is Portainer stack nivra-theking ID159/endpoint2,
+CTR10.1.1.4:3021, separate RW data /data/apps/nivra-theking. Existing Caddy and
+DNS-only Cloudflare A150.129.31.154; internalDNS10.1.1.3 unchanged. Latest image
+observed releasev2026.10.16. Healthy, TLS/health200, browser onboarding step1,
+unauth content/MCP401. Owner explicitly says friend completes onboarding: no
+owner/email/password/recovery/APIkey created; encryption left to wizard. Warned
+that first public visitor can claim uninitialized setup. **NO Homepage card**.
+Do not
+connect friend's instance to personal agents or clone original Nivra data. See
+infrastructure/nivra-theking/README.md. Authenticated behavior awaits onboarding.
+
 ## Nivra public exposure, 2026-10-19
 
 Owner authorized notes.l3b.cc.cd public access. Removed only Nivra Caddy private

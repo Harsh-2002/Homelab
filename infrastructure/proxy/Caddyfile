@@ -209,6 +209,14 @@
 	}
 }
 
+(nivra_theking) {
+	@nivra_theking host theking.l3b.cc.cd
+	handle @nivra_theking {
+		import proxy
+		reverse_proxy 10.1.1.4:3021
+	}
+}
+
 (homeassistant) {
 	@homeassistant host home.l3b.cc.cd
 	handle @homeassistant {
@@ -652,6 +660,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import supabase
 	import homepage
 	import nivra
+	import nivra_theking
 	import homeassistant
 	import pocketid
 	import tinyauth

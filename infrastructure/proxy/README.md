@@ -113,6 +113,14 @@ WAN `150.129.31.154`; internal DNS remains Caddy `10.1.1.3`. Container origin
 unauthenticated API/MCP401 verified; independent outside-network verification
 remains pending. See the Nivra runbook. Anchor remains retired.
 
+`theking.l3b.cc.cd` is a separate public Nivra instance for a friend, deployed
+2026-10-19. Existing Caddy forwards to CTR10.1.1.4:3021 without the private gate;
+native Nivra authentication remains. Cloudflare DNS-only A points to household
+WAN150.129.31.154, internal DNS remains10.1.1.3. State is isolated in
+/data/apps/nivra-theking, Portainer stack159. Friend performs first-owner
+onboarding; no account was provisioned and no Homepage/agent integration added.
+See infrastructure/nivra-theking/README.md for tests and first-visitor claim risk.
+
 ## Public Docker Registry
 
 `registry.l3b.cc.cd` is an explicit public DNS-only Cloudflare record. It intentionally bypasses the private-source and Tinyauth handlers because Docker uses the Registry's retained Basic authentication credentials. Caddy terminates TLS and does not response-compress the Registry route. The unauthenticated `/v2/` endpoint must return `401` with `Docker-Distribution-Api-Version: registry/2.0`.
