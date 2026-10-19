@@ -105,12 +105,13 @@ internal ports, and storage dependencies are in `infrastructure/arr/README.md`.
 Paperless-ngx at `docs.l3b.cc.cd` is private-network-only and uses its own
 Pocket ID OIDC login; its Caddy route does not import Tinyauth.
 
-Nivra is being prepared at `notes.l3b.cc.cd` on CTR. The initial owner setup
-must be completed while the Caddy route is private. Only after first-run
-authentication is established should the Nivra handler become public and a
-DNS-only Cloudflare A record point `notes` to the household WAN address
-`150.129.31.154`. Internal Unbound continues to resolve `notes` to Caddy
-`10.1.1.3`. Anchor was completely retired on 2026-10-18; its handler was removed.
+Nivra at `notes.l3b.cc.cd` on CTR is public by owner request on 2026-10-19.
+Only its Caddy private-source gate was removed; Nivra's native authentication
+protects data and MCP. Explicit DNS-only Cloudflare A record `notes` points to
+WAN `150.129.31.154`; internal DNS remains Caddy `10.1.1.3`. Container origin
+`10.1.1.4:3020` remains LAN-only. Public DNS, WAN-address HTTPS health200 and
+unauthenticated API/MCP401 verified; independent outside-network verification
+remains pending. See the Nivra runbook. Anchor remains retired.
 
 ## Public Docker Registry
 

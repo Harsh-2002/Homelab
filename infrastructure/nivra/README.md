@@ -1,5 +1,26 @@
 # Nivra
 
+## Public access, 2026-10-19
+
+Owner explicitly authorized public exposure of `https://notes.l3b.cc.cd`.
+Only this hostname's Caddy `private` source gate was removed. Native Nivra
+authentication remains required for notes, system data and MCP initialization.
+One existing owner account was confirmed; no account/password/reset or
+application/data changes were made. The historical native-password validation
+limitation below remains; public exposure does not establish successful owner login.
+
+Cloudflare has an explicit DNS-only A record `notes -> 150.129.31.154`.
+Internal DNS still resolves notes to Caddy `10.1.1.3`; raw application port3020
+remains bound only to CTR `10.1.1.4`. Existing wildcard TLS is reused. No router
+forwarding or Docker/Portainer changes were needed; Caddy was gracefully reloaded.
+
+Verified public-recursive DNS answer, valid TLS and HTTP200 through the WAN IP,
+health200, unauthenticated notes/system401 and MCP initialization401. Container
+remains healthy. WAN-IP testing originated inside the home network, not an
+independent outside probe. Slate SSH required Tailscale reauthentication, and
+direct public SSH timed out; no access policy was bypassed. An independent
+off-network/mobile-data check remains desirable.
+
 ## Agent MCP, verified 2026-10-18
 
 The owner-provided access key now authenticates successfully at
@@ -15,7 +36,7 @@ settings, refuses an existing entry and tests initialization/discovery. The
 older failed-MCP-credential statements below are superseded; native UI password
 login remains separately unverified.
 
-Nivra **v2026.10.16**, commit `8a761e26728f6a5ccb6bd97cce29acd96beb05e2`, is deployed on `ctr` as Portainer stack **157**, `nivra` (endpoint2). At the owner's explicit request, the Compose image is **`ghcr.io/harsh-2002/nivra:latest`**, without a digest pin. The image observed during this upgrade matches the published release. CI run38905049889 succeeded for that exact release commit. No upstream release/tag/CI settings were modified. Caddy access policy and DNS were left unchanged: existing private LAN/Tailscale route at `https://notes.l3b.cc.cd`.
+Nivra **v2026.10.16**, commit `8a761e26728f6a5ccb6bd97cce29acd96beb05e2`, is deployed on `ctr` as Portainer stack **157**, `nivra` (endpoint2). At the owner's explicit request, the Compose image is **`ghcr.io/harsh-2002/nivra:latest`**, without a digest pin. The image observed during this upgrade matches the published release. CI run38905049889 succeeded for that exact release commit. No upstream release/tag/CI settings were modified. At upgrade time Caddy/DNS were unchanged; the later public exposure above supersedes that private-access status.
 
 ## October18 IST upgrade acceptance
 
@@ -38,7 +59,7 @@ All durable application state is bind-mounted from `/data/apps/nivra` to `/data`
 
 The owner requested no encryption at rest. The stack sets `NIVRA_ENCRYPTION_ENABLED=false` before the first startup; Nivra persists that choice for the installation. Notes, SQLite and uploaded files are therefore plaintext on CTR's disk. Authentication secrets and exported application backups remain encrypted by Nivra. No external encryption key is mounted. Do not change this setting after the installation has initialized.
 
-Nivra has one owner and native password/passkey authentication; public sign-up is disabled. It does not use the Anchor Pocket ID client or Tinyauth. Complete first-run account setup at the HTTPS hostname while it is still private. Verify the UI reports encryption disabled and store the one-time recovery code securely. Only then change the Nivra Caddy handler to public access and create the explicit DNS-only Cloudflare A record `notes.l3b.cc.cd -> 150.129.31.154`. Leave the Caddy origin on the LAN and preserve the internal Unbound answer `10.1.1.3`. Confirm an unauthenticated remote request reaches Nivra's login/setup protection and that private API content is not returned.
+Nivra has one owner and native password/passkey authentication; public sign-up is disabled. It does not use the Anchor Pocket ID client or Tinyauth. The owner authorized public access on 2026-10-19 after the existing owner account and unauthenticated API denial were confirmed. Keep the application origin on the LAN and preserve internal DNS answer `10.1.1.3`. Public exposure does not disable Nivra login or expose note contents anonymously.
 
 Anchor was retired on 2026-10-18 at the owner's request. Nivra is the remaining notes service; do not recreate Anchor from historical configuration.
 

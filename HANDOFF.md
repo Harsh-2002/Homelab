@@ -1,5 +1,16 @@
 # Homelab agent handoff
 
+## Nivra public exposure, 2026-10-19
+
+Owner authorized notes.l3b.cc.cd public access. Removed only Nivra Caddy private
+gate; native auth retained. DNS-only Cloudflare notes A150.129.31.154, internal
+DNS still10.1.1.3, container10.1.1.4:3020 LAN-only. Health200/TLS/WAN-address
+checks pass; unauth notes/system/MCP initialize401. Existing owner exists; no
+credential reset, Docker change or data mutation. Independent off-network probe
+not available (Slate SSH reauth required); WAN-IP test was from inside home.
+See infrastructure/nivra/README.md. Do not publish private agent configuration
+or memory resource references when documenting this endpoint.
+
 ## Supabase cron repaired, 2026-10-18 16:10 UTC
 
 Owner approved the restart-dependent repair. cron.use_background_workers=on,

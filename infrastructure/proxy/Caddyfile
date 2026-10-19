@@ -194,7 +194,6 @@
 (nivra) {
 	@nivra host notes.l3b.cc.cd
 	handle @nivra {
-		import private
 		import proxy
 		reverse_proxy 10.1.1.4:3020
 	}
