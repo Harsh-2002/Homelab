@@ -342,24 +342,24 @@ data:
   custom.css: |
     #information-widgets-right .information-widget-openmeteo { margin-left: 0.75rem; }
     .theme-neutral {
-      --color-50: 255 255 255;
-      --color-900: 0 0 0;
+      --color-50: 244 244 244;
+      --color-900: 22 22 22;
     }
     :root {
-      --portal-canvas: #fff;
+      --portal-canvas: #f4f4f4;
       --portal-card: #fff;
-      --portal-hover: #f5f5f5;
+      --portal-hover: #f4f4f4;
       --portal-border: #dedede;
-      --portal-text: #000;
+      --portal-text: #161616;
       --portal-muted: #525252;
     }
     :root.dark {
-      --portal-canvas: #000;
-      --portal-card: #0a0a0a;
-      --portal-hover: #171717;
-      --portal-border: #303030;
-      --portal-text: #fff;
-      --portal-muted: #b3b3b3;
+      --portal-canvas: #161616;
+      --portal-card: #262626;
+      --portal-hover: #333333;
+      --portal-border: #393939;
+      --portal-text: #f4f4f4;
+      --portal-muted: #c6c6c6;
     }
     body, #__next { background-color: var(--portal-canvas) !important; }
     .service-card {

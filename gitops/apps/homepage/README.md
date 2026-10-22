@@ -12,15 +12,20 @@ Homepage is the stateless, Git-managed portal served at `https://l3b.cc.cd`.
 - Cilium advertises `10.1.1.174:80`; Caddy terminates TLS, applies private LAN/Tailscale access control, and uses Tinyauth/Pocket ID for authentication.
 - Widget credentials are held only in the live `homepage-widgets` Kubernetes Secret, sourced from the authoritative 1Password items. The chart contains `HOMEPAGE_VAR_*` placeholders only; never commit a secret value.
 
-## Automatic black-and-white theme
+## Automatic neutral light-and-dark theme
 
-The owner replaced the photo treatment with a minimal monochrome theme.
+The owner replaced the photo treatment with a minimal monochrome theme, then
+requested softer main backgrounds instead of absolute white/black.
 The background image, ConfigMap asset and images volume are removed; the old
 photo can be recovered from Git history if explicitly requested.
 
-Homepage uses `color: neutral`, no fixed `theme`, pure white/black canvas tokens,
-flat near-white/near-black cards, restrained neutral borders and no shadows or
-overlays. Metric values use normal400 weight; descriptions use contrast-safe
+Homepage uses `color: neutral`, no fixed `theme`, off-white `#f4f4f4` light canvas
+and charcoal `#161616` dark canvas. These are the Gray10/Gray100 background pair
+from [IBM Carbon's color system](https://www.carbondesignsystem.com/building-blocks/foundations/color/overview).
+Light cards remain white; dark cards use the lighter `#262626` surface so they
+read as elevated from the canvas without shadows. Primary text is `#161616` light
+and `#f4f4f4` dark; secondary text `#525252`/`#c6c6c6`. Hover/borders stay neutral.
+No images, shadows or overlays. Metric values use normal400 weight; descriptions use contrast-safe
 neutral gray. Service logos are displayed in grayscale without replacing the
 official source assets. Status indicators retain their semantic health colors.
 Existing groups, live widgets and card ordering remain unchanged.
