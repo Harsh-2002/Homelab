@@ -76,6 +76,15 @@ Pairing signs the browser/app into a30-day session; the link is single-use and
 expires in5minutes. Password rotation invalidates prior sessions. Generate a
 fresh link locally and never save it in Git, memory, Notion or Homepage:
 
+Browser-mode pairing (Accept:text/html) was tested through HTTPS and issued a
+session cookie; the subsequent API read succeeded without a Basic header.
+Non-browser requests receive JSON credentials instead, so a plain urllib/curl
+request is not a browser-cookie test. The upstream HTTP backend omits Secure on
+its cookie behind TLS termination; Caddy adds Secure only to OpenCode session
+cookies while preserving native HttpOnly/SameSite attributes. Verify this after
+proxy or OpenCode upgrades. Homepage deployment is Synced/Healthy at f24dfd3;
+all33 native Homepage HTTP checks passed and the live OpenCode card was verified.
+
 ```sh
 opencode pair --url https://oc.l3b.cc.cd
 ```

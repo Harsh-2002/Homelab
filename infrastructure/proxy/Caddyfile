@@ -472,6 +472,7 @@
 		import proxy
 		reverse_proxy 10.1.1.5:49374 {
 			flush_interval -1
+			header_down Set-Cookie "(?i)^(opencode_session(?:_[0-9]+)?=.*)$" "$1; Secure"
 		}
 	}
 }
