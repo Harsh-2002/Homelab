@@ -1,5 +1,10 @@
 # Caddy proxy
 
+OpenCode is private at `https://oc.l3b.cc.cd`, forwarding to dev10.1.1.5:49374
+with native authentication preserved, streamed responses and WebSockets. Explicit
+DNS-only oc A record points to10.1.1.3. No public tunnel or extra Basic-auth gate.
+See [agent runbook](../agents/README.md) for pairing, vault item and service unit.
+
 Homepage status probe: `status.l3b.cc.cd/_homepage/health` allows GET/HEAD only
 from Kubernetes nodes201/202/203 and podCIDR10.244/16. It contacts the protected
 Kuma backend, returns empty204 on upstream2xx/3xx,502 otherwise,404 for other

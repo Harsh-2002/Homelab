@@ -465,6 +465,17 @@
 	}
 }
 
+(opencode) {
+	@opencode host oc.l3b.cc.cd
+	handle @opencode {
+		import private
+		import proxy
+		reverse_proxy 10.1.1.5:49374 {
+			flush_interval -1
+		}
+	}
+}
+
 (grafana) {
 	@grafana host grafana.l3b.cc.cd
 	handle @grafana {
@@ -647,6 +658,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import uptime
 	import memory
 	import hermes
+	import opencode
 	import n8n
 	import qbittorrent
 	import cairn

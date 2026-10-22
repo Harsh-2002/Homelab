@@ -1,0 +1,18 @@
+[Unit]
+Description=OpenCode coding-agent API and web service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/dev
+Environment=PATH=/home/dev/.opencode/bin:/home/dev/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/dev/.opencode/bin/opencode serve --service
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=60
+KillMode=mixed
+UMask=0077
+
+[Install]
+WantedBy=default.target

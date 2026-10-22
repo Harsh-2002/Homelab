@@ -1,5 +1,25 @@
 # Homelab agent handoff
 
+## OpenCode and four-agent sync standard, 2026-10-22
+
+OpenCode2.1.2 is now installed by owner. All shared tools/MCPs/skills must stay
+aligned across Codex, Claude Code, Hermes and OpenCode. Nine common MCP entries
+and the official OpenCode OpenViking plugin2026.10.21-1 configured; ten MCPs
+connected for home/Homelab/Orva. Run infrastructure/agents/check-integrations.py
+before completion. Preserve v2 mcp.servers/plugins schema and native memory
+plugins/provider. OLX uses modern2026-07-28 protocol on OpenCode; removed fixed
+container name for concurrent agent access. Local global instructions record rule.
+
+OpenCode UI/API https://oc.l3b.cc.cd private through Caddy→dev10.1.1.5:49374,
+native0.0.0.0 listener, explicit DNS-only oc A→10.1.1.3. Enabled lingering systemd
+user opencode.service uses native serve --service and restarts on failure.
+Username is upstream-fixed opencode, not email; owner email is vault metadata.
+Generated48-character password saved HomeLab/OpenCode, verified matching protected
+service.json. Native API401 without auth, authenticated HTTPS works. Use opencode
+pair --url https://oc.l3b.cc.cd for single-use5min browser link,30-day session.
+No permanent token in docs/memory; no public tunnel. Homepage Applications card
+uses HTTP check. Details and reproducible unit: infrastructure/agents/README.md.
+
 ## REA coding-agent integration, 2026-10-22
 
 Owner-approved global installation completed for Codex, Claude Code and Hermes

@@ -1,5 +1,112 @@
 # Shared coding-agent tools on dev
 
+## Four-agent standard, 2026-10-22
+
+The owner now requires shared tools, MCP integrations and skills to remain aligned
+across **Codex, Claude Code, Hermes and OpenCode**. This supersedes the old
+three-agent scope and the earlier observation that OpenCode was absent. Global
+instructions in all four harnesses record this rule. Preserve harness-specific
+formats, native memory providers/plugins, authentication and approval choices.
+Check configuration parity before marking future changes complete:
+
+```sh
+python3 infrastructure/agents/check-integrations.py
+```
+
+This read-only check compares presence, enabled state, command structure, remote
+URLs and protected headers without displaying values. Newly added standalone
+servers must propagate to all four. Hermes Context7's protected environment
+reference remains intentional. This is a completion gate, not an unattended
+configuration-writing daemon or proof of live connectivity/automatic capture.
+
+OpenCode **v2.1.2** is installed at `~/.opencode/bin/opencode`, with `opencode2`
+also present. Interactive Bash PATH was set by the owner-installed package;
+`~/.local/bin/opencode` forwards to that binary for noninteractive agent use.
+No second binary was installed. Global mode-0600 configuration lives in
+`~/.config/opencode/opencode.json`, using v2 **mcp.servers**, `disabled: false`,
+catalog/execution timeouts and **plugins**. Do not overwrite with old v1 examples.
+
+Nine common MCPs are configured in all four: Playwright, Chrome DevTools,
+Context7, shadcn, Orva, Supabase, Nivra, REA6.7.0 and OLX. Existing authenticated
+URLs/headers were reused. Hermes gained the browser MCPs; Codex/Claude gained OLX.
+Codex Chrome DevTools was enabled for the new all-four requirement. Removed OLX's
+fixed container name and Hermes-only label to permit concurrent agent sessions;
+read-only root, tmpfs, shared-memory and log limits remain. OpenCode OLX explicitly
+uses `protocol: "2026-07-28"`, fixing its default legacy-handshake failure.
+
+OpenCode's official `@openviking/opencode-plugin@2026.10.21-1` registers its MCP
+and automatic recall/capture hooks, using existing `~/.openviking/ovcli.conf`
+and the same account-scoped identity. No new/root key or duplicate MCP entry.
+The package includes its memory/skills/experience skills. Extra global skill
+roots are `~/.agents/skills`, `~/.claude/skills` and Hermes's productivity skills
+(Quick Share/Karakeep). No broad approval/model-policy changes were made.
+
+Explicit home, Homelab and Orva location API checks reported all **10 MCPs
+connected**, including OpenViking. Plugin logs confirmed registration and healthy
+authenticated memory service. Hermes native tests discovered Playwright25,
+ChromeDevTools32 and OLX4 tools. Configuration parity passed. Full automatic
+agent-turn recall/capture was not separately exercised. Some native CLI list
+calls returned empty before location initialization; use a narrow explicit check:
+
+```sh
+opencode api GET /api/mcp --param 'location={"directory":"/home/dev/Homelab"}'
+```
+
+Never dump `debug config`, `/api/config` or raw command arguments: expanded
+configuration can expose credentials. Large `opencode api` responses can be
+truncated; narrow the operation or filter direct authenticated HTTP locally.
+Do not mistake truncated JSON for an underlying service failure.
+
+## OpenCode remote UI/API
+
+- URL: **https://oc.l3b.cc.cd**, private LAN/Tailscale through Caddy.
+- Backend: **0.0.0.0:49374** on dev10.1.1.5.
+- Explicit DNS-only Cloudflare A record: oc→10.1.1.3, matching local resolution.
+- Native username: **opencode**, hard-coded in upstream v2.1.2. An email username
+  is not supported. No source patch or extra authentication layer was introduced.
+- **HomeLab → OpenCode** Login item holds the generated48-character password,
+  URL and owner email metadata (iam.anuragvishwakarma@gmail.com, homelab contact
+  l3bctl@gmail.com). Vault and active service credential were compared successfully.
+- Native protected configuration/password: `~/.config/opencode/service.json`,0600.
+
+Unauthenticated web UI shell returns200; protected API returns401. Authenticated
+API access through HTTPS succeeded. Native API clients use HTTP Basic username
+opencode plus the concealed vault password, not an invented Bearer token.
+Pairing signs the browser/app into a30-day session; the link is single-use and
+expires in5minutes. Password rotation invalidates prior sessions. Generate a
+fresh link locally and never save it in Git, memory, Notion or Homepage:
+
+```sh
+opencode pair --url https://oc.l3b.cc.cd
+```
+
+The same server serves browser sessions. Caddy forwards WebSockets/streams and
+uses its existing private network policy; no public tunnel/port-forward was
+enabled. Homepage has an Applications card and native HTTP monitor, not an
+unsupported metrics widget. Network restriction plus native authentication are
+both retained; authenticated users inherit the powerful dev account's access.
+
+The enabled systemd user service runs native `opencode serve --service`, reuses
+the protected settings, integrates with CLI discovery and restarts on failure.
+User lingering is enabled for boot startup without an SSH session. It does not
+print passwords or put them in process arguments. Reproduce from the tracked unit:
+
+```sh
+install -m 644 infrastructure/agents/opencode.service ~/.config/systemd/user/opencode.service
+systemctl --user daemon-reload
+systemctl --user enable --now opencode.service
+```
+
+Use `systemctl --user restart opencode` for managed restarts. Native settings
+commands can stop its daemon; start/restart the systemd unit afterward. Do not
+run a second server on the port. Boot/failure-injection tests were not performed.
+Original Caddy config retained at `/etc/caddy/Caddyfile.before-opencode`; staged
+validation and graceful reload passed, with unrelated routes preserved.
+
+Sources: [v2 web guide](https://github.com/anomalyco/opencode/blob/v2.1.2/services/www/src/docs/content/cli/web.mdx),
+[v2 migration](https://github.com/anomalyco/opencode/blob/v2.1.2/services/www/src/docs/content/migrate-v1.mdx),
+[OpenViking integration](https://docs.openviking.ai/en/agent-integrations/10-opencode).
+
 ## REA, installed 2026-10-22
 
 REA (`rea-agents` from `morluto/rea`) is installed for the existing `dev` user.

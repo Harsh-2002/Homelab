@@ -1,5 +1,9 @@
 # Homepage
 
+OpenCode now appears under Applications at `https://oc.l3b.cc.cd`, with native
+HTTP availability monitor10.1.1.5:49374 and favicon. It has native authentication
+and private Caddy access, no supported Homepage metrics widget. There are33cards.
+
 PocketBase has been removed completely at the owner's request and has no active card. See `infrastructure/pocketbase/README.md` for the retirement record.
 
 Supabase appears once in Platform at `https://supabase.l3b.cc.cd` with the supported `supabase.svg` catalog icon. The separate Dev/Production entries and PocketBase card were removed after consolidation to Kubernetes. Existing layout/section styling is preserved; no unsupported metrics widget is claimed. See `infrastructure/supabase/README.md` for the full stack and credentials.
@@ -40,7 +44,7 @@ pod on changes. Verify light/dark and desktop/mobile after UI updates.
 
 ## Availability indicators
 
-All32 service cards use `siteMonitor`, not ICMP `ping`. Green dots represent an
+All33 service cards use `siteMonitor`, not ICMP `ping`. Green dots represent an
 HTTP response from the application endpoint, not merely a pingable host.
 Homepage refreshes every30s; hover the dot for status and latency.
 

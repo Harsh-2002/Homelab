@@ -242,6 +242,11 @@ data:
             href: https://hermes.l3b.cc.cd
             description: Personal agent
             siteMonitor: http://10.1.1.5:9119/api/status
+        - OpenCode:
+            icon: https://oc.l3b.cc.cd/favicon.ico
+            href: https://oc.l3b.cc.cd
+            description: Coding agent workspace
+            siteMonitor: http://10.1.1.5:49374/
     - Media:
         - Jellyfin:
             icon: jellyfin.png
