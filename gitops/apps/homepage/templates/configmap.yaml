@@ -40,7 +40,7 @@ data:
             icon: adguard-home.png
             href: https://dns.l3b.cc.cd
             description: DNS filtering
-            ping: https://dns.l3b.cc.cd
+            siteMonitor: http://10.1.1.2:3000/
             widget:
               type: adguard
               url: http://10.1.1.2:3000
@@ -51,7 +51,7 @@ data:
             icon: beszel.png
             href: https://beszel.l3b.cc.cd
             description: Monitoring
-            ping: https://beszel.l3b.cc.cd
+            siteMonitor: http://10.1.1.7:8090/api/health
             widget:
               type: beszel
               url: http://10.1.1.7:8090
@@ -63,22 +63,23 @@ data:
             icon: grafana.png
             href: https://grafana.l3b.cc.cd
             description: Infrastructure metrics
-            ping: https://grafana.l3b.cc.cd/api/health
+            siteMonitor: http://10.1.1.7:3000/api/health
         - Uptime Kuma:
             icon: uptime-kuma.png
             href: https://status.l3b.cc.cd
             description: Availability
-            ping: https://status.l3b.cc.cd
+            siteMonitor: https://status.l3b.cc.cd/_homepage/health
         - Frigate:
             icon: frigate.png
             href: https://frigate.l3b.cc.cd
             description: NVR
+            siteMonitor: http://10.1.1.4:8971/api/version
     - Control:
         - Pocket ID:
             icon: pocket-id.png
             href: https://auth.l3b.cc.cd
             description: Identity
-            ping: https://auth.l3b.cc.cd
+            siteMonitor: http://10.1.1.6:1411/healthz
             widget:
               type: customapi
               url: http://10.1.1.6:1412/stats
@@ -94,7 +95,7 @@ data:
             icon: portainer.png
             href: https://portainer.l3b.cc.cd
             description: Docker management
-            ping: https://portainer.l3b.cc.cd
+            siteMonitor: http://10.1.1.4:9000/api/status
             widget:
               type: portainer
               url: http://10.1.1.4:9000
@@ -105,7 +106,7 @@ data:
             icon: home-assistant.png
             href: https://home.l3b.cc.cd
             description: Smart home
-            ping: http://10.1.1.13
+            siteMonitor: http://10.1.1.13/
             widget:
               type: homeassistant
               url: http://10.1.1.13
@@ -116,7 +117,7 @@ data:
             icon: argo-cd.png
             href: https://argocd.l3b.cc.cd
             description: GitOps
-            ping: https://argocd.l3b.cc.cd
+            siteMonitor: http://argocd-server.argocd.svc.cluster.local/healthz
             widget:
               type: argocd
               url: http://argocd-server.argocd.svc.cluster.local
@@ -126,7 +127,7 @@ data:
             icon: headlamp.png
             href: https://headlamp.l3b.cc.cd
             description: Kubernetes
-            ping: https://headlamp.l3b.cc.cd
+            siteMonitor: http://headlamp.headlamp.svc.cluster.local/healthz
             widget:
               type: prometheusmetric
               url: http://10.1.1.7:8428
@@ -150,7 +151,7 @@ data:
             icon: longhorn.png
             href: https://longhorn.l3b.cc.cd
             description: Storage
-            ping: https://longhorn.l3b.cc.cd
+            siteMonitor: http://longhorn-frontend.longhorn-system.svc.cluster.local/v1
             widget:
               type: prometheusmetric
               url: http://10.1.1.7:8428
@@ -174,93 +175,95 @@ data:
             icon: rustfs.png
             href: https://rustfs.l3b.cc.cd
             description: S3 storage
-            ping: https://rustfs.l3b.cc.cd
+            siteMonitor: http://10.1.1.8:9000/health/ready
         - Cairn:
             icon: https://cairn.l3b.cc.cd/favicon.svg
             href: https://cairn.l3b.cc.cd
             description: S3 development
-            ping: https://cairn.l3b.cc.cd
+            siteMonitor: http://10.1.1.8:7373/healthz
         - Docker Registry:
             icon: docker.png
             href: https://registry.l3b.cc.cd
             description: Container images
+            siteMonitor: http://10.1.1.4:5000/v2/
         - OpenViking:
             icon: https://memory.l3b.cc.cd/favicon.ico
             href: https://memory.l3b.cc.cd
             description: Shared agent memory
-            ping: http://10.1.1.4:1933/health
+            siteMonitor: http://10.1.1.4:1933/health
         - Orva:
             icon: https://orva.l3b.cc.cd/web/favicon.svg
             href: https://orva.l3b.cc.cd
             description: Serverless functions
-            ping: https://orva.l3b.cc.cd
+            siteMonitor: http://10.1.1.11:8443/api/v1/system/health
         - Supabase:
             icon: supabase.svg
             href: https://supabase.l3b.cc.cd
             description: Kubernetes HA database and APIs
+            siteMonitor: https://sb.l3b.cc.cd/auth/v1/health
         - Omni:
             icon: talos.png
             href: https://omni.l3b.cc.cd
             description: Talos cluster management
-            ping: https://omni.l3b.cc.cd/healthz
+            siteMonitor: http://10.1.1.4:8180/healthz
     - Applications:
         - Nivra:
             icon: /icons/nivra.png
             href: https://notes.l3b.cc.cd
             description: Notes, tasks and bookmarks
-            ping: https://notes.l3b.cc.cd/health
+            siteMonitor: http://10.1.1.4:3020/health
         - Immich:
             icon: immich.png
             href: https://photos.l3b.cc.cd
             description: Photos
-            ping: https://photos.l3b.cc.cd
+            siteMonitor: http://10.1.1.4:2283/api/server/ping
         - Karakeep:
             icon: karakeep.png
             href: https://pin.l3b.cc.cd
             description: Bookmarks
-            ping: https://pin.l3b.cc.cd
+            siteMonitor: http://10.1.1.4:3000/api/health
         - OpenCloud:
             icon: open-cloud.png
             href: https://drive.l3b.cc.cd
             description: Files
-            ping: https://drive.l3b.cc.cd/healthz
+            siteMonitor: http://10.1.1.4:9200/healthz
         - Paperless-ngx:
             icon: paperless-ngx.png
             href: https://docs.l3b.cc.cd
             description: Documents
-            ping: https://docs.l3b.cc.cd
+            siteMonitor: http://10.1.1.4:8010/
         - n8n:
             icon: n8n.png
             href: https://n8n.l3b.cc.cd
             description: Automation
-            ping: https://n8n.l3b.cc.cd
+            siteMonitor: http://10.1.1.4:5678/healthz/readiness
         - Hermes:
             icon: https://hermes.l3b.cc.cd/favicon.ico
             href: https://hermes.l3b.cc.cd
             description: Personal agent
-            ping: http://10.1.1.5:9119/api/status
+            siteMonitor: http://10.1.1.5:9119/api/status
     - Media:
         - Jellyfin:
             icon: jellyfin.png
             href: https://media.l3b.cc.cd
             description: Movies and TV Shows
-            ping: https://media.l3b.cc.cd/health
+            siteMonitor: http://10.1.1.4:8096/health
         - qBittorrent:
             icon: qbittorrent.png
             href: https://torrent.l3b.cc.cd
             description: Download client
-            ping: http://10.1.1.4:8081
+            siteMonitor: http://10.1.1.4:8081/
         - Motrix:
             icon: https://downloads.l3b.cc.cd/favicon.ico
             href: https://downloads.l3b.cc.cd
             description: Downloads
-            ping: https://downloads.l3b.cc.cd/healthz
+            siteMonitor: http://10.1.1.4:8080/healthz
     - Compute:
         - Proxmox:
             icon: proxmox.png
             href: https://px.l3b.cc.cd
             description: Cluster
-            ping: https://px.l3b.cc.cd
+            siteMonitor: https://px.l3b.cc.cd/
             widget:
               type: proxmox
               url: https://10.1.1.10:8006
@@ -271,7 +274,7 @@ data:
             icon: proxmox.png
             href: https://px10.l3b.cc.cd
             description: Node
-            ping: https://px10.l3b.cc.cd
+            siteMonitor: https://10.1.1.10:8006/
             widget:
               type: proxmox
               url: https://10.1.1.10:8006
@@ -283,7 +286,7 @@ data:
             icon: proxmox.png
             href: https://px20.l3b.cc.cd
             description: Node
-            ping: https://px20.l3b.cc.cd
+            siteMonitor: https://10.1.1.20:8006/
             widget:
               type: proxmox
               url: https://10.1.1.20:8006
@@ -295,7 +298,7 @@ data:
             icon: proxmox.png
             href: https://px30.l3b.cc.cd
             description: Node
-            ping: https://px30.l3b.cc.cd
+            siteMonitor: https://10.1.1.30:8006/
             widget:
               type: proxmox
               url: https://10.1.1.30:8006

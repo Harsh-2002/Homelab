@@ -38,6 +38,42 @@ manual toggle is hidden because this deployment intentionally follows the OS.
 No credentials are read by this theme code. The ConfigMap checksum rolls the
 pod on changes. Verify light/dark and desktop/mobile after UI updates.
 
+## Availability indicators
+
+All32 service cards use `siteMonitor`, not ICMP `ping`. Green dots represent an
+HTTP response from the application endpoint, not merely a pingable host.
+Homepage refreshes every30s; hover the dot for status and latency.
+
+Native health/readiness URLs and private addresses are preferred. AdGuard,
+Home Assistant, Paperless, qBittorrent and Proxmox use their own UI/login page
+where no unauthenticated health URL is configured. These check the application
+front end, not authenticated functional workflows. Proxmox's aggregate card
+checks the existing multi-node proxy; per-node cards check HTTPS8006 directly,
+with the existing trusted Proxmox CA and TLS verification enabled.
+
+Homepage v2.4.0 counts HTTP200..403 as reachable, including native app401/403.
+Frigate, Registry, Orva, Motrix and Nivra HEAD can return native authentication
+responses. Green is not proof that background jobs or authenticated APIs work.
+Supabase checks the API gateway auth-health route through Caddy (native Kong401),
+not every Database/Storage/Studio component. Its NetworkPolicy stays unchanged.
+Do not substitute an SSO login page response for reaching the application.
+
+Kuma's backend deliberately allows only Caddy because its own auth is disabled.
+The Caddy URL `/_homepage/health` permits GET/HEAD only from Kubernetes node/pod
+sources, contacts Kuma and returns an empty204 for upstream2xx/3xx,502 otherwise.
+Other sources/methods receive404. No page, cookie, redirect or credential is
+returned. Normal UI SSO and backend firewall are unchanged.
+
+Read-only validation through Homepage's actual monitor handler in its pod:
+
+```bash
+python3 gitops/apps/homepage/check-monitors.py
+```
+
+This rejects missing monitors/legacy ping and exits nonzero on failed checks.
+No services are stopped. Dots do not replace Uptime Kuma alerting or functional
+tests. Monitor URLs are recorded directly in services.yaml.
+
 ## Live metrics
 
 Platform card order prioritizes live statistics: Argo CD, Headlamp, Longhorn,

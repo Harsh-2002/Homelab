@@ -21,6 +21,13 @@ The application tree is root-owned and pinned to Git tag `2.5.5`. The dedicated 
 
 ## Operations
 
+Homepage uses `https://status.l3b.cc.cd/_homepage/health`. This separate Caddy
+probe allows GET/HEAD only from pod CIDR10.244/16 or Kubernetes nodes201/202/203,
+contacts Kuma from Caddy and returns only empty204/502. Other sources/methods
+receive404. It does not return the dashboard or forward credentials/cookies.
+Normal UI remains behind Tinyauth; nftables remains proxy-only. Do not broadly
+allow Homepage to port3001.
+
 ```bash
 ssh root@10.1.1.7 'systemctl is-enabled uptime-kuma; systemctl is-active uptime-kuma'
 ssh root@10.1.1.7 'journalctl -u uptime-kuma --since=-15min --no-pager'

@@ -1,5 +1,13 @@
 # Caddy proxy
 
+Homepage status probe: `status.l3b.cc.cd/_homepage/health` allows GET/HEAD only
+from Kubernetes nodes201/202/203 and podCIDR10.244/16. It contacts the protected
+Kuma backend, returns empty204 on upstream2xx/3xx,502 otherwise,404 for other
+sources/methods. No upstream body/cookies/redirects are returned. This preserves
+Kuma's proxy-only firewall and normal UI SSO. Tested from Homepage pod (HEAD/GET
+204,POST404), operator dev VM404, normal unauthenticated UI401. No service restart
+or firewall relaxation, only validated graceful Caddy reload.
+
 Supabase MCP exception: exact `/mcp` and its subpaths use the dedicated Bearer-key gate, not Tinyauth. The private LAN/Tailscale gate still applies. Protected `SUPABASE_MCP_API_KEY` is the canonical HomeLab→Supabase mcp-api-key; never print or commit it. Missing/wrong key401, no browser redirect. Credential/cookie stripped upstream; Kong permits only Caddy's direct IP and both Caddy/Kong deny `/api/mcp`. Existing agent credential was retained during the Kubernetes cutover.
 
 Supabase is on Kubernetes only. Studio is `https://supabase.l3b.cc.cd`; APIs/MCP use `https://sb.l3b.cc.cd`; TLS PostgreSQL uses `sb.l3b.cc.cd:5432`. Existing Caddy health-checks all three node-local gateway ports32080 and PostgreSQL ports32432; `externalTrafficPolicy: Local` preserves Caddy's source IP for the ingress allowlist. Studio/admin paths use Pocket ID/Tinyauth with exact owner-email/admin-group rules; API paths retain API-key/JWT authentication. After SSO only, Caddy injects protected `SUPABASE_STUDIO_AUTH` from `/etc/caddy/cloudflare.env`, without a browser Basic-auth prompt. Sync with `../supabase/sync-studio-auth.py`, validate with protected env loaded, then reload Caddy. VM108 and PocketBase were removed, not left as a second instance. See `../supabase/README.md`.

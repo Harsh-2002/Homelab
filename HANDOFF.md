@@ -1,5 +1,17 @@
 # Homelab agent handoff
 
+## Homepage HTTP availability checks, 2026-10-22
+
+All32 cards now use application HTTP siteMonitor, no ICMP ping. Added missing
+Frigate/Registry/Supabase checks; corrected internal endpoints and Motrix web
+port8080. Native health/readiness preferred, own login/API401 accepted where
+required (Homepage considers200..403 reachable). Supabase gateway check is not
+full-component health; no NetworkPolicy change. Kuma has cluster-only empty
+status probe through Caddy at /_homepage/health to preserve proxy-only nftables
+and disabled native auth. Normal UI still401 without SSO; disallowed probe
+sources/methods404. See Homepage/proxy/Kuma runbooks and read-only validator
+gitops/apps/homepage/check-monitors.py. No app interruption/disruption drills.
+
 ## Omni cluster management completed, 2026-10-22
 
 Supersedes the pending Oct18 Omni entry. Owner authorized matching omnictl via

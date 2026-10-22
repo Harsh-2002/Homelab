@@ -403,9 +403,40 @@
 	@uptime host status.l3b.cc.cd
 	handle @uptime {
 		import private
-		import authenticate
-		import proxy
-		reverse_proxy 10.1.1.7:3001
+		@homepage_probe path /_homepage/health
+		handle @homepage_probe {
+			@homepage_origin {
+				remote_ip 10.244.0.0/16 10.1.1.201 10.1.1.202 10.1.1.203
+				method GET HEAD
+			}
+			handle @homepage_origin {
+				header Cache-Control no-store
+				reverse_proxy 10.1.1.7:3001 {
+					rewrite /
+					header_up -Authorization
+					header_up -Cookie
+					transport http {
+						dial_timeout 3s
+						response_header_timeout 5s
+					}
+					@available status 2xx 3xx
+					handle_response @available {
+						respond "" 204
+					}
+					handle_response {
+						respond "" 502
+					}
+				}
+			}
+			handle {
+				respond "" 404
+			}
+		}
+		handle {
+			import authenticate
+			import proxy
+			reverse_proxy 10.1.1.7:3001
+		}
 	}
 }
 
