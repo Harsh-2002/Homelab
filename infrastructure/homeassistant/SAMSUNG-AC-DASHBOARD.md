@@ -11,6 +11,15 @@ cards. Existing dashboards, authentication and theme are unchanged.
 
 ## Copy refinement and article
 
+Latest owner refinement2026-10-22: remove all explanatory/unsupported-feature
+paragraphs from **Care**, not just shorten them. Keep actual status/counters
+and native cards. Maintenance buttons now compact full-width tiles; card and
+icon taps share the same confirmation-protected action. No control or diagnostic
+actuation sent. AC Control unchanged. Six final Homelab/AC Care captures passed
+independent review, disposition ship. Earlier descriptions below are history,
+not instructions to restore helper text. Full capability definitions stay in
+documentation, including unmapped cloud/standby features and test boundaries.
+
 Owner approved the structure and requested less text on 2026-10-22. Shortened
 Markdown explanations from317 to171 words (46% reduction), preserving every
 card, entity, condition, action and maintenance confirmation. Detailed coverage

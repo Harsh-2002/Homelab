@@ -1,5 +1,24 @@
 # Homelab agent handoff
 
+## Frigate, physical-node stats and no-prose UI, 2026-10-22
+
+Homelab dashboard `/homelab-status/cameras` and `/nodes` added. Official Frigate
+HA integrationv5.15.6, Mosquitto app7.1.2; Frigate MQTT host corrected from dead
+10.1.1.40 toHA10.1.1.13. Caddy only HA source10.1.1.13 bypasses browser SSO with
+existing proxy-secret injection; other clients remain protected even with XFF
+spoofing. RTSP10.1.1.4:8554 requires new concealed HomeLab/Frigate credentials.
+Original cameraH.265 needed GPU H.264 `outdoor_ha`; explicit VAAPI device fixes
+hwupload failure. Live browser video1920x1080/currentTime advancing and HLS
+segment verified, original recordings/retention preserved. Portainer stack
+updates/restarts, no unmanaged duplicate stack.27 host metrics via existing
+VictoriaMetrics/Node Exporter. px10 exporter failed due pre-LAN bind/rate-limit;
+all three have network-online/retry drop-in and are active. No host reboot test.
+Latest owner request: REMOVE descriptive cards from Nodes/Cameras/AC Care.
+Clean camera tiles and compact AC Care action tiles; BOTH icon/card taps confirm
+maintenance actions. AC Control untouched, no appliance/reset actions sent.
+Independent six-capture review ship. Reproduction,auth,backup80f021c0 androllback:
+infrastructure/homeassistant/FRIGATE-AND-NODES.md. No secrets in repo/memory.
+
 ## Samsung AC copy refinement and article, 2026-10-22
 
 Owner likes the existing Control/Care structure; preserve it. Reduced dashboard

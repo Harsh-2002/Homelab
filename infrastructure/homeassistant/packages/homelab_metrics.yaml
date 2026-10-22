@@ -1,0 +1,247 @@
+lovelace:
+  dashboards:
+    homelab-status:
+      mode: yaml
+      title: Homelab
+      icon: mdi:server-network
+      show_in_sidebar: true
+      require_admin: false
+      filename: dashboards/homelab.yaml
+
+rest:
+  - resource: http://10.1.1.7:8428/api/v1/query
+    method: GET
+    authentication: basic
+    username: metrics
+    password: !secret ha_victoriametrics_password
+    scan_interval: 60
+    timeout: 15
+    params:
+      query: >-
+        label_set((100 * (1 - avg by(host)(rate(node_cpu_seconds_total{host=~"px10|px20|px30",mode="idle"}[2m])))) and on(host) (up{job="proxmox-hosts",host=~"px10|px20|px30"} == 1), "ha_stat", "cpu") or label_set((100 * (1 - node_memory_MemAvailable_bytes{host=~"px10|px20|px30"} / node_memory_MemTotal_bytes{host=~"px10|px20|px30"})) and on(host) (up{job="proxmox-hosts",host=~"px10|px20|px30"} == 1), "ha_stat", "ram") or label_set(((node_memory_MemTotal_bytes{host=~"px10|px20|px30"} - node_memory_MemAvailable_bytes{host=~"px10|px20|px30"}) / 1073741824) and on(host) (up{job="proxmox-hosts",host=~"px10|px20|px30"} == 1), "ha_stat", "ram_used") or label_set((node_memory_MemTotal_bytes{host=~"px10|px20|px30"} / 1073741824) and on(host) (up{job="proxmox-hosts",host=~"px10|px20|px30"} == 1), "ha_stat", "ram_total") or label_set((100 * sum by(host)(zfs_pool_allocated_bytes{host=~"px10|px20|px30"}) / sum by(host)(zfs_pool_size_bytes{host=~"px10|px20|px30"})) and on(host) (up{job="proxmox-hosts",host=~"px10|px20|px30"} == 1), "ha_stat", "disk") or label_set((sum by(host)(zfs_pool_free_bytes{host=~"px10|px20|px30"}) / 1073741824) and on(host) (up{job="proxmox-hosts",host=~"px10|px20|px30"} == 1), "ha_stat", "disk_free") or label_set((max by(host)(node_hwmon_temp_celsius{host=~"px10|px20|px30",chip=~".*coretemp.*"})) and on(host) (up{job="proxmox-hosts",host=~"px10|px20|px30"} == 1), "ha_stat", "cpu_temperature") or label_set((max by(host)(node_hwmon_temp_celsius{host=~"px10|px20|px30",chip=~"nvme.*",sensor="temp1"})) and on(host) (up{job="proxmox-hosts",host=~"px10|px20|px30"} == 1), "ha_stat", "nvme_temperature") or label_set(((time() - node_boot_time_seconds{host=~"px10|px20|px30"}) / 3600) and on(host) (up{job="proxmox-hosts",host=~"px10|px20|px30"} == 1), "ha_stat", "uptime")
+    sensor:
+      - name: "px10 CPU"
+        unique_id: homelab_px10_cpu
+        unit_of_measurement: "%"
+        icon: mdi:cpu-64-bit
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'cpu') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px10 RAM"
+        unique_id: homelab_px10_ram
+        unit_of_measurement: "%"
+        icon: mdi:memory
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'ram') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px10 RAM used"
+        unique_id: homelab_px10_ram_used
+        unit_of_measurement: "GiB"
+        icon: mdi:memory
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'ram_used') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px10 RAM total"
+        unique_id: homelab_px10_ram_total
+        unit_of_measurement: "GiB"
+        icon: mdi:memory
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'ram_total') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px10 ZFS disk"
+        unique_id: homelab_px10_disk
+        unit_of_measurement: "%"
+        icon: mdi:harddisk
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'disk') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px10 ZFS free"
+        unique_id: homelab_px10_disk_free
+        unit_of_measurement: "GiB"
+        icon: mdi:harddisk
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'disk_free') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px10 CPU temperature"
+        unique_id: homelab_px10_cpu_temperature
+        unit_of_measurement: "°C"
+        icon: mdi:thermometer
+        state_class: measurement
+        device_class: temperature
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'cpu_temperature') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px10 NVMe temperature"
+        unique_id: homelab_px10_nvme_temperature
+        unit_of_measurement: "°C"
+        icon: mdi:thermometer
+        state_class: measurement
+        device_class: temperature
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'nvme_temperature') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px10 Uptime"
+        unique_id: homelab_px10_uptime
+        unit_of_measurement: "h"
+        icon: mdi:clock-outline
+        state_class: measurement
+        device_class: duration
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'uptime') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px20 CPU"
+        unique_id: homelab_px20_cpu
+        unit_of_measurement: "%"
+        icon: mdi:cpu-64-bit
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'cpu') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px20 RAM"
+        unique_id: homelab_px20_ram
+        unit_of_measurement: "%"
+        icon: mdi:memory
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'ram') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px20 RAM used"
+        unique_id: homelab_px20_ram_used
+        unit_of_measurement: "GiB"
+        icon: mdi:memory
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'ram_used') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px20 RAM total"
+        unique_id: homelab_px20_ram_total
+        unit_of_measurement: "GiB"
+        icon: mdi:memory
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'ram_total') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px20 ZFS disk"
+        unique_id: homelab_px20_disk
+        unit_of_measurement: "%"
+        icon: mdi:harddisk
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'disk') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px20 ZFS free"
+        unique_id: homelab_px20_disk_free
+        unit_of_measurement: "GiB"
+        icon: mdi:harddisk
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'disk_free') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px20 CPU temperature"
+        unique_id: homelab_px20_cpu_temperature
+        unit_of_measurement: "°C"
+        icon: mdi:thermometer
+        state_class: measurement
+        device_class: temperature
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'cpu_temperature') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px20 NVMe temperature"
+        unique_id: homelab_px20_nvme_temperature
+        unit_of_measurement: "°C"
+        icon: mdi:thermometer
+        state_class: measurement
+        device_class: temperature
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'nvme_temperature') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px20 Uptime"
+        unique_id: homelab_px20_uptime
+        unit_of_measurement: "h"
+        icon: mdi:clock-outline
+        state_class: measurement
+        device_class: duration
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'uptime') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px30 CPU"
+        unique_id: homelab_px30_cpu
+        unit_of_measurement: "%"
+        icon: mdi:cpu-64-bit
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'cpu') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px30 RAM"
+        unique_id: homelab_px30_ram
+        unit_of_measurement: "%"
+        icon: mdi:memory
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'ram') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px30 RAM used"
+        unique_id: homelab_px30_ram_used
+        unit_of_measurement: "GiB"
+        icon: mdi:memory
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'ram_used') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px30 RAM total"
+        unique_id: homelab_px30_ram_total
+        unit_of_measurement: "GiB"
+        icon: mdi:memory
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'ram_total') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px30 ZFS disk"
+        unique_id: homelab_px30_disk
+        unit_of_measurement: "%"
+        icon: mdi:harddisk
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'disk') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px30 ZFS free"
+        unique_id: homelab_px30_disk_free
+        unit_of_measurement: "GiB"
+        icon: mdi:harddisk
+        state_class: measurement
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'disk_free') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px30 CPU temperature"
+        unique_id: homelab_px30_cpu_temperature
+        unit_of_measurement: "°C"
+        icon: mdi:thermometer
+        state_class: measurement
+        device_class: temperature
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'cpu_temperature') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px30 NVMe temperature"
+        unique_id: homelab_px30_nvme_temperature
+        unit_of_measurement: "°C"
+        icon: mdi:thermometer
+        state_class: measurement
+        device_class: temperature
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'nvme_temperature') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}
+      - name: "px30 Uptime"
+        unique_id: homelab_px30_uptime
+        unit_of_measurement: "h"
+        icon: mdi:clock-outline
+        state_class: measurement
+        device_class: duration
+        value_template: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'uptime') | list %}
+          {{ rows[0].value[1] | float | round(1) if rows else none }}

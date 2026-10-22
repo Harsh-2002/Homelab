@@ -1,5 +1,14 @@
 # Infrastructure metrics
 
+Home Assistant consumes27 read-only physical-host metrics from VictoriaMetrics
+in one query/minute, displayed at `/homelab-status/nodes`. No additional host
+agent/PVE admin credential. Definitions and deployment in
+[HA runbook](../homeassistant/FRIGATE-AND-NODES.md). On2026-10-22 px10's exporter
+was found failed after LAN-bind startup race; all three nodes now install
+`node-exporter-network.conf` as systemd drop-in `network.conf`, ordering after
+network-online with15second retry/no start-limit lockout. All three active;
+LAN-only binds preserved. No actual reboot test performed.
+
 Grafana `13.2.2` and single-node VictoriaMetrics `v1.152.0` run as native systemd services in Beszel CT 104. The stack collects metrics only, not logs or traces. The Grafana UI is private at `https://grafana.l3b.cc.cd`. The VictoriaMetrics API is not a browser service; only authenticated `POST /api/v1/write` at `https://metrics.l3b.cc.cd` is proxied for Kubernetes vmagent.
 
 ## Topology

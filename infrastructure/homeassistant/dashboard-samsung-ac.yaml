@@ -146,6 +146,8 @@ views:
           - type: tile
             entity: binary_sensor.samsung_ac_reported_alarm
             name: Reported alarms
+            grid_options:
+              columns: full
             tap_action:
               action: more-info
           - type: entities
@@ -154,14 +156,11 @@ views:
               - entity: sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_alarm_code
                 name: Alarm code
               - entity: binary_sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_overload_protection_active
-                name: Abnormal-load monitoring enabled
+                name: Overload monitoring
               - entity: sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_overload_protection_mode
                 name: Detection response
               - entity: input_boolean.samsung_ac_local_alerts
-                name: Local HA alarm notifications
-          - type: markdown
-            content: >-
-              Alerts stay in HA, **not iOS push**. Monitoring enabled does not mean an active overload.
+                name: HA notifications
           - type: markdown
             title: Self-check
             content: >-
@@ -172,16 +171,21 @@ views:
 
               {% set error = states('sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_self_check_error') %}
               **Reported error:** {{ 'None reported' if error == 'DA_ERROR_NONE' else error }}
-          - type: button
-            name: Start self-check
+          - type: tile
+            entity: button.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_start_self_check
+            name: Run self-check
             icon: mdi:clipboard-pulse-outline
-            tap_action:
+            hide_state: true
+            grid_options:
+              columns: full
+            tap_action: &ac_self_check_action
               action: perform-action
               perform_action: button.press
               target:
                 entity_id: button.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_start_self_check
               confirmation:
                 text: Start the AC's diagnostic routine? It may change operation. Only continue when it is safe.
+            icon_tap_action: *ac_self_check_action
       - type: grid
         cards:
           - type: heading
@@ -206,35 +210,42 @@ views:
                 name: Auto clean running
               - entity: sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_auto_clean_progress
                 name: Progress
-          - type: markdown
-            content: >-
-              Maintenance interval remaining, not measured filter quality.
           - type: conditional
             conditions:
               - condition: state
                 entity: binary_sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_auto_clean_running
                 state: "on"
             card:
-              type: button
+              type: tile
+              entity: button.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_stop_auto_clean
               name: Stop auto clean
               icon: mdi:fan-off
-              tap_action:
+              hide_state: true
+              grid_options:
+                columns: full
+              tap_action: &ac_stop_clean_action
                 action: perform-action
                 perform_action: button.press
                 target:
                   entity_id: button.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_stop_auto_clean
                 confirmation:
                   text: Stop the current auto-clean cycle?
-          - type: button
+              icon_tap_action: *ac_stop_clean_action
+          - type: tile
+            entity: button.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_reset_air_filter
             name: Reset filter counter
             icon: mdi:filter-check-outline
-            tap_action:
+            hide_state: true
+            grid_options:
+              columns: full
+            tap_action: &ac_reset_filter_action
               action: perform-action
               perform_action: button.press
               target:
                 entity_id: button.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_reset_air_filter
               confirmation:
                 text: Reset the maintenance counter? Only continue after cleaning or replacing the filter.
+            icon_tap_action: *ac_reset_filter_action
       - type: grid
         cards:
           - type: heading
@@ -258,16 +269,3 @@ views:
                 name: Reported energy saved
               - entity: binary_sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_firmware_update_available
                 name: Update reported by device
-          - type: markdown
-            content: >-
-              HA-recorded samples only. Samsung history is not imported.
-          - type: markdown
-            title: Not mapped locally
-            content: >-
-              **Welcome Cooling:** not configured locally.
-
-              **Always-on monitoring:** unverified. No local humidity reading.
-
-              **Samsung schedules and care score:** not imported.
-
-              [Samsung model features & support](https://www.samsung.com/in/air-conditioners/split-ac/bespoke-ai-inverter-split-ac-4-8-kw-4-star-ar50h18d14hnna/)

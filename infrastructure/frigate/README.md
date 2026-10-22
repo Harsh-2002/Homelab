@@ -1,5 +1,14 @@
 # Frigate
 
+Home Assistant integration added2026-10-22. MQTT broker is now HAOS10.1.1.13:1883
+(the prior10.1.1.40 target was unreachable), with existing concealed login.
+Password-protected RTSP is LAN-bound10.1.1.4:8554, with credentials concealed in
+HomeLab/Frigate. HA-only Caddy source handler supplies proxy auth; other browser
+clients retain Pocket ID. On-demand `outdoor_ha` converts H.265 to H.264 using
+the existing VAAPI/i965 device for browser compatibility; source recordings and
+retention unchanged. Do not remove the explicit VAAPI device initialization.
+Live video and HLS verified. Full [HA runbook](../homeassistant/FRIGATE-AND-NODES.md).
+
 Frigate runs as Portainer stack `frigate` on the `ctr` Docker VM, using the Intel iGPU's `/dev/dri/renderD128` device for VAAPI decoding and OpenVINO object detection. It is deliberately not privileged: only the device, its host `video` and `render` groups, and the narrow `PERFMON` capability required for Intel GPU telemetry are passed explicitly. The VM applies `kernel.perf_event_paranoid=2` so that capability can access the performance event system. The container pins Intel's `i965` VAAPI driver: it is stable with this camera pipeline, whereas the tested `iHD` path produced VAAPI frame-download errors. VAAPI decoding and GPU scaling remain enabled. OpenVINO uses Frigate's bundled SSD MobileNet model on the detected Intel `GPU` device instead of the test-only CPU detector. Frigate is pinned to `0.18.0`; the pre-upgrade live configuration and database were copied under `/data/apps/frigate/backups/2026-09-22-pre-0.18` before this version change. The authenticated UI is bound only to `10.1.1.4:8971` and served privately at `https://frigate.l3b.cc.cd` by Caddy.
 
 ## Identity

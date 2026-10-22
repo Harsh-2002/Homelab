@@ -358,15 +358,28 @@
 (frigate) {
 	@frigate host frigate.l3b.cc.cd
 	handle @frigate {
-		import private
-		import authenticate
-		import proxy
-		@frigatelogin path /login
-		redir @frigatelogin / 303
-		reverse_proxy 10.1.1.4:8971 {
-			header_up X-Proxy-Secret {env.FRIGATE_PROXY_AUTH_SECRET}
-			header_up Remote-User iam.anuragvishwakarma@gmail.com
-			header_up Remote-Groups infrastructure-admins
+		route {
+			import private
+			@frigate_ha_client remote_ip 10.1.1.13
+			handle @frigate_ha_client {
+				import proxy
+				reverse_proxy 10.1.1.4:8971 {
+					header_up X-Proxy-Secret {env.FRIGATE_PROXY_AUTH_SECRET}
+					header_up Remote-User homeassistant
+					header_up Remote-Groups infrastructure-admins
+				}
+			}
+			handle {
+				import authenticate
+				import proxy
+				@frigatelogin path /login
+				redir @frigatelogin / 303
+				reverse_proxy 10.1.1.4:8971 {
+					header_up X-Proxy-Secret {env.FRIGATE_PROXY_AUTH_SECRET}
+					header_up Remote-User iam.anuragvishwakarma@gmail.com
+					header_up Remote-Groups infrastructure-admins
+				}
+			}
 		}
 	}
 }

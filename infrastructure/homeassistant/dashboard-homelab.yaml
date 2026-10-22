@@ -1,0 +1,174 @@
+title: Homelab
+views:
+  - title: Cameras
+    path: cameras
+    type: sections
+    max_columns: 2
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Outdoor
+            heading_style: title
+            icon: mdi:cctv
+          - type: picture-entity
+            entity: camera.outdoor
+            name: Outdoor
+            camera_view: live
+            show_state: false
+            show_name: false
+            aspect_ratio: "16:9"
+            grid_options:
+              columns: full
+          - type: tile
+            entity: binary_sensor.outdoor_motion
+            name: Motion
+          - type: tile
+            entity: binary_sensor.outdoor_person_occupancy
+            name: Person
+          - type: tile
+            entity: binary_sensor.outdoor_dog_occupancy
+            name: Dog
+          - type: tile
+            entity: sensor.outdoor_all_count
+            name: Objects
+      - type: grid
+        cards:
+          - type: heading
+            heading: Camera controls
+            heading_style: title
+            icon: mdi:record-rec
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: switch.outdoor_detect
+                name: Object detection
+              - entity: switch.outdoor_motion
+                name: Motion detection
+              - entity: switch.outdoor_recordings
+                name: Recordings
+              - entity: switch.outdoor_snapshots
+                name: Snapshots
+          - type: tile
+            entity: camera.outdoor
+            name: Open Frigate
+            icon: mdi:cctv
+            hide_state: true
+            tap_action:
+              action: url
+              url_path: https://frigate.l3b.cc.cd
+            icon_tap_action:
+              action: url
+              url_path: https://frigate.l3b.cc.cd
+            grid_options:
+              columns: full
+  - title: Nodes
+    path: nodes
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: px10
+            heading_style: title
+            icon: mdi:server
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: sensor.px10_cpu
+                name: CPU
+              - entity: sensor.px10_ram
+                name: RAM
+              - entity: sensor.px10_ram_used
+                name: RAM used
+              - entity: sensor.px10_ram_total
+                name: RAM total
+              - entity: sensor.px10_zfs_disk
+                name: ZFS pool used
+              - entity: sensor.px10_zfs_free
+                name: ZFS pool free
+              - entity: sensor.px10_cpu_temperature
+                name: CPU temperature
+              - entity: sensor.px10_nvme_temperature
+                name: NVMe temperature
+              - entity: sensor.px10_uptime
+                name: Uptime
+          - type: history-graph
+            title: CPU & RAM · 6 hours
+            hours_to_show: 6
+            entities:
+              - entity: sensor.px10_cpu
+                name: CPU
+              - entity: sensor.px10_ram
+                name: RAM
+      - type: grid
+        cards:
+          - type: heading
+            heading: px20
+            heading_style: title
+            icon: mdi:server
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: sensor.px20_cpu
+                name: CPU
+              - entity: sensor.px20_ram
+                name: RAM
+              - entity: sensor.px20_ram_used
+                name: RAM used
+              - entity: sensor.px20_ram_total
+                name: RAM total
+              - entity: sensor.px20_zfs_disk
+                name: ZFS pool used
+              - entity: sensor.px20_zfs_free
+                name: ZFS pool free
+              - entity: sensor.px20_cpu_temperature
+                name: CPU temperature
+              - entity: sensor.px20_nvme_temperature
+                name: NVMe temperature
+              - entity: sensor.px20_uptime
+                name: Uptime
+          - type: history-graph
+            title: CPU & RAM · 6 hours
+            hours_to_show: 6
+            entities:
+              - entity: sensor.px20_cpu
+                name: CPU
+              - entity: sensor.px20_ram
+                name: RAM
+      - type: grid
+        cards:
+          - type: heading
+            heading: px30
+            heading_style: title
+            icon: mdi:server
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: sensor.px30_cpu
+                name: CPU
+              - entity: sensor.px30_ram
+                name: RAM
+              - entity: sensor.px30_ram_used
+                name: RAM used
+              - entity: sensor.px30_ram_total
+                name: RAM total
+              - entity: sensor.px30_zfs_disk
+                name: ZFS pool used
+              - entity: sensor.px30_zfs_free
+                name: ZFS pool free
+              - entity: sensor.px30_cpu_temperature
+                name: CPU temperature
+              - entity: sensor.px30_nvme_temperature
+                name: NVMe temperature
+              - entity: sensor.px30_uptime
+                name: Uptime
+          - type: history-graph
+            title: CPU & RAM · 6 hours
+            hours_to_show: 6
+            entities:
+              - entity: sensor.px30_cpu
+                name: CPU
+              - entity: sensor.px30_ram
+                name: RAM

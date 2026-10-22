@@ -1,5 +1,14 @@
 # Home Assistant OS
 
+Frigate and node monitoring (2026-10-22): **Homelab** sidebar dashboard has
+[Cameras](https://home.l3b.cc.cd/homelab-status/cameras) and
+[Nodes](https://home.l3b.cc.cd/homelab-status/nodes). Authenticated MQTT and RTSP,
+GPU H.264 compatibility restream, working browser playback,27 physical-host
+metrics from existing VictoriaMetrics. px10 exporter startup race repaired on
+all hosts. Latest owner preference: no explanatory paragraphs in Nodes/Cameras/
+AC Care, clear labels and confirmation-protected compact maintenance tiles.
+See [FRIGATE-AND-NODES.md](FRIGATE-AND-NODES.md) for reproduction and rollback.
+
 Samsung AC dashboard (2026-10-22): separate native **Control** and **Care** at
 `/samsung-ac/control` and `/samsung-ac/care`. Independent airflow, comfort,
 five-step cooling, local schedule and honest care/history coverage. Schedule
