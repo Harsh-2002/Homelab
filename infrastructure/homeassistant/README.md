@@ -1,5 +1,14 @@
 # Home Assistant OS
 
+Samsung AC **AR50H18D14HNNA** local integration (2026-10-22): device10.1.1.241,
+MAC34:55:E5:0A:80:D7, authenticated OCF/CoAP over DTLS UDP49154. LocalThings
+releasev0.34.0 installed on Core2026.10.2 after native backup0b406e2d. Native
+**climate.samsung_room_ac** is loaded with live state, fan/modes/presets/swing;
+private HTTPS read and integration reload verified, no actuator or WAN-outage
+test yet. Credentials concealed HomeLab/Samsung AC - Room. See
+[SAMSUNG-AC-LOCAL.md](SAMSUNG-AC-LOCAL.md) for evidence, model/software reference,
+installation, acceptance boundaries and rollback. Keep SmartThings registration.
+
 Wipro/Smart Life bulb local-control investigation (2026-10-22): verified
 10.1.1.231↔10:5A:17:51:D7:9D, encrypted Tuya3.3 LAN announcements, port6668.
 REA packet evidence and preparation in [BULB-LOCAL.md](BULB-LOCAL.md). Tuya

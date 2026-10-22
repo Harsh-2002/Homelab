@@ -1,5 +1,23 @@
 # Homelab agent handoff
 
+## Samsung AC local integration operational, 2026-10-22
+
+Owner Samsung AR50H18D14HNNA at10.1.1.241 MAC34:55:E5:0A:80:D7 uses SmartThings.
+Confirmed encrypted LAN DTLS49154 and authenticated OCF GETs, not older TCP2878/
+8888 path. Live platformTP1X_DA-AC-RAC-01011_0000, firmwareARA-WW-TP1-26-AR6X00MG_11260710.
+Owner reports OneUI7.0AC/TizenLite4.0/controllerRAC5.3.20; don't claim latestglobal.
+Installed official LocalThings releasev0.34.0(manifest0.33.0 upstream mismatch)
+on Core2026.10.2 after native backup0b406e2d and configcheck; oneCore restart.
+Entry01M5HQ6SAA45N3EFXRNMQBS25B loaded, climate.samsung_room_ac, Samsung Room AC,
+28registered/26enabled entities. Native API liveDry/target18C, normal roomtemp
+changes, climate modes/fan/presets/swing exposed. Native reload and privateHTTPS
+read passed; existingbulb loaded/available. No power/setpoint/mode/write orWAN
+outage test. Don't call physical control fully tested. Initialsetup publiccloud
+UUID lookup only; runtime LAN. Keep SmartThings registration to avoidnetworkreset.
+Native generatedclientkey/cert backedup concealed HomeLab/Samsung AC - Room,
+not Git/memory. No newMCPs; fouragentparitypasses. Detailed reproducible runbook
+in infrastructure/homeassistant/SAMSUNG-AC-LOCAL.md, including REApcap evidence.
+
 ## Firstfinger bulb article published, 2026-10-22
 
 Owner approved publication. Published https://firstfinger.io/wipro-bulb-local-control-home-assistant/
