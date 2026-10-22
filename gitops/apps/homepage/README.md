@@ -14,6 +14,14 @@ Homepage is the stateless, Git-managed portal served at `https://l3b.cc.cd`.
 
 ## Live metrics
 
+Platform card order prioritizes live statistics: Argo CD, Headlamp, Longhorn,
+then RustFS, Cairn, Docker Registry, OpenViking, Orva, Supabase, and Omni last.
+The three-column, equal-height layout and existing widgets are unchanged.
+Omni has Prometheus metrics on CTR loopback `127.0.0.1:9095/metrics`, but no
+native Homepage widget. Our metrics collector does not currently scrape that
+listener; Omni therefore remains a health-checked link, not a statistics card.
+Do not expose its metrics publicly or invent counts to fill the card.
+
 Nivra is an Applications card at `https://notes.l3b.cc.cd`, with its `/health` check. Its official N-mark PNG is vendored at `files/nivra.png` and served by Homepage at `/icons/nivra.png`. Nivra's own icon endpoint sends `Cross-Origin-Resource-Policy: same-origin`, so browsers block it when Homepage loads it cross-origin. The vendored file's SHA-256 matches the official icon at the deployed Nivra source commit `b52a1d7`. Update it from the official Nivra release when upgrading the application. Do not use the nonexistent `/favicon.ico`. Anchor and its card were removed on 2026-10-18. See `infrastructure/nivra/README.md`.
 
 The Control row groups Pocket ID, Portainer, and Home Assistant in three equal-height statistics cards. Hermes sits with the general Applications. Termix and Warpgate were completely removed on 2026-10-01; neither has a Homepage card or active reverse-proxy route. Media services have their own four-column row so downloads and automation are discoverable together without crowding Applications.
