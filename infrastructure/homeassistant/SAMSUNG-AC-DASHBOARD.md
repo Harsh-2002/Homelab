@@ -9,6 +9,31 @@ cards. Existing dashboards, authentication and theme are unchanged.
 - Device and protocol evidence: [SAMSUNG-AC-LOCAL.md](SAMSUNG-AC-LOCAL.md).
 - Native UI inheritance and component rules: [DESIGN.md](DESIGN.md).
 
+## Copy refinement and article
+
+Owner approved the structure and requested less text on 2026-10-22. Shortened
+Markdown explanations from317 to171 words (46% reduction), preserving every
+card, entity, condition, action and maintenance confirmation. Detailed coverage
+stays in this runbook; no capability or safety rule was removed. New desktop1440
+and phone390 checks passed for both views, with no overflow/error cards.
+No Core restart or appliance command was needed. AC state changed to Dry during
+observation; the agent did not issue that change or restore older state.
+
+Article: `firstfinger/content/posts/samsung-ac-local-home-assistant/index.md`,
+**Finding the Local Interface in My Samsung AC**, using the owner-selected
+Unsplash `photo-1791898360744-ba0793b80d4b` thumbnail and one accessible SVG
+protocol diagram. Describes authenticated LAN reads and model-specific mapping
+without claiming physical writes or full offline validation. No private device
+identifiers or credentials. Publication URL:
+https://firstfinger.io/samsung-ac-local-home-assistant/ .
+Published and live HTTP200 verified, firstfinger main **2fc3f9e**. Cloudflare
+Pages succeeded; served title, selected cover, SVG, canonical and honest test
+limitations verified. Hugo production, Pagefind, strict Markdown lint and SVG
+XML checks passed locally. Separate GitHub CI run39780236742 failed both jobs
+during tooling installation, before content/build checks; production deployment
+is successful. No unrelated CI/theme edits. Independent copy review: ship;
+documentation pass confirmed existing DESIGN.md remains accurate and unchanged.
+
 ## Feature coverage
 
 | Feature | Implementation and limits |

@@ -37,8 +37,7 @@ views:
                 name: Comfort
           - type: markdown
             content: >-
-              MAX (Fast), Quiet and Good Sleep are **alternative comfort modes**, not independent switches.
-              Availability depends on the AC's operating mode.
+              Choose one comfort mode. Available options depend on the operating mode.
       - type: grid
         cards:
           - type: heading
@@ -65,8 +64,7 @@ views:
                 name: Sweep range
           - type: markdown
             content: >-
-              Positions are the AC's numbered steps, **not degrees**.
-              Selecting a fixed position stops swing on that axis. Turn the AC on before adjusting airflow.
+              Turn the AC on to adjust airflow. Fixed positions are steps, not degrees, and stop that axis's swing.
           - type: heading
             heading: 5-step cooling
             icon: mdi:snowflake-variant
@@ -89,8 +87,7 @@ views:
             card:
               type: markdown
               content: >-
-                **Available in Cool mode:** Standard (100%), 80%, 60%, 40% and Power (120%).
-                These are compressor operation levels, not a live power-consumption percentage.
+                **Cool mode only.** Levels: 40–120%. Not a live power reading.
       - type: grid
         cards:
           - type: heading
@@ -108,7 +105,7 @@ views:
                 name: Auto clean after use
           - type: markdown
             content: >-
-              Auto clean dries internal moisture after the AC turns off. It is not a request to start a cleaning cycle now.
+              Dries the AC after turn-off, not immediately.
           - type: heading
             heading: Local daily schedule
             icon: mdi:calendar-clock-outline
@@ -123,9 +120,8 @@ views:
                 name: "Off"
           - type: markdown
             content: >-
-              Choose different on/off times, then enable. Times use **Asia/Kolkata**.
-              Turn-on uses the AC's last operating settings. This is a new local schedule;
-              your existing SmartThings program has **not** been imported. Avoid enabling conflicting schedules.
+              **Asia/Kolkata.** Use different times; turn-on keeps the last settings.
+              SmartThings schedules stay separate. Avoid conflicts.
           - type: conditional
             conditions:
               - condition: state
@@ -134,8 +130,8 @@ views:
             card:
               type: markdown
               content: >-
-                **AC unavailable.** Check its power and Wi-Fi, then LocalThings under Devices & services.
-                Do not reset or remove it from SmartThings to troubleshoot.
+                **AC unavailable.** Check power, Wi-Fi and LocalThings.
+                Do not reset or unlink it from SmartThings.
   - title: Care
     path: care
     type: sections
@@ -165,9 +161,7 @@ views:
                 name: Local HA alarm notifications
           - type: markdown
             content: >-
-              HA alerts appear in Home Assistant's notifications, **not iOS push**.
-              Detection enabled does not mean an overload is happening. Samsung's eight-check health score
-              is not exposed here; these are actual local alarm and self-check results.
+              Alerts stay in HA, **not iOS push**. Monitoring enabled does not mean an active overload.
           - type: markdown
             title: Self-check
             content: >-
@@ -214,8 +208,7 @@ views:
                 name: Progress
           - type: markdown
             content: >-
-              Remaining interval is **100 minus the AC's reported usage percentage**.
-              It is a maintenance counter, not a measured filter-quality or airflow score.
+              Maintenance interval remaining, not measured filter quality.
           - type: conditional
             conditions:
               - condition: state
@@ -267,16 +260,14 @@ views:
                 name: Update reported by device
           - type: markdown
             content: >-
-              History starts when HA records the device; it does not import Samsung's usage history.
-              The observed mean uses available samples, not a complete first day.
+              HA-recorded samples only. Samsung history is not imported.
           - type: markdown
             title: Not mapped locally
             content: >-
-              **Welcome Cooling:** SmartThings location/notification workflow, not a verified AC LAN toggle.
+              **Welcome Cooling:** not configured locally.
 
-              **Always-on sensor:** standby-monitoring command is not verified. No humidity sensor is exposed locally.
+              **Always-on monitoring:** unverified. No local humidity reading.
 
-              **Samsung schedules and care score:** not imported or recreated from guessed values.
-              Use the local schedule and actual alarm data above.
+              **Samsung schedules and care score:** not imported.
 
               [Samsung model features & support](https://www.samsung.com/in/air-conditioners/split-ac/bespoke-ai-inverter-split-ac-4-8-kw-4-star-ar50h18d14hnna/)

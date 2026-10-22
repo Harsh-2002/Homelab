@@ -1,5 +1,19 @@
 # Homelab agent handoff
 
+## Samsung AC copy refinement and article, 2026-10-22
+
+Owner likes the existing Control/Care structure; preserve it. Reduced dashboard
+explanations317→171words (46%) without changing cards/entities/actions/conditions
+or confirmations. Live native reload and1440/390px rendering pass, no restart or
+device commands. Full coverage stays in the runbook. Article prepared in
+firstfinger/content/posts/samsung-ac-local-home-assistant/index.md, owner-chosen
+Unsplash photo-1791898360744-ba0793b80d4b, one SVG, honest test boundaries.
+Publication target https://firstfinger.io/samsung-ac-local-home-assistant/ .
+Published firstfinger2fc3f9e; Cloudflare Pages success and live HTTP200 verified
+with exact title/cover/SVG/canonical/test caveat. Local Hugo/Pagefind/Markdown/SVG
+checks pass. Independent dashboard copy reviewer ship. Separate GitHub CI failed,
+not a production deployment failure; no unrelated CI/theme changes.
+
 ## Samsung AC Control/Care dashboard, 2026-10-22
 
 Native separate dashboard live at https://home.l3b.cc.cd/samsung-ac/control and

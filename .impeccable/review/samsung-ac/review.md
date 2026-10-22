@@ -23,3 +23,14 @@ Runtime evidence: live native entity/dashboard verification, six offline tests,
 off-state rejection before device write. No successful physical actuation,
 schedule execution or full WAN-outage acceptance. UI review is not a claim that
 all appliance writes are physically verified.
+
+## Copy-only refinement
+
+Owner requested trimming explanations while preserving the approved structure.
+Markdown copy reduced317→171words (46%). Parsed YAML comparison verifies every
+non-Markdown field is identical: cards, entities, actions, defaults, conditions
+and confirmation prompts. Live native reload passed without Core restart or
+appliance commands. Four new captures at1440/390 opened valid; no overflow or
+error cards. Mechanical detector findings: []. Independent fresh copy reviewer
+disposition **ship**, no material findings. Review scope excludes physical
+actuation and dark-theme acceptance. Detailed coverage retained in runbook.
