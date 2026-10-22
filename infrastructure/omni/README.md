@@ -49,11 +49,99 @@ state plus its encryption key before a deliberate upgrade. Limits: 2 CPUs, 3 GiB
 memory. Initial idle sample was approximately 66 MiB; this is not a loaded sizing
 guarantee. The embedded etcd is independent of the managed cluster's etcd.
 
-## Acceptance and import gate
+## Managed cluster status, 2026-10-22
 
-**Pending:** owner must open the UI and review/accept Sidero's EULA. The agent
-must not accept it on the owner's behalf. No acceptance flags are configured.
-The service is installed, but the three Talos nodes are **not yet imported**.
+Cluster `k8s` is imported and **unlocked** for Omni management. All three
+machines are connected and Ready; the control-plane load balancer is healthy.
+The owner completed CLI authorization through Pocket ID. This supersedes the
+old pending-import record from 2026-10-18.
+
+- Talos `1.14.1`, Kubernetes `1.37.0`, unchanged by enrollment.
+- `k8s-201`: `716f2a61-bd9a-4352-8a14-c500139c5964`
+- `k8s-202`: `bc9ba4bc-8788-448a-9c0b-9c237019189e`
+- `k8s-203`: `bed2656a-4098-4783-8246-cbd99dd9f223`
+
+Both Kubernetes access through `omni-kube.l3b.cc.cd` and Talos access through
+Omni were exercised successfully. Existing VIP access remains valid. All nine
+Argo applications were Synced/Healthy, all non-completed pods Ready, Cilium
+healthy, and all six Longhorn volumes attached/healthy after handover.
+
+Unlocking refreshed control-plane static pods and temporarily interrupted API
+access. The load balancer initially returned proxy errors, then recovered after
+the API servers and health checks settled. The cluster was briefly locked during
+inspection and subsequently unlocked after successful proxy checks. No node
+reboot, reset, version upgrade or certificate rotation was requested. This was
+**not a zero-downtime handover**.
+
+Before unlocking, every original configuration document was compared against
+the import backup and found unchanged; only the three Omni connection/logging
+documents had been added. After reconciliation, exact equality of resolver,
+static links, hostname, VIP, Longhorn UserVolume, pod/service networks and
+disabled kube-proxy was verified. All original extensions remain detected:
+`iscsi-tools`, `kata-containers-snp`, `qemu-guest-agent`.
+
+The cluster endpoint becomes Omni's internal SideroLink load balancer. Omni also
+updates API authentication defaults and removes the unattended-install document
+from the applied configuration. Keep future Talos machine changes in Omni;
+do not independently reapply historical machine configuration patches.
+
+### Local access and recovery material
+
+On dev, `/home/dev/.talos/omni/config` (0600) uses the existing administrator
+identity and HTTPS Omni URL. Its signing key is protected under `.talos/keys`;
+future expiration requires normal Pocket ID reauthentication, not disabling auth.
+Separate generated client configs live under `/home/dev/.local/state/omni-import`
+(0700), without replacing the existing kubeconfig or Talos configuration:
+
+- `talosconfig`: Omni-proxied access; local context renamed `default` to reuse
+  the already-authorized CLI signing-key context, avoiding a second login.
+- `kubeconfig-oidc`: normal user OIDC access; requires `kubectl oidc-login` and
+  browser authentication when first used. Generated, not interactively tested.
+- `k8s-before-import-20261022.zip` (0600): original configurations for all three
+  nodes. Contains credentials; **never commit, print, or ingest into memory**.
+
+The successful Kubernetes proxy test used an isolated service-account kubeconfig
+with a 10-minute token; its local file was removed after validation. It is not a
+permanent agent credential. The original
+Talos/Kubernetes CAs were deliberately retained so existing integrations continue
+working. Consequently, Omni's imported-cluster warning (`tainted-by-importing`)
+is expected: old direct client configurations still work. CA rotation is a
+separate coordinated maintenance operation, not performed during enrollment.
+
+```bash
+omnictl get clusters
+omnictl get machines
+omnictl get loadbalancerstatuses
+omnictl cluster status k8s --wait 30s
+talosctl --talosconfig /home/dev/.local/state/omni-import/talosconfig \
+  --nodes 716f2a61-bd9a-4352-8a14-c500139c5964 version --short
+```
+
+### Failure handling and ownership
+
+If a subsequent machine-config change causes trouble, pause reconciliation with
+`omnictl cluster lock k8s`, inspect the affected machine's current and pending
+configuration, and use the retained direct Talos access if the Omni proxy is
+unavailable. Locking prevents further reconciliation; it does not undo an
+already-applied configuration. Do not delete the cluster or machines to resolve
+a connectivity issue: deletion can reset machines.
+
+The original ZIP is an enrollment rollback reference, not a current cluster-state
+backup or database/PersistentVolume backup. After management handover, blindly
+restoring it can discard newer configuration. Use the supported locked import
+abort workflow only for an explicit decision to abandon the import, then choose
+the restoration method appropriate to whether the cluster was ever unlocked.
+See the official import guide below. Do not run abort during ordinary recovery.
+
+Omni manages Talos machines and control-plane lifecycle. Argo CD continues to
+manage Kubernetes applications, Helm settings and manifests. Longhorn continues
+to own its volumes. Keep these ownership boundaries to avoid conflicting changes.
+
+## Import procedure, reference only
+
+Do not re-run import against the already managed cluster. For a future new
+cluster, the owner must review/accept any presented EULA themselves. The agent
+must not accept legal terms on the owner's behalf; no acceptance flags are set.
 
 Use the matching `omnictl` v1.12.4 (GitHub SHA-256 verified) on dev. After owner
 acceptance and CLI authentication, first preview:

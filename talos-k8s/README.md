@@ -16,8 +16,11 @@ Talos nodes use only AdGuard Home `10.1.1.2` as their resolver. Kubernetes Servi
 
 Omni management service is deployed separately on CTR. See
 [`infrastructure/omni/README.md`](../infrastructure/omni/README.md) for enrollment
-status and the supported import workflow. As of 2026-10-18, EULA acceptance is
-pending and these nodes have **not** been imported or changed by Omni.
+status and the supported import workflow. As of 2026-10-22, cluster `k8s` and all
+three nodes are imported, connected, healthy and unlocked for Omni management.
+Make future Talos machine configuration changes through Omni rather than
+independently reapplying these historical patches. Kubernetes GitOps remains
+managed by Argo CD; existing direct client credentials were not rotated.
 
 - `cluster-name.patch.yaml` — cluster name.
 - `vip.patch.yaml` — Kubernetes API VIP.

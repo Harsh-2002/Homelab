@@ -1,5 +1,26 @@
 # Homelab agent handoff
 
+## Omni cluster management completed, 2026-10-22
+
+Supersedes the pending Oct18 Omni entry. Owner authorized matching omnictl via
+Pocket ID. Supported dry-run passed without force/skip-health, then cluster k8s
+imported and unlocked. Three machines connected/Ready, load balancer healthy;
+Talos1.14.1/Kubernetes1.37.0 unchanged. Actual Kubernetes API access through
+omni-kube and Talos API access through Omni passed. Direct VIP access retained.
+Nine Argo apps Synced/Healthy, no unready non-completed pods, Cilium healthy,
+six Longhorn volumes attached/healthy. Critical network/storage configurations
+compared with original and preserved, including iscsi/kata/qemu extensions.
+
+Handover refreshed static control-plane pods and briefly interrupted API/proxy
+access; locked during investigation, recovered, verified then unlocked. No node
+reboot/reset/upgrade or CA rotation requested. Do not claim zero downtime.
+Omni is now authoritative for machine config, Argo remains Kubernetes GitOps.
+Imported-cluster taint expected: old direct CAs/credentials intentionally valid.
+Private original config ZIP on dev at
+/home/dev/.local/state/omni-import/k8s-before-import-20261022.zip (0600), never
+print/commit/ingest. Protected CLI config ~/.talos/omni/config, normal user login
+may need renewal. See infrastructure/omni/README.md for client paths/recovery.
+
 ## ARR retired and Homepage Pocket ID counts fixed, 2026-10-22
 
 Owner explicitly requested deletion of complete ARR stack/data and dedicated
