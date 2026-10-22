@@ -1,0 +1,282 @@
+title: Samsung AC
+views:
+  - title: Control
+    path: control
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Bedroom 1
+            heading_style: title
+            icon: mdi:bed-outline
+          - type: thermostat
+            entity: climate.samsung_room_ac
+            name: Samsung Room AC
+            show_current_as_primary: false
+            features:
+              - type: climate-hvac-modes
+                hvac_modes: ["off", auto, cool, dry, fan_only]
+            grid_options:
+              columns: full
+          - type: tile
+            entity: climate.samsung_room_ac
+            name: Fan speed
+            icon: mdi:fan
+            state_content: fan_mode
+            features:
+              - type: climate-fan-modes
+                style: dropdown
+            grid_options:
+              columns: full
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: select.samsung_ac_comfort_mode
+                name: Comfort
+          - type: markdown
+            content: >-
+              MAX (Fast), Quiet and Good Sleep are **alternative comfort modes**, not independent switches.
+              Availability depends on the AC's operating mode.
+      - type: grid
+        cards:
+          - type: heading
+            heading: Airflow
+            heading_style: title
+            icon: mdi:weather-windy
+          - type: entities
+            title: Up / down
+            show_header_toggle: false
+            entities:
+              - entity: select.samsung_ac_vertical_swing
+                name: Swing
+              - entity: select.samsung_ac_vertical_position
+                name: Fixed position
+          - type: entities
+            title: Left / right
+            show_header_toggle: false
+            entities:
+              - entity: select.samsung_ac_horizontal_swing
+                name: Swing
+              - entity: select.samsung_ac_horizontal_position
+                name: Fixed position
+              - entity: select.samsung_ac_horizontal_sweep
+                name: Sweep range
+          - type: markdown
+            content: >-
+              Positions are the AC's numbered steps, **not degrees**.
+              Selecting a fixed position stops swing on that axis. Turn the AC on before adjusting airflow.
+          - type: heading
+            heading: 5-step cooling
+            icon: mdi:snowflake-variant
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: climate.samsung_room_ac
+                state: cool
+            card:
+              type: entities
+              show_header_toggle: false
+              entities:
+                - entity: select.samsung_ac_cooling_capacity
+                  name: Cooling capacity
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: climate.samsung_room_ac
+                state_not: cool
+            card:
+              type: markdown
+              content: >-
+                **Available in Cool mode:** Standard (100%), 80%, 60%, 40% and Power (120%).
+                These are compressor operation levels, not a live power-consumption percentage.
+      - type: grid
+        cards:
+          - type: heading
+            heading: Everyday settings
+            heading_style: title
+            icon: mdi:tune-variant
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: switch.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_display_light
+                name: Display lighting
+              - entity: switch.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_beep
+                name: Beep
+              - entity: switch.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_auto_clean
+                name: Auto clean after use
+          - type: markdown
+            content: >-
+              Auto clean dries internal moisture after the AC turns off. It is not a request to start a cleaning cycle now.
+          - type: heading
+            heading: Local daily schedule
+            icon: mdi:calendar-clock-outline
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: input_boolean.samsung_ac_daily_schedule
+                name: Enable schedule
+              - entity: input_datetime.samsung_ac_on_time
+                name: "On"
+              - entity: input_datetime.samsung_ac_off_time
+                name: "Off"
+          - type: markdown
+            content: >-
+              Choose different on/off times, then enable. Times use **Asia/Kolkata**.
+              Turn-on uses the AC's last operating settings. This is a new local schedule;
+              your existing SmartThings program has **not** been imported. Avoid enabling conflicting schedules.
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: climate.samsung_room_ac
+                state: unavailable
+            card:
+              type: markdown
+              content: >-
+                **AC unavailable.** Check its power and Wi-Fi, then LocalThings under Devices & services.
+                Do not reset or remove it from SmartThings to troubleshoot.
+  - title: Care
+    path: care
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Device care
+            heading_style: title
+            icon: mdi:shield-check-outline
+          - type: tile
+            entity: binary_sensor.samsung_ac_reported_alarm
+            name: Reported alarms
+            tap_action:
+              action: more-info
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_alarm_code
+                name: Alarm code
+              - entity: binary_sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_overload_protection_active
+                name: Abnormal-load monitoring enabled
+              - entity: sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_overload_protection_mode
+                name: Detection response
+              - entity: input_boolean.samsung_ac_local_alerts
+                name: Local HA alarm notifications
+          - type: markdown
+            content: >-
+              HA alerts appear in Home Assistant's notifications, **not iOS push**.
+              Detection enabled does not mean an overload is happening. Samsung's eight-check health score
+              is not exposed here; these are actual local alarm and self-check results.
+          - type: markdown
+            title: Self-check
+            content: >-
+              **Status:** {{ states('sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_self_check_status') }}
+
+              {% set result = states('sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_self_check_result') %}
+              **Last result:** {{ 'No stored result' if result == 'NA' else result }}
+
+              {% set error = states('sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_self_check_error') %}
+              **Reported error:** {{ 'None reported' if error == 'DA_ERROR_NONE' else error }}
+          - type: button
+            name: Start self-check
+            icon: mdi:clipboard-pulse-outline
+            tap_action:
+              action: perform-action
+              perform_action: button.press
+              target:
+                entity_id: button.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_start_self_check
+              confirmation:
+                text: Start the AC's diagnostic routine? It may change operation. Only continue when it is safe.
+      - type: grid
+        cards:
+          - type: heading
+            heading: Filter & cleaning
+            heading_style: title
+            icon: mdi:air-filter
+          - type: gauge
+            entity: sensor.samsung_ac_filter_interval_remaining
+            name: Filter interval remaining
+            min: 0
+            max: 100
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_filter_status
+                name: Filter status
+              - entity: sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_filter_usage_hours
+                name: Recorded use
+              - entity: select.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_filter_alarm_threshold
+                name: Reminder interval (hours)
+              - entity: binary_sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_auto_clean_running
+                name: Auto clean running
+              - entity: sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_auto_clean_progress
+                name: Progress
+          - type: markdown
+            content: >-
+              Remaining interval is **100 minus the AC's reported usage percentage**.
+              It is a maintenance counter, not a measured filter-quality or airflow score.
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: binary_sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_auto_clean_running
+                state: "on"
+            card:
+              type: button
+              name: Stop auto clean
+              icon: mdi:fan-off
+              tap_action:
+                action: perform-action
+                perform_action: button.press
+                target:
+                  entity_id: button.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_stop_auto_clean
+                confirmation:
+                  text: Stop the current auto-clean cycle?
+          - type: button
+            name: Reset filter counter
+            icon: mdi:filter-check-outline
+            tap_action:
+              action: perform-action
+              perform_action: button.press
+              target:
+                entity_id: button.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_reset_air_filter
+              confirmation:
+                text: Reset the maintenance counter? Only continue after cleaning or replacing the filter.
+      - type: grid
+        cards:
+          - type: heading
+            heading: Local history
+            heading_style: title
+            icon: mdi:chart-line
+          - type: history-graph
+            title: Room temperature · 24 hours
+            hours_to_show: 24
+            entities:
+              - entity: sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_temperature
+                name: Room
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: sensor.samsung_ac_observed_temperature_mean
+                name: Observed mean · up to 24h
+              - entity: sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_energy
+                name: Cumulative energy
+              - entity: sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_energy_saved
+                name: Reported energy saved
+              - entity: binary_sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_firmware_update_available
+                name: Update reported by device
+          - type: markdown
+            content: >-
+              History starts when HA records the device; it does not import Samsung's usage history.
+              The observed mean uses available samples, not a complete first day.
+          - type: markdown
+            title: Not mapped locally
+            content: >-
+              **Welcome Cooling:** SmartThings location/notification workflow, not a verified AC LAN toggle.
+
+              **Always-on sensor:** standby-monitoring command is not verified. No humidity sensor is exposed locally.
+
+              **Samsung schedules and care score:** not imported or recreated from guessed values.
+              Use the local schedule and actual alarm data above.
+
+              [Samsung model features & support](https://www.samsung.com/in/air-conditioners/split-ac/bespoke-ai-inverter-split-ac-4-8-kw-4-star-ar50h18d14hnna/)

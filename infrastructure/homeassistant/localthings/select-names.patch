@@ -1,0 +1,12 @@
+--- a/translations/en.json
++++ b/translations/en.json
+@@ -301,2 +301,9 @@
+     "select": {
++      "homelab_vertical_swing": {"name": "Vertical swing"},
++      "homelab_horizontal_swing": {"name": "Horizontal swing"},
++      "homelab_vertical_position": {"name": "Vertical position"},
++      "homelab_horizontal_position": {"name": "Horizontal position"},
++      "homelab_horizontal_sweep": {"name": "Horizontal sweep"},
++      "homelab_cooling_capacity": {"name": "5-step cooling"},
++      "homelab_comfort_mode": {"name": "Comfort mode"},
+       "welcome_lighting_proximity": {

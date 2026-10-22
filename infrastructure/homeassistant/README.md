@@ -1,5 +1,12 @@
 # Home Assistant OS
 
+Samsung AC dashboard (2026-10-22): separate native **Control** and **Care** at
+`/samsung-ac/control` and `/samsung-ac/care`. Independent airflow, comfort,
+five-step cooling, local schedule and honest care/history coverage. Schedule
+and alerts initially disabled. Live reads/rendering and safety rejection tests
+passed; physical write/outage acceptance remains pending. Reproducible source,
+patches and rollback: [SAMSUNG-AC-DASHBOARD.md](SAMSUNG-AC-DASHBOARD.md).
+
 Samsung AC **AR50H18D14HNNA** local integration (2026-10-22): device10.1.1.241,
 MAC34:55:E5:0A:80:D7, authenticated OCF/CoAP over DTLS UDP49154. LocalThings
 releasev0.34.0 installed on Core2026.10.2 after native backup0b406e2d. Native

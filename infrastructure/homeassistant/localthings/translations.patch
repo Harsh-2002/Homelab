@@ -1,0 +1,11 @@
+--- a/translations/en.json
++++ b/translations/en.json
+@@ -2164,2 +2164,8 @@
+   "exceptions": {
++    "homelab_ac_power_required": {
++      "message": "Turn on the AC before changing airflow or comfort settings."
++    },
++    "homelab_ac_cool_required": {
++      "message": "5-step cooling is available only while the AC is on in Cool mode."
++    },
+     "remote_control_disabled": {

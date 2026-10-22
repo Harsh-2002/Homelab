@@ -121,6 +121,13 @@ there can reset Wi-Fi settings when it next contacts Samsung.
 
 ## Operational completion
 
+Subsequent dashboard work is recorded in
+[SAMSUNG-AC-DASHBOARD.md](SAMSUNG-AC-DASHBOARD.md): separate Control/Care views,
+seven model-gated local selectors,35 total registered entities, native helpers,
+reproducible patches and backup8b832ad0. The28-entity count below describes the
+original installation, not the later dashboard extension. Physical write and
+WAN-outage acceptance remain pending.
+
 Native config flow accepted only `host: 10.1.1.241`, generated its own client
 certificate and created entry **01M5HQ6SAA45N3EFXRNMQBS25B**. The standalone
 diagnostic certificate was not imported. No SmartThings user account/password,

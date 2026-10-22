@@ -1,0 +1,9 @@
+--- a/registry/by_type/airconditioner.py
++++ b/registry/by_type/airconditioner.py
+@@ -19,1 +19,1 @@
+-from ..capabilities import air_purifier, airconditioner, common, dishwasher, ehs, ignored
++from ..capabilities import air_purifier, airconditioner, common, dishwasher, ehs, ignored, homelab_samsung_ac
+@@ -91,1 +91,2 @@
+-            *airconditioner.COVERAGE,
++            *[cap for cap in airconditioner.COVERAGE if cap.href not in homelab_samsung_ac.OVERRIDDEN_HREFS],
++            *homelab_samsung_ac.CAPABILITIES,

@@ -1,5 +1,19 @@
 # Homelab agent handoff
 
+## Samsung AC Control/Care dashboard, 2026-10-22
+
+Native separate dashboard live at https://home.l3b.cc.cd/samsung-ac/control and
+`/samsung-ac/care`; existing dashboards unchanged. Owner chose AC-only native
+cards. Added seven model-gated LocalThings selectors for independent airflow,
+positions, sweep, capacity and comfort;35 registered entities total. Local
+schedule and persistent HA alerts start disabled. Actual alarm/filter/history
+data, confirmation-protected maintenance, explicit unmapped cloud features.
+Native backup8b832ad0 and old component retained, config check/restart passed.
+Six offline tests, live reads, desktop/phone rendering and off-state rejection
+passed; NO successful AC actuation or WAN-outage acceptance. Do not call fully
+physically tested. Do not blindly upgrade patched LocalThings. Reproduction,
+source mapping, coverage and rollback in homeassistant/SAMSUNG-AC-DASHBOARD.md.
+
 ## Samsung AC local integration operational, 2026-10-22
 
 Owner Samsung AR50H18D14HNNA at10.1.1.241 MAC34:55:E5:0A:80:D7 uses SmartThings.

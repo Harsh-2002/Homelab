@@ -1,0 +1,116 @@
+lovelace:
+  dashboards:
+    samsung-ac:
+      mode: yaml
+      title: Samsung AC
+      icon: mdi:air-conditioner
+      show_in_sidebar: true
+      require_admin: false
+      filename: dashboards/samsung-ac.yaml
+
+input_boolean:
+  samsung_ac_daily_schedule:
+    name: Daily schedule
+    icon: mdi:calendar-clock
+  samsung_ac_local_alerts:
+    name: Home Assistant alerts
+    icon: mdi:bell-outline
+
+input_datetime:
+  samsung_ac_on_time:
+    name: Turn on at
+    has_date: false
+    has_time: true
+  samsung_ac_off_time:
+    name: Turn off at
+    has_date: false
+    has_time: true
+
+template:
+  - sensor:
+      - name: Samsung AC filter interval remaining
+        unique_id: samsung_ac_filter_interval_remaining
+        unit_of_measurement: "%"
+        icon: mdi:air-filter
+        availability: >-
+          {{ is_number(states('sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_filter_usage')) }}
+        state: >-
+          {{ [0, [100, 100 - states('sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_filter_usage') | float(0)] | min] | max | round(0) }}
+  - binary_sensor:
+      - name: Samsung AC reported alarm
+        unique_id: samsung_ac_reported_alarm
+        device_class: problem
+        availability: >-
+          {{ states('sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_alarm_code') not in ['unknown', 'unavailable'] }}
+        state: >-
+          {{ states('sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_alarm_code') | lower not in ['none', 'normal', 'na', 'da_error_none', ''] }}
+
+sensor:
+  - platform: statistics
+    name: Samsung AC observed temperature mean
+    unique_id: samsung_ac_observed_temperature_mean
+    entity_id: sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_temperature
+    state_characteristic: mean
+    sampling_size: 10000
+    max_age:
+      hours: 24
+    precision: 1
+
+automation:
+  - id: samsung_ac_daily_on
+    alias: Samsung AC daily turn on
+    mode: single
+    triggers:
+      - trigger: time
+        at: input_datetime.samsung_ac_on_time
+    conditions:
+      - condition: state
+        entity_id: input_boolean.samsung_ac_daily_schedule
+        state: "on"
+      - condition: template
+        value_template: >-
+          {{ states('input_datetime.samsung_ac_on_time') != states('input_datetime.samsung_ac_off_time') }}
+      - condition: template
+        value_template: "{{ states('climate.samsung_room_ac') not in ['unknown', 'unavailable'] }}"
+    actions:
+      - action: climate.turn_on
+        target:
+          entity_id: climate.samsung_room_ac
+  - id: samsung_ac_daily_off
+    alias: Samsung AC daily turn off
+    mode: single
+    triggers:
+      - trigger: time
+        at: input_datetime.samsung_ac_off_time
+    conditions:
+      - condition: state
+        entity_id: input_boolean.samsung_ac_daily_schedule
+        state: "on"
+      - condition: template
+        value_template: >-
+          {{ states('input_datetime.samsung_ac_on_time') != states('input_datetime.samsung_ac_off_time') }}
+      - condition: template
+        value_template: "{{ states('climate.samsung_room_ac') not in ['unknown', 'unavailable'] }}"
+    actions:
+      - action: climate.turn_off
+        target:
+          entity_id: climate.samsung_room_ac
+  - id: samsung_ac_local_alarm_notification
+    alias: Samsung AC local alarm notification
+    mode: single
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.samsung_ac_reported_alarm
+        to: "on"
+    conditions:
+      - condition: state
+        entity_id: input_boolean.samsung_ac_local_alerts
+        state: "on"
+    actions:
+      - action: persistent_notification.create
+        data:
+          title: Samsung AC reported an alarm
+          message: >-
+            The AC reports {{ states('sensor.samsung_airconditioner_tp1x_da_ac_rac_01011_0000_alarm_code') }}.
+            Open Samsung AC → Care to inspect it. This is a device-reported alarm, not a completed diagnostic test.
+          notification_id: samsung_ac_reported_alarm
