@@ -346,6 +346,7 @@ data:
       --color-900: 0 0 0;
     }
     :root {
+      --portal-canvas: #fff;
       --portal-card: #fff;
       --portal-hover: #f5f5f5;
       --portal-border: #dedede;
@@ -353,12 +354,14 @@ data:
       --portal-muted: #525252;
     }
     :root.dark {
+      --portal-canvas: #000;
       --portal-card: #0a0a0a;
       --portal-hover: #171717;
       --portal-border: #303030;
       --portal-text: #fff;
       --portal-muted: #b3b3b3;
     }
+    body, #__next { background-color: var(--portal-canvas) !important; }
     .service-card {
       background-color: var(--portal-card) !important;
       border: 1px solid var(--portal-border);
@@ -371,6 +374,8 @@ data:
     .service-group-name { color: var(--portal-text) !important; }
     .service-icon img { filter: grayscale(1); }
     .dark .service-icon img { filter: grayscale(1) brightness(1.5); }
+    .dark .service[data-name="Frigate"] .service-icon img,
+    .dark .service[data-name="Portainer"] .service-icon img { filter: grayscale(1) invert(1); }
     .service-card a:focus-visible, .service-group > button:focus-visible {
       outline: 2px solid var(--portal-text);
       outline-offset: 3px;
@@ -384,6 +389,8 @@ data:
         const root = document.documentElement;
         root.classList.toggle("dark", dark);
         root.classList.toggle("light", !dark);
+        root.classList.toggle("scheme-dark", dark);
+        root.classList.toggle("scheme-light", !dark);
         root.style.colorScheme = dark ? "dark" : "light";
         localStorage.setItem("theme-mode", dark ? "dark" : "light");
       };
