@@ -1,5 +1,9 @@
 # Docker Registry
 
+Future work: [minimal Go-based Registry UI](UI-PLAN.md), recorded2026-10-22.
+This is a plan only; no UI has been built or deployed. Existing API behavior was
+verified read-only, with limitations and security boundaries recorded there.
+
 The Docker Registry runs on `ctr` as Portainer stack `registry` and stores image layers in the migrated RustFS bucket `docker-registry`, under the immutable legacy prefix `/registry`. Its Docker client endpoint is public at `https://registry.l3b.cc.cd`; access still requires the retained Registry `htpasswd` credentials.
 
 Registry uses its default in-memory metadata cache; a separate Redis cache is unnecessary for this single-instance deployment. Only Registry port `5000` is bound to `10.1.1.4`, where Caddy terminates TLS. Caddy deliberately does not use response compression or the private/OIDC policy on this route: Docker clients authenticate with Registry's own HTTP Basic credentials and transfer signed layer data without interference.

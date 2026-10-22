@@ -17,6 +17,7 @@ talos-k8s/*.backup*
 secrets/
 
 # Generated and local tooling files
+.playwright-mcp/
 .DS_Store
 .idea/
 .vscode/
