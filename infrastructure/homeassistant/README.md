@@ -1,5 +1,15 @@
 # Home Assistant OS
 
+Wipro/Smart Life bulb local-control investigation (2026-10-22): verified
+10.1.1.231↔10:5A:17:51:D7:9D, encrypted Tuya3.3 LAN announcements, port6668.
+REA packet evidence and preparation in [BULB-LOCAL.md](BULB-LOCAL.md). Tuya
+Local2026.9.2 installed after native backup a8059954; config check/Core restart
+passed. Owner Smart Life approval completed; **light.behind_monitor_bulb** now
+works through Tuya Local with tested LAN power/brightness/colour/white control,
+restored to its prior visible on/white setting. Local key concealed in HomeLab
+Wipro Bulb - Behind Monitor. Actual WAN-outage validation remains untested.
+No firmware/reset/router changes. See the bulb runbook for API access/evidence.
+
 Home Assistant OS 18.3 is installed as Proxmox VM 107 (`haos`) on px30. The official `haos_ova-18.3.qcow2.xz` KVM image was downloaded directly on px30, checked against the release's SHA-256 digest, decompressed, validated with `qemu-img check`, and imported to `local-zfs:vm-107-disk-1`. The source download and QCOW2 staging directory were removed after the independent ZFS disk was verified.
 
 Current VM configuration: OVMF with the `4m` EFI vars type and no pre-enrolled Secure Boot keys, one socket with two vCPUs, fixed 4 GiB RAM (`balloon: 0`), VirtIO NIC on `vmbr0`, VirtIO SCSI single controller, `scsi0` on local-zfs with discard, SSD and I/O thread enabled, and boot order `scsi0`. The imported disk was expanded from its 32 GiB image default to **40 GiB** at the owner's request; Proxmox reports the ZFS zvol at 40 GiB. Home Assistant OS can expand its guest data partition after a boot with the larger disk. The empty virtual CD-ROM was removed. VM 107 was started and is running on px30.

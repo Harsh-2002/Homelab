@@ -1,5 +1,48 @@
 # Homelab agent handoff
 
+## Wipro bulb article draft, 2026-10-22
+
+Owner wants the journey preserved and a concise natural Firstfinger article in
+the existing style: short paragraphs, concrete packet/process explanation,
+inline SVG diagrams and an Unsplash cover. Cloned Harsh-2002/firstfinger into
+/home/dev/firstfinger; read latest RAM/database and network-interface posts and
+repo authoring guide. Draft at content/posts/wipro-bulb-local-control-home-assistant/index.md,
+title Why Does My Light Bulb Need the Internet?, draft:true, not published.
+Repo config says firstfinger.io (owner mentioned .in), no domain changes made.
+No secrets/private identifiers in article; acknowledges no prolonged WAN-outage
+or full cold-start test. Owner is updating HA; do not interfere with that update.
+Detailed evidence and article handoff: infrastructure/homeassistant/BULB-LOCAL.md.
+
+## Wipro bulb local control operational, 2026-10-22
+
+Supersedes pending preparation below. Owner approved Smart Life QR; Behind Monitor
+Bulb account ID exactly matched discovery. Saved local key concealed HomeLab/
+Wipro Bulb - Behind Monitor, not Git/memory. Native Tuya Local2026.9.2 entry loaded,
+light.behind_monitor_bulb on10.1.1.231,protocol3.3,profile rgbcw_lightbulb selected
+by actual product-ID and datapoints. Native local status, HA power/brightness/HS/
+white temperature, authenticated HTTPS API, and integration reload/reconnect pass.
+Restored prior visible on/white/brightness24/3376.4K. REA39-frame control capture
+verified HA13↔bulb231 TCP6668. No cloud account token in persisted native entry.
+Actual complete WAN-outage/extended firmware behavior and full cold restart
+untested; do not claim those passed. No WAN block/reset/flash/router change.
+Use existingHAAPI/Hermes plugin, no extra public webhook/MCP/broker. See
+infrastructure/homeassistant/BULB-LOCAL.md for private artifact hashes and API.
+
+## Wipro bulb local-control preparation, 2026-10-22
+
+Owner confirms Smart Life app (formerly Wipro). Candidate10.1.1.231 matches
+MAC10:5A:17:51:D7:9D via ARP and REA packet analysis; Tuya OUI, TCP6668open,
+encrypted3.3 device discovery. Exact physical/account-model mapping still pending.
+Do not confuse this live device with historical HAOS DHCP231; HAOS now13.
+Official Tuya Local2026.9.2 installed on existingHA2026.9.4, pre-change native
+backup a8059954, config check and Core restart successful. Cloud-assisted form
+tested; waits for owner Smart Life User Code entered directly in HA and phone
+QR approval. Do not print keys/account flows or claim actual control/offline
+acceptance passed. No resets/flashing/Wi-Fi changes/commands/WAN block. Reuse
+existingHA REST/WebSocket+Hermes integration, not a redundant bridge/publicAPI.
+See infrastructure/homeassistant/BULB-LOCAL.md for evidence, hashes, steps and
+remaining acceptance. Raw capture private outside Git; four-agent parity passes.
+
 ## Private router proxy, 2026-10-22
 
 router.l3b.cc.cd now private Caddy→http://10.1.1.1, LAN/Tailscale restriction
