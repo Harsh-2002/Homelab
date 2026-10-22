@@ -1,5 +1,16 @@
 # Homelab agent handoff
 
+## Private router proxy, 2026-10-22
+
+router.l3b.cc.cd now private Caddy→http://10.1.1.1, LAN/Tailscale restriction
+before PocketID/Tinyauth owner/admin gate, native router login retained. Explicit
+route preserves handler order. Host/Origin/Referer normalized for embedded UI.
+Dedicated tracked router.env/router-tinyauth.conf add auth policy without editing
+base secrets. DNS existing wildcard→10.1.1.3, no public exception/WAN forwarding.
+Router firewall/WAN remote-management settings not inspected/changed; direct LAN
+10.1.1.1 remains reachable. Caddy/auth active, staged validation/graceful reload,
+LAN unauth401, disallowed source403, upstream200. No full router login test.
+
 ## OpenCode and four-agent sync standard, 2026-10-22
 
 OpenCode2.1.2 is now installed by owner. All shared tools/MCPs/skills must stay

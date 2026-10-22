@@ -1,5 +1,33 @@
 # Caddy proxy
 
+## Private router management, 2026-10-22
+
+`https://router.l3b.cc.cd` proxies to `http://10.1.1.1/` through Caddy10.1.1.3.
+Only immediate peers from LAN10.1.1.0/24 or Tailscale100.64.0.0/10 are admitted;
+Pocket ID/Tinyauth also requires the existing owner/admin policy. The router's
+native login remains in place. Host/Origin/Referer are normalized to its native
+HTTP address for embedded-router compatibility. No public route exception, WAN
+port-forward, or router remote-management setting was added or changed.
+
+Deploy the tracked router.env to `/etc/tinyauth/router.env` on auth and
+router-tinyauth.conf to `/etc/systemd/system/tinyauth.service.d/router.conf`.
+Run daemon-reload and restart Tinyauth to load the additional app policy, without
+editing its protected base credentials. Stage/validate the tracked Caddyfile
+with existing protected environment loaded, then gracefully reload Caddy.
+Existing wildcard private DNS resolves router.l3b.cc.cd to Caddy10.1.1.3; no
+public WAN-address record is needed.
+
+An explicit route preserves source restriction before forward-auth, preventing
+Caddy's normal directive sorting from presenting login challenges to disallowed
+sources. Verified: LAN unauthenticated401, disallowed loopback source403, router
+upstream login page200 from Caddy with normalized headers. Full authenticated
+router administration was not tested; native credentials/settings were untouched.
+
+This protects the new HTTPS hostname, not direct management traffic to
+10.1.1.1 from existing LAN clients. Router WAN settings were not inspected or
+changed, so this is not proof its original WAN management is disabled. Proxy-only
+backend access would require a separate router management ACL change.
+
 OpenCode is private at `https://oc.l3b.cc.cd`, forwarding to dev10.1.1.5:49374
 with native authentication preserved, streamed responses and WebSockets. Explicit
 DNS-only oc A record points to10.1.1.3. No public tunnel or extra Basic-auth gate.

@@ -84,6 +84,22 @@
 	}
 }
 
+(router) {
+	@router host router.l3b.cc.cd
+	handle @router {
+		route {
+			import private
+			import authenticate
+			import proxy
+			reverse_proxy http://10.1.1.1 {
+				header_up Host 10.1.1.1
+				header_up Origin http://10.1.1.1
+				header_up Referer http://10.1.1.1/
+			}
+		}
+	}
+}
+
 (argocd) {
 	@webhook {
 		host argocd.l3b.cc.cd
@@ -632,6 +648,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import omni
 	import devtesting
 	import adguard
+	import router
 	import argocd
 	import karakeep
 	import longhorn
