@@ -19,6 +19,7 @@ Use `iam.anuragvishwakarma@gmail.com` for personal logins when a service accepts
 - `talos-k8s/` — safe Talos patches and Cilium networking configuration.
 - `gitops/` — Argo CD bootstrap, cluster applications, and workload manifests.
 - `infrastructure/` — reproducible proxy configuration and sanitized service runbooks.
+  - `infrastructure/agents/` — shared coding-agent integrations, REA installation, verification and recovery.
   - `infrastructure/proxmox/` — Proxmox host resolver baseline.
   - `infrastructure/tailscale/` — three-node Tailscale subnet routing, direct `dev` client, and recovery runbook.
   - `infrastructure/pocket-id/` — Pocket ID systemd service, pinned upgrade helper, and runbook.

@@ -1,5 +1,13 @@
 # Hermes Agent on dev
 
+REA 6.7.0 is globally configured for Hermes, Codex and Claude Code on `dev`.
+Hermes uses the local stdio entry `mcp_servers.rea` and the bundled skill at
+`~/.hermes/skills/reverse-engineer-anything`. Native connection and 207-tool
+discovery passed; the gateway was gracefully restarted on 2026-10-22. Existing
+settings and credentials were preserved and the main YAML remains comment-free.
+See [shared agent tools](../agents/README.md) for exact installation, limits,
+verification evidence, updates and rollback.
+
 Supabase native HTTP MCP is configured in the protected live config as `mcp_servers.supabase`, URL `https://supabase.l3b.cc.cd/mcp`, with a direct Bearer header from HomeLab→Supabase→mcp-api-key. No OAuth/browser/export required. Native `hermes mcp test supabase` connected and discovered11tools; existing MCPs/settings were preserved. Gateway completed its graceful systemd user ExecReload/SIGUSR1 restart and is active. Supabase's key has administrative SQL/migration powers and requires LAN/Tailscale access. Reproduction/rotation helper and client backup locations are documented in `../supabase/README.md`; no credential is in Git.
 
 The local `quick-share` skill was installed on 2026-10-09 at `/home/dev/.hermes/skills/productivity/quick-share/SKILL.md`; its reproducible source is [skills/quick-share/SKILL.md](skills/quick-share/SKILL.md). It instructs Hermes to use `/usr/local/bin/qs` to download supplied Quick Share images/files and upload requested deliverables, with default one-hour expiry, a maximum seven-day lifetime, and the installed CLI's 4 MiB upload limit. It covers stdin/MIME options, no-overwrite downloads, sanitization, and uncertain-upload failure handling. No extra keys, MCP server, or gateway configuration is needed. Skill discovery/validation does not prove a live transfer succeeded. If an existing session does not see the new skill, start a new Hermes conversation and list skills; no service restart is required for file-based discovery.

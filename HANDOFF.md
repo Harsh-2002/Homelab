@@ -1,5 +1,20 @@
 # Homelab agent handoff
 
+## REA coding-agent integration, 2026-10-22
+
+Owner-approved global installation completed for Codex, Claude Code and Hermes
+under dev. REA 6.7.0 CLI is in ~/.local/bin; all three MCP entries launch
+npx -y rea-agents@6.7.0 mcp. Matching bundled skills installed. Existing configs
+preserved, protected .rea.backup files retained locally, Hermes YAML comment-free.
+Scoped doctor healthy; real MCP handshake, 207-tool discovery and live identity
+passed using each config. Claude and Hermes native probes passed; static local
+Quick Share handler analysis passed without execution/modification. Hermes
+gateway gracefully restarted and gateway/dashboard active. Existing Codex/Claude
+chats require restart for discovery. Optional native providers/Frida are not
+enabled; broad environment readiness is not all-green. OpenCode not usable on
+PATH or usual locations, only an old config/AGENTS.md remains. No OpenCode install
+authorized. See infrastructure/agents/README.md for reproduction and recovery.
+
 ## Homepage HTTP availability checks, 2026-10-22
 
 All32 cards now use application HTTP siteMonitor, no ICMP ping. Added missing
