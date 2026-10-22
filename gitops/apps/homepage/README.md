@@ -12,24 +12,26 @@ Homepage is the stateless, Git-managed portal served at `https://l3b.cc.cd`.
 - Cilium advertises `10.1.1.174:80`; Caddy terminates TLS, applies private LAN/Tailscale access control, and uses Tinyauth/Pocket ID for authentication.
 - Widget credentials are held only in the live `homepage-widgets` Kubernetes Secret, sourced from the authoritative 1Password items. The chart contains `HOMEPAGE_VAR_*` placeholders only; never commit a secret value.
 
-## Background and contrast
+## Automatic black-and-white theme
 
-The owner's selected Unsplash photo [SewuBG5F9x8](https://unsplash.com/photos/SewuBG5F9x8)
-is vendored as `files/background-SewuBG5F9x8.webp` (2560x1440, about104KiB).
-Original download: `https://unsplash.com/photos/SewuBG5F9x8/download?force=true`.
-The chart includes it as ConfigMap binary data and mounts only the images
-subdirectory, not all of `/app/public`. Homepage serves it locally at
-`/images/background-SewuBG5F9x8.webp`; no runtime Unsplash dependency.
+The owner replaced the photo treatment with a minimal monochrome theme.
+The background image, ConfigMap asset and images volume are removed; the old
+photo can be recovered from Git history if explicitly requested.
 
-Native background brightness75 and opacity85 keep the photograph visible against
-the existing dark slate theme, increased after owner feedback that the first
-version was too dark. Cards use88% dark-slate surfaces with soft downward
-shadows,96% on hover. Section titles and header widgets have localized84% dark
-backing for contrast rather than heavily dimming the entire photograph. Metric
-values use normal font weight instead of Homepage's thin default. Existing
-groups, widgets and ordering remain unchanged. No backdrop blur is needed.
-The ConfigMap checksum rolls the pod when assets/settings change, satisfying
-Next.js's restart requirement for new public assets.
+Homepage uses `color: neutral`, no fixed `theme`, pure white/black canvas tokens,
+flat near-white/near-black cards, restrained neutral borders and no shadows or
+overlays. Metric values use normal400 weight; descriptions use contrast-safe
+neutral gray. Service logos are displayed in grayscale without replacing the
+official source assets. Status indicators retain their semantic health colors.
+Existing groups, live widgets and card ordering remain unchanged.
+
+Homepage v2.4.0's native theme context defaults to dark and remembers a browser
+override rather than following OS changes reliably. The tracked custom JS syncs
+the root class, color-scheme and stored theme-mode to prefers-color-scheme, listens
+for changes and guards against a stale native root-class update. The native
+manual toggle is hidden because this deployment intentionally follows the OS.
+No credentials are read by this theme code. The ConfigMap checksum rolls the
+pod on changes. Verify light/dark and desktop/mobile after UI updates.
 
 ## Live metrics
 
