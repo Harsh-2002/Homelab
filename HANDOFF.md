@@ -1,5 +1,15 @@
 # Homelab agent handoff
 
+## Firstfinger bulb article published, 2026-10-22
+
+Owner approved publication. Published https://firstfinger.io/wipro-bulb-local-control-home-assistant/
+from firstfinger main commit9a0143b, draft:false, selected rainbow-cube Unsplash
+thumbnail. Cloudflare Pages deployment succeeded; live HTTP200, title, both SVGs,
+cover reference, canonical URL and offline-test caveat verified. Local Hugo,
+Pagefind and Markdown lint pass. Separate GitHub Actions jobs failed installing
+npm lint tooling before checks, not a Cloudflare deployment failure. No CI edits.
+Supersedes draft-only status below. Detailed runbook in homeassistant/BULB-LOCAL.md.
+
 ## Wipro bulb article draft, 2026-10-22
 
 Owner wants the journey preserved and a concise natural Firstfinger article in

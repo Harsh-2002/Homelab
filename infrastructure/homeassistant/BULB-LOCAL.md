@@ -210,7 +210,16 @@ Sources: [TinyTuya](https://github.com/jasonacox/tinytuya),
 [Home Assistant cloud Tuya](https://www.home-assistant.io/integrations/tuya/),
 [IEEE OUI registry](https://standards-oui.ieee.org/oui/oui.txt).
 
-## Public article draft
+## Public article
+
+Published with explicit owner approval on 2026-10-22:
+https://firstfinger.io/wipro-bulb-local-control-home-assistant/ . Firstfinger
+commit `9a0143b59da625a77c4d70cf95f98c16694fc294`, pushed to main, `draft: false`.
+Cloudflare Pages deployment succeeded and live HTTP 200 confirms the article,
+both SVGs and owner-selected thumbnail `photo-1773301885514-a1ef2fd93f43`.
+This supersedes the draft-only review history below. GitHub Actions lint/build
+jobs failed separately during npm tooling installation before validation;
+Cloudflare production deployment is successful. No CI configuration changed.
 
 Owner requested a natural, concise first-person article matching the latest
 Firstfinger posts, including inline SVG diagrams and an Unsplash cover.
