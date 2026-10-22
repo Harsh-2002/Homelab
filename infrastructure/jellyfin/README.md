@@ -1,5 +1,15 @@
 # Jellyfin
 
+## ARR retired, 2026-10-22
+
+All ARR automation was removed at owner request. Jellyfin itself, its config,
+library paths, media files, native/OIDC credentials and scheduled scanning were
+preserved. Motrix and standalone qBittorrent remain. Historical ARR notifications
+and import workflows described below are no longer deployed. Do not redeploy ARR
+merely to restore a historical integration. Service-specific Seerr/Lidarr API-key
+registrations require separate native administrator access to revoke; a live
+credential check returned401, and no account reset or database edit was attempted.
+
 ## 2026-10-05 mount startup recovery
 
 The public URL returned502 because Jellyfin was stopped with Docker exit128 and an OCI mount error opening `/mnt/AV/media` (`no such device`). Docker reported no OOM kill. The AV CIFS share and render device were accessible at diagnosis, so starting the existing container restored `/health` to Healthy. No image, database, media or Portainer Compose was replaced.

@@ -1,5 +1,25 @@
 # Homelab agent handoff
 
+## ARR retired and Homepage Pocket ID counts fixed, 2026-10-22
+
+Owner explicitly requested deletion of complete ARR stack/data and dedicated
+1Password items, NO new backups. Stack153 and11automation services/config dirs,
+unused images/network/Portainer files removed. qBittorrent preserved in standalone
+stack160, config moved intact /data/apps/qbittorrent, same image/two torrent hashes.
+Jellyfin/Motrix containers and all /mnt/AV media/downloads untouched. Retired
+HomeLabitems: Sonarr/Radarr/Prowlarr/Bazarr/Lidarr/Readarr/Cleanuparr/Soulseek;
+retained qBittorrent/Jellyfin/Motrix credentials. ARR routes/ACLs/cards removed;
+onlytorrent authrulesnowin infrastructure/qbittorrent. Historical ARR docs and
+Compose remain archive-only, not a live deployment. See relevant runbooks.
+
+Homepage metrics503 came from expired PocketIDautomation APIkey (expiredOct20,
+PocketIDhealthy). Adapter nowread-only SQLiteCOUNT snapshots on users/oidc_clients
+with WAL/query_only, no full-admin APIkey. Oldadapterkeyfile removed; sharedvault
+AutomationAPIitem retained expired forfuturemanualrenewal, notneededforcounts.
+Counts200 users1/clients18, unit testscoverreadonly/WAL/missingDB. NoPocketIDrestart.
+Jellyfin's obsolete Seerr/Lidarr key registrations remain pending native admin
+access: vaultlogin and APIkey management401; no credential reset/directDBedit.
+
 ## Separate friend's Nivra, 2026-10-19
 
 Public https://theking.l3b.cc.cd is Portainer stack nivra-theking ID159/endpoint2,

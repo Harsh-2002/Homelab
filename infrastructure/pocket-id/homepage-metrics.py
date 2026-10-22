@@ -2,25 +2,26 @@
 """Expose only Pocket ID totals to the private Homepage dashboard."""
 
 import json
+import sqlite3
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.request import Request, urlopen
 
 
-API_KEY = Path("/etc/pocket-id/homepage-metrics.key").read_text().strip()
-API_URL = "http://127.0.0.1:1411/api"
+DATABASE = Path("/var/lib/pocket-id/pocket-id.db")
 
 
-def total(path):
-    request = Request(
-        f"{API_URL}/{path}?pagination%5Blimit%5D=1",
-        headers={"X-API-KEY": API_KEY, "Accept": "application/json"},
-    )
-    with urlopen(request, timeout=3) as response:
-        count = json.load(response)["pagination"]["totalItems"]
-    if not isinstance(count, int) or count < 0:
-        raise ValueError("invalid total")
-    return count
+def counts(database=DATABASE):
+    # mode=ro includes current WAL state without permitting database writes.
+    connection = sqlite3.connect(database.resolve().as_uri() + "?mode=ro", uri=True, timeout=3)
+    try:
+        connection.execute("PRAGMA query_only=ON")
+        connection.execute("BEGIN")
+        return {
+            "users": connection.execute("SELECT count(*) FROM users").fetchone()[0],
+            "clients": connection.execute("SELECT count(*) FROM oidc_clients").fetchone()[0],
+        }
+    finally:
+        connection.close()
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -29,9 +30,9 @@ class Handler(BaseHTTPRequestHandler):
             self.send_error(404)
             return
         try:
-            body = json.dumps({"users": total("users"), "clients": total("oidc/clients")}).encode()
+            body = json.dumps(counts()).encode()
             status = 200
-        except (OSError, ValueError, KeyError, TypeError):
+        except (OSError, ValueError, sqlite3.Error):
             body = b'{"error":"Pocket ID unavailable"}'
             status = 503
         self.send_response(status)
@@ -44,4 +45,5 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
 
-ThreadingHTTPServer(("10.1.1.6", 1412), Handler).serve_forever()
+if __name__ == "__main__":
+    ThreadingHTTPServer(("10.1.1.6", 1412), Handler).serve_forever()

@@ -46,17 +46,17 @@ Register the primary passkey in 1Password and keep a second recovery passkey bef
 - Upgrade helper: `/usr/local/sbin/pocket-id-upgrade`
 - SSH policy: `/etc/ssh/sshd_config.d/10-key-only.conf`
 - Homepage counts adapter: `/opt/pocket-id/homepage-metrics.py`, `/etc/systemd/system/homepage-metrics.service`
-- Adapter API key: `/etc/pocket-id/homepage-metrics.key` (`root:pocket-id`, `0640`)
+- Counts adapter reads the existing local database read-only; no adapter API key.
 
 The encryption key and application data must be backed up together. Neither belongs in Git or Notion.
 
 ## Homepage counts
 
-Homepage reads `http://10.1.1.6:1412/stats` every five minutes for user and OIDC-client totals. The small native systemd service in this directory calls Pocket ID's local admin API, discards the raw response, and serves only `{"users":N,"clients":N}`. Other paths return 404. The endpoint binds only to the private LAN address and contains no personal information or client credentials; do not proxy it publicly.
+Homepage reads `http://10.1.1.6:1412/stats` every five minutes for user and OIDC-client totals. The native systemd adapter opens the existing SQLite database with `mode=ro` and `query_only`, then reads only counts from `users` and `oidc_clients` in one transaction. It serves only `{"users":N,"clients":N}`; other paths return404. It binds only to the private LAN and must not be publicly proxied. SQLite WAL is included; do not use immutable mode, which would miss active WAL contents.
 
-Pocket ID API keys are full-admin. With the owner's approval, the adapter uses the existing `Pocket ID Automation API` key from the HomeLab 1Password vault, stored only in its protected key file on `auth`. Pocket ID does not permit an API key to create another key; minting a dedicated key later requires an administrator passkey session. Homepage itself has no Pocket ID key. When the vault key is rotated, update the protected file and restart `homepage-metrics.service`.
+RCA2026-10-22: Pocket ID was healthy, but its shared automation key expired at2026-10-20T18:30UTC. The adapter's valid-format but expired key caused local API401 and widget503. It now needs no admin API key, network request, renewal, or credential file. The obsolete `/etc/pocket-id/homepage-metrics.key` was deleted. The shared HomeLab `Pocket ID Automation API` vault item was not deleted or silently renewed; future privileged provisioning must renew it through an administrator session. This does not affect normal Pocket ID/passkey sign-in.
 
-To restore this adapter, copy the tracked Python and unit files to the paths above, install the vault key into the protected file, then run `systemctl daemon-reload && systemctl enable --now homepage-metrics.service`. Verify `curl -fsS http://10.1.1.6:1412/stats` returns only the two totals. When Pocket ID is unavailable, the adapter returns HTTP 503 rather than stale counts.
+Restore by copying the tracked Python/unit files to their documented paths and running `systemctl daemon-reload && systemctl enable --now homepage-metrics.service`. Service user `pocket-id` already owns the DB; no database permissions were broadened. The existing strict filesystem protection and read-only SQLite URI prohibit writes from this adapter. Errors return503, never stale counts. Test using `python3 infrastructure/pocket-id/test-homepage-metrics.py`; it verifies live WAL reads, read-only enforcement and fail-closed behavior when the DB is absent. Runtime count check returned users1/clients18. Keep schema compatibility checks when upgrading Pocket ID.
 
 ## Operations
 
@@ -84,7 +84,7 @@ getent ahostsv4 auth.l3b.cc.cd
 
 The final command must return `10.1.1.3`.
 
-The media automation app rules are tracked in `tinyauth-arr.rules` and loaded as `/etc/tinyauth/arr.env` through the systemd drop-in `tinyauth-arr.conf`. The original `/etc/tinyauth/tinyauth.env` still holds the existing OAuth secret and app rules; do not replace it with the tracked file. When adding another Caddy `authenticate` route under the global deny policy, add an exact matching `TINYAUTH_APPS_<NAME>_CONFIG_DOMAIN`, `_OAUTH_WHITELIST`, and `_OAUTH_GROUPS` rule before testing sign-in. Restart Tinyauth after editing either environment file.
+ARR rules/drop-in were retired2026-10-22. Only the retained qBittorrent rule remains, tracked under `infrastructure/qbittorrent/tinyauth.rules`, loaded from `/etc/tinyauth/qbittorrent.env` via `qbittorrent.conf`. Old `/etc/tinyauth/arr.env` and its drop-in were deleted. The original `/etc/tinyauth/tinyauth.env` retains its OAuth secret and other apps; never replace it with a template. New protected apps still require exact domain, OAuth whitelist and group rules; restart Tinyauth after editing environment files.
 
 ### Identity integrations
 

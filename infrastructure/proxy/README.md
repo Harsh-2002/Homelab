@@ -97,10 +97,11 @@ Jellyfin at `media.l3b.cc.cd` is a deliberate public DNS-only exception. It
 uses its own application login; Caddy does not put Tinyauth in front of
 streaming clients. Its upstream is `10.1.1.4:8096` on `ctr`.
 
-The media automation endpoints `sonarr`, `radarr`, `prowlarr`, `bazarr`,
-`seerr`, and `torrent` are private LAN/Tailscale routes on `ctr`. Each imports
-the shared `private`, `authenticate`, and `proxy` blocks. Their Portainer stack,
-internal ports, and storage dependencies are in `infrastructure/arr/README.md`.
+ARR routes sonarr/radarr/prowlarr/bazarr/seerr/lidarr/readarr/cleanuparr were
+retired2026-10-22. Only retained `torrent` remains under the `qbittorrent` snippet,
+with private LAN/Tailscale restriction, Tinyauth/Pocket ID and native qBittorrent
+login. It forwards to CTR8081, independent Portainer stack160. See
+infrastructure/qbittorrent/README.md. Retired hosts have no backend route.
 
 Paperless-ngx at `docs.l3b.cc.cd` is private-network-only and uses its own
 Pocket ID OIDC login; its Caddy route does not import Tinyauth.

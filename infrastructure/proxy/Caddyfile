@@ -464,71 +464,7 @@
 	}
 }
 
-(arr) {
-	@lidarr host lidarr.l3b.cc.cd
-	handle @lidarr {
-		import private
-		import authenticate
-		import proxy
-		reverse_proxy 10.1.1.4:8686
-	}
-
-	@readarr host readarr.l3b.cc.cd
-	handle @readarr {
-		import private
-		import authenticate
-		import proxy
-		reverse_proxy 10.1.1.4:8787
-	}
-
-	@cleanuparr host cleanuparr.l3b.cc.cd
-	handle @cleanuparr {
-		import private
-		import authenticate
-		import proxy
-		reverse_proxy 10.1.1.4:11011
-	}
-
-	@sonarr host sonarr.l3b.cc.cd
-	handle @sonarr {
-		import private
-		import authenticate
-		import proxy
-		reverse_proxy 10.1.1.4:8989
-	}
-
-	@radarr host radarr.l3b.cc.cd
-	handle @radarr {
-		import private
-		import authenticate
-		import proxy
-		reverse_proxy 10.1.1.4:7878
-	}
-
-	@prowlarr host prowlarr.l3b.cc.cd
-	handle @prowlarr {
-		import private
-		import authenticate
-		import proxy
-		reverse_proxy 10.1.1.4:9696
-	}
-
-	@bazarr host bazarr.l3b.cc.cd
-	handle @bazarr {
-		import private
-		import authenticate
-		import proxy
-		reverse_proxy 10.1.1.4:6767
-	}
-
-	@seerr host seerr.l3b.cc.cd
-	handle @seerr {
-		import private
-		import authenticate
-		import proxy
-		reverse_proxy 10.1.1.4:5055
-	}
-
+(qbittorrent) {
 	@torrent host torrent.l3b.cc.cd
 	handle @torrent {
 		import private
@@ -681,7 +617,7 @@ l3b.cc.cd, *.l3b.cc.cd {
 	import memory
 	import hermes
 	import n8n
-	import arr
+	import qbittorrent
 	import cairn
 	import proxmox
 	import storefront

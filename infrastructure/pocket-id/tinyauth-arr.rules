@@ -1,3 +1,4 @@
+# Historical ARR rules, removed from runtime2026-10-22. Do not reinstall as-is.
 TINYAUTH_APPS_SONARR_CONFIG_DOMAIN=sonarr.l3b.cc.cd
 TINYAUTH_APPS_SONARR_OAUTH_WHITELIST=iam.anuragvishwakarma@gmail.com
 TINYAUTH_APPS_SONARR_OAUTH_GROUPS=infrastructure-admins

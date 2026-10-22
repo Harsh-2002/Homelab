@@ -1,5 +1,30 @@
 # Media automation
 
+## RETIRED, 2026-10-22
+
+Owner requested full ARR removal, including app data and credentials, with no
+new backups. Portainer stack153 and all11 automation containers were removed:
+Sonarr, Radarr, Prowlarr, Bazarr, Seerr, Lidarr, Readarr, Cleanuparr, Unpackerr,
+Soularr and slskd. Their bind/config directories and the emptied /data/apps/arr
+root were deleted, along with unused images and the ARR network/Portainer files.
+Media and downloads on /mnt/AV were not touched.
+
+qBittorrent was preserved and moved to independent stack160; its stopped config
+was moved intact to /data/apps/qbittorrent. Same image and all two torrent hashes
+verified. See ../qbittorrent/README.md. Jellyfin and Motrix remain unchanged.
+Retired Caddy routes, Tinyauth rules and Homepage cards were removed. Dedicated
+HomeLab items Sonarr/Radarr/Prowlarr/Bazarr/Lidarr/Readarr/Cleanuparr/Soulseek were
+deleted; retained qBittorrent/Jellyfin/Motrix items were not changed. 1Password
+Recently Deleted provides its normal30-day recovery, not a newly created backup.
+App data deletion has no newly created rollback copy. Historical whole-VM
+backups were not modified because they also contain unrelated retained services.
+
+Everything below and compose.yaml/soularr.ini are **historical redeployment
+references**, not live state. Do not apply the archived Compose unchanged: it
+contains the old qBittorrent identity/path, which now belongs to its own stack.
+Future redeployment requires new secrets, reinitialization and current release
+review. retire.py records the owner-authorized exact-target retirement workflow.
+
 Portainer stack `arr` (ID 153, endpoint 2) runs on `ctr` at `10.1.1.4`. Its tracked source is [`compose.yaml`](compose.yaml). The stack contains Sonarr, Radarr, Lidarr, Readarr, Prowlarr, Bazarr, Seerr, qBittorrent, Cleanuparr, Unpackerr, slskd and Soularr. Each service has its own persistent configuration under `/data/apps/arr/<service>` and shares only the paths it needs from the encrypted SMB AV mount. No service uses the old `docknet` network.
 
 `ctr` is Proxmox VM 204. It has four vCPUs and fixed 16 GiB RAM (`balloon: 16384`, `memory: 16384`), with the balloon device retained for statistics. The owner approved this on 2026-09-30 after inspection proved Intel iGPU PCI passthrough kept about 16 GiB locked on the host despite the guest being restricted to 8 GiB. The live monitor adjustment restored the full allocation without a reboot. This supersedes the earlier 8 GiB minimum / 16 GiB maximum policy; see [the VM memory RCA](../ctr/README.md). There is no swapfile or active swap. Do not re-create the temporary `/data/swapfile` or its systemd unit. Check memory after changing this stack because it shares the VM with other applications; fixed allocation does not eliminate future OOM risk.

@@ -1,0 +1,3 @@
+TINYAUTH_APPS_TORRENT_CONFIG_DOMAIN=torrent.l3b.cc.cd
+TINYAUTH_APPS_TORRENT_OAUTH_WHITELIST=iam.anuragvishwakarma@gmail.com
+TINYAUTH_APPS_TORRENT_OAUTH_GROUPS=infrastructure-admins
