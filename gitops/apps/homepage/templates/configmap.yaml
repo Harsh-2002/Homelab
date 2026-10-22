@@ -9,8 +9,8 @@ data:
     color: slate
     background:
       image: /images/background-SewuBG5F9x8.webp
-      brightness: 50
-      opacity: 65
+      brightness: 75
+      opacity: 85
     headerStyle: underlined
     statusStyle: dot
     hideVersion: true
@@ -347,11 +347,22 @@ data:
   custom.css: |
     #information-widgets-right .information-widget-openmeteo { margin-left: 0.75rem; }
     .dark .service-card {
-      background-color: rgb(15 23 42 / 92%);
+      background-color: rgb(15 23 42 / 88%);
       box-shadow: 0 4px 14px rgb(0 0 0 / 24%);
     }
     .dark .service-card:hover { background-color: rgb(30 41 59 / 96%); }
-    .dark .service-group-name { text-shadow: 0 2px 8px rgb(0 0 0 / 55%); }
+    .dark .service-card .font-thin { font-weight: 400; }
+    .dark .service-group-name {
+      color: rgb(248 250 252);
+      background-color: rgb(15 23 42 / 84%);
+      border-radius: 0.375rem;
+      padding: 0.125rem 0.5rem;
+    }
+    .dark #information-widgets {
+      background-color: rgb(15 23 42 / 84%);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
   custom.js: |
     (() => {
       const units = ["B", "KB", "MB", "GB", "TB", "PB"];

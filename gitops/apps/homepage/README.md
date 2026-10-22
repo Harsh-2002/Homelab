@@ -21,10 +21,13 @@ The chart includes it as ConfigMap binary data and mounts only the images
 subdirectory, not all of `/app/public`. Homepage serves it locally at
 `/images/background-SewuBG5F9x8.webp`; no runtime Unsplash dependency.
 
-Native background brightness50 and opacity65 dim the bright photograph against
-the existing dark slate theme. Cards use92% dark-slate surfaces with soft downward
-shadows,96% on hover, and section titles have a restrained text shadow. Existing
-layout, widgets and ordering remain unchanged. No backdrop blur is needed.
+Native background brightness75 and opacity85 keep the photograph visible against
+the existing dark slate theme, increased after owner feedback that the first
+version was too dark. Cards use88% dark-slate surfaces with soft downward
+shadows,96% on hover. Section titles and header widgets have localized84% dark
+backing for contrast rather than heavily dimming the entire photograph. Metric
+values use normal font weight instead of Homepage's thin default. Existing
+groups, widgets and ordering remain unchanged. No backdrop blur is needed.
 The ConfigMap checksum rolls the pod when assets/settings change, satisfying
 Next.js's restart requirement for new public assets.
 
