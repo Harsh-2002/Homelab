@@ -9,7 +9,7 @@ native login remains in place. Host/Origin/Referer are normalized to its native
 HTTP address for embedded-router compatibility. No public route exception, WAN
 port-forward, or router remote-management setting was added or changed.
 
-Deploy the tracked router.env to `/etc/tinyauth/router.env` on auth and
+Deploy the tracked router.env.example to `/etc/tinyauth/router.env` on auth and
 router-tinyauth.conf to `/etc/systemd/system/tinyauth.service.d/router.conf`.
 Run daemon-reload and restart Tinyauth to load the additional app policy, without
 editing its protected base credentials. Stage/validate the tracked Caddyfile

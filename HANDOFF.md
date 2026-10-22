@@ -5,7 +5,7 @@
 router.l3b.cc.cd now private Caddy→http://10.1.1.1, LAN/Tailscale restriction
 before PocketID/Tinyauth owner/admin gate, native router login retained. Explicit
 route preserves handler order. Host/Origin/Referer normalized for embedded UI.
-Dedicated tracked router.env/router-tinyauth.conf add auth policy without editing
+Dedicated tracked router.env.example/router-tinyauth.conf add auth policy without editing
 base secrets. DNS existing wildcard→10.1.1.3, no public exception/WAN forwarding.
 Router firewall/WAN remote-management settings not inspected/changed; direct LAN
 10.1.1.1 remains reachable. Caddy/auth active, staged validation/graceful reload,
