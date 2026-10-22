@@ -7,6 +7,10 @@ data:
     title: l3b.cc.cd
     theme: dark
     color: slate
+    background:
+      image: /images/background-SewuBG5F9x8.webp
+      brightness: 50
+      opacity: 65
     headerStyle: underlined
     statusStyle: dot
     hideVersion: true
@@ -342,6 +346,12 @@ data:
   docker.yaml: "{}"
   custom.css: |
     #information-widgets-right .information-widget-openmeteo { margin-left: 0.75rem; }
+    .dark .service-card {
+      background-color: rgb(15 23 42 / 92%);
+      box-shadow: 0 4px 14px rgb(0 0 0 / 24%);
+    }
+    .dark .service-card:hover { background-color: rgb(30 41 59 / 96%); }
+    .dark .service-group-name { text-shadow: 0 2px 8px rgb(0 0 0 / 55%); }
   custom.js: |
     (() => {
       const units = ["B", "KB", "MB", "GB", "TB", "PB"];
@@ -385,3 +395,4 @@ data:
     })();
 binaryData:
   nivra.png: {{ .Files.Get "files/nivra.png" | b64enc }}
+  background.webp: {{ .Files.Get "files/background-SewuBG5F9x8.webp" | b64enc }}

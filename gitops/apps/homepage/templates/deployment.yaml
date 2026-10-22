@@ -106,6 +106,9 @@ spec:
             - name: icons
               mountPath: /app/public/icons
               readOnly: true
+            - name: images
+              mountPath: /app/public/images
+              readOnly: true
             - name: logs
               mountPath: /app/config/logs
             - name: tmp
@@ -122,5 +125,11 @@ spec:
                 path: nivra.png
         - name: logs
           emptyDir: {}
+        - name: images
+          configMap:
+            name: homepage-config
+            items:
+              - key: background.webp
+                path: background-SewuBG5F9x8.webp
         - name: tmp
           emptyDir: {}

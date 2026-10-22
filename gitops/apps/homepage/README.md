@@ -12,6 +12,22 @@ Homepage is the stateless, Git-managed portal served at `https://l3b.cc.cd`.
 - Cilium advertises `10.1.1.174:80`; Caddy terminates TLS, applies private LAN/Tailscale access control, and uses Tinyauth/Pocket ID for authentication.
 - Widget credentials are held only in the live `homepage-widgets` Kubernetes Secret, sourced from the authoritative 1Password items. The chart contains `HOMEPAGE_VAR_*` placeholders only; never commit a secret value.
 
+## Background and contrast
+
+The owner's selected Unsplash photo [SewuBG5F9x8](https://unsplash.com/photos/SewuBG5F9x8)
+is vendored as `files/background-SewuBG5F9x8.webp` (2560x1440, about104KiB).
+Original download: `https://unsplash.com/photos/SewuBG5F9x8/download?force=true`.
+The chart includes it as ConfigMap binary data and mounts only the images
+subdirectory, not all of `/app/public`. Homepage serves it locally at
+`/images/background-SewuBG5F9x8.webp`; no runtime Unsplash dependency.
+
+Native background brightness50 and opacity65 dim the bright photograph against
+the existing dark slate theme. Cards use92% dark-slate surfaces with soft downward
+shadows,96% on hover, and section titles have a restrained text shadow. Existing
+layout, widgets and ordering remain unchanged. No backdrop blur is needed.
+The ConfigMap checksum rolls the pod when assets/settings change, satisfying
+Next.js's restart requirement for new public assets.
+
 ## Live metrics
 
 Platform card order prioritizes live statistics: Argo CD, Headlamp, Longhorn,
