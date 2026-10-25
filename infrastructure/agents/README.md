@@ -76,6 +76,13 @@ Do not mistake truncated JSON for an underlying service failure.
 
 ## OpenCode remote UI/API
 
+Upgrade follow-up, 2026-10-25: owner updated the installed binary to **v2.1.4**.
+The existing user service was still running its pre-upgrade process. Restarted
+with `systemctl --user restart opencode.service`; the actual running executable
+reported v2.1.4, HTTPS UI returned200 and unauthenticated API returned401.
+Unit remains enabled. Future CLI upgrades may require this separate service
+restart; refresh the browser afterward. No authentication, MCP or proxy changes.
+
 - URL: **https://oc.l3b.cc.cd**, private LAN/Tailscale through Caddy.
 - Backend: **0.0.0.0:49374** on dev10.1.1.5.
 - Explicit DNS-only Cloudflare A record: oc→10.1.1.3, matching local resolution.
