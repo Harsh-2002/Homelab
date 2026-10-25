@@ -7,6 +7,11 @@ Run `python3 infrastructure/agents/check-integrations.py` after agent changes.
 
 ## Living architecture
 
+Primary artifact is now the owner's internal Excalidraw topology tree/flow board,
+not the rejected presentation sheets. Update `excalidraw-build.mjs`, rebuild and
+render with the official CLI after material changes; see docs/architecture.
+Keep IP-bearing native scenes, address sources and exports Git-ignored.
+
 Material changes to hosts, VM/LXC placement, services, network access, storage,
 identity, HA or integrations must update `docs/architecture/inventory.json` and
 the affected relationships in `docs/architecture/build.mjs`, alongside service

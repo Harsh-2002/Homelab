@@ -1,5 +1,10 @@
 # Shared coding-agent tools on dev
 
+Excalidraw CLI added 2026-10-25: official user-global CLI plus shared local
+skill for all four agents. Local scene rendering is account-free; no cloud
+uploads or MCP added. See [EXCALIDRAW.md](EXCALIDRAW.md). The Homelab's current
+diagram direction is an internal connected tree/flow board with IP labels.
+
 Living architecture standard, 2026-10-25: all four global instruction files
 point to the root Homelab AGENTS.md. Material infrastructure changes update
 the [architecture inventory and diagrams](../../docs/architecture/README.md),

@@ -6,6 +6,11 @@ Start a new agent or chat with [`HANDOFF.md`](HANDOFF.md). It lists the authorit
 
 ## Architecture diagrams
 
+Primary artifact: the internal, editable **Excalidraw topology tree and flow
+board**, with IP/port labels, stored locally under docs/architecture/internal.
+It is intentionally not published. The owner rejected the earlier presentation
+sheets below; use the [current workflow](docs/architecture/README.md).
+
 The [living architecture](docs/architecture/README.md) contains a share-safe
 [physical/service overview](docs/architecture/homelab.svg),
 [traffic/data flows](docs/architecture/flows.svg) and

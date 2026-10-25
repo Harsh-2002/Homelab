@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-25",
+  "internal": false,
+  "sourceHash": "78d3192cbb4ebcbf780eaa98552cb14ccbf521efb720c297f919a2b90f8e02a1",
+  "nodes": 131,
+  "ownershipEdges": 130,
+  "frames": [
+    "tree",
+    "flow-0",
+    "flow-1",
+    "flow-2",
+    "flow-3",
+    "flow-4",
+    "flow-5",
+    "flow-6",
+    "flow-7",
+    "flow-8",
+    "flow-9",
+    "flow-10",
+    "flow-11",
+    "flow-12",
+    "flow-13",
+    "flow-14",
+    "flow-15",
+    "flow-16",
+    "flow-17",
+    "flow-18",
+    "flow-19"
+  ],
+  "width": 3469.0240000000003,
+  "height": 3404.528
+}

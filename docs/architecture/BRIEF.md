@@ -1,5 +1,22 @@
 # Architecture diagram brief
 
+## Superseding owner direction, 2026-10-25
+
+The owner rejected the presentation/inventory-sheet design below. This task is
+for his internal understanding, not primarily public sharing. Build a connected
+tree with IP/ports: router, LAN switching/AP, camera/bulb/AC, physical Proxmox
+hosts, VM/LXC guests, Docker stacks/individual containers, Kubernetes logical
+services and storage. On the same native editable Excalidraw scene, trace the
+important request/data paths in focused frames. Use the explicitly chosen
+official Excalidraw CLI. Unknown device/cable details remain marked unknown.
+No API key, Excalidraw+ login, remote uploads or new hosted service required.
+
+The direction contract is now a tree/map with short node labels and arrows, not
+paragraph cards. Existing cool neutral technical palette is retained only for
+legibility. Earlier review approval does not override the owner's rejection.
+Native scene, text, bound arrows and frames must be independently rendered and
+reviewed. Root Home Assistant product context remains outside scope.
+
 Scope: docs/architecture only. Read mode. Anurag wants a complete, minimal,
 professional explanation of physical compute and services, using his supplied
 network diagram as subject reference, not as infrastructure evidence. Readers

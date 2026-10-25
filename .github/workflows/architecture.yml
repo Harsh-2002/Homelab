@@ -16,5 +16,6 @@ jobs:
           node-version: '22'
       - run: node docs/architecture/build.mjs
       - run: node docs/architecture/check.mjs
+      - run: node docs/architecture/check-topology.mjs
       - name: Reject stale generated SVGs
         run: git diff --exit-code -- docs/architecture/homelab.svg docs/architecture/flows.svg

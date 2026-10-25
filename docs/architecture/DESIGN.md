@@ -1,151 +1,142 @@
 ---
-name: Homelab Architecture Diagrams
-description: A restrained visual system for readable, code-generated technical schematics.
+name: Homelab Topology Diagrams
+description: Native Excalidraw topology tree and labelled relationship frames.
 colors:
-  primary: "#225d82"
-  secondary: "#25675d"
-  ink: "#18252c"
-  muted: "#52636d"
-  rule: "#c7d2d7"
-  paper: "#f8fafb"
-  surface: "#ffffff"
-  blue-wash: "#edf4f8"
-  teal-wash: "#edf5f1"
+  canvas: "#f8fafc"
+  ink: "#263848"
+  node-text: "#233647"
+  frame-title: "#142b3c"
+  tree-key: "#536575"
+  ownership-arrow: "#9baab5"
+  arrow-fallback: "#9caab4"
+  flow-arrow: "#2c7185"
+  physical-fill: "#e7eff8"
+  guest-fill: "#e8f4f0"
+  logical-fill: "#f0edf9"
+  service-fill: "#ffffff"
+  device-fill: "#fff3df"
 typography:
   display:
-    fontFamily: "Arial, Liberation Sans, sans-serif"
-    fontSize: "46px"
-    fontWeight: 600
-  headline:
-    fontFamily: "Arial, Liberation Sans, sans-serif"
-    fontSize: "28px"
-    fontWeight: 600
-  title:
-    fontFamily: "Arial, Liberation Sans, sans-serif"
-    fontSize: "25px"
-    fontWeight: 600
+    fontFamily: "Helvetica, Arial, sans-serif"
+    fontSize: "30px"
+    fontWeight: 400
   body:
-    fontFamily: "Arial, Liberation Sans, sans-serif"
-    fontSize: "22px"
+    fontFamily: "Helvetica, Arial, sans-serif"
+    fontSize: "16px"
+    fontWeight: 400
+    lineHeight: 1.25
+  key:
+    fontFamily: "Helvetica, Arial, sans-serif"
+    fontSize: "17px"
     fontWeight: 400
   label:
-    fontFamily: "Arial, Liberation Sans, sans-serif"
-    fontSize: "20px"
+    fontFamily: "Helvetica, Arial, sans-serif"
+    fontSize: "13px"
+    fontWeight: 400
+  callout:
+    fontFamily: "Helvetica, Arial, sans-serif"
+    fontSize: "14px"
     fontWeight: 400
 rounded:
-  node: "12px"
-  enclosure: "16px"
+  node: "6px"
 spacing:
-  sheet-inset: "64px"
-  host-column-gap: "56px"
-  node-inset: "22px"
-  enclosure-inset: "24px"
+  node-label-inset: "12px"
+  frame-title-inset-x: "36px"
+  frame-title-inset-y: "30px"
 components:
-  service-node:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
+  topology-node:
+    backgroundColor: "{colors.service-fill}"
+    textColor: "{colors.node-text}"
     rounded: "{rounded.node}"
-    padding: "22px"
-  host-frame:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.enclosure}"
-    padding: "24px"
-    width: "720px"
-    height: "650px"
-  cluster-panel:
-    backgroundColor: "{colors.blue-wash}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.enclosure}"
-    padding: "40px 24px"
-  flow-card:
-    backgroundColor: "{colors.teal-wash}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.node}"
-    padding: "24px"
+    padding: "10px 12px"
+  frame-title:
+    textColor: "{colors.frame-title}"
+    typography: "{typography.display}"
+  flow-label:
+    textColor: "{colors.flow-arrow}"
+    typography: "{typography.callout}"
 ---
 
-# Design System: Homelab Architecture Diagrams
+# Design System: Homelab Topology Diagrams
 
 ## Overview
 
-**Creative North Star: “The Engineering Schematic.”**
+**Creative North Star: “The Connected Topology.”**
 
-This visual system applies to the static architecture sheets in this directory. It uses a cool paper field, plain sans-serif labels, fine strokes and measured spacing so containment and relationships remain easy to follow. Color is reserved for grouping and selected paths; geometry carries the explanation.
+One native Excalidraw scene combines the 131-node, 130-edge ownership and network-attachment tree with 20 labelled flow frames. The tree shows physical devices and hosts through VM/LXC guests to Docker and Kubernetes services. Focused frames trace selected request and data paths.
+
+The public scene is names-only. The private scene adds IP:port labels from local ignored address maps. The scene uses native shapes, text, frames and arrows; its PNGs are frame exports. Local rendering uses the official CLI and needs no account, API key or hosted service.
 
 **Key Characteristics:**
 
-- Fixed landscape sheets composed from editable SVG geometry.
-- Blue grouping and teal relationship accents against quiet neutrals.
-- Static, flat presentation with no generated imagery or external assets.
+- One editable canvas: a left-to-right topology tree and 20 focused flow frames.
+- Node fill identifies physical, guest, logical, service or device categories.
+- Relationship labels carry meaning; connector styling alone is not a relationship taxonomy.
 
 ## Colors
 
-The palette is cool and restrained: ink and muted gray-blue carry text, while two accents distinguish grouping from selected relationships.
+Dark blue-grey carries labels and outlines; restrained fills separate node categories, while muted neutral and teal strokes distinguish topology links from focused flow links.
 
 ### Primary
-- **Blueprint Blue** (`primary`): Used for cluster grouping, related headings and selected connectors.
-
-### Secondary
-- **Muted Teal** (`secondary`): Reserved for selected dependency and data paths, with a pale teal wash for flow cards.
+- **Topology Ink** (ink): Shared shape and text outline color.
+- **Flow Teal** (flow-arrow): Focused relationship arrows and their labels.
 
 ### Neutral
-- **Dark Blue-Grey Ink** (`ink`): Main headings and node titles.
-- **Slate Blue-Grey** (`muted`): Supporting labels and secondary copy.
-- **Fine Divider Gray** (`rule`): Panel outlines, separators and quiet connector lines.
-- **Cool Near-White Paper** (`paper`): Sheet background.
-- **White Surface** (`surface`): Default node and host-panel fill.
-- **Pale Blue Wash** (`blue-wash`): Cluster and selected grouped nodes.
-- **Pale Teal Wash** (`teal-wash`): Data-flow cards.
+- **Canvas** (canvas): Excalidraw scene background.
+- **Node Text** (node-text): Text inside labelled nodes.
+- **Frame Title** (frame-title): Frame headings.
+- **Tree Key** (tree-key): Build date and tree-scope note.
+- **Ownership Arrow** (ownership-arrow): Tree ownership/network-attachment links.
+- **Arrow Fallback** (arrow-fallback): Generator helper default; current tree and flow calls specify their own arrow colors.
 
-**The Color-Has-Meaning Rule.** Keep blue for grouping and teal for selected relationships; use neutrals for most text and structure.
+### Node Fills
+- **Physical** (physical-fill), **Guest** (guest-fill), **Logical** (logical-fill), **Service** (service-fill) and **Device** (device-fill) identify node categories.
+
+**The Labelled-Arrow Rule.** Read the arrow label for relationship meaning. Do not infer packet flow, membership or dependency from color or dash style alone.
 
 ## Typography
 
-**Display Font:** Arial (with Liberation Sans and sans-serif fallbacks)<br>
-**Body Font:** Arial (with Liberation Sans and sans-serif fallbacks)<br>
-**Label/Mono Font:** None; labels use the same plain sans-serif family.
+**Display Font:** Helvetica (with Arial and sans-serif fallbacks)<br>
+**Body Font:** Helvetica (with Arial and sans-serif fallbacks)<br>
+**Label/Mono Font:** None.
 
-**Character:** Compact, direct and technical. Weight and size establish hierarchy without a separate display face, decorative lettering or uppercase styling.
+The generator uses Excalidraw font family 2, Helvetica. The hierarchy is compact and consistent across the canvas.
 
 ### Hierarchy
-- **Display:** Sheet title.
-- **Headline:** Flow-group headings.
-- **Title:** Host, node and panel headings.
-- **Body:** Service descriptions and relationship notes.
-- **Label:** Page metadata, footers and compact notes.
-
-The generated SVGs use an 18–46px type range, with a few intermediate sizes for fit and emphasis. Repeated body lines use explicit baseline spacing; there is no letter-spacing treatment.
+- **Display** (400, 30px): Frame headings.
+- **Key** (400, 17px): Tree edition, date and relationship-scope note.
+- **Body** (400, 16px): Node labels.
+- **Callout** (400, 14px) and **Label** (400, 13px): Flow annotations; the generator uses both sizes.
 
 ## Layout
 
-Each sheet uses a fixed 2400 × 1820 landscape viewBox. The host-placement sheet starts with an access band, continues through three equal-width physical-host columns, then a shared cluster panel and a compact boundary row. The flow sheet organizes relationships into horizontal groups separated by fine rules. Both use a 64px outer inset, generous column gaps and left-aligned labels; connector paths turn at right angles. The layout is static and intended to remain legible when zoomed or printed from SVG/PDF.
+The tree is laid out left to right from Graphviz coordinates and occupies one native frame. Its dimensions follow the graph; the current manifest records about 3469 × 3405 units. Twenty 2800 × 400 flow frames sit to its right, stacked with 50 units between frames. The canvas and frame contents are fixed; no responsive reflow is defined.
 
 ## Elevation & Depth
 
-The diagrams are flat: there are no shadows, gradients or motion. Grouping comes from pale color washes, fine outlines, whitespace and containment.
+The scene is flat: no shadows, gradients or motion. Node categories, frame boundaries, whitespace and connector geometry carry the hierarchy.
 
 ## Shapes
 
-Nodes use softly rounded corners; larger host and cluster enclosures use the wider radius in the token set. Most box strokes are 1.5px, with host frames and the cluster edge using slightly stronger gray-blue outlines. Relationship lines are thin, with small arrowheads; dashed paths distinguish selected configuration or dependency links in the flow sheet.
+Nodes are native rounded rectangles with a 6px radius, 1.4px outline and 12px text inset. Arrows use native bound connectors with an end arrowhead; tree routing follows Graphviz polylines. Fan-out links in several flow frames are dashed across different relationship types, so their explicit labels are authoritative.
 
 ## Components
 
-- **Service node:** A white rounded rectangle with a semibold title and muted supporting lines. Compact nodes reduce title and body size to fit their assigned slot.
-- **Host frame:** A large white enclosure that groups one physical host and its guests; the header aligns host identity and hardware details above a thin divider.
-- **Cluster panel:** A pale-blue enclosure below the host columns, subdivided into three information groups.
-- **Flow card:** A pale-teal rounded panel for the three highlighted data-path examples.
+- **Topology node:** A native labelled rectangle. Its fill follows the node category; text uses the shared body style.
+- **Frame title:** Native text at the upper-left of each frame.
+- **Flow label and arrow:** A labelled native connector; flow annotations use teal. Some fan-out connectors are dashed, without assigning one universal meaning to that dash.
 
-These are static diagram primitives, not interactive controls.
+These are static diagram primitives. They are not controls or a responsive web interface.
 
 ## Do's and Don'ts
 
 ### Do
-- **Do** keep the page title, group headings and supporting copy in the established sans-serif hierarchy.
-- **Do** use containment, whitespace and orthogonal lines to make relationships readable.
-- **Do** reserve the two accent colors for grouping and selected paths.
+- **Do** use the tree for ownership and network attachment, and flow frames for labelled end-to-end paths.
+- **Do** read each relationship label, especially on dashed fan-out connectors.
+- **Do** preserve unknown hardware and network details as unknown.
+- **Do** keep the IP-bearing scene and address sources private.
 
 ### Don't
-- **Don't** add shadows, gradients, motion, icon libraries or generated imagery.
-- **Don't** use accent colors as decoration or introduce an additional palette.
-- **Don't** turn the sheets into a dashboard or add interactive controls.
+- **Don't** read every tree edge as a packet path.
+- **Don't** infer relationship semantics from dash style or color alone.
+- **Don't** publish the private scene or its local address maps.

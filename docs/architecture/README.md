@@ -1,5 +1,46 @@
 # Homelab architecture
 
+## Current direction: internal Excalidraw topology
+
+The owner rejected the original presentation sheets. The primary purpose is
+**understanding the full internal tree and actual flows**, not public sharing.
+Use the native `internal/homelab-topology.excalidraw` scene: a connected physical
+→ host → VM/LXC → Docker/Kubernetes/service tree, plus focused flow frames on the
+same editable canvas. IP:port labels are included. Open it in Excalidraw with
+Open file; it is not a flattened image. Router/switch/AP unknowns are marked.
+
+```bash
+node docs/architecture/excalidraw-build.mjs --internal
+node docs/architecture/excalidraw-render.mjs --internal
+```
+
+The official CLI is installed and requires no account for local rendering.
+See [tool setup](../../infrastructure/agents/EXCALIDRAW.md). The tree layout uses
+Graphviz as a helper, then writes editable native shapes/text/bound arrows.
+The default build omits addresses; the internal build reads two Git-ignored
+local address maps. Do not force-add those or upload the internal scene.
+
+Host/guest placement is in inventory.json; individual service nodes, containment
+and flow paths are in excalidraw-build.mjs. Update both when relevant. The source
+hash check rejects stale generated scenes, including changes to local address
+maps for the internal edition. Building regenerates the scene: preserve any
+manual Excalidraw edits before rebuilding, or carry those edits into the source.
+Rendering an existing scene does not regenerate its geometry.
+
+Camera address verified from the configured Frigate camera endpoint; native
+Docker published ports and Kubernetes service addresses were checked live.
+Internal-only containers use Docker DNS labels, not invented stable IPs.
+ClusterIP values are snapshots, not externally routable LAN endpoints.
+The tree shows ownership/network attachment, while the separate frames show
+data/request paths. This avoids pretending, for example, that a camera video
+stream flows through MQTT or Grafana sits between Home Assistant and metrics.
+
+## Previous presentation sheets
+
+These remain in Git history/current files for reference, but are **not the
+owner-approved primary layout**. Their earlier review did not establish that
+they met the owner's needs. Prefer the current Excalidraw tree above.
+
 Share-safe architecture snapshot verified on **25 October 2026**. The reference
 image supplied by the owner informed the subject and completeness, not its
 hardware inventory. These are technical diagrams, not generated illustrations.

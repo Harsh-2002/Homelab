@@ -87,6 +87,19 @@ def main():
             print('herdr: native integrations current; shared control skill aligned across four agents')
     except (OSError, subprocess.TimeoutExpired):
         failures.append('Herdr: unable to validate local integrations/control skill')
+    try:
+        reference = (Path.home() / '.agents/skills/excalidraw-local/SKILL.md').read_bytes()
+        for root in ('.codex/skills', '.claude/skills', '.hermes/skills'):
+            if (Path.home() / root / 'excalidraw-local/SKILL.md').read_bytes() != reference:
+                failures.append('Excalidraw: shared local skill drift')
+        result = subprocess.run(['excalidraw', '--version'], capture_output=True,
+                                text=True, timeout=10, check=False)
+        if result.returncode:
+            failures.append('Excalidraw: CLI version check failed')
+        else:
+            print('excalidraw: official CLI available; shared skill aligned across four agents')
+    except (OSError, subprocess.TimeoutExpired):
+        failures.append('Excalidraw: CLI or shared skill unavailable')
     for failure in failures:
         print(f'FAIL: {failure}', file=sys.stderr)
     if failures:
