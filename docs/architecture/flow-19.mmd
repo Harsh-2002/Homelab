@@ -1,0 +1,12 @@
+flowchart LR
+  n_flow_19_0["Longhorn<br/>2 replicas per current volume"]
+  n_flow_19_1["Longhorn data disk<br/>500 GiB / host-local ZFS"]
+  n_flow_19_2["Longhorn data disk<br/>500 GiB / host-local ZFS"]
+  n_flow_19_3["Longhorn data disk<br/>500 GiB / host-local ZFS"]
+  n_flow_19_0 -.->|"eligible disk"| n_flow_19_1
+  n_flow_19_0 -.->|"eligible disk"| n_flow_19_2
+  n_flow_19_0 -.->|"eligible disk"| n_flow_19_3
+  classDef c_flow_19_0 fill:#ffffff,stroke:#6c7f8c,color:#233647;
+  class n_flow_19_0 c_flow_19_0;
+  classDef c_flow_19_1 fill:#e7eff8,stroke:#6c7f8c,color:#233647;
+  class n_flow_19_1,n_flow_19_2,n_flow_19_3 c_flow_19_1;

@@ -1,0 +1,14 @@
+flowchart LR
+  n_flow_14_0["Your phone / workstation<br/>Client addresses vary"]
+  n_flow_14_1["Caddy / HTTPS + PostgreSQL proxy"]
+  n_flow_14_2["Kong<br/>Kubernetes Service"]
+  n_flow_14_3["REST<br/>Kubernetes Service"]
+  n_flow_14_4["PostgreSQL primary<br/>Streaming replication"]
+  n_flow_14_0 -->|"HTTPS :443"| n_flow_14_1
+  n_flow_14_1 -->|"gateway upstream"| n_flow_14_2
+  n_flow_14_2 -->|"REST API"| n_flow_14_3
+  n_flow_14_3 -->|"PostgreSQL connection"| n_flow_14_4
+  classDef c_flow_14_0 fill:#fff3df,stroke:#6c7f8c,color:#233647;
+  class n_flow_14_0 c_flow_14_0;
+  classDef c_flow_14_1 fill:#ffffff,stroke:#6c7f8c,color:#233647;
+  class n_flow_14_1,n_flow_14_2,n_flow_14_3,n_flow_14_4 c_flow_14_1;

@@ -1,0 +1,10 @@
+flowchart LR
+  n_flow_11_0["Outdoor camera<br/>Network attachment type unverified"]
+  n_flow_11_1["frigate<br/>Docker-internal unless published"]
+  n_flow_11_2["Frigate recordings<br/>ctr local /data/apps/frigate/media"]
+  n_flow_11_0 -->|"RTSP main stream"| n_flow_11_1
+  n_flow_11_1 -->|"writes local recording files"| n_flow_11_2
+  classDef c_flow_11_0 fill:#fff3df,stroke:#6c7f8c,color:#233647;
+  class n_flow_11_0 c_flow_11_0;
+  classDef c_flow_11_1 fill:#ffffff,stroke:#6c7f8c,color:#233647;
+  class n_flow_11_1,n_flow_11_2 c_flow_11_1;

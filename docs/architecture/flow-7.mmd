@@ -1,0 +1,12 @@
+flowchart LR
+  n_flow_7_0["Your phone / workstation<br/>Client addresses vary"]
+  n_flow_7_1["Caddy / HTTPS + PostgreSQL proxy"]
+  n_flow_7_2["Tinyauth / forward-auth"]
+  n_flow_7_3["Pocket ID / OIDC"]
+  n_flow_7_0 -->|"HTTPS :443"| n_flow_7_1
+  n_flow_7_1 -->|"selected routes / auth check"| n_flow_7_2
+  n_flow_7_2 -->|"OIDC / passkeys"| n_flow_7_3
+  classDef c_flow_7_0 fill:#fff3df,stroke:#6c7f8c,color:#233647;
+  class n_flow_7_0 c_flow_7_0;
+  classDef c_flow_7_1 fill:#ffffff,stroke:#6c7f8c,color:#233647;
+  class n_flow_7_1,n_flow_7_2,n_flow_7_3 c_flow_7_1;

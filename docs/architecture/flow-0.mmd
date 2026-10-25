@@ -1,0 +1,12 @@
+flowchart LR
+  n_flow_0_0["Outdoor camera<br/>Network attachment type unverified"]
+  n_flow_0_1["frigate<br/>Docker-internal unless published"]
+  n_flow_0_2["Mosquitto / MQTT"]
+  n_flow_0_3["Home Assistant"]
+  n_flow_0_0 -->|"RTSP :554"| n_flow_0_1
+  n_flow_0_1 -->|"events / MQTT :1883"| n_flow_0_2
+  n_flow_0_2 -->|"HA integration"| n_flow_0_3
+  classDef c_flow_0_0 fill:#fff3df,stroke:#6c7f8c,color:#233647;
+  class n_flow_0_0 c_flow_0_0;
+  classDef c_flow_0_1 fill:#ffffff,stroke:#6c7f8c,color:#233647;
+  class n_flow_0_1,n_flow_0_2,n_flow_0_3 c_flow_0_1;

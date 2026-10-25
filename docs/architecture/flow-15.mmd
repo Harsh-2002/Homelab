@@ -1,0 +1,14 @@
+flowchart LR
+  n_flow_15_0["Crucial X9 Pro / 4 TB<br/>USB: AV + BACKUP"]
+  n_flow_15_1["LXC 109 / store"]
+  n_flow_15_2["SMB / AV<br/>TCP 445"]
+  n_flow_15_3["jellyfin<br/>Docker-internal unless published"]
+  n_flow_15_0 -->|"host bind mount"| n_flow_15_1
+  n_flow_15_1 -->|"encrypted SMB3 :445"| n_flow_15_2
+  n_flow_15_2 -->|"media reads"| n_flow_15_3
+  classDef c_flow_15_0 fill:#e7eff8,stroke:#6c7f8c,color:#233647;
+  class n_flow_15_0 c_flow_15_0;
+  classDef c_flow_15_1 fill:#e8f4f0,stroke:#6c7f8c,color:#233647;
+  class n_flow_15_1 c_flow_15_1;
+  classDef c_flow_15_2 fill:#ffffff,stroke:#6c7f8c,color:#233647;
+  class n_flow_15_2,n_flow_15_3 c_flow_15_2;

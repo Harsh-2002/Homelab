@@ -1,0 +1,12 @@
+flowchart LR
+  n_flow_16_0["omni<br/>Docker-internal unless published"]
+  n_flow_16_1["VM 201 / k8s-201"]
+  n_flow_16_2["VM 202 / k8s-202"]
+  n_flow_16_3["VM 203 / k8s-203"]
+  n_flow_16_0 -.->|"machine management"| n_flow_16_1
+  n_flow_16_0 -.->|"machine management"| n_flow_16_2
+  n_flow_16_0 -.->|"machine management"| n_flow_16_3
+  classDef c_flow_16_0 fill:#ffffff,stroke:#6c7f8c,color:#233647;
+  class n_flow_16_0 c_flow_16_0;
+  classDef c_flow_16_1 fill:#e8f4f0,stroke:#6c7f8c,color:#233647;
+  class n_flow_16_1,n_flow_16_2,n_flow_16_3 c_flow_16_1;

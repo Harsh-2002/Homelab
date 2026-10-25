@@ -27,6 +27,41 @@ maps for the internal edition. Building regenerates the scene: preserve any
 manual Excalidraw edits before rebuilding, or carry those edits into the source.
 Rendering an existing scene does not regenerate its geometry.
 
+### SVG and Mermaid exports
+
+```bash
+node docs/architecture/export-formats.mjs --internal
+```
+
+This exports the **existing** native scene, preserving its labels/connections
+and any manual edits. It does not regenerate or restyle the scene.
+
+- `internal/homelab-topology.svg`: native Excalidraw topology tree, true vector.
+- `internal/homelab-complete.svg`: complete board, including all flow frames.
+- `internal/homelab-topology.mmd`: Mermaid topology tree.
+- `internal/homelab-complete.mmd`: all frames as Mermaid subgraphs.
+- `internal/homelab-mermaid.md`: separate readable Mermaid blocks for all frames.
+- `internal/homelab-mermaid.svg`: Mermaid-rendered topology (automatic layout,
+  same graph, not identical Excalidraw positioning).
+- Individual flow frames also receive `.svg` and `.mmd` exports.
+
+These contain internal addresses and remain Git-ignored. The default command
+without `--internal` exports only the existing address-free reference scene.
+The helper reads neither private map during a public export.
+
+SVG uses `exportToSvg` from the renderer bundled with official CLI 0.2.0, through
+an ephemeral loopback-only asset server and the existing Chromium. The CLI's
+`render` command itself supports PNG, not a pretend `--format svg` flag. No
+cloud upload, account or API key is involved. Re-check that bundled API after
+CLI upgrades; 0.2.0 uses the `data/config` wrapper.
+
+Mermaid validation/rendering uses an installed Mermaid package. Set
+`MERMAID_DIR` to its package directory when the existing local developer-tool
+copy is unavailable. `EXCALIDRAW_CLI_DIR` and `EXCALIDRAW_BROWSER_PATH` can also
+override the discovered tool paths. The helper checks native SVGs are vector,
+validates every Mermaid diagram and the combined source, renders the tree, and
+checks the topology node/edge counts against the current native scene.
+
 Camera address verified from the configured Frigate camera endpoint; native
 Docker published ports and Kubernetes service addresses were checked live.
 Internal-only containers use Docker DNS labels, not invented stable IPs.

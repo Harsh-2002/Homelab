@@ -1,0 +1,10 @@
+flowchart LR
+  n_flow_1_0["Your phone / workstation<br/>Client addresses vary"]
+  n_flow_1_1["Home Assistant"]
+  n_flow_1_2["Wipro bulb<br/>Tuya LAN / TCP 6668"]
+  n_flow_1_0 -->|"HTTPS / app"| n_flow_1_1
+  n_flow_1_1 -->|"Tuya LAN :6668"| n_flow_1_2
+  classDef c_flow_1_0 fill:#fff3df,stroke:#6c7f8c,color:#233647;
+  class n_flow_1_0,n_flow_1_2 c_flow_1_0;
+  classDef c_flow_1_1 fill:#ffffff,stroke:#6c7f8c,color:#233647;
+  class n_flow_1_1 c_flow_1_1;

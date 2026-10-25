@@ -1,0 +1,14 @@
+flowchart LR
+  n_flow_13_0["Your phone / workstation<br/>Client addresses vary"]
+  n_flow_13_1["AdGuard Home"]
+  n_flow_13_2["Unbound"]
+  n_flow_13_3["Internet"]
+  n_flow_13_0 -->|"DNS :53"| n_flow_13_1
+  n_flow_13_1 -->|"local recursion :5335"| n_flow_13_2
+  n_flow_13_2 -->|"authoritative DNS queries"| n_flow_13_3
+  classDef c_flow_13_0 fill:#fff3df,stroke:#6c7f8c,color:#233647;
+  class n_flow_13_0 c_flow_13_0;
+  classDef c_flow_13_1 fill:#ffffff,stroke:#6c7f8c,color:#233647;
+  class n_flow_13_1,n_flow_13_2 c_flow_13_1;
+  classDef c_flow_13_2 fill:#e7eff8,stroke:#6c7f8c,color:#233647;
+  class n_flow_13_3 c_flow_13_2;

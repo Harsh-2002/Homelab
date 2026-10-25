@@ -1,0 +1,12 @@
+flowchart LR
+  n_flow_8_0["Kubernetes / logical cluster<br/>Members: k8s-201 / 202 / 203"]
+  n_flow_8_1["VM 201 / k8s-201"]
+  n_flow_8_2["VM 202 / k8s-202"]
+  n_flow_8_3["VM 203 / k8s-203"]
+  n_flow_8_1 -.->|"member"| n_flow_8_0
+  n_flow_8_2 -.->|"member"| n_flow_8_0
+  n_flow_8_3 -.->|"member"| n_flow_8_0
+  classDef c_flow_8_0 fill:#f0edf9,stroke:#6c7f8c,color:#233647;
+  class n_flow_8_0 c_flow_8_0;
+  classDef c_flow_8_1 fill:#e8f4f0,stroke:#6c7f8c,color:#233647;
+  class n_flow_8_1,n_flow_8_2,n_flow_8_3 c_flow_8_1;

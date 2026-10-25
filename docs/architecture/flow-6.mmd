@@ -1,0 +1,12 @@
+flowchart LR
+  n_flow_6_0["openviking<br/>Docker-internal unless published"]
+  n_flow_6_1["Coding &amp; personal agents"]
+  n_flow_6_2["openviking-ollama<br/>Docker-internal unless published"]
+  n_flow_6_3["External model APIs<br/>Remote inference / not a local chat model"]
+  n_flow_6_1 -.->|"memory read / write"| n_flow_6_0
+  n_flow_6_0 -.->|"local embeddings"| n_flow_6_2
+  n_flow_6_0 -.->|"remote inference"| n_flow_6_3
+  classDef c_flow_6_0 fill:#ffffff,stroke:#6c7f8c,color:#233647;
+  class n_flow_6_0,n_flow_6_2 c_flow_6_0;
+  classDef c_flow_6_1 fill:#f0edf9,stroke:#6c7f8c,color:#233647;
+  class n_flow_6_1,n_flow_6_3 c_flow_6_1;

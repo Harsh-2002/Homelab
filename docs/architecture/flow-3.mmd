@@ -1,0 +1,12 @@
+flowchart LR
+  n_flow_3_0["qbittorrent<br/>Docker-internal unless published"]
+  n_flow_3_1["SMB / AV<br/>TCP 445"]
+  n_flow_3_2["jellyfin<br/>Docker-internal unless published"]
+  n_flow_3_3["Your phone / workstation<br/>Client addresses vary"]
+  n_flow_3_0 -->|"writes via SMB3 :445"| n_flow_3_1
+  n_flow_3_1 -->|"reads media over SMB3"| n_flow_3_2
+  n_flow_3_2 -->|"HTTP playback :8096"| n_flow_3_3
+  classDef c_flow_3_0 fill:#ffffff,stroke:#6c7f8c,color:#233647;
+  class n_flow_3_0,n_flow_3_1,n_flow_3_2 c_flow_3_0;
+  classDef c_flow_3_1 fill:#fff3df,stroke:#6c7f8c,color:#233647;
+  class n_flow_3_3 c_flow_3_1;
