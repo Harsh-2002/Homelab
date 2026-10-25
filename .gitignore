@@ -27,3 +27,7 @@ __pycache__/
 
 # Helm dependency archives
 **/charts/*.tgz
+
+# Private architecture exports and LAN address annotations
+docs/architecture/internal/
+docs/architecture/internal-addresses.local.json

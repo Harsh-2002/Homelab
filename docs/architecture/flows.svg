@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1820" viewBox="0 0 2400 1820" role="img" aria-labelledby="title desc"><title id="title">How traffic and data move</title><desc id="desc">The important connections, without drawing every packet or replica.. Architecture snapshot verified 25 Oct 2026. Share-safe. IP addresses and credentials omitted.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#52636d"/></marker><marker id="tealArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#25675d"/></marker></defs><rect width="2400" height="1820" fill="#f8fafb"/><g font-family="Arial, Liberation Sans, sans-serif">
+<text x="64" y="82" font-size="46" fill="#18252c" font-weight="600" >How traffic and data move</text>
+<text x="64" y="122" font-size="23" fill="#52636d" font-weight="400" >The important connections, without drawing every packet or replica.</text>
+<text x="2336" y="77" font-size="23" fill="#52636d" font-weight="400" text-anchor="end">l3b / 25 Oct 2026</text>
+<text x="2336" y="113" font-size="21" fill="#52636d" font-weight="400" text-anchor="end">2 / 2</text>
+<text x="64" y="188" font-size="28" fill="#18252c" font-weight="600" >Web access &amp; identity</text>
+<g data-node="true">
+<rect x="64" y="214" width="420" height="114" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="86" y="248" font-size="25" fill="#18252c" font-weight="600" >Client</text>
+<text x="86" y="279" font-size="21" fill="#52636d" font-weight="400" >LAN / Tailscale for private apps</text>
+<text x="86" y="308" font-size="21" fill="#52636d" font-weight="400" >Internet for selected public apps</text>
+</g>
+<g data-node="true">
+<rect x="560" y="214" width="486" height="114" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="582" y="248" font-size="25" fill="#18252c" font-weight="600" >Caddy · proxy LXC</text>
+<text x="582" y="279" font-size="21" fill="#52636d" font-weight="400" >HTTPS termination → backend routes</text>
+<text x="582" y="308" font-size="21" fill="#52636d" font-weight="400" >Source restrictions per service</text>
+</g>
+<g data-node="true">
+<rect x="1122" y="214" width="486" height="114" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1144" y="248" font-size="25" fill="#18252c" font-weight="600" >Application</text>
+<text x="1144" y="279" font-size="21" fill="#52636d" font-weight="400" >Native login / API credentials</text>
+<text x="1144" y="308" font-size="21" fill="#52636d" font-weight="400" >No blanket public or SSO bypass</text>
+</g>
+<g data-node="true">
+<rect x="1684" y="214" width="652" height="114" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1706" y="248" font-size="25" fill="#18252c" font-weight="600" >Pocket ID + Tinyauth · auth LXC</text>
+<text x="1706" y="279" font-size="21" fill="#52636d" font-weight="400" >Native OIDC where supported</text>
+<text x="1706" y="308" font-size="21" fill="#52636d" font-weight="400" >Caddy forward-auth for selected browser routes</text>
+</g>
+<path d="M484 270H558" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
+<path d="M1046 270H1120" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
+<path d="M2010 328V358H804V330" fill="none" stroke="#25675d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#tealArrow)"/>
+<text x="1122" y="389" font-size="21" fill="#52636d" font-weight="400" >Identity is a policy dependency; API/MCP routes retain their own authentication.</text>
+<text x="64" y="389" font-size="22" fill="#225d82" font-weight="600" >Name lookup: AdGuard → Unbound</text>
+<path d="M64 430H2336" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
+<text x="64" y="481" font-size="28" fill="#18252c" font-weight="600" >GitOps &amp; cluster operations</text>
+<g data-node="true">
+<rect x="64" y="507" width="420" height="112" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="86" y="541" font-size="25" fill="#18252c" font-weight="600" >GitHub · Homelab repository</text>
+<text x="86" y="572" font-size="21" fill="#52636d" font-weight="400" >Declarative non-secret configuration</text>
+<text x="86" y="601" font-size="21" fill="#52636d" font-weight="400" >Reviewed changes → desired state</text>
+</g>
+<g data-node="true">
+<rect x="560" y="507" width="486" height="112" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="582" y="541" font-size="25" fill="#18252c" font-weight="600" >Argo CD · Kubernetes</text>
+<text x="582" y="572" font-size="21" fill="#52636d" font-weight="400" >Reconciles tracked applications</text>
+<text x="582" y="601" font-size="21" fill="#52636d" font-weight="400" >Signed public webhook; private UI</text>
+</g>
+<g data-node="true">
+<rect x="1122" y="507" width="486" height="112" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1144" y="541" font-size="25" fill="#18252c" font-weight="600" >Talos / Kubernetes</text>
+<text x="1144" y="572" font-size="21" fill="#52636d" font-weight="400" >Cilium network · Longhorn volumes</text>
+<text x="1144" y="601" font-size="21" fill="#52636d" font-weight="400" >Services scheduled across three VMs</text>
+</g>
+<g data-node="true">
+<rect x="1684" y="507" width="652" height="112" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1706" y="541" font-size="25" fill="#18252c" font-weight="600" >Omni · ctr</text>
+<text x="1706" y="572" font-size="21" fill="#52636d" font-weight="400" >Manages the three Talos machines</text>
+<text x="1706" y="601" font-size="21" fill="#52636d" font-weight="400" >Runs on ctr, not inside Kubernetes</text>
+</g>
+<path d="M484 563H558" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
+<path d="M1046 563H1120" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
+<path d="M1684 563H1610" fill="none" stroke="#25675d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#tealArrow)"/>
+<text x="64" y="658" font-size="22" fill="#52636d" font-weight="400" >Longhorn: storage-level replicas. CloudNativePG: separate PostgreSQL streaming replicas and failover.</text>
+<path d="M64 700H2336" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
+<text x="64" y="751" font-size="28" fill="#18252c" font-weight="600" >Agents &amp; shared memory</text>
+<g data-node="true">
+<rect x="64" y="777" width="420" height="122" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="86" y="811" font-size="25" fill="#18252c" font-weight="600" >dev · four agents</text>
+<text x="86" y="842" font-size="21" fill="#52636d" font-weight="400" >Codex · Claude Code</text>
+<text x="86" y="871" font-size="21" fill="#52636d" font-weight="400" >Hermes · OpenCode</text>
+</g>
+<g data-node="true">
+<rect x="560" y="777" width="486" height="122" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="582" y="811" font-size="25" fill="#18252c" font-weight="600" >OpenViking · ctr</text>
+<text x="582" y="842" font-size="21" fill="#52636d" font-weight="400" >Shared account-scoped memory</text>
+<text x="582" y="871" font-size="21" fill="#52636d" font-weight="400" >Native plugins / provider and MCP</text>
+</g>
+<g data-node="true">
+<rect x="1122" y="777" width="486" height="122" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1144" y="811" font-size="25" fill="#18252c" font-weight="600" >Ollama · ctr</text>
+<text x="1144" y="842" font-size="21" fill="#52636d" font-weight="400" >Local embedding service</text>
+<text x="1144" y="871" font-size="21" fill="#52636d" font-weight="400" >Not the agents’ primary chat model</text>
+</g>
+<g data-node="true">
+<rect x="1684" y="777" width="652" height="122" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1706" y="811" font-size="25" fill="#18252c" font-weight="600" >Tools &amp; integrations</text>
+<text x="1706" y="842" font-size="21" fill="#52636d" font-weight="400" >Orva · Nivra · Supabase · browser / developer MCPs</text>
+<text x="1706" y="871" font-size="21" fill="#52636d" font-weight="400" >Hermes → Karakeep CLI / Home Assistant API</text>
+</g>
+<path d="M484 838H558" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
+<path d="M1046 838H1120" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
+<path d="M274 899V929H2010V901" fill="none" stroke="#25675d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#tealArrow)"/>
+<text x="560" y="961" font-size="22" fill="#52636d" font-weight="400" >External model APIs supply inference. Telegram / Photon iMessage reach the Hermes gateway on dev.</text>
+<path d="M64 1003H2336" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
+<text x="64" y="1054" font-size="28" fill="#18252c" font-weight="600" >Media &amp; object storage</text>
+<g data-node="true">
+<rect x="64" y="1080" width="690" height="186" rx="12" fill="#edf5f1" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="86" y="1114" font-size="25" fill="#18252c" font-weight="600" >Media path</text>
+</g>
+<text x="88" y="1155" font-size="23" fill="#18252c" font-weight="600" >qBittorrent / Motrix → Store AV share → Jellyfin</text>
+<text x="88" y="1193" font-size="21" fill="#52636d" font-weight="400" >Encrypted SMB3 directly over the LAN; not through Caddy.</text>
+<text x="88" y="1223" font-size="21" fill="#52636d" font-weight="400" >Media stays on Store’s USB SSD, not ctr’s OS disk.</text>
+<g data-node="true">
+<rect x="832" y="1080" width="710" height="186" rx="12" fill="#edf5f1" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="854" y="1114" font-size="25" fill="#18252c" font-weight="600" >Temporary sharing</text>
+</g>
+<text x="856" y="1155" font-size="23" fill="#18252c" font-weight="600" >Quick Share CLI → Orva function → Cairn S3</text>
+<text x="856" y="1193" font-size="21" fill="#52636d" font-weight="400" >Short Orva share URL → function proxy → object download.</text>
+<text x="856" y="1223" font-size="21" fill="#52636d" font-weight="400" >Cairn is a separate native service on the s3 LXC.</text>
+<g data-node="true">
+<rect x="1620" y="1080" width="716" height="186" rx="12" fill="#edf5f1" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1642" y="1114" font-size="25" fill="#18252c" font-weight="600" >Container images</text>
+</g>
+<text x="1644" y="1155" font-size="23" fill="#18252c" font-weight="600" >Docker client → Registry → RustFS S3</text>
+<text x="1644" y="1193" font-size="21" fill="#52636d" font-weight="400" >Registry runs on ctr; image layers live in RustFS.</text>
+<text x="1644" y="1223" font-size="21" fill="#52636d" font-weight="400" >Cairn and RustFS share one LXC / host failure domain.</text>
+<text x="64" y="1307" font-size="22" fill="#52636d" font-weight="400" >Proxmox nodes use Store BACKUP / ISO over SMB directly. App databases remain on their own local or block volumes.</text>
+<path d="M64 1348H2336" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
+<text x="64" y="1399" font-size="28" fill="#18252c" font-weight="600" >Home automation &amp; visibility</text>
+<g data-node="true">
+<rect x="64" y="1425" width="420" height="124" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="86" y="1459" font-size="25" fill="#18252c" font-weight="600" >Hermes / user</text>
+<text x="86" y="1490" font-size="21" fill="#52636d" font-weight="400" >Home Assistant API / app</text>
+<text x="86" y="1519" font-size="21" fill="#52636d" font-weight="400" >Existing authenticated access</text>
+</g>
+<g data-node="true">
+<rect x="560" y="1425" width="486" height="124" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="582" y="1459" font-size="25" fill="#18252c" font-weight="600" >Home Assistant · haos</text>
+<text x="582" y="1490" font-size="21" fill="#52636d" font-weight="400" >Wipro bulb → Tuya LAN</text>
+<text x="582" y="1519" font-size="21" fill="#52636d" font-weight="400" >Samsung AC → local DTLS / CoAP</text>
+</g>
+<g data-node="true">
+<rect x="1122" y="1425" width="486" height="124" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1144" y="1459" font-size="25" fill="#18252c" font-weight="600" >Frigate · ctr / Intel iGPU</text>
+<text x="1144" y="1490" font-size="21" fill="#52636d" font-weight="400" >Camera ingest / recording</text>
+<text x="1144" y="1519" font-size="21" fill="#52636d" font-weight="400" >RTSP restream + MQTT → HA</text>
+</g>
+<g data-node="true">
+<rect x="1684" y="1425" width="652" height="124" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1706" y="1459" font-size="25" fill="#18252c" font-weight="600" >Metrics · observability LXC</text>
+<text x="1706" y="1490" font-size="21" fill="#52636d" font-weight="400" >Exporters + Kubernetes vmagent → VictoriaMetrics</text>
+<text x="1706" y="1519" font-size="21" fill="#52636d" font-weight="400" >Grafana / HA node views; Beszel / Kuma monitoring</text>
+</g>
+<path d="M484 1487H558" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
+<path d="M1122 1487H1048" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
+<text x="64" y="1600" font-size="22" fill="#52636d" font-weight="400" >Local device protocols avoid cloud commands; a full WAN-outage acceptance test remains outstanding.</text>
+<text x="64" y="1650" font-size="21" fill="#52636d" font-weight="400" >Solid arrows: application / data path</text>
+<path d="M475 1643H540" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
+<text x="620" y="1650" font-size="21" fill="#52636d" font-weight="400" >Dashed arrows: configuration / dependency</text>
+<path d="M1152 1643H1217" fill="none" stroke="#25675d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#tealArrow)"/>
+<text x="1320" y="1650" font-size="21" fill="#52636d" font-weight="400" >Not a live health map; see the inventory notes for verification limits.</text>
+<path d="M64 1732H2336" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
+<text x="64" y="1771" font-size="20" fill="#52636d" font-weight="400" >Schemas are simplified; replicated storage and HA are not independent backups.</text>
+<text x="2336" y="1771" font-size="20" fill="#52636d" font-weight="400" text-anchor="end">Share-safe · editable SVG</text>
+</g></svg>

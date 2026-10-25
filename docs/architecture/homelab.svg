@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1820" viewBox="0 0 2400 1820" role="img" aria-labelledby="title desc"><title id="title">Homelab architecture</title><desc id="desc">Physical hosts, service placement and the shared platform.. Architecture snapshot verified 25 Oct 2026. Share-safe. IP addresses and credentials omitted.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#52636d"/></marker><marker id="tealArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#25675d"/></marker></defs><rect width="2400" height="1820" fill="#f8fafb"/><g font-family="Arial, Liberation Sans, sans-serif">
+<text x="64" y="82" font-size="46" fill="#18252c" font-weight="600" >Homelab architecture</text>
+<text x="64" y="122" font-size="23" fill="#52636d" font-weight="400" >Physical hosts, service placement and the shared platform.</text>
+<text x="2336" y="77" font-size="23" fill="#52636d" font-weight="400" text-anchor="end">l3b / 25 Oct 2026</text>
+<text x="2336" y="113" font-size="21" fill="#52636d" font-weight="400" text-anchor="end">1 / 2</text>
+<g data-node="true">
+<rect x="64" y="166" width="392" height="150" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="86" y="200" font-size="25" fill="#18252c" font-weight="600" >People &amp; devices</text>
+<text x="86" y="231" font-size="21" fill="#52636d" font-weight="400" >Browser · phone · workstation</text>
+<text x="86" y="260" font-size="21" fill="#52636d" font-weight="400" >Home LAN or remote Tailscale</text>
+</g>
+<g data-node="true">
+<rect x="512" y="166" width="868" height="150" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="534" y="200" font-size="25" fill="#18252c" font-weight="600" >Two access paths</text>
+<text x="534" y="231" font-size="21" fill="#52636d" font-weight="400" >Public: Internet → router → Caddy → selected services</text>
+<text x="534" y="260" font-size="21" fill="#52636d" font-weight="400" >Private: LAN / Tailscale → Caddy or native LAN protocols</text>
+<text x="534" y="289" font-size="21" fill="#52636d" font-weight="400" >Tailscale subnet routing runs on all three Proxmox hosts.</text>
+</g>
+<g data-node="true">
+<rect x="1436" y="166" width="396" height="150" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1458" y="200" font-size="25" fill="#18252c" font-weight="600" >Cloudflare</text>
+<text x="1458" y="231" font-size="21" fill="#52636d" font-weight="400" >DNS-only records · DNS-01 TLS</text>
+<text x="1458" y="260" font-size="21" fill="#52636d" font-weight="400" >Private defaults; public exceptions</text>
+<text x="1458" y="289" font-size="21" fill="#52636d" font-weight="400" >DNS is not a traffic tunnel.</text>
+</g>
+<g data-node="true">
+<rect x="1888" y="166" width="448" height="150" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1910" y="200" font-size="25" fill="#18252c" font-weight="600" >slate · external GCP VM</text>
+<text x="1910" y="231" font-size="21" fill="#52636d" font-weight="400" >Caddy · Uptime Kuma · ntfy</text>
+<text x="1910" y="260" font-size="21" fill="#52636d" font-weight="400" >Independent monitoring &amp; alerts</text>
+<text x="1910" y="289" font-size="21" fill="#52636d" font-weight="400" >Checks home over Tailscale</text>
+</g>
+<path d="M456 241H510" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
+<path d="M1436 241H1382" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
+<path d="M946 316V362" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
+<rect x="64" y="366" width="2272" height="64" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="88" y="406" font-size="25" fill="#18252c" font-weight="600" >Home router / LAN fabric</text>
+<text x="660" y="406" font-size="23" fill="#52636d" font-weight="400" >Ethernet: 1 Gb/s full duplex verified at px10, px20 and px30</text>
+<text x="2312" y="406" font-size="23" fill="#52636d" font-weight="400" text-anchor="end">Wi-Fi → bulb &amp; AC</text>
+<path d="M424 430V478" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
+<path d="M1200 430V478" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
+<path d="M1976 430V478" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
+<rect x="64" y="482" width="720" height="650" rx="16" fill="#ffffff" stroke="#aebfc7" stroke-width="1.5"/>
+<text x="88" y="523" font-size="32" fill="#18252c" font-weight="600" >px10</text>
+<text x="760" y="520" font-size="24" fill="#52636d" font-weight="400" text-anchor="end">Dell OptiPlex 5060</text>
+<text x="88" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-8400T / 6 cores · 32 GB RAM · ZFS OS + data pools</text>
+<path d="M88 578H760" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
+<rect x="840" y="482" width="720" height="650" rx="16" fill="#ffffff" stroke="#aebfc7" stroke-width="1.5"/>
+<text x="864" y="523" font-size="32" fill="#18252c" font-weight="600" >px20</text>
+<text x="1536" y="520" font-size="24" fill="#52636d" font-weight="400" text-anchor="end">Dell OptiPlex 5060</text>
+<text x="864" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-8400T / 6 cores · 32 GB RAM · ZFS OS + data pools</text>
+<path d="M864 578H1536" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
+<rect x="1616" y="482" width="720" height="650" rx="16" fill="#ffffff" stroke="#aebfc7" stroke-width="1.5"/>
+<text x="1640" y="523" font-size="32" fill="#18252c" font-weight="600" >px30</text>
+<text x="2312" y="520" font-size="24" fill="#52636d" font-weight="400" text-anchor="end">Dell OptiPlex 7040</text>
+<text x="1640" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-6500TE / 4 cores · 32 GB RAM · ZFS OS + data pools</text>
+<path d="M1640 578H2312" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
+<g data-node="true">
+<rect x="88" y="596" width="672" height="112" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="110" y="630" font-size="25" fill="#18252c" font-weight="600" >dev · VM 100</text>
+<text x="110" y="661" font-size="21" fill="#52636d" font-weight="400" >Codex · Claude Code · Hermes · OpenCode</text>
+<text x="110" y="690" font-size="21" fill="#52636d" font-weight="400" >Herdr · shared tools / MCP · development workloads</text>
+</g>
+<g data-node="true">
+<rect x="88" y="724" width="672" height="108" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="110" y="758" font-size="25" fill="#18252c" font-weight="600" >observability · LXC 104</text>
+<text x="110" y="789" font-size="21" fill="#52636d" font-weight="400" >Beszel · Grafana · VictoriaMetrics</text>
+<text x="110" y="818" font-size="21" fill="#52636d" font-weight="400" >Uptime Kuma · PVE exporter</text>
+</g>
+<g data-node="true">
+<rect x="88" y="848" width="672" height="114" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="110" y="882" font-size="25" fill="#18252c" font-weight="600" >store · LXC 109</text>
+<text x="110" y="913" font-size="21" fill="#52636d" font-weight="400" >Samba: AV · BACKUP · ISO</text>
+<text x="110" y="942" font-size="21" fill="#52636d" font-weight="400" >Host USB SSDs → bind mounts → SMB shares</text>
+</g>
+<g data-node="true">
+<rect x="864" y="596" width="672" height="290" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="886" y="630" font-size="25" fill="#18252c" font-weight="600" >ctr · VM 204 / Docker + Portainer</text>
+<text x="886" y="661" font-size="21" fill="#52636d" font-weight="400" >Media       Jellyfin · qBittorrent · Motrix</text>
+<text x="886" y="690" font-size="21" fill="#52636d" font-weight="400" >Personal   Immich · Karakeep · OpenCloud · Paperless</text>
+<text x="886" y="719" font-size="21" fill="#52636d" font-weight="400" >Notes       Nivra · separate friend instance</text>
+<text x="886" y="748" font-size="21" fill="#52636d" font-weight="400" >Build        Forgejo · Docker Registry · mirror worker</text>
+<text x="886" y="777" font-size="21" fill="#52636d" font-weight="400" >Automate n8n · SearXNG · isolated sandbox</text>
+<text x="886" y="806" font-size="21" fill="#52636d" font-weight="400" >Agents     OpenViking · Ollama · Omni</text>
+<text x="886" y="835" font-size="21" fill="#52636d" font-weight="400" >Helpers    PostgreSQL · Valkey · Meilisearch · updater</text>
+</g>
+<g data-node="true">
+<rect x="864" y="902" width="672" height="72" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="886" y="929" font-size="23" fill="#18252c" font-weight="600" >orva · VM 106</text>
+<text x="886" y="954" font-size="20" fill="#52636d" font-weight="400" >Serverless functions · Quick Share</text>
+</g>
+<g data-node="true">
+<rect x="1640" y="596" width="672" height="64" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1662" y="623" font-size="23" fill="#18252c" font-weight="600" >proxy · LXC 101</text>
+<text x="1662" y="648" font-size="20" fill="#52636d" font-weight="400" >Caddy · HTTPS routing / TLS</text>
+</g>
+<g data-node="true">
+<rect x="1640" y="674" width="672" height="64" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1662" y="701" font-size="23" fill="#18252c" font-weight="600" >dns · LXC 102</text>
+<text x="1662" y="726" font-size="20" fill="#52636d" font-weight="400" >AdGuard Home → Unbound recursion</text>
+</g>
+<g data-node="true">
+<rect x="1640" y="752" width="672" height="64" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1662" y="779" font-size="23" fill="#18252c" font-weight="600" >auth · LXC 103</text>
+<text x="1662" y="804" font-size="20" fill="#52636d" font-weight="400" >Pocket ID / OIDC · Tinyauth / forward-auth</text>
+</g>
+<g data-node="true">
+<rect x="1640" y="830" width="672" height="64" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1662" y="857" font-size="23" fill="#18252c" font-weight="600" >s3 · LXC 105</text>
+<text x="1662" y="882" font-size="20" fill="#52636d" font-weight="400" >Cairn · RustFS / S3-compatible storage</text>
+</g>
+<g data-node="true">
+<rect x="1640" y="908" width="672" height="66" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1662" y="935" font-size="23" fill="#18252c" font-weight="600" >haos · VM 107</text>
+<text x="1662" y="960" font-size="20" fill="#52636d" font-weight="400" >Home Assistant · Mosquitto · local device control</text>
+</g>
+<g data-node="true">
+<rect x="88" y="994" width="672" height="112" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="110" y="1028" font-size="25" fill="#18252c" font-weight="600" >k8s-201 · VM 201</text>
+<text x="110" y="1059" font-size="21" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
+<text x="110" y="1088" font-size="21" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk</text>
+</g>
+<g data-node="true">
+<rect x="864" y="994" width="672" height="112" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="886" y="1028" font-size="25" fill="#18252c" font-weight="600" >k8s-202 · VM 202</text>
+<text x="886" y="1059" font-size="21" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
+<text x="886" y="1088" font-size="21" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk</text>
+</g>
+<g data-node="true">
+<rect x="1640" y="994" width="672" height="112" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1662" y="1028" font-size="25" fill="#18252c" font-weight="600" >k8s-203 · VM 203</text>
+<text x="1662" y="1059" font-size="21" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
+<text x="1662" y="1088" font-size="21" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk</text>
+</g>
+<path d="M424 1106V1176" fill="none" stroke="#225d82" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" />
+<path d="M1200 1106V1176" fill="none" stroke="#225d82" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" />
+<path d="M1976 1106V1176" fill="none" stroke="#225d82" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" />
+<path d="M424 1176H1976" fill="none" stroke="#225d82" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" />
+<path d="M1200 1176V1212" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
+<text x="64" y="1160" font-size="20" fill="#52636d" font-weight="400" >Placement is a snapshot; managed guests can relocate.</text>
+<rect x="64" y="1218" width="2272" height="282" rx="16" fill="#edf4f8" stroke="#b5cbd8" stroke-width="1.5"/>
+<text x="88" y="1258" font-size="29" fill="#18252c" font-weight="600" >One Kubernetes cluster across all three physical hosts</text>
+<text x="88" y="1294" font-size="23" fill="#52636d" font-weight="400" >Talos management: Omni on ctr. Kubernetes desired state: GitHub → Argo CD.</text>
+<path d="M812 1324V1474" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
+<path d="M1568 1324V1474" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
+<text x="88" y="1348" font-size="25" fill="#225d82" font-weight="600" >Networking &amp; operations</text>
+<text x="88" y="1384" font-size="22" fill="#52636d" font-weight="400" >Cilium CNI · L2 LoadBalancer services · CoreDNS</text>
+<text x="88" y="1416" font-size="22" fill="#52636d" font-weight="400" >Argo CD · Headlamp · Homepage · metrics-server</text>
+<text x="88" y="1448" font-size="22" fill="#52636d" font-weight="400" >vmagent · kube-state-metrics · node metrics</text>
+<text x="844" y="1348" font-size="25" fill="#225d82" font-weight="600" >Persistent storage</text>
+<text x="844" y="1384" font-size="22" fill="#52636d" font-weight="400" >Longhorn block volumes on the 500 GiB disks</text>
+<text x="844" y="1416" font-size="22" fill="#52636d" font-weight="400" >Current volumes: 2 storage replicas each</text>
+<text x="844" y="1448" font-size="22" fill="#52636d" font-weight="400" >Data crosses hosts; replication is not backup.</text>
+<text x="1600" y="1348" font-size="25" fill="#225d82" font-weight="600" >Supabase</text>
+<text x="1600" y="1384" font-size="22" fill="#52636d" font-weight="400" >CloudNativePG: 1 primary + 2 hot standbys</text>
+<text x="1600" y="1416" font-size="22" fill="#52636d" font-weight="400" >Studio · Auth · REST · Realtime · Edge Functions</text>
+<text x="1600" y="1448" font-size="22" fill="#52636d" font-weight="400" >Storage / imgproxy · Kong · pooler · logs / analytics</text>
+<text x="64" y="1560" font-size="27" fill="#18252c" font-weight="600" >Storage boundaries</text>
+<text x="840" y="1560" font-size="27" fill="#18252c" font-weight="600" >Availability boundaries</text>
+<text x="1616" y="1560" font-size="27" fill="#18252c" font-weight="600" >Smart home</text>
+<text x="64" y="1600" font-size="22" fill="#52636d" font-weight="400" >ZFS → VM/LXC disks and selected 5-minute replicas</text>
+<text x="64" y="1634" font-size="22" fill="#52636d" font-weight="400" >USB on px10: 4 TB AV / BACKUP + 256 GB ISO</text>
+<text x="64" y="1668" font-size="22" fill="#52636d" font-weight="400" >ctr local data → app state; S3 → Cairn / RustFS objects</text>
+<text x="840" y="1600" font-size="22" fill="#52636d" font-weight="400" >Proxmox HA manages the listed non-Kubernetes guests.</text>
+<text x="840" y="1634" font-size="22" fill="#52636d" font-weight="400" >USB shares need physical-disk recovery after host loss.</text>
+<text x="840" y="1668" font-size="22" fill="#52636d" font-weight="400" >DNS, Caddy and several apps remain single instances.</text>
+<text x="1616" y="1600" font-size="22" fill="#52636d" font-weight="400" >Home Assistant → Wipro bulb / Tuya LAN</text>
+<text x="1616" y="1634" font-size="22" fill="#52636d" font-weight="400" >Home Assistant → Samsung AC / local DTLS</text>
+<text x="1616" y="1668" font-size="22" fill="#52636d" font-weight="400" >Frigate → camera feeds; HA → viewing / automation</text>
+<path d="M64 1732H2336" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
+<text x="64" y="1771" font-size="20" fill="#52636d" font-weight="400" >Logical LAN fabric shown; router, switch/AP models and exact cabling have not been audited.</text>
+<text x="2336" y="1771" font-size="20" fill="#52636d" font-weight="400" text-anchor="end">Share-safe · editable SVG</text>
+</g></svg>

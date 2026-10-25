@@ -1,5 +1,11 @@
 # Shared coding-agent tools on dev
 
+Living architecture standard, 2026-10-25: all four global instruction files
+point to the root Homelab AGENTS.md. Material infrastructure changes update
+the [architecture inventory and diagrams](../../docs/architecture/README.md),
+rebuild/validate, refresh Notion/OpenViking and commit/push scoped work. Private
+address annotations and internal diagram exports remain outside public Git.
+
 Herdr management support added2026-10-25 for all four agents: native lifecycle
 hooks/plugins installed/current, plus shared local `herdr-control` skill. Existing
 settings/MCPs/memory and launch commands preserved. See [HERDR.md](HERDR.md) for

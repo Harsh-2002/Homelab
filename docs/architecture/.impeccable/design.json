@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-25T08:15:35Z",
+  "title": "Design System: Homelab Architecture Diagrams",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Blueprint Blue",
+        "canonical": "#225d82",
+        "tonalRamp": ["#000d18", "#00273e", "#004468", "#296389", "#4a84ab", "#6ca6ce", "#8ec9f3", "#cce9ff"]
+      },
+      "secondary": {
+        "role": "secondary",
+        "displayName": "Muted Teal",
+        "canonical": "#25675d",
+        "tonalRamp": ["#000f0c", "#002b25", "#004b42", "#296a60", "#4b8b80", "#6dada1", "#8fd0c4", "#b2f4e7"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Dark Blue-Grey Ink",
+        "canonical": "#18252c",
+        "tonalRamp": ["#030d13", "#19262d", "#34424a", "#516068", "#718088", "#91a1aa", "#b3c4cd", "#d7e8f1"]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Slate Blue-Grey",
+        "canonical": "#52636d",
+        "tonalRamp": ["#020d14", "#17262f", "#32424c", "#4f606a", "#6f808b", "#8fa2ac", "#b1c4d0", "#d4e8f4"]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Fine Divider Gray",
+        "canonical": "#c7d2d7",
+        "tonalRamp": ["#050c10", "#1d2629", "#384145", "#565f64", "#757f84", "#96a0a5", "#b8c3c8", "#dbe7ec"]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Cool Near-White Paper",
+        "canonical": "#f8fafb",
+        "tonalRamp": ["#0a0b0c", "#232425", "#3e4041", "#5c5e5f", "#7c7d7e", "#9d9fa0", "#bfc1c2", "#e3e5e6"]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "White Surface",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#0b0b0b", "#242424", "#404040", "#5d5d5d", "#7d7d7d", "#9e9e9e", "#c1c1c1", "#e4e4e4"]
+      },
+      "blue-wash": {
+        "role": "neutral",
+        "displayName": "Pale Blue Wash",
+        "canonical": "#edf4f8",
+        "tonalRamp": ["#080c0e", "#202528", "#3b4144", "#595f62", "#787e82", "#999fa3", "#bbc2c6", "#dfe6ea"]
+      },
+      "teal-wash": {
+        "role": "neutral",
+        "displayName": "Pale Teal Wash",
+        "canonical": "#edf5f1",
+        "tonalRamp": ["#070d0a", "#202623", "#3b413e", "#595f5c", "#787f7c", "#99a09d", "#bbc3bf", "#dfe7e3"]
+      }
+    },
+    "typographyMeta": {
+      "display": {"displayName": "Sheet title", "purpose": "Identifies each architecture sheet."},
+      "headline": {"displayName": "Group heading", "purpose": "Labels major flow groups."},
+      "title": {"displayName": "Node title", "purpose": "Names hosts, nodes and panels."},
+      "body": {"displayName": "Supporting copy", "purpose": "Carries service descriptions and relationship notes."},
+      "label": {"displayName": "Compact note", "purpose": "Carries page metadata and footers."}
+    },
+    "shadows": [],
+    "motion": []
+  },
+  "components": [
+    {
+      "name": "Service node",
+      "kind": "custom",
+      "refersTo": "service-node",
+      "description": "A labelled actor or service with concise supporting copy.",
+      "html": "<div class=\"ds-service-node\"><strong>Service node</strong><span>Supporting relationship or role</span></div>",
+      "css": ".ds-service-node { background: #ffffff; border: 1.5px solid #c7d2d7; border-radius: 12px; padding: 22px; color: #18252c; font-family: Arial, Liberation Sans, sans-serif; } .ds-service-node strong { display: block; margin-bottom: 8px; font-size: 25px; font-weight: 600; } .ds-service-node span { display: block; color: #52636d; font-size: 21px; line-height: 29px; }"
+    },
+    {
+      "name": "Host frame",
+      "kind": "custom",
+      "refersTo": "host-frame",
+      "description": "An enclosure grouping one host heading and its guest nodes.",
+      "html": "<div class=\"ds-host-frame\"><strong>Physical host</strong><span>Hardware summary</span><hr><div>Guest nodes</div></div>",
+      "css": ".ds-host-frame { box-sizing: border-box; background: #ffffff; border: 1.5px solid #aebfc7; border-radius: 16px; padding: 24px; color: #18252c; font-family: Arial, Liberation Sans, sans-serif; width: 720px; height: 650px; } .ds-host-frame strong { display: block; font-size: 32px; font-weight: 600; } .ds-host-frame span, .ds-host-frame div { color: #52636d; font-size: 22px; } .ds-host-frame hr { border: 0; border-top: 1.5px solid #c7d2d7; margin: 16px 0; }"
+    },
+    {
+      "name": "Cluster panel",
+      "kind": "custom",
+      "refersTo": "cluster-panel",
+      "description": "A grouped panel placed beneath the three host columns.",
+      "html": "<div class=\"ds-cluster-panel\"><strong>Shared cluster</strong><div class=\"ds-cluster-groups\"><span>Group one</span><span>Group two</span><span>Group three</span></div></div>",
+      "css": ".ds-cluster-panel { background: #edf4f8; border: 1.5px solid #b5cbd8; border-radius: 16px; padding: 40px 24px; color: #18252c; font-family: Arial, Liberation Sans, sans-serif; } .ds-cluster-panel strong { display: block; margin-bottom: 24px; font-size: 29px; font-weight: 600; } .ds-cluster-groups { display: flex; justify-content: space-between; gap: 24px; color: #225d82; font-size: 25px; font-weight: 600; }"
+    },
+    {
+      "name": "Flow card",
+      "kind": "custom",
+      "refersTo": "flow-card",
+      "description": "A pale-teal card for a highlighted data path.",
+      "html": "<div class=\"ds-flow-card\"><strong>Data path</strong><span>Source → destination</span></div>",
+      "css": ".ds-flow-card { background: #edf5f1; border: 1.5px solid #c7d2d7; border-radius: 12px; padding: 24px; color: #18252c; font-family: Arial, Liberation Sans, sans-serif; } .ds-flow-card strong { display: block; margin-bottom: 12px; font-size: 25px; font-weight: 600; } .ds-flow-card span { color: #52636d; font-size: 21px; line-height: 29px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Engineering Schematic",
+    "overview": "This visual system applies to the static architecture sheets in this directory. It uses a cool paper field, plain sans-serif labels, fine strokes and measured spacing so containment and relationships remain easy to follow. Color is reserved for grouping and selected paths; geometry carries the explanation.",
+    "keyCharacteristics": [
+      "Fixed landscape sheets composed from editable SVG geometry.",
+      "Blue grouping and teal relationship accents against quiet neutrals.",
+      "Static, flat presentation with no generated imagery or external assets."
+    ],
+    "rules": [
+      {"name": "The Color-Has-Meaning Rule", "body": "Keep blue for grouping and teal for selected relationships; use neutrals for most text and structure.", "section": "colors"}
+    ],
+    "dos": [
+      "Do keep the page title, group headings and supporting copy in the established sans-serif hierarchy.",
+      "Do use containment, whitespace and orthogonal lines to make relationships readable.",
+      "Do reserve the two accent colors for grouping and selected paths."
+    ],
+    "donts": [
+      "Don't add shadows, gradients, motion, icon libraries or generated imagery.",
+      "Don't use accent colors as decoration or introduce an additional palette.",
+      "Don't turn the sheets into a dashboard or add interactive controls."
+    ]
+  }
+}

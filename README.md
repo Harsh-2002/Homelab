@@ -4,6 +4,15 @@ This repository is the reproducible configuration brain for the homelab. The Not
 
 Start a new agent or chat with [`HANDOFF.md`](HANDOFF.md). It lists the authoritative Notion pages, access conventions, deployed architecture, pending work, safety rules, and the ready-to-paste continuation prompt.
 
+## Architecture diagrams
+
+The [living architecture](docs/architecture/README.md) contains a share-safe
+[physical/service overview](docs/architecture/homelab.svg),
+[traffic/data flows](docs/architecture/flows.svg) and
+[printable PDF](docs/architecture/homelab-architecture.pdf).
+Inventory and diagrams are versioned as code. Update and rebuild them with
+material infrastructure changes; internal-IP exports stay outside public Git.
+
 Storage incident, 2026-10-17, restored October 18 IST: ISO is available again on the same SSD with an adapter-specific USB transport workaround, tested from all three nodes. Full raw/repaired recovery images are retained. ZimaOS VM 108 was deleted by the owner; an orphaned disk file remains, not an active VM. See the [recovery record](infrastructure/store/INCIDENT-2026-10-17.md) for validation limits and reboot/failover requirements.
 
 ## Administrator identity

@@ -1,5 +1,24 @@
 # Homelab agent handoff
 
+## Living architecture diagrams, 2026-10-25
+
+Current share-safe physical/service overview, flow sheet and PNG/PDF exports:
+[`docs/architecture`](docs/architecture/README.md). Source inventory and generator
+are committed; root AGENTS.md and all four agent instruction files require
+maintenance alongside material infrastructure changes. CI checks reproducible
+SVGs, layout/inventory consistency and public-address privacy. Internal-IP
+edition and its address source are local/Git-ignored, never public assets.
+
+Read-only snapshot: three Dell Proxmox hosts, thirteen guests, three Ready Talos
+nodes, current CTR/native inventory and healthy three-instance PostgreSQL.
+Longhorn volumes currently have two replicas. Independent diagram review: ship.
+No service restarts or appliance actions. Mirror worker remains restarting;
+fresh slate SSH check required Tailscale re-authentication and was cancelled.
+Logical LAN only; physical switch/AP, VLANs, UPS and exact cabling not invented.
+No blanket health, zero-loss failover or cloud-independence certification.
+Canonical memory: `viking://resources/homelab/architecture.md` and
+`architecture-inventory.json`; Notion runbook updated.
+
 ## Frigate, physical-node stats and no-prose UI, 2026-10-22
 
 Homelab dashboard `/homelab-status/cameras` and `/nodes` added. Official Frigate

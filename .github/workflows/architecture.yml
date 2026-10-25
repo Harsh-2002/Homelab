@@ -1,0 +1,20 @@
+name: Architecture diagrams
+on:
+  pull_request:
+    paths: ['docs/architecture/**', '.github/workflows/architecture.yml']
+  push:
+    paths: ['docs/architecture/**', '.github/workflows/architecture.yml']
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node docs/architecture/build.mjs
+      - run: node docs/architecture/check.mjs
+      - name: Reject stale generated SVGs
+        run: git diff --exit-code -- docs/architecture/homelab.svg docs/architecture/flows.svg
