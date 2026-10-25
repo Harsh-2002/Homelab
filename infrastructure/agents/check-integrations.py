@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import sys
 import tomllib
+import subprocess
 
 import yaml
 
@@ -67,6 +68,25 @@ def main():
     config = Path.home() / '.config/opencode/opencode.json'
     if config.stat().st_mode & 0o077:
         failures.append('OpenCode: credential-bearing config is not private')
+    skill = Path.home() / '.agents/skills/herdr-control/SKILL.md'
+    try:
+        expected = skill.read_bytes()
+        for client, root in [('Codex', '.codex/skills'), ('Claude Code', '.claude/skills'),
+                             ('Hermes', '.hermes/skills')]:
+            if (Path.home() / root / 'herdr-control/SKILL.md').read_bytes() != expected:
+                failures.append(f'{client}: Herdr control skill drift')
+        roots = opencode.get('skills', [])
+        if str(Path.home() / '.agents/skills') not in roots:
+            failures.append('OpenCode: shared Herdr skill root absent')
+        result = subprocess.run(['herdr', 'integration', 'status'], capture_output=True,
+                                text=True, timeout=10, check=False)
+        if result.returncode or any(not any(line.startswith(client + ': current ')
+            for line in result.stdout.splitlines()) for client in ('codex', 'claude', 'hermes', 'opencode')):
+            failures.append('Herdr: one or more native agent integrations absent or outdated')
+        else:
+            print('herdr: native integrations current; shared control skill aligned across four agents')
+    except (OSError, subprocess.TimeoutExpired):
+        failures.append('Herdr: unable to validate local integrations/control skill')
     for failure in failures:
         print(f'FAIL: {failure}', file=sys.stderr)
     if failures:

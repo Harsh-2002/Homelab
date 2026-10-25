@@ -1,5 +1,11 @@
 # Shared coding-agent tools on dev
 
+Herdr management support added2026-10-25 for all four agents: native lifecycle
+hooks/plugins installed/current, plus shared local `herdr-control` skill. Existing
+settings/MCPs/memory and launch commands preserved. See [HERDR.md](HERDR.md) for
+paths, installation, checks, context boundary and rollback. New CLI/TUI sessions
+load these components; setup did not start/control any live Herdr session.
+
 ## Four-agent standard, 2026-10-22
 
 The owner now requires shared tools, MCP integrations and skills to remain aligned
