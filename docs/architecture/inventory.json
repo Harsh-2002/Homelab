@@ -1,5 +1,6 @@
 {
   "verifiedOn": "2026-10-25",
+  "agentInference": { "hermesPrimary": { "provider": "opencode-go", "model": "deepseek-v4.1-flash" }, "hermesFallback": { "provider": "openai-codex", "model": "gpt-6-luna" }, "reasoning": "medium" },
   "hosts": [
     { "name": "px10", "model": "Dell OptiPlex 5060", "cpu": "i5-8400T / 6 cores", "ramGB": 32 },
     { "name": "px20", "model": "Dell OptiPlex 5060", "cpu": "i5-8400T / 6 cores", "ramGB": 32 },

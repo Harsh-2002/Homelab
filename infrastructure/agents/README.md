@@ -261,3 +261,11 @@ directory search. Global npm packages did not include OpenCode.
 `~/.config/opencode/AGENTS.md` exists from an earlier setup, but that file alone
 does not establish an installed or usable CLI. OpenCode was not installed or
 modified as part of the approved three-agent REA setup.
+
+## Hermes inference, 2026-10-25
+
+Hermes now uses OpenCode Go / DeepSeek V4.1 Flash, with the existing Codex
+`gpt-6-luna` OAuth route as fallback and medium reasoning. The Go key comes from
+HomeLab → OpenCode Go → API KEY and is kept only in protected Hermes state.
+OpenCode Console OAuth and the other agents' model defaults remain unchanged.
+See [Hermes setup and rollback](../hermes/README.md#opencode-go-primary-inference-2026-10-25).

@@ -143,7 +143,7 @@ node(1684, 777, 652, 122, 'Tools & integrations', ['Orva · Nivra · Supabase ·
 path('M484 838H558', C.muted, false, true);
 path('M1046 838H1120', C.muted, false, true);
 path('M274 899V929H2010V901', C.teal, true, true);
-text(560, 961, 'External model APIs supply inference. Telegram / Photon iMessage reach the Hermes gateway on dev.', 22, C.muted);
+text(560, 961, 'Hermes: OpenCode Go / DeepSeek Flash; Codex fallback. Telegram / Photon iMessage reach dev.', 22, C.muted);
 path('M64 1003H2336');
 
 text(64, 1054, 'Media & object storage', 28, C.ink, 600);

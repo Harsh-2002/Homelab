@@ -12,7 +12,7 @@ edge [arrowsize=0.5];
 "clients" [label="Your phone / workstation\nClient addresses vary", width=3.36, height=.8];
 "tailscale" [label="Tailscale\nSubnet routes on px10 / px20 / px30", width=4.90, height=.8];
 "cloudflare" [label="Cloudflare DNS\nDNS records / ACME DNS-01, not a tunnel", width=5.46, height=.8];
-"model-apis" [label="External model APIs\nRemote inference / not a local chat model", width=5.74, height=.8];
+"model-apis" [label="External model APIs\nHermes: DeepSeek Flash / Codex fallback", width=5.46, height=.8];
 "github" [label="GitHub / Homelab repository\nDeclarative configuration", width=3.78, height=.8];
 "slate" [label="slate / GCP VM\nExternal, documented; no fresh health check", width=6.02, height=.8];
 "slate-caddy" [label="Caddy", width=2.70, height=.52];

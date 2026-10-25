@@ -35,7 +35,7 @@ add('lan','camera','Outdoor camera','device','Network attachment type unverified
 add('lan','clients','Your phone / workstation','device','Client addresses vary');
 add('internet','tailscale','Tailscale','logical','Subnet routes on px10 / px20 / px30');
 add('internet','cloudflare','Cloudflare DNS','logical','DNS records / ACME DNS-01, not a tunnel');
-add('internet','model-apis','External model APIs','logical','Remote inference / not a local chat model');
+add('internet','model-apis','External model APIs','logical','Hermes: DeepSeek Flash / Codex fallback');
 add('internet','github','GitHub / Homelab repository','logical','Declarative configuration');
 add('internet','slate','slate / GCP VM','physical','External, documented; no fresh health check');
 add('slate','slate-caddy','Caddy'); add('slate','slate-kuma','Uptime Kuma'); add('slate','slate-ntfy','ntfy');

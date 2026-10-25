@@ -18,7 +18,7 @@ Hermes Agent runs under the existing `dev` Linux account on `dev`, not a separat
 
 Cloudflare CLI access was verified on 2026-10-08: the owner's separately installed `cf` (`1.0.0-beta.13`) is OAuth-authenticated under `dev`. The active Hermes gateway has `HOME=/home/dev` and `/usr/local/bin` on PATH, so it can reuse `cf` and its mode-0600 `/home/dev/.config/cloudflare/config/default.json` without another secret in `.hermes/.env`. Never display or copy that credential file into memory, prompts, or Git. Check `cf auth whoami` before operations, since authentication can expire. `cfdns` remains the independent minimal DNS helper; do not confuse the two. Other hosts/users need their own authentication. See [Cloudflare CLI access for agents](../proxy/README.md#cloudflare-cli-access-for-agents).
 
-The model provider is `openai-codex` with `gpt-6-luna` and `agent.reasoning_effort: medium`. The existing Codex CLI login was imported into Hermes' own protected auth store via `hermes model`; a one-shot CLI model call succeeded. Groq is used **only** for incoming Telegram voice transcription (`stt.provider: groq`, `whisper-large-v3-turbo`, language auto-detect), not for chat inference. A real audio-file call to Groq's transcription API succeeded. The live `/home/dev/.hermes/.env` is mode 0600 and contains additional Photon and Home Assistant settings beyond this directory's bootstrap `.env.template`; never re-inject the template over the live file or those settings and `GITHUB_TOKEN` will be lost. Never put resolved keys in Git, chat, or command output. The `Groq API Key` vault item remains the source of truth. Hermes reads `stt.provider` and `agent.reasoning_effort` despite its `config set/get` schema warning for those keys; verify runtime behavior on upgrade.
+The primary model provider is now `opencode-go` with `deepseek-v4.1-flash`; `openai-codex` / `gpt-6-luna` is the automatic fallback. `agent.reasoning_effort: medium` is preserved. See the 2026-10-25 update below. Previously the primary was Codex. The existing Codex CLI login was imported into Hermes' own protected auth store via `hermes model`; a one-shot CLI model call succeeded. Groq is used **only** for incoming Telegram voice transcription (`stt.provider: groq`, `whisper-large-v3-turbo`, language auto-detect), not for chat inference. A real audio-file call to Groq's transcription API succeeded. The live `/home/dev/.hermes/.env` is mode 0600 and contains additional Photon and Home Assistant settings beyond this directory's bootstrap `.env.template`; never re-inject the template over the live file or those settings and `GITHUB_TOKEN` will be lost. Never put resolved keys in Git, chat, or command output. The `Groq API Key` vault item remains the source of truth. Hermes reads `stt.provider` and `agent.reasoning_effort` despite its `config set/get` schema warning for those keys; verify runtime behavior on upgrade.
 
 Hermes' built-in OpenViking memory provider connects to `https://memory.l3b.cc.cd` with the same account-scoped agent key as Codex, injected from the `OpenViking` HomeLab vault item. The root API key is not used by Hermes. `hermes memory status` reports the plugin installed, active, and available. The provider's OpenViking search/read/remember tools are available to Hermes; ordinary built-in memory additions are mirrored by the provider, while replace/remove are not automatically mirrored.
 
@@ -83,3 +83,38 @@ stat -c '%a %n' /home/dev/.config/karakeep /home/dev/.config/karakeep/config.jso
 ```
 
 Sources: [official CLI](https://docs.karakeep.app/integrations/command-line/), [official agent skill](https://github.com/karakeep-app/karakeep/tree/v0.33.2/skills).
+
+## OpenCode Go primary inference, 2026-10-25
+
+Hermes uses native `opencode-go` / `deepseek-v4.1-flash` at
+`https://opencode.ai/zen/go/v1`, with top-level `fallback_providers` containing
+`provider: openai-codex` and `model: gpt-6-luna`. Reasoning stays `medium`.
+The native provider supplies the required `x-opencode-session` affinity header.
+A raw request without that header returns `MissingSessionID`; this is not an
+authentication failure. No Go account privacy/region setting was changed.
+
+The source credential is HomeLab → OpenCode Go → concealed **API KEY**. Retrieve
+it through `scripts/op-sa` in a process that captures output; never print it.
+Only the existing live `~/.hermes/.env` receives `OPENCODE_GO_API_KEY` (0600).
+Preserve every other variable. OpenCode Console OAuth is separate and was not
+copied or replaced. Codex OAuth remains in Hermes's protected auth store.
+This is a Hermes inference choice, not a change to the other agents' defaults
+or to shared MCPs, skills or memory identities.
+
+Validation: authenticated Go model discovery and a minimal completion passed.
+A native Hermes CLI turn using the configured default returned the expected
+response without a fallback notice. Session evidence recorded the Go provider,
+two API calls and one successful harmless terminal tool call. A separate native
+Codex probe confirmed the fallback route still returns a response. Gateway
+reload and dashboard restart apply
+the protected settings; Telegram, Photon iMessage and Home Assistant adapters
+reported connected, and the dashboard returned HTTP 200. Existing conversations
+may retain a per-session model
+override, so use a new chat or the native model selector for such sessions.
+The fallback chain is configured and the existing OAuth is preserved; a forced
+provider-outage drill was not performed.
+
+Rollback: private pre-change copies of `config.yaml` and `.env` are under
+`~/.hermes/backups/opencode-go-20261025T175019Z/` (0600 files, 0700 directory).
+Restore them only after checking for subsequent edits, then reload the gateway
+and restart the dashboard. Do not copy backups into Git or memory.

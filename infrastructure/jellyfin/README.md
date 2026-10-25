@@ -50,3 +50,17 @@ On 2026-09-29, actual playback exposed a CIFS hardlink/lease failure: listing th
 Radarr and Sonarr now have native **Emby / Jellyfin** connections named `Jellyfin`, with `Update Library` enabled for import/upgrade/rename/delete, `Send Notifications` disabled, and `/data/media` mapped to `/media`. They connect internally to `10.1.1.4:8096`; the API key stays in their persisted configuration. Jellyfin's five-minute scan remains a fallback. Renaming the current movie through Radarr automatically updated Jellyfin and Bazarr, including the Hindi sidecar subtitle. Browser playback passed again after the rename. Seerr's Movies/TV Shows scans are enabled and its external Jellyfin URL is `https://media.l3b.cc.cd`.
 
 The tracked `compose.yaml` is Portainer stack 94's source of truth. Update that stack in Portainer rather than starting a second Compose project. Before redeploying, confirm `findmnt -t cifs /mnt/AV` and its `seal` option. Verify the container is healthy and the Caddy URL loads after updating.
+
+## TV folder and scan verification, 2026-10-25
+
+At the owner's request, the eight The Terminal List episodes were moved directly
+into their series directory, retaining the year and S02E01–S02E08 filenames;
+the empty season directory was removed. Same-filesystem rename preserved file
+identity and sizes. Jellyfin had already indexed all eight under Season 2 before
+the move, so the previous season-directory layout was not preventing detection.
+An authenticated library refresh returned 204 and the owner's user-scoped item
+query confirmed all eight episodes at the new flat paths. A filesystem folder
+check alone does not prove user-visible indexing. Use the supported MediaBrowser
+Authorization header for API verification; a standalone legacy X-Emby-Token
+header returned 401 on this deployment. The short-lived maintenance session
+was logged out after verification. No library, mount or container was recreated.

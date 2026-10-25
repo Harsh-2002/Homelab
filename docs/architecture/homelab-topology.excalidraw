@@ -939,9 +939,9 @@
     {
       "id": "model-apis-text",
       "type": "text",
-      "x": 333.99800000000005,
+      "x": 343.9988,
       "y": 2220.5278399999997,
-      "width": 388.99920000000003,
+      "width": 368.99760000000003,
       "height": 38.00032,
       "angle": 0,
       "strokeColor": "#233647",
@@ -963,22 +963,22 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "External model APIs\nRemote inference / not a local chat model",
+      "text": "External model APIs\nHermes: DeepSeek Flash / Codex fallback",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "model-apis",
-      "originalText": "External model APIs\nRemote inference / not a local chat model",
+      "originalText": "External model APIs\nHermes: DeepSeek Flash / Codex fallback",
       "autoResize": false,
       "lineHeight": 1.25
     },
     {
       "id": "model-apis",
       "type": "rectangle",
-      "x": 321.99800000000005,
+      "x": 331.9988,
       "y": 2210.5278399999997,
-      "width": 412.99920000000003,
+      "width": 392.99760000000003,
       "height": 58.00032,
       "angle": 0,
       "strokeColor": "#263848",
@@ -10918,8 +10918,8 @@
       "type": "arrow",
       "x": 244.256,
       "y": 2212.6719999999996,
-      "width": 72.4752,
-      "height": 6.8400000000001455,
+      "width": 82.59119999999999,
+      "height": 7.847999999999956,
       "angle": 0,
       "strokeColor": "#9baab5",
       "backgroundColor": "transparent",
@@ -10946,16 +10946,16 @@
           0
         ],
         [
-          22.43519999999998,
-          2.088000000000193
+          25.43040000000005,
+          2.3760000000002037
         ],
         [
-          47.20320000000001,
-          4.463999999999942
+          53.8416,
+          5.11200000000008
         ],
         [
-          72.4752,
-          6.8400000000001455
+          82.59119999999999,
+          7.847999999999956
         ]
       ],
       "lastCommittedPoint": null,
@@ -30056,13 +30056,13 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "External model APIs\nRemote inference / not a local chat model",
+      "text": "External model APIs\nHermes: DeepSeek Flash / Codex fallback",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "flow-6-model-apis",
-      "originalText": "External model APIs\nRemote inference / not a local chat model",
+      "originalText": "External model APIs\nHermes: DeepSeek Flash / Codex fallback",
       "autoResize": false,
       "lineHeight": 1.25
     },
