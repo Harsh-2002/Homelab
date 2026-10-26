@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Read-only global MCP parity check. Never print credentials or full configs."""
+"""Read-only global MCP and shared-skill check. Never print credentials or full configs."""
 import json
+import hashlib
 from pathlib import Path
 import sys
 import tomllib
@@ -100,6 +101,27 @@ def main():
             print('excalidraw: official CLI available; shared skill aligned across four agents')
     except (OSError, subprocess.TimeoutExpired):
         failures.append('Excalidraw: CLI or shared skill unavailable')
+    try:
+        manifest = json.loads((Path(__file__).with_name('beautiful-rust.lock.json')).read_text())
+        expected_names = {'rust-best-practices', 'rust-review', 'rust-port'}
+        if set(manifest['skills']) != expected_names:
+            failures.append('BeautifulRust: incomplete skill manifest')
+        for name, files in manifest['skills'].items():
+            for root in ('.agents/skills', '.codex/skills', '.claude/skills', '.hermes/skills'):
+                directory = Path.home() / root / name
+                actual = {str(p.relative_to(directory)): hashlib.sha256(p.read_bytes()).hexdigest()
+                          for p in directory.rglob('*') if p.is_file()}
+                if actual != files:
+                    failures.append(f'BeautifulRust: content drift in {root}/{name}')
+        assets = Path.home() / '.local/share/beautiful-rust' / manifest['revision']
+        for name, digest in manifest['lintFiles'].items():
+            if hashlib.sha256((assets / name).read_bytes()).hexdigest() != digest:
+                failures.append(f'BeautifulRust: reference asset drift in {name}')
+        if str(Path.home() / '.agents/skills') not in opencode.get('skills', []):
+            failures.append('BeautifulRust: OpenCode shared skill root absent')
+        print('beautiful-rust: three complete skills and reference assets checked across four agents')
+    except (OSError, ValueError, KeyError):
+        failures.append('BeautifulRust: missing skill, reference asset or install manifest')
     for failure in failures:
         print(f'FAIL: {failure}', file=sys.stderr)
     if failures:

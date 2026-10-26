@@ -118,3 +118,11 @@ Rollback: private pre-change copies of `config.yaml` and `.env` are under
 `~/.hermes/backups/opencode-go-20261025T175019Z/` (0600 files, 0700 directory).
 Restore them only after checking for subsequent edits, then reload the gateway
 and restart the dashboard. Do not copy backups into Git or memory.
+
+## Beautiful Rust skills, 2026-10-26
+
+Hermes discovers rust-best-practices, rust-review and rust-port as enabled local
+skills through symlinks to the shared canonical files in ~/.agents/skills.
+The bundled references are present, and all three are also in OpenViking's
+shared skill catalog. No gateway restart, model or MCP change was needed. See
+[shared setup](../agents/BEAUTIFUL-RUST.md) for source revision and verification.

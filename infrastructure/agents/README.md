@@ -269,3 +269,11 @@ Hermes now uses OpenCode Go / DeepSeek V4.1 Flash, with the existing Codex
 HomeLab → OpenCode Go → API KEY and is kept only in protected Hermes state.
 OpenCode Console OAuth and the other agents' model defaults remain unchanged.
 See [Hermes setup and rollback](../hermes/README.md#opencode-go-primary-inference-2026-10-25).
+
+## Beautiful Rust, 2026-10-26
+
+Three complete upstream skills are globally installed and discoverable in Codex,
+Claude Code, Hermes and OpenCode: rust-best-practices, rust-review and rust-port.
+They share canonical local files and are also in the OpenViking shared catalog.
+Pinned source, Clippy references, reproduction, validation and updates are in
+[BEAUTIFUL-RUST.md](BEAUTIFUL-RUST.md). Existing Rust projects were not modified.

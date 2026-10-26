@@ -1,5 +1,18 @@
 # Current infrastructure verification and open items
 
+## 2026-10-26 Beautiful Rust shared skills and VLM auth
+
+Installed rust-best-practices, rust-review and rust-port from the owner-selected
+BeautifulRust repository, revision a2b22682fa69b5e2d41a5d041663df7d51aac521, into
+viking://agent/skills with native add_skill. Bundled reference reads passed.
+The initial import encountered a Codex OAuth refresh401; refreshed the persisted
+auth using the existing dev login through scripts/refresh-openviking-codex.sh.
+Doctor then passed VLM openai-codex/gpt-6-luna and Ollama all-minilm/384d.
+This supersedes the failed import observation; no model/embedding change,
+restart or stored-memory reset. The separate VikingBot user-key warning remains.
+All four local agents independently discovered the matching installed skills.
+See ../agents/BEAUTIFUL-RUST.md for exact source, local paths and checks.
+
 ## 2026-10-18 IST ISO recovery and restoration
 
 Import visibility correction: added `import` to cluster ISO storage's existing content types. Installed Proxmox9.2.20 GUI supports raw/QCOW2/VMDK through Import Hard Disk; all3node APIs now list the Debian cloud image as import content. Use VM → Hardware → Add → Import Hard Disk, source ISO, target local-zfs. Older statements implying CLI-only import are superseded; full-VM OVF/OVA import is a separate workflow. No VM changed.
