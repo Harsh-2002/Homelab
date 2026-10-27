@@ -92,7 +92,7 @@
 <path d="M484 838H558" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
 <path d="M1046 838H1120" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
 <path d="M274 899V929H2010V901" fill="none" stroke="#25675d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#tealArrow)"/>
-<text x="560" y="961" font-size="22" fill="#52636d" font-weight="400" >Hermes: OpenCode Go / DeepSeek Flash; Codex fallback. Telegram / Photon iMessage reach dev.</text>
+<text x="560" y="961" font-size="22" fill="#52636d" font-weight="400" >Hermes: Go / DeepSeek + Codex fallback. OpenCode: Claude Agent SDK. Telegram / iMessage → Hermes.</text>
 <path d="M64 1003H2336" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <text x="64" y="1054" font-size="28" fill="#18252c" font-weight="600" >Media &amp; object storage</text>
 <g data-node="true">

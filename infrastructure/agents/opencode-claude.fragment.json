@@ -1,0 +1,12 @@
+{
+  "model": "claude-code/claude-opus-5-5[1m]",
+  "default_agent": "build",
+  "agents": {
+    "build": {
+      "model": "claude-code/claude-opus-5-5[1m]#xhigh"
+    },
+    "plan": {
+      "model": "claude-code/claude-opus-5-5[1m]#xhigh"
+    }
+  }
+}

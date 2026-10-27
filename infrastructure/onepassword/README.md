@@ -53,3 +53,12 @@ Beszel and Argo CD break-glass passwords were generated in 1Password, applied to
 URLs formerly using the retired `*.ctl.qzz.io` domain were migrated to the equivalent `*.l3b.cc.cd` names. Credentials and usernames for inactive legacy applications are not changed until the corresponding service is restored and the identity migration can be verified end to end.
 
 The service account is a privileged machine identity. Review its item-usage report, rotate its token periodically, and revoke it immediately if `dev` or an automation session is compromised. Creating a new account is required to change its immutable vault scope or permissions.
+
+## 1Password for Agents reference, 2026-10-27
+
+Read the owner's [October22 announcement](https://1password.com/blog/1password-for-ai-agents).
+Supported partner apps request approved sign-ins that 1Password fills without
+exposing passwords or OTPs to the model. Availability varies by integration and
+region. This does not establish native support for our four CLIs. Existing
+HomeLab scope, service account and scripts/op-sa remain unchanged. Evaluate
+compatible credential brokering separately; do not infer it is installed.
