@@ -12,6 +12,62 @@ Tailscale runs directly on Proxmox hosts `px10`, `px20`, and `px30` as three app
 
 All three Proxmox hosts advertise exactly `10.1.1.0/24`, use `tag:subnet-router`, and have the route approved in Tailscale. Device-key expiry is disabled for the tagged subnet routers. Tailscale's own subnet-route SNAT and netfilter integration remain enabled. The hosts and `dev` have `accept-dns=false`, `accept-routes=false`, Tailscale SSH disabled, and native auto-update enabled. `dev` advertises no subnet and uses internal AdGuard `10.1.1.2` through its ordinary network configuration. Tailscale does not manage its DNS. The Proxmox hosts also retain their ordinary internal DNS and do not learn the LAN route from another subnet router.
 
+## Upgrade and access audit, 2026-10-29
+
+Updated sequentially, allowing each daemon to rejoin before proceeding:
+
+| Order | Node | Before | After |
+| --- | --- | --- | --- |
+| 1 | `px20` | 1.102.4 | 1.104.4 |
+| 2 | `px30` | 1.102.4 | 1.104.4 |
+| 3 | `px10` | 1.102.4 | 1.104.4 |
+| 4 | `dev` | 1.104.2 | 1.104.4 |
+
+All four reported `Running`, online and active afterward. Native stable-channel
+update dry-run confirmed 1.104.4 was current. All three subnet advertisements,
+SNAT, disabled DNS/route acceptance and native automatic updates were preserved.
+`px10` was the selected subnet router at the final observation; the other two
+remained available. No failover/node-shutdown test was performed.
+
+The owner deferred additional SSH/admin access. `slate` was not upgraded because
+its SSH session requires Tailscale approval. The saved admin API credential was
+rejected, so no ACL, DNS or route approvals were edited. Offline iPhone/macOS
+clients were not upgraded. Do not treat these as completed upgrades.
+
+[Reachability audit](REACHABILITY-2026-10-29.md) records LAN checks and external
+checks through existing Uptime Kuma on `slate`. OpenCode passed from both paths.
+Argo CD's external public-DNS path returns 403, while LAN access works. Its public
+address intentionally supports the webhook; clients need internal DNS over the
+subnet route for the private UI. Do not make that UI public to resolve this.
+The write-only metrics hostname has no read-only health route.
+
+No service placement, routing, proxy access rules, DNS configuration or architecture
+relationships changed. Existing architecture diagrams remain accurate; this was
+a package upgrade and access validation, not a new topology snapshot.
+
+### Repeat the upgrade safely
+
+Use one host at a time, with standby subnet routers first and the current selected
+router last. Run these commands locally on the selected host (through its existing
+LAN SSH connection for a router):
+
+```bash
+tailscale version
+sudo tailscale update --dry-run --track=stable
+sudo tailscale debug prefs | jq '{CorpDNS,RouteAll,RunSSH,AdvertiseRoutes,NoSNAT,AutoUpdate}'
+sudo tailscale update --yes --track=stable
+systemctl is-active tailscaled
+tailscale status --json | jq '{state:.BackendState,online:.Self.Online,primaryRoutes:.Self.PrimaryRoutes}'
+tailscale version
+```
+
+Wait for `Running` and online before moving to the next host. A transient
+`NoState` immediately after the package restart is not the final verification.
+Compare the selected preferences again after upgrade. Do not run `tailscale up`
+with incomplete flags or enable `accept-routes` on these same-LAN routers.
+Filtered router preferences from this audit are retained locally in the root-only
+`/root/tailscale-prefs-before-20261029.json`; no keys/state were exported to Git.
+
 ## Why the gateway VIP was retired
 
 The former `10.1.1.9` Keepalived VIP attempted to route guest traffic to the tailnet through the active Proxmox host. On 2026-09-28, a targeted nft trace showed that traffic from firewall-enabled VM 100 reached NAT postrouting first on Proxmox firewall bridge `fwbr100i0`, not on `tailscale0`. The custom masquerade rule did not match; conntrack recorded an untranslated, unreplied flow. Proxmox [documents this firewall-bridge NAT interaction](https://github.com/proxmox/pve-docs/blob/master/pve-network.adoc). Rather than add conntrack-zone rules on every host for a small number of clients, the owner chose direct Tailscale clients where outbound access is needed. The VIP, Keepalived package/configuration, custom nft table/service, health-check script, and `dev`'s route via `10.1.1.9` were removed from all three hosts and `dev`. The three inbound subnet routers remain.
