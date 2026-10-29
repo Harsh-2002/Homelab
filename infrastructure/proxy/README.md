@@ -1,5 +1,36 @@
 # Caddy proxy
 
+## Boot-time outage and recovery, 2026-10-29
+
+After the owner's restart of px10/px20, CT101 was running on px20 but Caddy
+had exited at15:13:48 UTC. Its PostgreSQL listener failed with
+`listen tcp 10.1.1.3:5432: bind: cannot assign requested address`.
+`network-online.target` had already been reached at15:13:45; ifupdown2's
+`networking.service` finished at15:13:50. The service had no restart policy.
+This single process failure took down the shared HTTPS entry point even though
+Home Assistant at10.1.1.13 and the Proxmox HA guests remained running.
+
+The proxy's LAN-bound node exporter hit the same address race, exhausted its
+rapid default retries and remained failed. Both services now install the tracked
+`20-startup-recovery.conf`: explicit ordering after the container's
+`networking.service`, retry after5s on failure, and no start-limit lockout.
+Existing LAN listener addresses and authentication are preserved. Deploy with:
+
+```bash
+scp infrastructure/proxy/20-startup-recovery.conf proxy:/tmp/20-startup-recovery.conf
+ssh proxy 'install -D -m 0644 /tmp/20-startup-recovery.conf /etc/systemd/system/caddy.service.d/20-startup-recovery.conf && install -D -m 0644 /tmp/20-startup-recovery.conf /etc/systemd/system/prometheus-node-exporter.service.d/20-startup-recovery.conf && rm /tmp/20-startup-recovery.conf && systemctl daemon-reload && systemctl reset-failed caddy prometheus-node-exporter && systemctl start caddy prometheus-node-exporter'
+```
+
+Recovery verification: Caddy and exporter active; systemd unit validation passed;
+effective restart policy and boot dependency verified. Home Assistant HTTPS and
+authenticated API returned200, and its real browser WebSocket was connected
+with144 entities loaded. Homepage backend returned200 and browser access reached
+the normal Pocket ID sign-in flow. Its in-pod monitor checks passed32/33 cards;
+px30 was the remaining unavailable host. Proxmox endpoints, OpenCode and OIDC
+discovery responded. A fresh Pocket ID login, cold reboot and forced process
+failure test were not performed. Proxmox HA tracks guest availability; it does
+not establish health of processes inside guests. Caddy remains a single instance.
+
 ## Private router management, 2026-10-22
 
 `https://router.l3b.cc.cd` proxies to `http://10.1.1.1/` through Caddy10.1.1.3.

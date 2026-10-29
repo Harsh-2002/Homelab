@@ -141,6 +141,15 @@ all UP after cutover, including private proxy, DNS and all physical host APIs.
 No permanent monitors or notification edits were made. Endpoint/API checks do not
 claim a fresh browser login to every application or an actuator/camera playback test.
 
+Later, after the owner's px10/px20 restart, CT101 was running but Caddy failed
+before its static LAN address was ready. Restored Caddy and its node exporter;
+both now wait for ifupdown2 networking and retry failures automatically. See
+[proxy boot RCA](../proxy/README.md#boot-time-outage-and-recovery-2026-10-29).
+The recovered Home Assistant browser connected live and its authenticated API
+returned200. Homepage backend/SSO routing worked and32/33 card monitors responded,
+with px30 still unavailable. This failure was inside the evacuated proxy guest,
+not evidence of missing VM migration. Guest HA alone is not application health.
+
 Recovery bundle refreshed before evacuation on px30 and px10 at
 `/root/px30-swap-20261029/config-before-evacuation.tar.gz`; checksums matched.
 The existing disks, ZFS pools, all guest data and node membership were preserved.

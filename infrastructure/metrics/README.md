@@ -1,5 +1,12 @@
 # Infrastructure metrics
 
+On2026-10-29 the proxy LXC's node exporter also failed during a static-address
+startup race. It now uses `infrastructure/proxy/20-startup-recovery.conf`, shared
+with Caddy: wait for ifupdown2's `networking.service`, retry after5s and disable
+start-limit lockout. Its existing LAN-only9100 listener was retained; service
+recovered without restarting the container. See the proxy runbook for evidence
+and reproducible deployment.
+
 Home Assistant consumes27 read-only physical-host metrics from VictoriaMetrics
 in one query/minute, displayed at `/homelab-status/nodes`. No additional host
 agent/PVE admin credential. Definitions and deployment in
