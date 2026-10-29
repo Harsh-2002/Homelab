@@ -1,5 +1,9 @@
 # Proxmox hosts
 
+For the **planned px30 chassis swap**, the owner chose to wait until the
+replacement BIOS is ready. See [preflight, evacuation, return and rollback](PX30-HARDWARE-SWAP.md).
+Nothing has been evacuated or shut down; installed hardware/architecture remains unchanged.
+
 For the owner-approved login-popup customization, persistent APT hook, validation and rollback, see [SUBSCRIPTION-POPUP.md](SUBSCRIPTION-POPUP.md). This does not change actual subscription status or repositories.
 
 All three Proxmox nodes use AdGuard Home as the primary resolver and Cloudflare as the availability fallback. The `l3b.cc.cd` search suffix expands short hostnames such as `px10` to `px10.l3b.cc.cd`. DNS is configured per node in `/etc/resolv.conf`; `systemd-resolved` is inactive.
