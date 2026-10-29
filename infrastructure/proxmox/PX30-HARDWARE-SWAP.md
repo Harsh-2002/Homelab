@@ -11,7 +11,8 @@ Do not reuse the 7040/5060 firmware package based only on the processor generati
 **Evacuation authorized and completed on 2026-10-29.** The owner explicitly
 requested starting after the earlier wait decision. All five service guests are
 running on surviving hosts, VM203 is cleanly stopped, and px30 is in HA maintenance.
-The physical px30 host remains powered on; shut it down normally before removing disks.
+The owner subsequently authorized a normal shutdown. It was issued after repeating
+the safety gates; px10/px20 retained quorum. Confirm the power light is off before removing disks.
 This is a temporary hardware swap retaining the existing px30 installation and
 cluster identity, not node decommissioning or reinstallation. The replacement
 hardware is not yet recorded as installed in the architecture inventory.
@@ -66,7 +67,7 @@ Longhorn disk remain within the unchanged VM disks.
 The final placement is CT101 on **px20**; CT102/103/105 and VM107 on **px10**.
 VM203 remains on px30, stopped. There are zero running px30 guests, no active
 Proxmox tasks on that host, healthy pools and no HA resource errors. The host is
-in manual maintenance mode and still powered on. No node identity was removed.
+in manual maintenance mode and was normally powered off after final safety checks. No node identity was removed.
 
 Longhorn replica eviction completed before the Kubernetes drain. Every one of
 the six volumes has two non-failed replicas on k8s-201/k8s-202; no assigned replica

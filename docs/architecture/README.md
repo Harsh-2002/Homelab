@@ -3,7 +3,7 @@
 ## Temporary px30 evacuation, 29 October 2026
 
 The current inventory and exports show temporary service placement on px10/px20.
-px30 retains its old hardware label and stopped VM203 until the replacement is
+px30 is powered off and retains its old hardware label and stopped VM203 until the replacement is
 verified. Kubernetes runs on two nodes; the third PostgreSQL instance is pending.
 See [execution and restoration](../../infrastructure/proxmox/PX30-HARDWARE-SWAP.md).
 On validated return, restore placement and memory/HA/replication settings, clear

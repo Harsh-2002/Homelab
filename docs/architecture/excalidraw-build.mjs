@@ -33,14 +33,14 @@ add('wifi','bulb','Wipro bulb','device','Tuya LAN / TCP 6668');
 add('wifi','ac','Samsung AC','device','Local DTLS / UDP 49154');
 add('lan','camera','Outdoor camera','device','Network attachment type unverified');
 add('lan','clients','Your phone / workstation','device','Client addresses vary');
-add('internet','tailscale','Tailscale','logical','Subnet routes on px10 / px20 / px30');
+add('internet','tailscale','Tailscale','logical',inv.maintenance?.poweredOff ? 'px10 / px20 active; px30 powered off' : 'Subnet routes on px10 / px20 / px30');
 add('internet','cloudflare','Cloudflare DNS','logical','DNS records / ACME DNS-01, not a tunnel');
 add('internet','model-apis','External model APIs','logical','Hermes: DeepSeek Flash / Codex fallback');
 add('internet','github','GitHub / Homelab repository','logical','Declarative configuration');
 add('internet','slate','slate / GCP VM','physical','External, documented; no fresh health check');
 add('slate','slate-caddy','Caddy'); add('slate','slate-kuma','Uptime Kuma'); add('slate','slate-ntfy','ntfy');
 for (const h of inv.hosts) {
-  add('lan',h.name,`${h.name} / ${h.model}`,'physical',`${h.cpu} / ${h.ramGB} GB / ZFS${inv.maintenance?.node === h.name ? " / maintenance" : ""}`,'1 GbE');
+  add('lan',h.name,`${h.name} / ${h.model}${inv.maintenance?.node === h.name && inv.maintenance.poweredOff ? " / powered off" : ""}`,'physical',`${h.cpu} / ${h.ramGB} GB / ZFS${inv.maintenance?.node === h.name ? " / maintenance" : ""}`,'1 GbE');
   for (const g of inv.guests.filter(g=>g.host===h.name)) add(h.name,g.name,`${g.kind} ${g.id} / ${g.name}${g.state ? " / stopped" : ""}`,'guest');
   add(h.name,h.name+'-zfs','Local ZFS / rpool + data','physical','Guest OS / data volumes');
 }
