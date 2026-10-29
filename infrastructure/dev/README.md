@@ -72,3 +72,10 @@ sudo journalctl --vacuum-size=512M
 Review paths before running these again. There was no source, application or
 agent configuration change, so architecture diagrams and integration settings
 did not require modification.
+
+## Network discovery tooling, 2026-10-29
+
+Installed Debian Nmap7.95 (plus nmap-common/liblinear4) for the owner-requested
+LAN service scan. All four coding agents can use the same `/usr/bin/nmap`; no
+MCP, harness config or native memory settings changed. Scan output is ephemeral
+under `/tmp`, not public Git. See the [verified switch/access runbook](../network/NETGEAR-SWITCH.md).

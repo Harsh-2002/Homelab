@@ -3,8 +3,8 @@
 ## Temporary px30 evacuation, 29 October 2026
 
 The current inventory and exports show temporary service placement on px10/px20.
-px30 is powered off and retains its old hardware label and stopped VM203 until the replacement is
-verified. Kubernetes runs on two nodes; the third PostgreSQL instance is pending.
+The replacement px30 is reported powered on but remains network-unreachable;
+its model and boot state are unverified. The old7040 is historical rollback hardware. Kubernetes runs on two reachable nodes; k8s-203 remains NotReady and its current VM state is unverified.
 See [execution and restoration](../../infrastructure/proxmox/PX30-HARDWARE-SWAP.md).
 On validated return, restore placement and memory/HA/replication settings, clear
 maintenance metadata and regenerate these artifacts. Do not treat this as decommissioning.
@@ -16,7 +16,7 @@ The owner rejected the original presentation sheets. The primary purpose is
 Use the native `internal/homelab-topology.excalidraw` scene: a connected physical
 → host → VM/LXC → Docker/Kubernetes/service tree, plus focused flow frames on the
 same editable canvas. IP:port labels are included. Open it in Excalidraw with
-Open file; it is not a flattened image. Router/switch/AP unknowns are marked.
+Open file; it is not a flattened image. The Netgear switch and host ports are verified; router/AP and remaining cabling unknowns are marked.
 
 ```bash
 node docs/architecture/excalidraw-build.mjs --internal

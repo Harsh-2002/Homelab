@@ -17,6 +17,23 @@ This is a temporary hardware swap retaining the existing px30 installation and
 cluster identity, not node decommissioning or reinstallation. The replacement
 hardware is not yet recorded as installed in the architecture inventory.
 
+## Replacement power-on / network investigation, later October 29
+
+The owner powered on px10/px20 and reports the replacement px30 powered on.
+The survivors are reachable and quorate with the evacuated services started.
+px30 still does not answer at its static address or appear as a new SSH/Proxmox
+endpoint in the LAN scan. A healthy boot/new NIC configuration is not verified.
+Do not mistake the previous powered-off checkpoint for current physical state.
+The new machine's exact model/RAM detection remain unverified; its i5-9500T is
+owner-reported. The old 7040 is retained only as historical rollback inventory.
+
+The Netgear GS110TPv3 is now identified. Owner confirms px30 cable on g7, with
+1Gbps link but no learned MAC in the copied dynamic table. This establishes
+physical link, not an alternate IP or a completed OS boot. See the verified
+[port map, temporary management access and recovery limits](../network/NETGEAR-SWITCH.md).
+No switch changes or permanent px30 repair were made. Existing maintenance,
+paused-replication, Longhorn and supervised-return requirements still apply.
+
 ## Verified preflight
 
 | Item | Observation on October 29 |

@@ -2,7 +2,7 @@ flowchart LR
   n_flow_19_0["Longhorn<br/>2 replicas per current volume"]
   n_flow_19_1["Longhorn data disk<br/>500 GiB / host-local ZFS"]
   n_flow_19_2["Longhorn data disk<br/>500 GiB / host-local ZFS"]
-  n_flow_19_3["Longhorn data disk<br/>500 GiB / stopped; replicas evacuated"]
+  n_flow_19_3["Longhorn data disk<br/>500 GiB / unreachable; replicas evacuated"]
   n_flow_19_0 -.->|"eligible disk"| n_flow_19_1
   n_flow_19_0 -.->|"eligible disk"| n_flow_19_2
   n_flow_19_0 -.->|"offline / no replicas"| n_flow_19_3

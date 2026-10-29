@@ -8,13 +8,13 @@ Address-free reference edition.
 flowchart LR
   n_tree_0["Internet"]
   n_tree_1["Home router<br/>Model not verified"]
-  n_tree_2["LAN switching / Ethernet<br/>Switch model &amp; port map unknown"]
+  n_tree_2["LAN fabric / Netgear GS110TPv3<br/>g5: px10 / g6: px20 / g7: px30 cable"]
   n_tree_3["Home Wi-Fi / AP<br/>AP model not verified"]
   n_tree_4["Wipro bulb<br/>Tuya LAN / TCP 6668"]
   n_tree_5["Samsung AC<br/>Local DTLS / UDP 49154"]
   n_tree_6["Outdoor camera<br/>Network attachment type unverified"]
   n_tree_7["Your phone / workstation<br/>Client addresses vary"]
-  n_tree_8["Tailscale<br/>px10 / px20 active; px30 powered off"]
+  n_tree_8["Tailscale<br/>px10 / px20 active; px30 unreachable"]
   n_tree_9["Cloudflare DNS<br/>DNS records / ACME DNS-01, not a tunnel"]
   n_tree_10["External model APIs<br/>Hermes: DeepSeek Flash / Codex fallback"]
   n_tree_11["GitHub / Homelab repository<br/>Declarative configuration"]
@@ -38,8 +38,8 @@ flowchart LR
   n_tree_29["LXC 101 / proxy"]
   n_tree_30["VM 202 / k8s-202"]
   n_tree_31["Local ZFS / rpool + data<br/>Guest OS / data volumes"]
-  n_tree_32["px30 / Dell OptiPlex 7040 / powered off<br/>i5-6500TE / 4 cores / 32 GB / ZFS / maintenance"]
-  n_tree_33["VM 203 / k8s-203 / stopped"]
+  n_tree_32["px30 / Replacement (unverified)<br/>i5-9500T (reported) / 32 GB reported / ZFS / maintenance"]
+  n_tree_33["VM 203 / k8s-203 / unreachable"]
   n_tree_34["Local ZFS / rpool + data<br/>Guest OS / data volumes"]
   n_tree_35["Crucial X9 Pro / 4 TB<br/>USB: AV + BACKUP"]
   n_tree_36["SSD / 256 GB<br/>USB: ISO images / imports"]
@@ -107,7 +107,7 @@ flowchart LR
   n_tree_98["portainer<br/>Docker-internal unless published"]
   n_tree_99["watchtower<br/>Docker-internal unless published"]
   n_tree_100["gitea-mirror<br/>Restarting / not healthy"]
-  n_tree_101["Kubernetes / logical cluster<br/>k8s-201 / 202 active; k8s-203 stopped"]
+  n_tree_101["Kubernetes / logical cluster<br/>k8s-201 / 202 active; k8s-203 unreachable"]
   n_tree_102["Cluster networking"]
   n_tree_103["Cilium<br/>Kubernetes Service"]
   n_tree_104["CoreDNS<br/>Kubernetes Service"]
@@ -138,7 +138,7 @@ flowchart LR
   n_tree_129["PostgreSQL standby B / pending<br/>Streaming replication"]
   n_tree_130["Longhorn data disk<br/>500 GiB / host-local ZFS"]
   n_tree_131["Longhorn data disk<br/>500 GiB / host-local ZFS"]
-  n_tree_132["Longhorn data disk<br/>500 GiB / stopped; replicas evacuated"]
+  n_tree_132["Longhorn data disk<br/>500 GiB / unreachable; replicas evacuated"]
   n_tree_133["Frigate recordings<br/>ctr local /data/apps/frigate/media"]
   n_tree_0 --> n_tree_1
   n_tree_0 --> n_tree_8
@@ -506,7 +506,7 @@ flowchart LR
 flowchart LR
   n_flow_17_0["GitHub / Homelab repository<br/>Declarative configuration"]
   n_flow_17_1["Argo CD<br/>Kubernetes Service"]
-  n_flow_17_2["Kubernetes / logical cluster<br/>k8s-201 / 202 active; k8s-203 stopped"]
+  n_flow_17_2["Kubernetes / logical cluster<br/>k8s-201 / 202 active; k8s-203 unreachable"]
   n_flow_17_0 -->|"tracked manifests / charts"| n_flow_17_1
   n_flow_17_1 -->|"reconciles declared resources"| n_flow_17_2
   classDef c_flow_17_0 fill:#f0edf9,stroke:#6c7f8c,color:#233647;
@@ -553,10 +553,10 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  n_flow_8_0["Kubernetes / logical cluster<br/>k8s-201 / 202 active; k8s-203 stopped"]
+  n_flow_8_0["Kubernetes / logical cluster<br/>k8s-201 / 202 active; k8s-203 unreachable"]
   n_flow_8_1["VM 201 / k8s-201"]
   n_flow_8_2["VM 202 / k8s-202"]
-  n_flow_8_3["VM 203 / k8s-203 / stopped"]
+  n_flow_8_3["VM 203 / k8s-203 / unreachable"]
   n_flow_8_1 -.->|"member"| n_flow_8_0
   n_flow_8_2 -.->|"member"| n_flow_8_0
   n_flow_8_3 -.->|"member"| n_flow_8_0
@@ -605,7 +605,7 @@ flowchart LR
   n_flow_16_0["omni<br/>Docker-internal unless published"]
   n_flow_16_1["VM 201 / k8s-201"]
   n_flow_16_2["VM 202 / k8s-202"]
-  n_flow_16_3["VM 203 / k8s-203 / stopped"]
+  n_flow_16_3["VM 203 / k8s-203 / unreachable"]
   n_flow_16_0 -.->|"machine management"| n_flow_16_1
   n_flow_16_0 -.->|"machine management"| n_flow_16_2
   n_flow_16_0 -.->|"machine management"| n_flow_16_3
@@ -622,7 +622,7 @@ flowchart LR
   n_flow_19_0["Longhorn<br/>2 replicas per current volume"]
   n_flow_19_1["Longhorn data disk<br/>500 GiB / host-local ZFS"]
   n_flow_19_2["Longhorn data disk<br/>500 GiB / host-local ZFS"]
-  n_flow_19_3["Longhorn data disk<br/>500 GiB / stopped; replicas evacuated"]
+  n_flow_19_3["Longhorn data disk<br/>500 GiB / unreachable; replicas evacuated"]
   n_flow_19_0 -.->|"eligible disk"| n_flow_19_1
   n_flow_19_0 -.->|"eligible disk"| n_flow_19_2
   n_flow_19_0 -.->|"offline / no replicas"| n_flow_19_3

@@ -56,7 +56,7 @@ node(64, 166, 392, 150, 'People & devices', ['Browser · phone · workstation', 
 node(512, 166, 868, 150, 'Two access paths', [
   'Public: Internet → router → Caddy → selected services',
   'Private: LAN / Tailscale → Caddy or native LAN protocols',
-  inventory.maintenance?.poweredOff ? 'Tailscale routing: px10 / px20 active; px30 powered off.' : 'Tailscale subnet routing runs on all three Proxmox hosts.'
+  inventory.maintenance ? 'Tailscale routing: px10 / px20 active; px30 unreachable.' : 'Tailscale subnet routing runs on all three Proxmox hosts.'
 ], C.blueBg);
 node(1436, 166, 396, 150, 'Cloudflare', ['DNS-only records · DNS-01 TLS', 'Private defaults; public exceptions', 'DNS is not a traffic tunnel.']);
 node(1888, 166, 448, 150, 'slate · external GCP VM', ['Caddy · Uptime Kuma · ntfy', 'Independent monitoring & alerts', 'Checks home over Tailscale']);
@@ -64,7 +64,7 @@ path('M456 241H510', C.muted, false, true);
 path('M1436 241H1382', C.muted, true, true);
 path('M946 316V362', C.muted, false, true);
 box(64, 366, 2272, 64, C.white);
-text(88, 406, 'Home router / LAN fabric', 25, C.ink, 600);
+text(88, 406, 'LAN fabric / Netgear GS110TPv3', 25, C.ink, 600);
 text(660, 406, 'Ethernet: 1 Gb/s full duplex verified at px10, px20 and px30', 23, C.muted);
 text(2312, 406, 'Wi-Fi → bulb & AC', 23, C.muted, 400, 'text-anchor="end"');
 for (const x of [424, 1200, 1976]) path(`M${x} 430V478`, C.muted, false, true);
@@ -79,12 +79,12 @@ function host(x, name, model, cpu, ramGB) {
 }
 for (const [i, h] of inventory.hosts.entries()) {
   const x = 64 + i * 776;
-  host(x, h.name + (inventory.maintenance?.node === h.name ? (inventory.maintenance.poweredOff ? " · powered off" : " · maintenance") : ""), h.model, h.cpu, h.ramGB);
+  host(x, h.name + (inventory.maintenance?.node === h.name ? (inventory.maintenance.poweredOff ? " · powered off" : " · maintenance") : ""), h.model, h.cpu, h.unverifiedHardware ? `${h.ramGB} (reported)` : h.ramGB);
   if (internal) text(x + 190, 523, addresses[h.name] || '', 20, C.blue);
 }
 for (const g of inventory.guests) {
   const x = 88 + inventory.hosts.findIndex(h => h.name === g.host) * 776;
-  node(x, g.slot[0], 672, g.slot[1], `${g.name} · ${g.kind} ${g.id}${g.state ? " · stopped" : ""}${g.titleSuffix || ''}`, g.body.slice(0, g.slot[1] < 90 ? 1 : Math.max(1, Math.floor((g.slot[1] - 65) / 29) + 1)), g.kubernetes ? C.blueBg : C.white);
+  node(x, g.slot[0], 672, g.slot[1], `${g.name} · ${g.kind} ${g.id}${g.statusLabel ? " · " + g.statusLabel : g.state ? " · stopped" : ""}${g.titleSuffix || ''}`, g.body.slice(0, g.slot[1] < 90 ? 1 : Math.max(1, Math.floor((g.slot[1] - 65) / 29) + 1)), g.kubernetes ? C.blueBg : C.white);
   if (internal) text(x + 650, g.slot[0] + (g.slot[1] < 90 ? 27 : 34), addresses[g.name] || '', 18, C.blue, 400, 'text-anchor="end"');
 }
 for (const x of [424, 1200, 1976]) path(`M${x} 1106V1176`, C.blue, true);
@@ -93,7 +93,7 @@ path('M1200 1176V1212', C.muted, true, true);
 text(64, 1160, 'Placement is a snapshot; managed guests can relocate.', 20, C.muted);
 
 box(64, 1218, 2272, 282, C.blueBg, '#b5cbd8', 16);
-text(88, 1258, inventory.maintenance ? 'Kubernetes: two active nodes; k8s-203 stopped for hardware swap' : 'One Kubernetes cluster across all three physical hosts', 29, C.ink, 600);
+text(88, 1258, inventory.maintenance ? 'Kubernetes: two active nodes; k8s-203 unreachable during hardware swap' : 'One Kubernetes cluster across all three physical hosts', 29, C.ink, 600);
 text(88, 1294, 'Talos management: Omni on ctr. Kubernetes desired state: GitHub → Argo CD.', 23, C.muted);
 path('M812 1324V1474'); path('M1568 1324V1474');
 text(88, 1348, 'Networking & operations', 25, C.blue, 600);
@@ -109,7 +109,7 @@ text(1616, 1560, 'Smart home', 27, C.ink, 600);
 lines(64, 1600, ['ZFS → VM/LXC disks and selected 5-minute replicas', 'USB on px10: 4 TB AV / BACKUP + 256 GB ISO', 'ctr local data → app state; S3 → Cairn / RustFS objects'], 22, 34);
 lines(840, 1600, ['Proxmox HA manages the listed non-Kubernetes guests.', 'USB shares need physical-disk recovery after host loss.', 'DNS, Caddy and several apps remain single instances.'], 22, 34);
 lines(1616, 1600, ['Home Assistant → Wipro bulb / Tuya LAN', 'Home Assistant → Samsung AC / local DTLS', 'Frigate → camera feeds; HA → viewing / automation'], 22, 34);
-end('homelab', 'Logical LAN fabric shown; router, switch/AP models and exact cabling have not been audited.');
+end('homelab', 'Switch and host-port map verified; router/AP models and remaining physical cabling are unverified.');
 
 begin('How traffic and data move', 'The important connections, without drawing every packet or replica.', 2);
 
@@ -128,7 +128,7 @@ path('M64 430H2336');
 text(64, 481, 'GitOps & cluster operations', 28, C.ink, 600);
 node(64, 507, 420, 112, 'GitHub · Homelab repository', ['Declarative non-secret configuration', 'Reviewed changes → desired state']);
 node(560, 507, 486, 112, 'Argo CD · Kubernetes', ['Reconciles tracked applications', 'Signed public webhook; private UI']);
-node(1122, 507, 486, 112, 'Talos / Kubernetes', ['Cilium network · Longhorn volumes', inventory.maintenance ? 'k8s-201 / 202 active; k8s-203 stopped' : 'Services scheduled across three VMs']);
+node(1122, 507, 486, 112, 'Talos / Kubernetes', ['Cilium network · Longhorn volumes', inventory.maintenance ? 'k8s-201 / 202 active; k8s-203 unreachable' : 'Services scheduled across three VMs']);
 node(1684, 507, 652, 112, 'Omni · ctr', ['Manages the three Talos machines', 'Runs on ctr, not inside Kubernetes']);
 path('M484 563H558', C.muted, true, true);
 path('M1046 563H1120', C.muted, true, true);

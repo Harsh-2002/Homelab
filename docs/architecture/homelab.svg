@@ -14,7 +14,7 @@
 <text x="534" y="200" font-size="25" fill="#18252c" font-weight="600" >Two access paths</text>
 <text x="534" y="231" font-size="21" fill="#52636d" font-weight="400" >Public: Internet → router → Caddy → selected services</text>
 <text x="534" y="260" font-size="21" fill="#52636d" font-weight="400" >Private: LAN / Tailscale → Caddy or native LAN protocols</text>
-<text x="534" y="289" font-size="21" fill="#52636d" font-weight="400" >Tailscale routing: px10 / px20 active; px30 powered off.</text>
+<text x="534" y="289" font-size="21" fill="#52636d" font-weight="400" >Tailscale routing: px10 / px20 active; px30 unreachable.</text>
 </g>
 <g data-node="true">
 <rect x="1436" y="166" width="396" height="150" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -34,7 +34,7 @@
 <path d="M1436 241H1382" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
 <path d="M946 316V362" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
 <rect x="64" y="366" width="2272" height="64" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="88" y="406" font-size="25" fill="#18252c" font-weight="600" >Home router / LAN fabric</text>
+<text x="88" y="406" font-size="25" fill="#18252c" font-weight="600" >LAN fabric / Netgear GS110TPv3</text>
 <text x="660" y="406" font-size="23" fill="#52636d" font-weight="400" >Ethernet: 1 Gb/s full duplex verified at px10, px20 and px30</text>
 <text x="2312" y="406" font-size="23" fill="#52636d" font-weight="400" text-anchor="end">Wi-Fi → bulb &amp; AC</text>
 <path d="M424 430V478" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round"  marker-end="url(#arrow)"/>
@@ -51,9 +51,9 @@
 <text x="864" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-8400T / 6 cores · 32 GB RAM · ZFS OS + data pools</text>
 <path d="M864 578H1536" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <rect x="1616" y="482" width="720" height="650" rx="16" fill="#ffffff" stroke="#aebfc7" stroke-width="1.5"/>
-<text x="1640" y="523" font-size="32" fill="#18252c" font-weight="600" >px30 · powered off</text>
-<text x="2312" y="520" font-size="24" fill="#52636d" font-weight="400" text-anchor="end">Dell OptiPlex 7040</text>
-<text x="1640" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-6500TE / 4 cores · 32 GB RAM · ZFS OS + data pools</text>
+<text x="1640" y="523" font-size="32" fill="#18252c" font-weight="600" >px30 · maintenance</text>
+<text x="2312" y="520" font-size="24" fill="#52636d" font-weight="400" text-anchor="end">Replacement (unverified)</text>
+<text x="1640" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-9500T (reported) · 32 (reported) GB RAM · ZFS OS + data pools</text>
 <path d="M1640 578H2312" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <g data-node="true">
 <rect x="88" y="596" width="672" height="60" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -123,7 +123,7 @@
 </g>
 <g data-node="true">
 <rect x="1640" y="596" width="672" height="112" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="1662" y="630" font-size="25" fill="#18252c" font-weight="600" >k8s-203 · VM 203 · stopped</text>
+<text x="1662" y="630" font-size="25" fill="#18252c" font-weight="600" >k8s-203 · VM 203 · unreachable</text>
 <text x="1662" y="661" font-size="21" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
 <text x="1662" y="690" font-size="21" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk</text>
 </g>
@@ -134,7 +134,7 @@
 <path d="M1200 1176V1212" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
 <text x="64" y="1160" font-size="20" fill="#52636d" font-weight="400" >Placement is a snapshot; managed guests can relocate.</text>
 <rect x="64" y="1218" width="2272" height="282" rx="16" fill="#edf4f8" stroke="#b5cbd8" stroke-width="1.5"/>
-<text x="88" y="1258" font-size="29" fill="#18252c" font-weight="600" >Kubernetes: two active nodes; k8s-203 stopped for hardware swap</text>
+<text x="88" y="1258" font-size="29" fill="#18252c" font-weight="600" >Kubernetes: two active nodes; k8s-203 unreachable during hardware swap</text>
 <text x="88" y="1294" font-size="23" fill="#52636d" font-weight="400" >Talos management: Omni on ctr. Kubernetes desired state: GitHub → Argo CD.</text>
 <path d="M812 1324V1474" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <path d="M1568 1324V1474" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
@@ -163,6 +163,6 @@
 <text x="1616" y="1634" font-size="22" fill="#52636d" font-weight="400" >Home Assistant → Samsung AC / local DTLS</text>
 <text x="1616" y="1668" font-size="22" fill="#52636d" font-weight="400" >Frigate → camera feeds; HA → viewing / automation</text>
 <path d="M64 1732H2336" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
-<text x="64" y="1771" font-size="20" fill="#52636d" font-weight="400" >Logical LAN fabric shown; router, switch/AP models and exact cabling have not been audited.</text>
+<text x="64" y="1771" font-size="20" fill="#52636d" font-weight="400" >Switch and host-port map verified; router/AP models and remaining physical cabling are unverified.</text>
 <text x="2336" y="1771" font-size="20" fill="#52636d" font-weight="400" text-anchor="end">Share-safe · editable SVG</text>
 </g></svg>

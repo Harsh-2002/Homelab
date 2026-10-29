@@ -27,21 +27,21 @@ const edge = (a,b,label='') => edges.push({a,b,label});
 const add = (parent,id,name,category='service',detail='',label='') => {node(id,name,category,detail); edge(parent,id,label);};
 node('internet','Internet','physical');
 add('internet','router','Home router','physical','Model not verified','WAN');
-add('router','lan','LAN switching / Ethernet','physical','Switch model & port map unknown','LAN');
+add('router','lan','LAN fabric / Netgear GS110TPv3','physical','g5: px10 / g6: px20 / g7: px30 cable','LAN');
 add('router','wifi','Home Wi-Fi / AP','physical','AP model not verified','Wi-Fi');
 add('wifi','bulb','Wipro bulb','device','Tuya LAN / TCP 6668');
 add('wifi','ac','Samsung AC','device','Local DTLS / UDP 49154');
 add('lan','camera','Outdoor camera','device','Network attachment type unverified');
 add('lan','clients','Your phone / workstation','device','Client addresses vary');
-add('internet','tailscale','Tailscale','logical',inv.maintenance?.poweredOff ? 'px10 / px20 active; px30 powered off' : 'Subnet routes on px10 / px20 / px30');
+add('internet','tailscale','Tailscale','logical',inv.maintenance ? 'px10 / px20 active; px30 unreachable' : 'Subnet routes on px10 / px20 / px30');
 add('internet','cloudflare','Cloudflare DNS','logical','DNS records / ACME DNS-01, not a tunnel');
 add('internet','model-apis','External model APIs','logical','Hermes: DeepSeek Flash / Codex fallback');
 add('internet','github','GitHub / Homelab repository','logical','Declarative configuration');
 add('internet','slate','slate / GCP VM','physical','External, documented; no fresh health check');
 add('slate','slate-caddy','Caddy'); add('slate','slate-kuma','Uptime Kuma'); add('slate','slate-ntfy','ntfy');
 for (const h of inv.hosts) {
-  add('lan',h.name,`${h.name} / ${h.model}${inv.maintenance?.node === h.name && inv.maintenance.poweredOff ? " / powered off" : ""}`,'physical',`${h.cpu} / ${h.ramGB} GB / ZFS${inv.maintenance?.node === h.name ? " / maintenance" : ""}`,'1 GbE');
-  for (const g of inv.guests.filter(g=>g.host===h.name)) add(h.name,g.name,`${g.kind} ${g.id} / ${g.name}${g.state ? " / stopped" : ""}`,'guest');
+  add('lan',h.name,`${h.name} / ${h.model}${inv.maintenance?.node === h.name && inv.maintenance.poweredOff ? " / powered off" : ""}`,'physical',`${h.cpu} / ${h.ramGB} GB${h.unverifiedHardware ? " reported" : ""} / ZFS${inv.maintenance?.node === h.name ? " / maintenance" : ""}`,'1 GbE');
+  for (const g of inv.guests.filter(g=>g.host===h.name)) add(h.name,g.name,`${g.kind} ${g.id} / ${g.name}${g.statusLabel ? " / " + g.statusLabel : g.state ? " / stopped" : ""}`,'guest');
   add(h.name,h.name+'-zfs','Local ZFS / rpool + data','physical','Guest OS / data volumes');
 }
 add('px10','usb-av','Crucial X9 Pro / 4 TB','physical','USB: AV + BACKUP','USB');
@@ -75,7 +75,7 @@ for (const [id,label,services] of stacks) {
   add('docker',id,label,'logical');
   for (const s of services) add(id,s,s,'service',s==='gitea-mirror'?'Restarting / not healthy':'Docker-internal unless published');
 }
-add('lan','kubernetes','Kubernetes / logical cluster','logical',inv.maintenance ? 'k8s-201 / 202 active; k8s-203 stopped' : 'Members: k8s-201 / 202 / 203');
+add('lan','kubernetes','Kubernetes / logical cluster','logical',inv.maintenance ? 'k8s-201 / 202 active; k8s-203 unreachable' : 'Members: k8s-201 / 202 / 203');
 for (const [id,label,services] of [
  ['kube-network','Cluster networking',['Cilium','CoreDNS']],
  ['kube-platform','Platform / GitOps',['Argo CD','Headlamp','Homepage','metrics-server','vmagent','kube-state-metrics']],
@@ -86,7 +86,7 @@ for (const [id,label,services] of [
   add('kubernetes',id,label,'logical');
   for (const s of services) add(id,'kube-'+s.toLowerCase().replaceAll(' ','-'),s + (inv.maintenance && s==='PostgreSQL standby B' ? ' / pending' : ''),'service',id==='cnpg'?'Streaming replication':id==='kube-volumes'?'2 replicas per current volume':'Kubernetes Service');
 }
-for(const g of inv.guests.filter(g=>g.kubernetes)) add(g.name,g.name+'-disk','Longhorn data disk','physical',g.state ? '500 GiB / stopped; replicas evacuated' : '500 GiB / host-local ZFS');
+for(const g of inv.guests.filter(g=>g.kubernetes)) add(g.name,g.name+'-disk','Longhorn data disk','physical',g.state ? '500 GiB / unreachable; replicas evacuated' : '500 GiB / host-local ZFS');
 add('frigate','recordings','Frigate recordings','service','ctr local /data/apps/frigate/media');
 const Q = x=>JSON.stringify(x);
 const dot = ['digraph G {','graph [rankdir=LR, ordering=out, splines=polyline, nodesep=0.20, ranksep=0.95, margin=0.2];',
