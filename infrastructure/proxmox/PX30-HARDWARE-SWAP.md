@@ -8,8 +8,10 @@ NIC and disk connectivity are not yet verified. Update the replacement's BIOS
 using its own model-specific Dell package before transferring the existing disks.
 Do not reuse the 7040/5060 firmware package based only on the processor generation.
 
-**Wait until the owner confirms the replacement BIOS is ready.** No guest has
-been migrated, no node drained, no HA maintenance enabled and no shutdown issued.
+**Evacuation authorized and completed on 2026-10-29.** The owner explicitly
+requested starting after the earlier wait decision. All five service guests are
+running on surviving hosts, VM203 is cleanly stopped, and px30 is in HA maintenance.
+The physical px30 host remains powered on; shut it down normally before removing disks.
 This is a temporary hardware swap retaining the existing px30 installation and
 cluster identity, not node decommissioning or reinstallation. The replacement
 hardware is not yet recorded as installed in the architecture inventory.
@@ -51,13 +53,104 @@ or replica placement. It does not read credential-bearing application configs.
 | CT102 DNS | px30 | px10 | Replicated LXC; brief restart required |
 | CT103 identity | px30 | px10 | Replicated LXC; brief restart required |
 | CT105 S3 | px30 | px10 | Replicated data-pool LXC; brief restart required |
-| VM107 Home Assistant | px30 | px20 | Replicated VM; attempt live migration after capacity check |
+| VM107 Home Assistant | px30 | **px10 during this swap** | Live migration completed; temporary affinity and replica reseed below |
 | VM203 k8s-203 | px30 | Keep its disks on px30 | Drain Kubernetes, then cleanly stop the VM for the swap |
 
 Existing strict HA node-affinity rules already permit the listed service targets.
 Do not add VM203 to HA or copy its 200 GiB boot and 500 GiB data disks to a second
 physical host just for this short swap. Its Talos/Kubernetes identity and
 Longhorn disk remain within the unchanged VM disks.
+
+## Execution record and temporary settings
+
+The final placement is CT101 on **px20**; CT102/103/105 and VM107 on **px10**.
+VM203 remains on px30, stopped. There are zero running px30 guests, no active
+Proxmox tasks on that host, healthy pools and no HA resource errors. The host is
+in manual maintenance mode and still powered on. No node identity was removed.
+
+Longhorn replica eviction completed before the Kubernetes drain. Every one of
+the six volumes has two non-failed replicas on k8s-201/k8s-202; no assigned replica
+remains on k8s-203. Its scheduling is disabled and evictionRequested=true.
+Drain respected PDBs (including waiting for the instance-manager budget); no
+force deletion or PDB bypass. VM203 shut down cleanly with task status OK.
+PostgreSQL primary supabase-db-2 and standby supabase-db-3 remain ready, with the
+standby streaming/quorum. The third instance is intentionally Pending while its
+node is cordoned. Five volumes are attached/healthy; the stopped standby's volume
+is detached/unknown with both surviving replicas retained. Do not label that
+expected detached status a storage failure or pretend all three DB instances run.
+
+Memory plan changed based on evidence: lowering VM204's balloon target to 12 GiB
+reduced guest-visible RAM but did not reduce its host footprint. Its iGPU/VFIO VM
+had approximately 16 GiB locked. The original 16 GiB minimum/maximum was restored
+without restarting Docker. Instead VM100 on px10 temporarily has balloon=10240,
+shares=0 and unchanged memory=12288. Original balloon=2048, shares omitted (native
+1000 default). A memory check showed adequate guest headroom before reclaiming it.
+Host pressure averages were zero at final checks; spare RAM remains limited.
+Do not start additional large workloads while the cluster is on two hosts.
+
+VM107's temporary node-affinity rule is px10:3,px30:2,px20:1 (strict), preserving
+the original rule name. Its original rule was px30:2,px20:1. Live migration to the
+previously non-replica host copied the disk through the native migration path and
+completed successfully in 2m10s. That left replication job107-0 without a common
+base with the old px20 replica. After confirming no px20 owner/config/process for
+VM107, the two inactive old replica datasets were **renamed**, not destroyed:
+
+```text
+px20 rpool/data/px30-swap-vm107-disk0-before-20261029
+px20 rpool/data/px30-swap-vm107-disk1-before-20261029
+```
+
+A fresh native job107-0 sync px10→px20 completed, followed by another successful
+incremental sync; fail count is zero. Keep the renamed recovery datasets until
+validated return, then remove only those confirmed obsolete copies. Do not touch
+running VM107 volumes. Verify or seed the return destination before live failback,
+and recheck common snapshots afterward instead of assuming multi-target lineage.
+
+After successful final syncs, jobs targeting the soon-offline px30 were paused:
+**101-0,102-0,103-0,104-0,105-0**. Jobs100-0,106-0,107-0,109-0,204-0 remain enabled
+and healthy. This includes CT104's ordinary backup replica even though CT104 did
+not move. Re-enable all five paused jobs when px30 is healthy and account for
+native replication-direction reversal during failback. No jobs or backups were
+deleted. Existing VMID-based nightly backups still include the moved guests.
+
+Validation: Home Assistant authenticated API200; bulb/AC entities available and
+camera reporting recording (no actuator commands sent); proxy/OpenCode200, OIDC
+discovery200, AdGuard/Unbound/Caddy active, RustFS health200. Quick Share performed
+an actual Cairn-backed upload and download with exact byte comparison; harmless
+test object expires after one hour. Supabase Studio302, surviving PostgreSQL
+replication streaming. External slate Uptime Kuma's original six monitors were
+all UP after cutover, including private proxy, DNS and all physical host APIs.
+No permanent monitors or notification edits were made. Endpoint/API checks do not
+claim a fresh browser login to every application or an actuator/camera playback test.
+
+Recovery bundle refreshed before evacuation on px30 and px10 at
+`/root/px30-swap-20261029/config-before-evacuation.tar.gz`; checksums matched.
+The existing disks, ZFS pools, all guest data and node membership were preserved.
+Internal/public topology, SVG/Mermaid/PNG/PDF exports and live inventory now show
+this temporary placement. Retain the 7040 hardware label until actual replacement
+hardware is verified, then rebuild the final architecture after return.
+
+### Mandatory restoration after the replacement returns
+
+1. Validate host, NIC mapping, pools, quorum and Tailscale before releasing HA
+   maintenance. VM203 has onboot=1 and may start automatically but remains cordoned.
+2. Verify Talos/etcd/node readiness, clear Longhorn evictionRequested, restore its
+   scheduling, then uncordon k8s-203. Wait for the third PostgreSQL instance and
+   application/storage health. Preserve current two-replica data during this.
+3. Re-enable jobs101-0 through105-0 that were paused above. Verify fresh syncs
+   before using px30's replicas. Supervise HA failback and final disk ownership.
+4. Restore VM107 affinity to px30:2,px20:1 as part of supervised return; its
+   temporary preference for px10 will otherwise keep it there. Validate fresh
+   replication from its final owner and remove the renamed old px20 copies only
+   once their replacement and final service state are verified.
+5. After services have left px10, restore VM100 balloon=2048 and remove its
+   temporary shares setting (native auto-balloon shares default1000). Its maximum
+   remains 12288. VM204 already has its original 16384/16384 settings.
+6. Reconcile placement, HA/replication/backup state, clear temporary inventory
+   maintenance metadata and compact layout as appropriate, validate services,
+   rebuild all diagrams, refresh Notion/OpenViking and commit/push scoped work.
+   This is temporary evacuation; do not delete px30 from the cluster or remove
+   legitimate long-term HA/replication/backup rules as cleanup.
 
 ## Gates before evacuation
 
@@ -204,5 +297,5 @@ on another host. Return through normal cluster migration/reconciliation.
 Sources: [Proxmox HA maintenance and shutdown behavior](https://github.com/proxmox/pve-docs/blob/master/ha-manager.adoc),
 [Proxmox NIC pinning](https://github.com/proxmox/pve-docs/blob/master/pve-network.adoc),
 [Proxmox bootloader recovery](https://github.com/proxmox/pve-docs/blob/master/system-booting.adoc),
-[Longhorn node maintenance](https://longhorn.io/docs/1.13.0/maintenance/maintenance/).
-The installed Longhorn is v1.12.1; verify version-specific controls again at execution.
+[Longhorn node maintenance](https://longhorn.io/docs/1.12.1/maintenance/maintenance/).
+Longhorn node eviction/drain controls were verified against the installed v1.12.1 documentation during execution.

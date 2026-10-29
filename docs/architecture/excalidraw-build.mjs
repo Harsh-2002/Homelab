@@ -40,8 +40,8 @@ add('internet','github','GitHub / Homelab repository','logical','Declarative con
 add('internet','slate','slate / GCP VM','physical','External, documented; no fresh health check');
 add('slate','slate-caddy','Caddy'); add('slate','slate-kuma','Uptime Kuma'); add('slate','slate-ntfy','ntfy');
 for (const h of inv.hosts) {
-  add('lan',h.name,`${h.name} / ${h.model}`,'physical',`${h.cpu} / ${h.ramGB} GB / ZFS`,'1 GbE');
-  for (const g of inv.guests.filter(g=>g.host===h.name)) add(h.name,g.name,`${g.kind} ${g.id} / ${g.name}`,'guest');
+  add('lan',h.name,`${h.name} / ${h.model}`,'physical',`${h.cpu} / ${h.ramGB} GB / ZFS${inv.maintenance?.node === h.name ? " / maintenance" : ""}`,'1 GbE');
+  for (const g of inv.guests.filter(g=>g.host===h.name)) add(h.name,g.name,`${g.kind} ${g.id} / ${g.name}${g.state ? " / stopped" : ""}`,'guest');
   add(h.name,h.name+'-zfs','Local ZFS / rpool + data','physical','Guest OS / data volumes');
 }
 add('px10','usb-av','Crucial X9 Pro / 4 TB','physical','USB: AV + BACKUP','USB');
@@ -75,7 +75,7 @@ for (const [id,label,services] of stacks) {
   add('docker',id,label,'logical');
   for (const s of services) add(id,s,s,'service',s==='gitea-mirror'?'Restarting / not healthy':'Docker-internal unless published');
 }
-add('lan','kubernetes','Kubernetes / logical cluster','logical','Members: k8s-201 / 202 / 203');
+add('lan','kubernetes','Kubernetes / logical cluster','logical',inv.maintenance ? 'k8s-201 / 202 active; k8s-203 stopped' : 'Members: k8s-201 / 202 / 203');
 for (const [id,label,services] of [
  ['kube-network','Cluster networking',['Cilium','CoreDNS']],
  ['kube-platform','Platform / GitOps',['Argo CD','Headlamp','Homepage','metrics-server','vmagent','kube-state-metrics']],
@@ -84,9 +84,9 @@ for (const [id,label,services] of [
  ['cnpg','CloudNativePG',['PostgreSQL primary','PostgreSQL standby A','PostgreSQL standby B']]
 ]) {
   add('kubernetes',id,label,'logical');
-  for (const s of services) add(id,'kube-'+s.toLowerCase().replaceAll(' ','-'),s,'service',id==='cnpg'?'Streaming replication':id==='kube-volumes'?'2 replicas per current volume':'Kubernetes Service');
+  for (const s of services) add(id,'kube-'+s.toLowerCase().replaceAll(' ','-'),s + (inv.maintenance && s==='PostgreSQL standby B' ? ' / pending' : ''),'service',id==='cnpg'?'Streaming replication':id==='kube-volumes'?'2 replicas per current volume':'Kubernetes Service');
 }
-for(const g of inv.guests.filter(g=>g.kubernetes)) add(g.name,g.name+'-disk','Longhorn data disk','physical','500 GiB / host-local ZFS');
+for(const g of inv.guests.filter(g=>g.kubernetes)) add(g.name,g.name+'-disk','Longhorn data disk','physical',g.state ? '500 GiB / stopped; replicas evacuated' : '500 GiB / host-local ZFS');
 add('frigate','recordings','Frigate recordings','service','ctr local /data/apps/frigate/media');
 const Q = x=>JSON.stringify(x);
 const dot = ['digraph G {','graph [rankdir=LR, ordering=out, splines=polyline, nodesep=0.20, ranksep=0.95, margin=0.2];',
@@ -190,7 +190,7 @@ replaceFlow(8,'Kubernetes / three VM members','kubernetes',['k8s-201','k8s-202',
 replaceFlow(9,'Metrics / independent readers','victoriametrics',['grafana','homeassistant','exporters'],['queries API','queries API','scrapes exporters'],['grafana','homeassistant']);
 replaceFlow(6,'Memory / independent local and external dependencies','openviking',['agents','openviking-ollama','model-apis'],['memory read / write','local embeddings','remote inference'],['agents']);
 replaceFlow(16,'Omni / Talos machine management','omni',['k8s-201','k8s-202','k8s-203'],['machine management','machine management','machine management']);
-replaceFlow(19,'Longhorn / 2 replicas per volume, across eligible disks','kube-longhorn',['k8s-201-disk','k8s-202-disk','k8s-203-disk'],['eligible disk','eligible disk','eligible disk']);
+replaceFlow(19,'Longhorn / 2 replicas per volume, across eligible disks','kube-longhorn',['k8s-201-disk','k8s-202-disk','k8s-203-disk'],['eligible disk','eligible disk',inv.maintenance ? 'offline / no replicas' : 'eligible disk']);
 const scene={type:'excalidraw',version:2,source:'https://excalidraw.com',elements,appState:{viewBackgroundColor:'#f8fafc',gridSize:null,exportBackground:true,exportWithDarkMode:false},files:{}};
 writeFileSync(join(out,'homelab-topology.excalidraw'),JSON.stringify(scene,null,2)+'\n');
 writeFileSync(join(out,'topology-manifest.json'),JSON.stringify({date:inv.verifiedOn,internal,sourceHash,nodes:nodes.size,ownershipEdges:edges.length,frames:['tree',...flows.map((_,i)=>'flow-'+i)],width:W+100,height:H+170},null,2)+'\n');

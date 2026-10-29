@@ -19,20 +19,20 @@ flowchart LR
   n_tree_17["VM 100 / dev"]
   n_tree_18["LXC 104 / observability"]
   n_tree_19["LXC 109 / store"]
-  n_tree_20["VM 201 / k8s-201"]
-  n_tree_21["Local ZFS / rpool + data<br/>Guest OS / data volumes"]
-  n_tree_22["px20 / Dell OptiPlex 5060<br/>i5-8400T / 6 cores / 32 GB / ZFS"]
-  n_tree_23["VM 204 / ctr"]
-  n_tree_24["VM 106 / orva"]
-  n_tree_25["VM 202 / k8s-202"]
-  n_tree_26["Local ZFS / rpool + data<br/>Guest OS / data volumes"]
-  n_tree_27["px30 / Dell OptiPlex 7040<br/>i5-6500TE / 4 cores / 32 GB / ZFS"]
-  n_tree_28["LXC 101 / proxy"]
-  n_tree_29["LXC 102 / dns"]
-  n_tree_30["LXC 103 / auth"]
-  n_tree_31["LXC 105 / s3"]
-  n_tree_32["VM 107 / haos"]
-  n_tree_33["VM 203 / k8s-203"]
+  n_tree_20["LXC 102 / dns"]
+  n_tree_21["LXC 103 / auth"]
+  n_tree_22["LXC 105 / s3"]
+  n_tree_23["VM 107 / haos"]
+  n_tree_24["VM 201 / k8s-201"]
+  n_tree_25["Local ZFS / rpool + data<br/>Guest OS / data volumes"]
+  n_tree_26["px20 / Dell OptiPlex 5060<br/>i5-8400T / 6 cores / 32 GB / ZFS"]
+  n_tree_27["VM 204 / ctr"]
+  n_tree_28["VM 106 / orva"]
+  n_tree_29["LXC 101 / proxy"]
+  n_tree_30["VM 202 / k8s-202"]
+  n_tree_31["Local ZFS / rpool + data<br/>Guest OS / data volumes"]
+  n_tree_32["px30 / Dell OptiPlex 7040<br/>i5-6500TE / 4 cores / 32 GB / ZFS / maintenance"]
+  n_tree_33["VM 203 / k8s-203 / stopped"]
   n_tree_34["Local ZFS / rpool + data<br/>Guest OS / data volumes"]
   n_tree_35["Crucial X9 Pro / 4 TB<br/>USB: AV + BACKUP"]
   n_tree_36["SSD / 256 GB<br/>USB: ISO images / imports"]
@@ -100,7 +100,7 @@ flowchart LR
   n_tree_98["portainer<br/>Docker-internal unless published"]
   n_tree_99["watchtower<br/>Docker-internal unless published"]
   n_tree_100["gitea-mirror<br/>Restarting / not healthy"]
-  n_tree_101["Kubernetes / logical cluster<br/>Members: k8s-201 / 202 / 203"]
+  n_tree_101["Kubernetes / logical cluster<br/>k8s-201 / 202 active; k8s-203 stopped"]
   n_tree_102["Cluster networking"]
   n_tree_103["Cilium<br/>Kubernetes Service"]
   n_tree_104["CoreDNS<br/>Kubernetes Service"]
@@ -128,10 +128,10 @@ flowchart LR
   n_tree_126["CloudNativePG"]
   n_tree_127["PostgreSQL primary<br/>Streaming replication"]
   n_tree_128["PostgreSQL standby A<br/>Streaming replication"]
-  n_tree_129["PostgreSQL standby B<br/>Streaming replication"]
+  n_tree_129["PostgreSQL standby B / pending<br/>Streaming replication"]
   n_tree_130["Longhorn data disk<br/>500 GiB / host-local ZFS"]
   n_tree_131["Longhorn data disk<br/>500 GiB / host-local ZFS"]
-  n_tree_132["Longhorn data disk<br/>500 GiB / host-local ZFS"]
+  n_tree_132["Longhorn data disk<br/>500 GiB / stopped; replicas evacuated"]
   n_tree_133["Frigate recordings<br/>ctr local /data/apps/frigate/media"]
   n_tree_0 --> n_tree_1
   n_tree_0 --> n_tree_8
@@ -145,8 +145,8 @@ flowchart LR
   n_tree_2 --> n_tree_6
   n_tree_2 --> n_tree_7
   n_tree_2 --> n_tree_16
-  n_tree_2 --> n_tree_22
-  n_tree_2 --> n_tree_27
+  n_tree_2 --> n_tree_26
+  n_tree_2 --> n_tree_32
   n_tree_2 --> n_tree_101
   n_tree_3 --> n_tree_4
   n_tree_3 --> n_tree_5
@@ -158,6 +158,10 @@ flowchart LR
   n_tree_16 --> n_tree_19
   n_tree_16 --> n_tree_20
   n_tree_16 --> n_tree_21
+  n_tree_16 --> n_tree_22
+  n_tree_16 --> n_tree_23
+  n_tree_16 --> n_tree_24
+  n_tree_16 --> n_tree_25
   n_tree_16 --> n_tree_35
   n_tree_16 --> n_tree_36
   n_tree_17 --> n_tree_40
@@ -170,29 +174,25 @@ flowchart LR
   n_tree_19 --> n_tree_37
   n_tree_19 --> n_tree_38
   n_tree_19 --> n_tree_39
-  n_tree_20 --> n_tree_130
-  n_tree_22 --> n_tree_23
-  n_tree_22 --> n_tree_24
-  n_tree_22 --> n_tree_25
-  n_tree_22 --> n_tree_26
-  n_tree_23 --> n_tree_64
-  n_tree_24 --> n_tree_63
-  n_tree_25 --> n_tree_131
-  n_tree_27 --> n_tree_28
-  n_tree_27 --> n_tree_29
-  n_tree_27 --> n_tree_30
-  n_tree_27 --> n_tree_31
-  n_tree_27 --> n_tree_32
-  n_tree_27 --> n_tree_33
-  n_tree_27 --> n_tree_34
-  n_tree_28 --> n_tree_49
-  n_tree_29 --> n_tree_50
-  n_tree_30 --> n_tree_52
-  n_tree_30 --> n_tree_53
-  n_tree_31 --> n_tree_59
-  n_tree_31 --> n_tree_60
-  n_tree_32 --> n_tree_61
-  n_tree_32 --> n_tree_62
+  n_tree_20 --> n_tree_50
+  n_tree_21 --> n_tree_52
+  n_tree_21 --> n_tree_53
+  n_tree_22 --> n_tree_59
+  n_tree_22 --> n_tree_60
+  n_tree_23 --> n_tree_61
+  n_tree_23 --> n_tree_62
+  n_tree_24 --> n_tree_130
+  n_tree_26 --> n_tree_27
+  n_tree_26 --> n_tree_28
+  n_tree_26 --> n_tree_29
+  n_tree_26 --> n_tree_30
+  n_tree_26 --> n_tree_31
+  n_tree_27 --> n_tree_64
+  n_tree_28 --> n_tree_63
+  n_tree_29 --> n_tree_49
+  n_tree_30 --> n_tree_131
+  n_tree_32 --> n_tree_33
+  n_tree_32 --> n_tree_34
   n_tree_33 --> n_tree_132
   n_tree_40 --> n_tree_41
   n_tree_40 --> n_tree_42
@@ -267,7 +267,7 @@ flowchart LR
   n_tree_126 --> n_tree_128
   n_tree_126 --> n_tree_129
   classDef c_tree_0 fill:#e7eff8,stroke:#6c7f8c,color:#233647;
-  class n_tree_0,n_tree_1,n_tree_2,n_tree_3,n_tree_12,n_tree_16,n_tree_21,n_tree_22,n_tree_26,n_tree_27,n_tree_34,n_tree_35,n_tree_36,n_tree_130,n_tree_131,n_tree_132 c_tree_0;
+  class n_tree_0,n_tree_1,n_tree_2,n_tree_3,n_tree_12,n_tree_16,n_tree_25,n_tree_26,n_tree_31,n_tree_32,n_tree_34,n_tree_35,n_tree_36,n_tree_130,n_tree_131,n_tree_132 c_tree_0;
   classDef c_tree_1 fill:#fff3df,stroke:#6c7f8c,color:#233647;
   class n_tree_4,n_tree_5,n_tree_6,n_tree_7 c_tree_1;
   classDef c_tree_2 fill:#f0edf9,stroke:#6c7f8c,color:#233647;
@@ -275,4 +275,4 @@ flowchart LR
   classDef c_tree_3 fill:#ffffff,stroke:#6c7f8c,color:#233647;
   class n_tree_13,n_tree_14,n_tree_15,n_tree_37,n_tree_38,n_tree_39,n_tree_41,n_tree_42,n_tree_43,n_tree_44,n_tree_45,n_tree_48,n_tree_49,n_tree_50,n_tree_51,n_tree_52,n_tree_53,n_tree_54,n_tree_55,n_tree_56,n_tree_57,n_tree_58,n_tree_59,n_tree_60,n_tree_61,n_tree_62,n_tree_63,n_tree_66,n_tree_67,n_tree_68,n_tree_69,n_tree_71,n_tree_72,n_tree_73,n_tree_74,n_tree_76,n_tree_77,n_tree_78,n_tree_80,n_tree_81,n_tree_83,n_tree_84,n_tree_85,n_tree_86,n_tree_87,n_tree_89,n_tree_90,n_tree_92,n_tree_93,n_tree_94,n_tree_95,n_tree_96,n_tree_97,n_tree_98,n_tree_99,n_tree_100,n_tree_103,n_tree_104,n_tree_106,n_tree_107,n_tree_108,n_tree_109,n_tree_110,n_tree_111,n_tree_113,n_tree_115,n_tree_116,n_tree_117,n_tree_118,n_tree_119,n_tree_120,n_tree_121,n_tree_122,n_tree_123,n_tree_124,n_tree_125,n_tree_127,n_tree_128,n_tree_129,n_tree_133 c_tree_3;
   classDef c_tree_4 fill:#e8f4f0,stroke:#6c7f8c,color:#233647;
-  class n_tree_17,n_tree_18,n_tree_19,n_tree_20,n_tree_23,n_tree_24,n_tree_25,n_tree_28,n_tree_29,n_tree_30,n_tree_31,n_tree_32,n_tree_33 c_tree_4;
+  class n_tree_17,n_tree_18,n_tree_19,n_tree_20,n_tree_21,n_tree_22,n_tree_23,n_tree_24,n_tree_27,n_tree_28,n_tree_29,n_tree_30,n_tree_33 c_tree_4;

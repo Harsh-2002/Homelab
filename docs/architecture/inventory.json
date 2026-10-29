@@ -1,30 +1,31 @@
 {
-  "verifiedOn": "2026-10-25",
+  "verifiedOn": "2026-10-29",
   "agentInference": { "hermesPrimary": { "provider": "opencode-go", "model": "deepseek-v4.1-flash" }, "hermesFallback": { "provider": "openai-codex", "model": "gpt-6-luna" }, "reasoning": "medium", "opencodePrimary": { "provider": "claude-code", "model": "claude-opus-5-5[1m]", "variant": "xhigh", "transport": "local Agent SDK / Claude CLI", "inferenceVerified": true } },
+  "maintenance": {"node": "px30", "phase": "evacuated; powered on for chassis swap", "kubernetesOffline": "k8s-203", "guestMemory": {"dev": {"balloonMiB": 10240, "maxMiB": 12288, "shares": 0, "restoreBalloonMiB": 2048, "restoreShares": 1000}}, "note": "Retain old chassis inventory until replacement hardware is verified; HAOS temporarily prefers px10."},
   "hosts": [
     { "name": "px10", "model": "Dell OptiPlex 5060", "cpu": "i5-8400T / 6 cores", "ramGB": 32 },
     { "name": "px20", "model": "Dell OptiPlex 5060", "cpu": "i5-8400T / 6 cores", "ramGB": 32 },
     { "name": "px30", "model": "Dell OptiPlex 7040", "cpu": "i5-6500TE / 4 cores", "ramGB": 32 }
   ],
   "guests": [
-    { "id": 100, "name": "dev", "host": "px10", "kind": "VM", "slot": [596, 112], "body": ["Codex · Claude Code · Hermes · OpenCode", "Herdr · shared tools / MCP · development workloads"] },
-    { "id": 104, "name": "observability", "host": "px10", "kind": "LXC", "slot": [724, 108], "body": ["Beszel · Grafana · VictoriaMetrics", "Uptime Kuma · PVE exporter"] },
-    { "id": 109, "name": "store", "host": "px10", "kind": "LXC", "slot": [848, 114], "body": ["Samba: AV · BACKUP · ISO", "Host USB SSDs → bind mounts → SMB shares"] },
-    { "id": 204, "name": "ctr", "host": "px20", "kind": "VM", "titleSuffix": " / Docker + Portainer", "slot": [596, 290], "body": ["Media       Jellyfin · qBittorrent · Motrix", "Personal   Immich · Karakeep · OpenCloud · Paperless", "Notes       Nivra · separate friend instance", "Build        Forgejo · Docker Registry · mirror worker", "Automate n8n · SearXNG · isolated sandbox", "Agents     OpenViking · Ollama · Omni", "Helpers    PostgreSQL · Valkey · Meilisearch · updater"] },
-    { "id": 106, "name": "orva", "host": "px20", "kind": "VM", "slot": [902, 72], "body": ["Serverless functions · Quick Share"] },
-    { "id": 101, "name": "proxy", "host": "px30", "kind": "LXC", "slot": [596, 64], "body": ["Caddy · HTTPS routing / TLS"] },
-    { "id": 102, "name": "dns", "host": "px30", "kind": "LXC", "slot": [674, 64], "body": ["AdGuard Home → Unbound recursion"] },
-    { "id": 103, "name": "auth", "host": "px30", "kind": "LXC", "slot": [752, 64], "body": ["Pocket ID / OIDC · Tinyauth / forward-auth"] },
-    { "id": 105, "name": "s3", "host": "px30", "kind": "LXC", "slot": [830, 64], "body": ["Cairn · RustFS / S3-compatible storage"] },
-    { "id": 107, "name": "haos", "host": "px30", "kind": "VM", "slot": [908, 66], "body": ["Home Assistant · Mosquitto · local device control"] },
-    { "id": 201, "name": "k8s-201", "host": "px10", "kind": "VM", "slot": [994, 112], "kubernetes": true, "body": ["Talos · control plane + workloads", "4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk"] },
-    { "id": 202, "name": "k8s-202", "host": "px20", "kind": "VM", "slot": [994, 112], "kubernetes": true, "body": ["Talos · control plane + workloads", "4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk"] },
-    { "id": 203, "name": "k8s-203", "host": "px30", "kind": "VM", "slot": [994, 112], "kubernetes": true, "body": ["Talos · control plane + workloads", "4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk"] }
+    {"id": 100, "name": "dev", "host": "px10", "kind": "VM", "slot": [596, 60], "body": ["Codex \u00b7 Claude Code \u00b7 Hermes \u00b7 OpenCode", "Herdr \u00b7 shared tools / MCP \u00b7 development workloads"]},
+    {"id": 104, "name": "observability", "host": "px10", "kind": "LXC", "slot": [660, 60], "body": ["Beszel \u00b7 Grafana \u00b7 VictoriaMetrics", "Uptime Kuma \u00b7 PVE exporter"]},
+    {"id": 109, "name": "store", "host": "px10", "kind": "LXC", "slot": [724, 60], "body": ["Samba: AV \u00b7 BACKUP \u00b7 ISO", "Host USB SSDs \u2192 bind mounts \u2192 SMB shares"]},
+    {"id": 204, "name": "ctr", "host": "px20", "kind": "VM", "titleSuffix": " / Docker + Portainer", "slot": [596, 230], "body": ["Media       Jellyfin \u00b7 qBittorrent \u00b7 Motrix", "Personal   Immich \u00b7 Karakeep \u00b7 OpenCloud \u00b7 Paperless", "Notes       Nivra \u00b7 separate friend instance", "Build        Forgejo \u00b7 Docker Registry \u00b7 mirror worker", "Automate n8n \u00b7 SearXNG \u00b7 isolated sandbox", "Agents     OpenViking \u00b7 Ollama \u00b7 Omni", "Helpers    PostgreSQL \u00b7 Valkey \u00b7 Meilisearch \u00b7 updater"]},
+    {"id": 106, "name": "orva", "host": "px20", "kind": "VM", "slot": [836, 72], "body": ["Serverless functions \u00b7 Quick Share"]},
+    {"id": 101, "name": "proxy", "host": "px20", "kind": "LXC", "slot": [918, 64], "body": ["Caddy \u00b7 HTTPS routing / TLS"]},
+    {"id": 102, "name": "dns", "host": "px10", "kind": "LXC", "slot": [788, 60], "body": ["AdGuard Home \u2192 Unbound recursion"]},
+    {"id": 103, "name": "auth", "host": "px10", "kind": "LXC", "slot": [852, 60], "body": ["Pocket ID / OIDC \u00b7 Tinyauth / forward-auth"]},
+    {"id": 105, "name": "s3", "host": "px10", "kind": "LXC", "slot": [916, 60], "body": ["Cairn \u00b7 RustFS / S3-compatible storage"]},
+    {"id": 107, "name": "haos", "host": "px10", "kind": "VM", "slot": [980, 60], "body": ["Home Assistant \u00b7 Mosquitto \u00b7 local device control"]},
+    {"id": 201, "name": "k8s-201", "host": "px10", "kind": "VM", "slot": [1044, 60], "kubernetes": true, "body": ["Talos \u00b7 control plane + workloads", "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"]},
+    {"id": 202, "name": "k8s-202", "host": "px20", "kind": "VM", "slot": [992, 112], "kubernetes": true, "body": ["Talos \u00b7 control plane + workloads", "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"]},
+    {"id": 203, "name": "k8s-203", "host": "px30", "kind": "VM", "slot": [596, 112], "kubernetes": true, "body": ["Talos \u00b7 control plane + workloads", "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"], "state": "stopped for chassis swap"}
   ],
   "kubernetes": {
     "network": ["Cilium CNI · L2 LoadBalancer services · CoreDNS", "Argo CD · Headlamp · Homepage · metrics-server", "vmagent · kube-state-metrics · node metrics"],
-    "storage": ["Longhorn block volumes on the 500 GiB disks", "Current volumes: 2 storage replicas each", "Data crosses hosts; replication is not backup."],
-    "supabase": ["CloudNativePG: 1 primary + 2 hot standbys", "Studio · Auth · REST · Realtime · Edge Functions", "Storage / imgproxy · Kong · pooler · logs / analytics"]
+    "storage": ["Longhorn: both active disks on k8s-201 / k8s-202", "Current volumes: 2 storage replicas each", "Data crosses hosts; replication is not backup."],
+    "supabase": ["Configured: 1 primary + 2 standbys; swap: 1 standby pending", "Studio · Auth · REST · Realtime · Edge Functions", "Storage / imgproxy · Kong · pooler · logs / analytics"]
   },
   "physicalStorage": [
     { "name": "Crucial X9 Pro USB SSD", "size": "4 TB", "host": "px10", "roles": ["AV", "BACKUP"] },

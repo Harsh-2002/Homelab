@@ -1,8 +1,9 @@
 # Proxmox hosts
 
-For the **planned px30 chassis swap**, the owner chose to wait until the
-replacement BIOS is ready. See [preflight, evacuation, return and rollback](PX30-HARDWARE-SWAP.md).
-Nothing has been evacuated or shut down; installed hardware/architecture remains unchanged.
+For the **px30 chassis swap**, temporary evacuation completed on 2026-10-29.
+See [current placement, temporary settings and required restoration](PX30-HARDWARE-SWAP.md).
+Five service guests run on px10/px20, VM203 is stopped, and px30 is in HA maintenance
+but still powered on. Preserve node identity and validate before returning services.
 
 For the owner-approved login-popup customization, persistent APT hook, validation and rollback, see [SUBSCRIPTION-POPUP.md](SUBSCRIPTION-POPUP.md). This does not change actual subscription status or repositories.
 
