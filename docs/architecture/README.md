@@ -3,12 +3,12 @@
 ## Temporary px30 evacuation, updated 30 October 2026
 
 The current inventory and exports show temporary service placement on px10/px20.
-The drives returned to the old7040; its SSH, healthy pools, three-node quorum
-and a controlled reboot were verified. It was subsequently shut down normally
-at the owner's request for another drive transfer. Last verified RAM was16GiB;
-HA maintenance remains enabled. MAC-independent onboard NIC naming is prepared
-for the next replacement attempt. Kubernetes runs on two nodes; VM203 is deliberately
-stopped and its automatic start temporarily disabled. Workloads remain evacuated.
+The replacement is verified over SSH as OptiPlex5060, i5-9400T, six cores and
+32GiB RAM. It has reached quorum with healthy pools, but its power/reset issue
+remains under investigation. Keep px30 in HA maintenance, services evacuated,
+and VM203 stopped/onboot0. A power-key input was captured on the ACPI button
+endpoint; that does not explain every observed boot ending. See the
+[diagnostic evidence and fast collector](../../infrastructure/proxmox/REBOOT-DIAGNOSTICS.md).
 See [execution and restoration](../../infrastructure/proxmox/PX30-HARDWARE-SWAP.md).
 On validated return, restore placement and memory/HA/replication settings, clear
 maintenance metadata and regenerate these artifacts. Do not treat this as decommissioning.
@@ -153,7 +153,7 @@ provenance records that origin. Preserve/re-embed it when replacing PNG exports.
 | --- | --- | --- |
 | px10 | Dell OptiPlex 5060, i5-8400T, 6 cores, 32 GB RAM | dev VM100; dns LXC102; auth LXC103; observability LXC104; s3 LXC105; haos VM107; store LXC109; Talos VM201 |
 | px20 | Dell OptiPlex 5060, i5-8400T, 6 cores, 32 GB RAM | proxy LXC101; orva VM106; ctr VM204; Talos VM202 |
-| px30 | Dell OptiPlex 7040, i5-6500TE, 4 cores, 16 GiB RAM currently | None; Talos VM203 remains stopped during swap preparation |
+| px30 | Dell OptiPlex 5060, i5-9400T, 6 cores, 32 GiB RAM | None; Talos VM203 remains stopped during swap preparation |
 
 All three physical NICs reported 1000 Mb/s, full duplex, link detected. Each host
 has separate rpool and data ZFS pools. The Netgear GS110TPv3 and partial port map

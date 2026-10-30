@@ -1,6 +1,17 @@
 # px30 hardware swap: preparation and return plan
 
-## Latest checkpoint: normal shutdown authorized, October 30
+## Latest checkpoint: replacement reachable, power/reset investigation ongoing
+
+The replacement is now verified over SSH as OptiPlex5060 with i5-9400T,
+six cores,32GiB RAM and BIOS1.32.0. It has reached three-node quorum with healthy
+pools, but several boots have ended. Keep HA maintenance and evacuated workloads
+in place. VM203 stays stopped/onboot0; do not fail back yet. A captured ACPI
+power-key event explains one clean shutdown, while a later boot ended without
+a clean sequence and the owner confirms no manual restart. See
+[evidence, limits and the tested two-second collector](REBOOT-DIAGNOSTICS.md).
+The temporary power-key inhibitor was lost on reboot; it is not a permanent fix.
+
+## Previous checkpoint: normal shutdown authorized, October 30
 
 After preparation and the successful reboot test below, the owner explicitly
 requested shutdown for the next drive transfer. Rechecked zero running guests,
