@@ -1,13 +1,13 @@
 {
-  "verifiedOn": "2026-10-29",
+  "verifiedOn": "2026-10-30",
   "serviceRecovery": {"proxy": {"services": ["caddy", "prometheus-node-exporter"], "waitFor": "networking.service (ifupdown2)", "restart": "on-failure / 5s / no start-limit lockout", "scope": "Single proxy instance; guest HA does not detect an application-process failure", "verification": "Live HTTPS, authenticated Home Assistant API and browser WebSocket; no cold reboot or injected failure"}},
   "agentInference": { "hermesPrimary": { "provider": "opencode-go", "model": "deepseek-v4.1-flash" }, "hermesFallback": { "provider": "openai-codex", "model": "gpt-6-luna" }, "reasoning": "medium", "opencodePrimary": { "provider": "claude-code", "model": "claude-opus-5-5[1m]", "variant": "xhigh", "transport": "local Agent SDK / Claude CLI", "inferenceVerified": true } },
-  "maintenance": {"node": "px30", "phase": "replacement reported powered on; network and boot unverified", "poweredOff": false, "kubernetesOffline": "k8s-203", "guestMemory": {"dev": {"balloonMiB": 10240, "maxMiB": 12288, "shares": 0, "restoreBalloonMiB": 2048, "restoreShares": 1000}}, "note": "Retain old chassis inventory until replacement hardware is verified; HAOS temporarily prefers px10."},
-  "networkSwitch": {"model": "NETGEAR GS110TPv3", "name": "home", "firmware": "7.1.1.13", "ports": {"g1": "camera / 100 Mbps", "g5": "px10 / 1 Gbps", "g6": "px20 / 1 Gbps", "g7": "replacement px30 cable / 1 Gbps link, no learned MAC", "g10": "router and downstream clients; exact intermediaries unverified"}, "management": "separate legacy subnet; temporary troubleshooting tunnel"},
+  "maintenance": {"node": "px30", "phase": "old 7040 restored; prepared NIC rule passed reboot; next replacement pending", "poweredOff": false, "nodeOnline": true, "vm203Onboot": 0, "restoreVm203Onboot": 1, "kubernetesOffline": "k8s-203", "guestMemory": {"dev": {"balloonMiB": 10240, "maxMiB": 12288, "shares": 0, "restoreBalloonMiB": 2048, "restoreShares": 1000}}, "note": "Old 7040 verified online with 16 GiB; workloads remain evacuated and HAOS temporarily prefers px10. Replacement hardware and display behavior still need validation."},
+  "networkSwitch": {"model": "NETGEAR GS110TPv3", "name": "home", "firmware": "7.1.1.13", "ports": {"g1": "camera / 100 Mbps", "g5": "px10 / 1 Gbps", "g6": "px20 / 1 Gbps", "g7": "px30 cable; old 7040 restored, host reports 1 Gbps", "g10": "router and downstream clients; exact intermediaries unverified"}, "management": "separate legacy subnet; temporary troubleshooting tunnel"},
   "hosts": [
     { "name": "px10", "model": "Dell OptiPlex 5060", "cpu": "i5-8400T / 6 cores", "ramGB": 32 },
     { "name": "px20", "model": "Dell OptiPlex 5060", "cpu": "i5-8400T / 6 cores", "ramGB": 32 },
-    { "name": "px30", "model": "Replacement (unverified)", "cpu": "i5-9500T (reported)", "ramGB": 32, "unverifiedHardware": true, "previousModel": "Dell OptiPlex 7040" }
+    { "name": "px30", "model": "Dell OptiPlex 7040", "cpu": "i5-6500TE / 4 cores", "ramGB": 16 }
   ],
   "guests": [
     {"id": 100, "name": "dev", "host": "px10", "kind": "VM", "slot": [596, 60], "body": ["Codex \u00b7 Claude Code \u00b7 Hermes \u00b7 OpenCode", "Herdr \u00b7 shared tools / MCP \u00b7 development workloads"]},
@@ -22,7 +22,7 @@
     {"id": 107, "name": "haos", "host": "px10", "kind": "VM", "slot": [980, 60], "body": ["Home Assistant \u00b7 Mosquitto \u00b7 local device control"]},
     {"id": 201, "name": "k8s-201", "host": "px10", "kind": "VM", "slot": [1044, 60], "kubernetes": true, "body": ["Talos \u00b7 control plane + workloads", "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"]},
     {"id": 202, "name": "k8s-202", "host": "px20", "kind": "VM", "slot": [992, 112], "kubernetes": true, "body": ["Talos \u00b7 control plane + workloads", "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"]},
-    {"id": 203, "name": "k8s-203", "host": "px30", "kind": "VM", "slot": [596, 112], "kubernetes": true, "body": ["Talos \u00b7 control plane + workloads", "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"], "state": "last verified stopped; current guest state unverified", "statusLabel": "unreachable"}
+    {"id": 203, "name": "k8s-203", "host": "px30", "kind": "VM", "slot": [596, 112], "kubernetes": true, "body": ["Talos \u00b7 control plane + workloads", "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"], "state": "stopped; onboot disabled until replacement verified", "statusLabel": "stopped"}
   ],
   "kubernetes": {
     "network": ["Cilium CNI · L2 LoadBalancer services · CoreDNS", "Argo CD · Headlamp · Homepage · metrics-server", "vmagent · kube-state-metrics · node metrics"],

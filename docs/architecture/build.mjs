@@ -56,7 +56,7 @@ node(64, 166, 392, 150, 'People & devices', ['Browser · phone · workstation', 
 node(512, 166, 868, 150, 'Two access paths', [
   'Public: Internet → router → Caddy → selected services',
   'Private: LAN / Tailscale → Caddy or native LAN protocols',
-  inventory.maintenance ? 'Tailscale routing: px10 / px20 active; px30 unreachable.' : 'Tailscale subnet routing runs on all three Proxmox hosts.'
+  inventory.maintenance ? (inventory.maintenance.nodeOnline ? 'Tailscale: three hosts online; px30 in maintenance.' : 'Tailscale routing: px10 / px20 active; px30 unreachable.') : 'Tailscale subnet routing runs on all three Proxmox hosts.'
 ], C.blueBg);
 node(1436, 166, 396, 150, 'Cloudflare', ['DNS-only records · DNS-01 TLS', 'Private defaults; public exceptions', 'DNS is not a traffic tunnel.']);
 node(1888, 166, 448, 150, 'slate · external GCP VM', ['Caddy · Uptime Kuma · ntfy', 'Independent monitoring & alerts', 'Checks home over Tailscale']);
@@ -93,7 +93,7 @@ path('M1200 1176V1212', C.muted, true, true);
 text(64, 1160, 'Placement is a snapshot; managed guests can relocate.', 20, C.muted);
 
 box(64, 1218, 2272, 282, C.blueBg, '#b5cbd8', 16);
-text(88, 1258, inventory.maintenance ? 'Kubernetes: two active nodes; k8s-203 unreachable during hardware swap' : 'One Kubernetes cluster across all three physical hosts', 29, C.ink, 600);
+text(88, 1258, inventory.maintenance ? 'Kubernetes: two active nodes; k8s-203 stopped during hardware swap' : 'One Kubernetes cluster across all three physical hosts', 29, C.ink, 600);
 text(88, 1294, 'Talos management: Omni on ctr. Kubernetes desired state: GitHub → Argo CD.', 23, C.muted);
 path('M812 1324V1474'); path('M1568 1324V1474');
 text(88, 1348, 'Networking & operations', 25, C.blue, 600);
@@ -128,7 +128,7 @@ path('M64 430H2336');
 text(64, 481, 'GitOps & cluster operations', 28, C.ink, 600);
 node(64, 507, 420, 112, 'GitHub · Homelab repository', ['Declarative non-secret configuration', 'Reviewed changes → desired state']);
 node(560, 507, 486, 112, 'Argo CD · Kubernetes', ['Reconciles tracked applications', 'Signed public webhook; private UI']);
-node(1122, 507, 486, 112, 'Talos / Kubernetes', ['Cilium network · Longhorn volumes', inventory.maintenance ? 'k8s-201 / 202 active; k8s-203 unreachable' : 'Services scheduled across three VMs']);
+node(1122, 507, 486, 112, 'Talos / Kubernetes', ['Cilium network · Longhorn volumes', inventory.maintenance ? 'k8s-201 / 202 active; k8s-203 stopped' : 'Services scheduled across three VMs']);
 node(1684, 507, 652, 112, 'Omni · ctr', ['Manages the three Talos machines', 'Runs on ctr, not inside Kubernetes']);
 path('M484 563H558', C.muted, true, true);
 path('M1046 563H1120', C.muted, true, true);

@@ -1,10 +1,13 @@
 # Homelab architecture
 
-## Temporary px30 evacuation, 29 October 2026
+## Temporary px30 evacuation, updated 30 October 2026
 
 The current inventory and exports show temporary service placement on px10/px20.
-The replacement px30 is reported powered on but remains network-unreachable;
-its model and boot state are unverified. The old7040 is historical rollback hardware. Kubernetes runs on two reachable nodes; k8s-203 remains NotReady and its current VM state is unverified.
+The drives are back in the old7040; its SSH, healthy pools, three-node quorum
+and a controlled reboot are verified. It currently has16GiB RAM and remains in
+HA maintenance. MAC-independent onboard NIC naming is prepared for the next
+replacement attempt. Kubernetes still runs on two nodes; VM203 is deliberately
+stopped and its automatic start temporarily disabled. Workloads remain evacuated.
 See [execution and restoration](../../infrastructure/proxmox/PX30-HARDWARE-SWAP.md).
 On validated return, restore placement and memory/HA/replication settings, clear
 maintenance metadata and regenerate these artifacts. Do not treat this as decommissioning.
@@ -147,15 +150,15 @@ provenance records that origin. Preserve/re-embed it when replacing PNG exports.
 
 | Host | Physical hardware | Running guests |
 | --- | --- | --- |
-| px10 | Dell OptiPlex 5060, i5-8400T, 6 cores, 32 GB RAM | dev VM100; observability LXC104; store LXC109; Talos VM201 |
-| px20 | Dell OptiPlex 5060, i5-8400T, 6 cores, 32 GB RAM | orva VM106; ctr VM204; Talos VM202 |
-| px30 | Dell OptiPlex 7040, i5-6500TE, 4 cores, 32 GB RAM | proxy LXC101; dns LXC102; auth LXC103; s3 LXC105; haos VM107; Talos VM203 |
+| px10 | Dell OptiPlex 5060, i5-8400T, 6 cores, 32 GB RAM | dev VM100; dns LXC102; auth LXC103; observability LXC104; s3 LXC105; haos VM107; store LXC109; Talos VM201 |
+| px20 | Dell OptiPlex 5060, i5-8400T, 6 cores, 32 GB RAM | proxy LXC101; orva VM106; ctr VM204; Talos VM202 |
+| px30 | Dell OptiPlex 7040, i5-6500TE, 4 cores, 16 GiB RAM currently | None; Talos VM203 remains stopped during swap preparation |
 
 All three physical NICs reported 1000 Mb/s, full duplex, link detected. Each host
-has separate rpool and data ZFS pools. No dedicated switch, router/AP model,
-physical port map, upstream bandwidth, VLAN topology or UPS inventory was
-verified, so none is invented. The LAN line is a logical network, not a claim
-that every cable is plugged directly into the router. Guest placement can change
+has separate rpool and data ZFS pools. The Netgear GS110TPv3 and partial port map
+are verified in the switch runbook; router/AP model, upstream bandwidth, VLAN
+topology and UPS inventory remain unverified. The LAN line does not claim every
+cable is plugged directly into the router. Guest placement can change
 through HA or maintenance.
 
 ## Workload inventory

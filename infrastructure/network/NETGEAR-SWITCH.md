@@ -71,6 +71,14 @@ cutover. Keep the temporary URL available while the owner is using it.
 
 ## px30 finding and limits
 
+Update October30: both drives are back on the old7040 and SSH/quorum/pools were
+verified, including a controlled reboot after repair. The previous boot journal
+confirms the attempted replacement's NIC became`eno1` while vmbr0 required`nic0`.
+An onboard PCI-path rule now replaces the MAC dependency and is included in both
+boot images. The next replacement's actual path/hardware must still be checked;
+see [current preparation checkpoint](../proxmox/PX30-HARDWARE-SWAP.md).
+The following describes the earlier investigation, not current host reachability.
+
 The replacement is reported powered on but unreachable at its preserved static
 LAN address. It is no longer accurate to describe the physical machine as still
 powered off. Hardware/boot identity remains unverified remotely. px10 and px20

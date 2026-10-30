@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1820" viewBox="0 0 2400 1820" role="img" aria-labelledby="title desc"><title id="title">Homelab architecture</title><desc id="desc">Physical hosts, service placement and the shared platform.. Architecture snapshot verified 29 Oct 2026. Share-safe. IP addresses and credentials omitted.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#52636d"/></marker><marker id="tealArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#25675d"/></marker></defs><rect width="2400" height="1820" fill="#f8fafb"/><g font-family="Arial, Liberation Sans, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1820" viewBox="0 0 2400 1820" role="img" aria-labelledby="title desc"><title id="title">Homelab architecture</title><desc id="desc">Physical hosts, service placement and the shared platform.. Architecture snapshot verified 30 Oct 2026. Share-safe. IP addresses and credentials omitted.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#52636d"/></marker><marker id="tealArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#25675d"/></marker></defs><rect width="2400" height="1820" fill="#f8fafb"/><g font-family="Arial, Liberation Sans, sans-serif">
 <text x="64" y="82" font-size="46" fill="#18252c" font-weight="600" >Homelab architecture</text>
 <text x="64" y="122" font-size="23" fill="#52636d" font-weight="400" >Physical hosts, service placement and the shared platform.</text>
-<text x="2336" y="77" font-size="23" fill="#52636d" font-weight="400" text-anchor="end">l3b / 29 Oct 2026</text>
+<text x="2336" y="77" font-size="23" fill="#52636d" font-weight="400" text-anchor="end">l3b / 30 Oct 2026</text>
 <text x="2336" y="113" font-size="21" fill="#52636d" font-weight="400" text-anchor="end">1 / 2</text>
 <g data-node="true">
 <rect x="64" y="166" width="392" height="150" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -14,7 +14,7 @@
 <text x="534" y="200" font-size="25" fill="#18252c" font-weight="600" >Two access paths</text>
 <text x="534" y="231" font-size="21" fill="#52636d" font-weight="400" >Public: Internet → router → Caddy → selected services</text>
 <text x="534" y="260" font-size="21" fill="#52636d" font-weight="400" >Private: LAN / Tailscale → Caddy or native LAN protocols</text>
-<text x="534" y="289" font-size="21" fill="#52636d" font-weight="400" >Tailscale routing: px10 / px20 active; px30 unreachable.</text>
+<text x="534" y="289" font-size="21" fill="#52636d" font-weight="400" >Tailscale: three hosts online; px30 in maintenance.</text>
 </g>
 <g data-node="true">
 <rect x="1436" y="166" width="396" height="150" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -52,8 +52,8 @@
 <path d="M864 578H1536" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <rect x="1616" y="482" width="720" height="650" rx="16" fill="#ffffff" stroke="#aebfc7" stroke-width="1.5"/>
 <text x="1640" y="523" font-size="32" fill="#18252c" font-weight="600" >px30 · maintenance</text>
-<text x="2312" y="520" font-size="24" fill="#52636d" font-weight="400" text-anchor="end">Replacement (unverified)</text>
-<text x="1640" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-9500T (reported) · 32 (reported) GB RAM · ZFS OS + data pools</text>
+<text x="2312" y="520" font-size="24" fill="#52636d" font-weight="400" text-anchor="end">Dell OptiPlex 7040</text>
+<text x="1640" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-6500TE / 4 cores · 16 GB RAM · ZFS OS + data pools</text>
 <path d="M1640 578H2312" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <g data-node="true">
 <rect x="88" y="596" width="672" height="60" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -123,7 +123,7 @@
 </g>
 <g data-node="true">
 <rect x="1640" y="596" width="672" height="112" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="1662" y="630" font-size="25" fill="#18252c" font-weight="600" >k8s-203 · VM 203 · unreachable</text>
+<text x="1662" y="630" font-size="25" fill="#18252c" font-weight="600" >k8s-203 · VM 203 · stopped</text>
 <text x="1662" y="661" font-size="21" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
 <text x="1662" y="690" font-size="21" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk</text>
 </g>
@@ -134,7 +134,7 @@
 <path d="M1200 1176V1212" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
 <text x="64" y="1160" font-size="20" fill="#52636d" font-weight="400" >Placement is a snapshot; managed guests can relocate.</text>
 <rect x="64" y="1218" width="2272" height="282" rx="16" fill="#edf4f8" stroke="#b5cbd8" stroke-width="1.5"/>
-<text x="88" y="1258" font-size="29" fill="#18252c" font-weight="600" >Kubernetes: two active nodes; k8s-203 unreachable during hardware swap</text>
+<text x="88" y="1258" font-size="29" fill="#18252c" font-weight="600" >Kubernetes: two active nodes; k8s-203 stopped during hardware swap</text>
 <text x="88" y="1294" font-size="23" fill="#52636d" font-weight="400" >Talos management: Omni on ctr. Kubernetes desired state: GitHub → Argo CD.</text>
 <path d="M812 1324V1474" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <path d="M1568 1324V1474" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />

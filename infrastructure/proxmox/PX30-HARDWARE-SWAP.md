@@ -1,6 +1,75 @@
 # px30 hardware swap: preparation and return plan
 
-## Owner decision and current state
+## Current checkpoint: back on 7040, prepared for another attempt, October 30
+
+The owner returned both existing drives to the old7040. SSH, three-node quorum,
+UEFI boot and both ZFS pools were verified, followed by a successful controlled
+reboot after the network repair. Current hardware reports OptiPlex7040,
+i5-6500TE and16GiB RAM. The planned next machine is owner-described as a Dell
+OptiPlex with an i5 ninth-generation CPU; its next boot must verify actual model,
+CPU, RAM, firmware and device paths. Do not treat the attempted machine's identity
+as proof of the next machine's specifications.
+
+Preserved boot logs establish the earlier network failure: on the attempted
+replacement (DMI OptiPlex5060, BIOS1.32.0), Intel e1000e LAN at PCI0000:00:1f.6
+became `eno1`. The MAC-bound installer rule did not match, and ifupdown2 logged
+`vmbr0: bridge port nic0 does not exist`. This is now confirmed, not speculation.
+
+The last seven recorded replacement boots also show logind receiving a short
+power-key event, then an orderly power-off. The owner explains those were manual
+attempts to force power-off after the login display appeared to shut down while
+the device stayed powered. Therefore these events do not establish a spontaneous
+shutdown, faulty button, kernel panic or HA watchdog reset. The earlier display
+behavior remains unproven. The watchdog multiplexer exited cleanly in the last
+boot; do not disable HA fencing or ignore power keys as an assumed fix.
+
+### Applied preparation
+
+- `/etc/systemd/network/50-pmx-nic0.link` overrides the same-named vendor rule,
+  matching the Intel PCH onboard PCI path instead of a motherboard MAC. The path
+  was observed on both the7040 and attempted5060. Source: `px30-onboard-nic.link`.
+  It preserves bridge port`nic0` and static host address. A different PCI path or
+  multiple/replaced adapters require a reviewed rule; this is not universal NIC
+  discovery or DHCP. No live interface trigger/down/up was issued.
+- `/etc/initramfs-tools/hooks/px30-nic` embeds the override for early udev.
+  Both installed kernel initramfs images were regenerated and synced to the ESP.
+  Source: `px30-nic-initramfs-hook`. The old vendor rule remains for rollback.
+- VM203 `onboot` is temporarily0 (restore1 after validated replacement return).
+  It remains stopped. px30 stays in HA maintenance; evacuated services, paused
+  replication jobs, Kubernetes cordon and Longhorn eviction remain unchanged.
+- Protected config/state bundle copied to px10 with matching SHA256, under
+  `/root/px30-swap-20261029/config-prepared-20261030.tar.gz`. Source bundle and
+  previous-boot journal are under `/root/px30-swap-20261030/` on px30. This bundle
+  includes Tailscale identity, is mode0600, and must never enter Git or memory.
+
+Reproduce the rule installation only after verifying the target onboard PCI path:
+
+```bash
+scp infrastructure/proxmox/px30-onboard-nic.link px30:/etc/systemd/network/50-pmx-nic0.link
+scp infrastructure/proxmox/px30-nic-initramfs-hook px30:/etc/initramfs-tools/hooks/px30-nic
+ssh px30 'chmod 0644 /etc/systemd/network/50-pmx-nic0.link; chmod 0755 /etc/initramfs-tools/hooks/px30-nic; udevadm control --reload; update-initramfs -u -k all'
+```
+
+The controlled reboot returned with a new boot ID, the override selected,
+`nic0`/vmbr0 and its original default route intact, both pools healthy, VM203
+still stopped and three-node quorum restored. Machine ID and SSH host-key hash
+matched their pre-reboot values; Tailscale state can legitimately change during
+reconnection, so confirm its node identity/addresses and running connection
+instead of requiring a byte-identical mutable state file. Services on px10/px20
+were not restarted or failed back. Leave this host powered on for inspection;
+use a normal shutdown and confirm it is off before another physical drive move.
+Next replacement boot still needs SSH, NIC link, quorum, pools and stability
+verification before any workload return.
+
+Post-reboot endpoint checks: Home Assistant and aggregate Proxmox HTTPS200;
+Homepage's per-card checks passed32/33 initially, including px30. Longhorn's
+monitor request timed out once, then its VIP returned200 and three consecutive
+checks through Homepage's actual handler returned200. Both UI replicas were
+Ready, five attached volumes healthy and the stopped standby volume detached
+with unknown robustness as expected. This does not certify every authenticated
+application workflow or restore the missing third Kubernetes node.
+
+## Original decision and evacuation record, October 29
 
 Prepared on **2026-10-29**. The owner plans to replace the OptiPlex 7040 chassis
 with a machine described as having an Intel i5-9500T. Its exact model, BIOS,

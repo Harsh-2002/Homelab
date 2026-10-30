@@ -33,7 +33,7 @@ add('wifi','bulb','Wipro bulb','device','Tuya LAN / TCP 6668');
 add('wifi','ac','Samsung AC','device','Local DTLS / UDP 49154');
 add('lan','camera','Outdoor camera','device','Network attachment type unverified');
 add('lan','clients','Your phone / workstation','device','Client addresses vary');
-add('internet','tailscale','Tailscale','logical',inv.maintenance ? 'px10 / px20 active; px30 unreachable' : 'Subnet routes on px10 / px20 / px30');
+add('internet','tailscale','Tailscale','logical',inv.maintenance ? (inv.maintenance.nodeOnline ? 'All three hosts online; px30 maintenance' : 'px10 / px20 active; px30 unreachable') : 'Subnet routes on px10 / px20 / px30');
 add('internet','cloudflare','Cloudflare DNS','logical','DNS records / ACME DNS-01, not a tunnel');
 add('internet','model-apis','External model APIs','logical','Hermes: DeepSeek Flash / Codex fallback');
 add('internet','github','GitHub / Homelab repository','logical','Declarative configuration');
@@ -75,7 +75,7 @@ for (const [id,label,services] of stacks) {
   add('docker',id,label,'logical');
   for (const s of services) add(id,s,s,'service',s==='gitea-mirror'?'Restarting / not healthy':'Docker-internal unless published');
 }
-add('lan','kubernetes','Kubernetes / logical cluster','logical',inv.maintenance ? 'k8s-201 / 202 active; k8s-203 unreachable' : 'Members: k8s-201 / 202 / 203');
+add('lan','kubernetes','Kubernetes / logical cluster','logical',inv.maintenance ? 'k8s-201 / 202 active; k8s-203 stopped' : 'Members: k8s-201 / 202 / 203');
 for (const [id,label,services] of [
  ['kube-network','Cluster networking',['Cilium','CoreDNS']],
  ['kube-platform','Platform / GitOps',['Argo CD','Headlamp','Homepage','metrics-server','vmagent','kube-state-metrics']],
@@ -86,7 +86,7 @@ for (const [id,label,services] of [
   add('kubernetes',id,label,'logical');
   for (const s of services) add(id,'kube-'+s.toLowerCase().replaceAll(' ','-'),s + (inv.maintenance && s==='PostgreSQL standby B' ? ' / pending' : ''),'service',id==='cnpg'?'Streaming replication':id==='kube-volumes'?'2 replicas per current volume':'Kubernetes Service');
 }
-for(const g of inv.guests.filter(g=>g.kubernetes)) add(g.name,g.name+'-disk','Longhorn data disk','physical',g.state ? '500 GiB / unreachable; replicas evacuated' : '500 GiB / host-local ZFS');
+for(const g of inv.guests.filter(g=>g.kubernetes)) add(g.name,g.name+'-disk','Longhorn data disk','physical',g.state ? '500 GiB / stopped; replicas evacuated' : '500 GiB / host-local ZFS');
 add('frigate','recordings','Frigate recordings','service','ctr local /data/apps/frigate/media');
 const Q = x=>JSON.stringify(x);
 const dot = ['digraph G {','graph [rankdir=LR, ordering=out, splines=polyline, nodesep=0.20, ranksep=0.95, margin=0.2];',

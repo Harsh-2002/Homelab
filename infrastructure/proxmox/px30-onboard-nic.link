@@ -1,0 +1,10 @@
+# Intel PCH onboard LAN slot verified on the 7040 and the attempted 5060.
+# Keep the Proxmox bridge port stable across a motherboard MAC change.
+# Recheck this PCI path before using a different replacement model.
+[Match]
+Path=pci-0000:00:1f.6
+Type=ether
+
+[Link]
+NamePolicy=
+Name=nic0
