@@ -1,24 +1,18 @@
 # Homelab architecture
 
-## Temporary px30 evacuation, updated 30 October 2026
+## Normal placement restored, 30 October 2026
 
-The current inventory and exports show temporary service placement on px10/px20.
-The replacement is verified as OptiPlex5060, i5-9400T, six cores and32GiB RAM.
-Two remote reboot cycles on7.0.14-26-pve passed301.3seconds each, including normal
-boot selection and persistent NIC settings. px30 was then shut down normally
-for the owner's rack move. Keep maintenance, evacuated services and VM203
-stopped/onboot0 until rack return. These finite idle-host checks do not prove
-the earlier reset's cause or validate cold starts/load. See the
-[diagnostic evidence and fast collector](../../infrastructure/proxmox/REBOOT-DIAGNOSTICS.md).
-See [execution and restoration](../../infrastructure/proxmox/PX30-HARDWARE-SWAP.md).
-On validated return, restore placement and memory/HA/replication settings, clear
-maintenance metadata and regenerate these artifacts. Do not treat this as decommissioning.
+All three physical hosts and Talos VMs are online. Proxy, DNS, identity, S3 and
+Home Assistant are back on px30; px10 retains dev/observability/store and px20
+retains Orva/Docker. HA maintenance, Kubernetes cordon/Longhorn eviction and
+replication pauses are cleared. VM100's temporary memory settings are restored.
+The verified replacement is OptiPlex5060, i5-9400T, six cores and32GiB RAM.
+All hosts run kernel7.0.14-26-pve and manager9.2.24; obsolete kernels are removed.
 
-px10/px20 package maintenance installs manager9.2.24 and kernel26; they remain
-on running kernel19 pending the owner’s restart. Guarded next-boot cleanup removes
-older kernels only after health/quorum gates. px30 remains off, with cleanup
-pending return. Service placement and flow relationships are unchanged. See
-[package maintenance](../../infrastructure/proxmox/PACKAGE-MAINTENANCE.md).
+See [return-to-service validation and cleanup](../../infrastructure/proxmox/RETURN-TO-SERVICE.md).
+Earlier power/reset evidence remains documented; successful return does not
+prove its original cause. The inventory and current exports show normal service
+ownership rather than the historical evacuation. IP-bearing exports stay ignored.
 
 ## Current direction: internal Excalidraw topology
 

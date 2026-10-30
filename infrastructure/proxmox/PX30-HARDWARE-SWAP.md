@@ -1,5 +1,18 @@
 # px30 hardware swap: preparation and return plan
 
+## Current checkpoint: rack return and normal placement restored, October 30
+
+Owner confirmed all three nodes online and authorized supervised restoration.
+The replacement is in service with its original identity/disks. VM203 onboot,
+HA affinity, replication, Kubernetes/Longhorn scheduling and VM100 memory settings
+are restored; service placement is again the pre-evacuation layout. See
+[the current return-to-service record](RETURN-TO-SERVICE.md) for validation,
+cluster peer DNS repair, replica reseeding and artifact cleanup. Earlier entries
+below are dated history; their maintenance holds and retained-copy instructions
+are superseded by the completed return record. Original reset cause remains
+unresolved. Old kernels are removed following the owner's later cleanup request.
+
+
 ## Acceptance checkpoint: updated-kernel reboot tests, October 30
 
 The owner selected two remote reboot cycles, after checking official driver,

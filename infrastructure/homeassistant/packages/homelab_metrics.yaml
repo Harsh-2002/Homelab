@@ -25,6 +25,9 @@ rest:
         unit_of_measurement: "%"
         icon: mdi:cpu-64-bit
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'cpu') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'cpu') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -33,6 +36,9 @@ rest:
         unit_of_measurement: "%"
         icon: mdi:memory
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'ram') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'ram') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -41,6 +47,9 @@ rest:
         unit_of_measurement: "GiB"
         icon: mdi:memory
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'ram_used') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'ram_used') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -49,6 +58,9 @@ rest:
         unit_of_measurement: "GiB"
         icon: mdi:memory
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'ram_total') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'ram_total') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -57,6 +69,9 @@ rest:
         unit_of_measurement: "%"
         icon: mdi:harddisk
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'disk') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'disk') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -65,6 +80,9 @@ rest:
         unit_of_measurement: "GiB"
         icon: mdi:harddisk
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'disk_free') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'disk_free') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -74,6 +92,9 @@ rest:
         icon: mdi:thermometer
         state_class: measurement
         device_class: temperature
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'cpu_temperature') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'cpu_temperature') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -83,6 +104,9 @@ rest:
         icon: mdi:thermometer
         state_class: measurement
         device_class: temperature
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'nvme_temperature') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'nvme_temperature') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -92,6 +116,9 @@ rest:
         icon: mdi:clock-outline
         state_class: measurement
         device_class: duration
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'uptime') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px10') | selectattr('metric.ha_stat', 'eq', 'uptime') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -100,6 +127,9 @@ rest:
         unit_of_measurement: "%"
         icon: mdi:cpu-64-bit
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'cpu') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'cpu') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -108,6 +138,9 @@ rest:
         unit_of_measurement: "%"
         icon: mdi:memory
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'ram') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'ram') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -116,6 +149,9 @@ rest:
         unit_of_measurement: "GiB"
         icon: mdi:memory
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'ram_used') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'ram_used') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -124,6 +160,9 @@ rest:
         unit_of_measurement: "GiB"
         icon: mdi:memory
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'ram_total') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'ram_total') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -132,6 +171,9 @@ rest:
         unit_of_measurement: "%"
         icon: mdi:harddisk
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'disk') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'disk') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -140,6 +182,9 @@ rest:
         unit_of_measurement: "GiB"
         icon: mdi:harddisk
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'disk_free') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'disk_free') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -149,6 +194,9 @@ rest:
         icon: mdi:thermometer
         state_class: measurement
         device_class: temperature
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'cpu_temperature') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'cpu_temperature') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -158,6 +206,9 @@ rest:
         icon: mdi:thermometer
         state_class: measurement
         device_class: temperature
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'nvme_temperature') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'nvme_temperature') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -167,6 +218,9 @@ rest:
         icon: mdi:clock-outline
         state_class: measurement
         device_class: duration
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'uptime') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px20') | selectattr('metric.ha_stat', 'eq', 'uptime') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -175,6 +229,9 @@ rest:
         unit_of_measurement: "%"
         icon: mdi:cpu-64-bit
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'cpu') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'cpu') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -183,6 +240,9 @@ rest:
         unit_of_measurement: "%"
         icon: mdi:memory
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'ram') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'ram') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -191,6 +251,9 @@ rest:
         unit_of_measurement: "GiB"
         icon: mdi:memory
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'ram_used') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'ram_used') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -199,6 +262,9 @@ rest:
         unit_of_measurement: "GiB"
         icon: mdi:memory
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'ram_total') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'ram_total') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -207,6 +273,9 @@ rest:
         unit_of_measurement: "%"
         icon: mdi:harddisk
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'disk') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'disk') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -215,6 +284,9 @@ rest:
         unit_of_measurement: "GiB"
         icon: mdi:harddisk
         state_class: measurement
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'disk_free') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'disk_free') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -224,6 +296,9 @@ rest:
         icon: mdi:thermometer
         state_class: measurement
         device_class: temperature
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'cpu_temperature') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'cpu_temperature') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -233,6 +308,9 @@ rest:
         icon: mdi:thermometer
         state_class: measurement
         device_class: temperature
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'nvme_temperature') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'nvme_temperature') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}
@@ -242,6 +320,9 @@ rest:
         icon: mdi:clock-outline
         state_class: measurement
         device_class: duration
+        availability: >-
+          {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'uptime') | list if value_json is defined else [] %}
+          {{ rows | length > 0 and is_number(rows[0].value[1]) }}
         value_template: >-
           {% set rows = value_json.get('data', {}).get('result', []) | selectattr('metric.host', 'eq', 'px30') | selectattr('metric.ha_stat', 'eq', 'uptime') | list %}
           {{ rows[0].value[1] | float | round(1) if rows else none }}

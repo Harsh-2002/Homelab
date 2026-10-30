@@ -1,5 +1,16 @@
 # Proxmox package maintenance
 
+## Completion after rack return
+
+All three hosts have booted7.0.14-26-pve. Guarded old-kernel cleanup succeeded on
+px10/px20 at restart and on px30 after return. Only the running kernel remains
+on each host. Unused dependencies and APT caches are removed. The completed
+one-time live helpers, service/timer files and markers were uninstalled; their
+tracked sources below remain available for future maintenance. The pending
+restart/offline-cleanup descriptions in the original execution record are now
+historical. See [return to service](RETURN-TO-SERVICE.md).
+
+
 ## 30 October 2026
 
 Owner requested current Proxmox/kernel/security packages on every node and removal

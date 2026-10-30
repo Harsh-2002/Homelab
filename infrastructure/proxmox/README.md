@@ -3,11 +3,10 @@
 See [package maintenance and guarded old-kernel cleanup](PACKAGE-MAINTENANCE.md)
 for the October 30 updates and next-boot cleanup on px10/px20.
 
-For the **px30 chassis swap**, temporary evacuation completed on 2026-10-29.
-See [current placement, temporary settings and required restoration](PX30-HARDWARE-SWAP.md).
-Five service guests run on px10/px20, VM203 is stopped, and px30 is in HA maintenance
-and powered off after owner-authorized normal shutdown. Preserve node identity
-and validate before returning services.
+The **px30 chassis swap has returned to service**. All three hosts are online;
+normal placement, HA/replication and memory settings are restored. See
+[return-to-service checks, cluster DNS repair and cleanup](RETURN-TO-SERVICE.md).
+The [hardware-swap record](PX30-HARDWARE-SWAP.md) is historical context.
 
 For the owner-approved login-popup customization, persistent APT hook, validation and rollback, see [SUBSCRIPTION-POPUP.md](SUBSCRIPTION-POPUP.md). This does not change actual subscription status or repositories.
 

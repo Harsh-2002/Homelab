@@ -1,5 +1,18 @@
 # Frigate and physical-node monitoring in Home Assistant
 
+## Post-cluster-restart recovery, 30 October 2026
+
+All three hosts are back online. Final checks found11 persisted/unavailable
+metric entities while all exporters were up and VictoriaMetrics returned27
+series. Native REST reload recovered the entities. The tracked package now
+uses a per-sensor availability template for missing/undefined/non-numeric data;
+config check and live reload passed, with all27 actual runtime entities available.
+Valid/missing/undefined/NaN template cases were verified without interrupting
+exporters. Camera snapshot and private authenticated HA API passed. The local
+AC is unavailable because its mains power is off, confirmed by the owner.
+See [return-to-service record](../proxmox/RETURN-TO-SERVICE.md).
+
+
 Deployed 2026-10-22, Core2026.10.2. Owner requested existing Frigate integration
 and basic px10/px20/px30 host stats, then explicitly requested no descriptive
 paragraphs on Nodes/Cameras/AC Care. Native cards only; AC Control unchanged.

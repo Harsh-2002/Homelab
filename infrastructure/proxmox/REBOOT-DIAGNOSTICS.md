@@ -1,5 +1,18 @@
 # px30 reboot evidence and fast capture
 
+## Cleanup after completed rack return
+
+The owner requested removal of temporary artifacts. After guest return, HAOS
+replication reseeding and API checks, removed the private px30-diagnostics
+scratch directory (934031870 bytes of files), including raw captures and local
+collector copies. Temporary receiver/journal observer listeners are absent.
+Removed per-host px30-swap and package-maintenance scratch/config bundles.
+The historical artifact paths below no longer exist. The evidence summary and
+reproducible tracked collector sources remain; native system and PVE journals
+were preserved. Original reset cause remains unresolved, not declared fixed.
+See [return-to-service record](RETURN-TO-SERVICE.md).
+
+
 ## Driver/package review and requested reboot acceptance, October 30
 
 The owner requested driver-related updates before two **remote reboot cycles**,
