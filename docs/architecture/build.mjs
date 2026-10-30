@@ -56,7 +56,7 @@ node(64, 166, 392, 150, 'People & devices', ['Browser · phone · workstation', 
 node(512, 166, 868, 150, 'Two access paths', [
   'Public: Internet → router → Caddy → selected services',
   'Private: LAN / Tailscale → Caddy or native LAN protocols',
-  inventory.maintenance ? (inventory.maintenance.nodeOnline ? 'Tailscale: three hosts online; px30 in maintenance.' : 'Tailscale routing: px10 / px20 active; px30 unreachable.') : 'Tailscale subnet routing runs on all three Proxmox hosts.'
+  inventory.maintenance ? (inventory.maintenance.nodeOnline ? 'Tailscale: three hosts online; px30 in maintenance.' : (inventory.maintenance.poweredOff ? 'Tailscale routing: px10 / px20 active; px30 powered off.' : 'Tailscale routing: px10 / px20 active; px30 unreachable.')) : 'Tailscale subnet routing runs on all three Proxmox hosts.'
 ], C.blueBg);
 node(1436, 166, 396, 150, 'Cloudflare', ['DNS-only records · DNS-01 TLS', 'Private defaults; public exceptions', 'DNS is not a traffic tunnel.']);
 node(1888, 166, 448, 150, 'slate · external GCP VM', ['Caddy · Uptime Kuma · ntfy', 'Independent monitoring & alerts', 'Checks home over Tailscale']);

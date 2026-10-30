@@ -3,10 +3,11 @@
 ## Temporary px30 evacuation, updated 30 October 2026
 
 The current inventory and exports show temporary service placement on px10/px20.
-The drives are back in the old7040; its SSH, healthy pools, three-node quorum
-and a controlled reboot are verified. It currently has16GiB RAM and remains in
-HA maintenance. MAC-independent onboard NIC naming is prepared for the next
-replacement attempt. Kubernetes still runs on two nodes; VM203 is deliberately
+The drives returned to the old7040; its SSH, healthy pools, three-node quorum
+and a controlled reboot were verified. It was subsequently shut down normally
+at the owner's request for another drive transfer. Last verified RAM was16GiB;
+HA maintenance remains enabled. MAC-independent onboard NIC naming is prepared
+for the next replacement attempt. Kubernetes runs on two nodes; VM203 is deliberately
 stopped and its automatic start temporarily disabled. Workloads remain evacuated.
 See [execution and restoration](../../infrastructure/proxmox/PX30-HARDWARE-SWAP.md).
 On validated return, restore placement and memory/HA/replication settings, clear

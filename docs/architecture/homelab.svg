@@ -14,7 +14,7 @@
 <text x="534" y="200" font-size="25" fill="#18252c" font-weight="600" >Two access paths</text>
 <text x="534" y="231" font-size="21" fill="#52636d" font-weight="400" >Public: Internet → router → Caddy → selected services</text>
 <text x="534" y="260" font-size="21" fill="#52636d" font-weight="400" >Private: LAN / Tailscale → Caddy or native LAN protocols</text>
-<text x="534" y="289" font-size="21" fill="#52636d" font-weight="400" >Tailscale: three hosts online; px30 in maintenance.</text>
+<text x="534" y="289" font-size="21" fill="#52636d" font-weight="400" >Tailscale routing: px10 / px20 active; px30 powered off.</text>
 </g>
 <g data-node="true">
 <rect x="1436" y="166" width="396" height="150" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -51,7 +51,7 @@
 <text x="864" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-8400T / 6 cores · 32 GB RAM · ZFS OS + data pools</text>
 <path d="M864 578H1536" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <rect x="1616" y="482" width="720" height="650" rx="16" fill="#ffffff" stroke="#aebfc7" stroke-width="1.5"/>
-<text x="1640" y="523" font-size="32" fill="#18252c" font-weight="600" >px30 · maintenance</text>
+<text x="1640" y="523" font-size="32" fill="#18252c" font-weight="600" >px30 · powered off</text>
 <text x="2312" y="520" font-size="24" fill="#52636d" font-weight="400" text-anchor="end">Dell OptiPlex 7040</text>
 <text x="1640" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-6500TE / 4 cores · 16 GB RAM · ZFS OS + data pools</text>
 <path d="M1640 578H2312" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />

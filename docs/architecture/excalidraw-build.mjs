@@ -33,7 +33,7 @@ add('wifi','bulb','Wipro bulb','device','Tuya LAN / TCP 6668');
 add('wifi','ac','Samsung AC','device','Local DTLS / UDP 49154');
 add('lan','camera','Outdoor camera','device','Network attachment type unverified');
 add('lan','clients','Your phone / workstation','device','Client addresses vary');
-add('internet','tailscale','Tailscale','logical',inv.maintenance ? (inv.maintenance.nodeOnline ? 'All three hosts online; px30 maintenance' : 'px10 / px20 active; px30 unreachable') : 'Subnet routes on px10 / px20 / px30');
+add('internet','tailscale','Tailscale','logical',inv.maintenance ? (inv.maintenance.nodeOnline ? 'All three hosts online; px30 maintenance' : (inv.maintenance.poweredOff ? 'px10 / px20 active; px30 powered off' : 'px10 / px20 active; px30 unreachable')) : 'Subnet routes on px10 / px20 / px30');
 add('internet','cloudflare','Cloudflare DNS','logical','DNS records / ACME DNS-01, not a tunnel');
 add('internet','model-apis','External model APIs','logical','Hermes: DeepSeek Flash / Codex fallback');
 add('internet','github','GitHub / Homelab repository','logical','Declarative configuration');

@@ -1,5 +1,16 @@
 # px30 hardware swap: preparation and return plan
 
+## Latest checkpoint: normal shutdown authorized, October 30
+
+After preparation and the successful reboot test below, the owner explicitly
+requested shutdown for the next drive transfer. Rechecked zero running guests,
+no active Proxmox tasks, px30 HA maintenance/watchdog standby and healthy pools.
+Issued `sync; systemctl poweroff`. px10/px20 retain the evacuated services.
+Confirm the physical power LED is off before unplugging power or either drive;
+network unreachability alone is not electrical power-off confirmation. Keep the
+two surviving nodes online. Next boot must validate the replacement hardware,
+prepared NIC mapping, original host identity, pools and quorum before failback.
+
 ## Current checkpoint: back on 7040, prepared for another attempt, October 30
 
 The owner returned both existing drives to the old7040. SSH, three-node quorum,
@@ -56,8 +67,8 @@ still stopped and three-node quorum restored. Machine ID and SSH host-key hash
 matched their pre-reboot values; Tailscale state can legitimately change during
 reconnection, so confirm its node identity/addresses and running connection
 instead of requiring a byte-identical mutable state file. Services on px10/px20
-were not restarted or failed back. Leave this host powered on for inspection;
-use a normal shutdown and confirm it is off before another physical drive move.
+were not restarted or failed back. The host was initially left on for inspection;
+the later owner-authorized normal shutdown is recorded above.
 Next replacement boot still needs SSH, NIC link, quorum, pools and stability
 verification before any workload return.
 
