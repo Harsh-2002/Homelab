@@ -14,6 +14,12 @@ See [execution and restoration](../../infrastructure/proxmox/PX30-HARDWARE-SWAP.
 On validated return, restore placement and memory/HA/replication settings, clear
 maintenance metadata and regenerate these artifacts. Do not treat this as decommissioning.
 
+px10/px20 package maintenance installs manager9.2.24 and kernel26; they remain
+on running kernel19 pending the owner’s restart. Guarded next-boot cleanup removes
+older kernels only after health/quorum gates. px30 remains off, with cleanup
+pending return. Service placement and flow relationships are unchanged. See
+[package maintenance](../../infrastructure/proxmox/PACKAGE-MAINTENANCE.md).
+
 ## Current direction: internal Excalidraw topology
 
 The owner rejected the original presentation sheets. The primary purpose is

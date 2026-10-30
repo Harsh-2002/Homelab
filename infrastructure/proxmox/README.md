@@ -1,5 +1,8 @@
 # Proxmox hosts
 
+See [package maintenance and guarded old-kernel cleanup](PACKAGE-MAINTENANCE.md)
+for the October 30 updates and next-boot cleanup on px10/px20.
+
 For the **px30 chassis swap**, temporary evacuation completed on 2026-10-29.
 See [current placement, temporary settings and required restoration](PX30-HARDWARE-SWAP.md).
 Five service guests run on px10/px20, VM203 is stopped, and px30 is in HA maintenance

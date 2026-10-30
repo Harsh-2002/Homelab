@@ -1,0 +1,10 @@
+[Unit]
+Description=Retry guarded one-time Proxmox kernel cleanup
+
+[Timer]
+OnBootSec=3min
+OnUnitInactiveSec=5min
+Unit=homelab-kernel-cleanup.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=Prune older Proxmox kernels after verified updated-kernel boot
+After=network-online.target pve-cluster.service pveproxy.service
+ConditionPathExists=!/var/lib/homelab-kernel-cleanup/completed
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/homelab-prune-old-kernels --apply
+Nice=10
+CPUWeight=20
+IOWeight=20
+Environment=LC_ALL=C
+Environment=NEEDRESTART_MODE=l
