@@ -1,6 +1,61 @@
 # px30 hardware swap: preparation and return plan
 
-## Latest checkpoint: replacement reachable, power/reset investigation ongoing
+## Acceptance checkpoint: updated-kernel reboot tests, October 30
+
+The owner selected two remote reboot cycles, after checking official driver,
+firmware and CPU microcode updates. APT metadata refreshed successfully;
+full-upgrade simulation reported zero pending package changes. Kernel26-pve was
+already installed but19-pve was running. Verified the new initramfs NIC rule,
+selected26-pve for the first boot only and refreshed the ESP. The second test
+uses the normal boot default. Keep19-pve as the fallback; no BIOS/EEPROM flash,
+out-of-tree driver or unrelated node update was performed.
+
+The TSO/GSO/GRO/EEE workaround was already enabled and active on all three nodes,
+with matching commands/order and only Description differences between units.
+Reapplying it was unnecessary. Tests leave the ordinary power-key policy and HA
+watchdog intact; no diagnostic inhibitor is active.
+
+Each test observes at least300seconds after readiness with15second sampling.
+Required gates: expected kernel and unchanged boot ID throughout observation,
+network/offload/exporter/SSH/PVE/Tailscale services active,1Gbps full duplex,
+TSO/GSO/GRO/EEE disabled, healthy ZFS pools, three-node quorum, VM203 stopped,
+no inhibitor and no detected power-key/shutdown or selected fatal-kernel events.
+Both tests passed:301.3seconds with20samples each, on distinct boot IDs.
+Cycle1 used the documented one-boot selection; cycle2 booted26-pve through the
+normal default. The one-shot pin cleared and no permanent kernel pin remains.
+TSO/GSO/GRO/EEE remained disabled on both boots. Native NIC firmware0.5-4 and
+CPU microcode0xfa were retained; no new kernel/NIC/power events matched the
+acceptance checks.
+
+Post-test storage checks showed BACKUP, ISO, local, local-zfs and data active;
+CIFS mount targets were present and NTP synchronized with UTC RTC handling.
+Machine ID and SSH host-key hashes matched. Direct Tailscale ping returned in2ms;
+px30/aggregate Proxmox, Home Assistant and OpenCode HTTPS returned200, as did the
+Home Assistant authenticated API. The existing unsupported OpenIPMI service
+warning remains separate from these core host checks.
+
+A final full native-journal snapshot completed in3seconds and passed archive
+integrity verification. A mode0600configuration/Tailscale-state recovery bundle
+was copied to px10 with a matching SHA256; this is not a full guest-data backup.
+Detailed private reports are reboot-cycle-1.json and reboot-cycle-2.json under
+dev's diagnostic state directory; raw captures remain outside public/shared docs.
+
+After rechecking zero running guests, no active PVE tasks, healthy pools and
+px30 HA maintenance/watchdog standby, issued normal poweroff for the rack move.
+SSH became unreachable and px10/px20 retained2/3 quorum. The owner must confirm
+front power light off before disconnecting power. Temporary diagnostic receiver
+and journal observer were stopped; original raw evidence was preserved. VM203
+onboot0, maintenance, replication pauses, Longhorn eviction and temporary HAOS/
+VM100 settings remain intentionally held until rack return and supervised failback.
+
+These are finite idle-host warm-reboot acceptance tests, not proof that the
+original uncommanded reset is fixed, nor cold-start, load, fencing or failover
+validation. Keep workloads evacuated and restore placement/memory/replication
+only after the owner returns the powered-off machine to the rack and confirms
+it has been connected and started there.
+
+
+## Earlier checkpoint: replacement reachable, power/reset investigation
 
 The replacement is now verified over SSH as OptiPlex5060 with i5-9400T,
 six cores,32GiB RAM and BIOS1.32.0. It has reached three-node quorum with healthy

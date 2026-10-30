@@ -55,5 +55,5 @@ class Handler(http.server.BaseHTTPRequestHandler):
  def log_message(self,*args):pass
 server=http.server.ThreadingHTTPServer((args.bind,args.port),Handler)
 threading.Timer(args.lifetime,server.shutdown).start()
-print('LAN-only diagnostic receiver ready; expires after 30 minutes',flush=True)
+print(f'LAN-only diagnostic receiver ready; expires after {args.lifetime} seconds',flush=True)
 server.serve_forever();server.server_close()

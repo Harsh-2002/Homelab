@@ -1,5 +1,39 @@
 # px30 reboot evidence and fast capture
 
+## Driver/package review and requested reboot acceptance, October 30
+
+The owner requested driver-related updates before two **remote reboot cycles**,
+then final shutdown for moving the machine back to the rack. Workloads remain
+evacuated throughout; cold starts, node-loss/fencing drills and workload failback
+are separate from these checks.
+
+Refreshed APT metadata successfully and reviewed `apt-get -s full-upgrade`:
+zero upgrades, installations, removals or held-back updates. No packages needed
+installing. Installed firmware is pve-firmware3.18-8; Intel microcode package is
+3.20251111.1~deb13u1 and the loaded CPU revision is0xfa. A newer official kernel,
+7.0.14-26-pve, was already installed while the host was still running19-pve.
+Verified its initramfs contains the PCI-path NIC override and e1000e driver,
+then used the documented one-boot kernel selection and refreshed the ESP.
+No BIOS/NIC EEPROM flashing or out-of-tree driver was performed.
+
+NIC comparison found TSO/GSO/GRO/EEE already disabled on all three physical nodes.
+Their startup units execute identical commands and have matching ordering;
+px10/px20 differ from px30's tracked unit only in their Description string.
+RX/TX checksum offload remains enabled as intended. No redundant live NIC reset
+or change to the other nodes was needed.
+
+Acceptance checks require the new boot ID and26-pve kernel, active networking/
+offload/exporter/SSH/PVE/Tailscale services, offloads/EEE disabled,1Gbps full-duplex
+link, healthy pools, three-node quorum, VM203 stopped, no power-key inhibitor,
+and no logged power-key/shutdown or selected fatal-kernel events. Observe each
+boot for at least300seconds after initial readiness, sampling every15seconds.
+Private detailed reports and separate live journal capture stay under dev's
+mode0700diagnostic state directory. Both cycles passed301.3seconds with20samples each; normal boot selected26-pve
+on cycle2. Post-test normal shutdown for the rack move completed and the two
+survivors retained quorum. Final results are recorded in the swap runbook.
+Passing this finite idle-host window does not identify the original reset cause
+or establish load/cold-start stability.
+
 ## Verified evidence, October 30, 2026
 
 Live SSH and collected logs identify the replacement as **OptiPlex5060,

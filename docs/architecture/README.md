@@ -3,11 +3,12 @@
 ## Temporary px30 evacuation, updated 30 October 2026
 
 The current inventory and exports show temporary service placement on px10/px20.
-The replacement is verified over SSH as OptiPlex5060, i5-9400T, six cores and
-32GiB RAM. It has reached quorum with healthy pools, but its power/reset issue
-remains under investigation. Keep px30 in HA maintenance, services evacuated,
-and VM203 stopped/onboot0. A power-key input was captured on the ACPI button
-endpoint; that does not explain every observed boot ending. See the
+The replacement is verified as OptiPlex5060, i5-9400T, six cores and32GiB RAM.
+Two remote reboot cycles on7.0.14-26-pve passed301.3seconds each, including normal
+boot selection and persistent NIC settings. px30 was then shut down normally
+for the owner's rack move. Keep maintenance, evacuated services and VM203
+stopped/onboot0 until rack return. These finite idle-host checks do not prove
+the earlier reset's cause or validate cold starts/load. See the
 [diagnostic evidence and fast collector](../../infrastructure/proxmox/REBOOT-DIAGNOSTICS.md).
 See [execution and restoration](../../infrastructure/proxmox/PX30-HARDWARE-SWAP.md).
 On validated return, restore placement and memory/HA/replication settings, clear
