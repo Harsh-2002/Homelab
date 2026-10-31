@@ -48,6 +48,7 @@ for (const h of inv.hosts) {
 add(inv.physicalStorage.find(d=>d.name==='Crucial X9 Pro USB SSD')?.host||'px10','usb-av','Crucial X9 Pro / 4 TB','physical',inv.retirementBackup?.accessibleDataVerified ? 'USB: ext4 backup / accessible data verified' : 'USB: portable ext4 backup / in progress','USB');
 add('px10','usb-iso','SSD / 256 GB','physical',inv.retirementFormat ? (inv.retirementFormat.externalUsbStatus==='complete' ? 'USB: empty ext4 / unmounted' : 'USB: full overwrite / ext4 target') : 'USB: ISO images / imports','USB');
 if(inv.retirementFormat) add('px20','usb-spare','SSD / 256 GB','physical',inv.retirementFormat.externalUsbStatus==='complete' ? 'USB: empty ext4 / unmounted' : 'USB: full overwrite / ext4 target','USB');
+if(inv.bootMedia) add(inv.bootMedia.preparedOnHost,'usb-boot','Boot USB / 32 GB','physical','ShredOS '+inv.bootMedia.version+' / unmounted','USB');
 for (const share of ['AV','BACKUP','ISO']) add('store','share-'+share,`SMB / ${share} / offline`,'service','TCP 445');
 add('dev','agents','Coding & personal agents','logical');
 for (const a of ['Codex','Claude Code','Hermes','OpenCode']) add('agents',a.toLowerCase().replaceAll(' ','-'),a);

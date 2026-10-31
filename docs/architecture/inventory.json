@@ -330,6 +330,15 @@
       "roles": [
         "Discarded; empty ext4; unmounted"
       ]
+    },
+    {
+      "name": "ShredOS boot USB",
+      "size": "32 GB",
+      "host": "px20",
+      "roles": [
+        "Prepared and verified on px20; removable BIOS/UEFI boot media",
+        "ShredOS 0.43.1 / unmounted"
+      ]
     }
   ],
   "availabilityReview": {
@@ -404,5 +413,19 @@
       "sqliteDatabasesChecked": 20
     },
     "completionStatus": "infrastructure/retirement/DISK-FORMAT-STATUS.json"
+  },
+  "bootMedia": {
+    "preparedOnHost": "px20",
+    "model": "USB DISK 3.0",
+    "capacityBytes": 31014191104,
+    "software": "ShredOS",
+    "version": "0.43.1",
+    "interface": "Interactive keyboard-controlled menus",
+    "imageSha256": "c856cfb91ebd525e23caffc284d84764e9d9b5427ee1925783773642e3d50ae4",
+    "readbackVerified": true,
+    "filesystemCheck": "passed",
+    "leftUnmounted": true,
+    "writtenUtc": "2026-10-31T16:50:35Z",
+    "physicalBootTest": "Pending; existing retirement jobs must finish before reboot"
   }
 }

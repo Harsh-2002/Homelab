@@ -1,7 +1,7 @@
 # Bootable disk-erasure media
 
 Use **ShredOS x86-64 v0.43.1** for these Intel Dell hosts. It is a small,
-free bootable erasure environment that starts an interactive nwipe interface.
+free bootable erasure environment that starts an interactive keyboard-controlled nwipe interface.
 The regular USB `.img` supports BIOS/UEFI and writable report storage. The
 `.iso` is also available for ISO-oriented tools or Ventoy.
 
@@ -21,13 +21,18 @@ c856cfb91ebd525e23caffc284d84764e9d9b5427ee1925783773642e3d50ae4
 
 Local cache: `~/.cache/homelab-boot-media/shredos-0.43.1/`.
 `verified-image.json` records the source, size, digest and verification result.
-At preparation time, a new spare USB had not been identified or written.
-Writing the image will erase the selected spare USB and provide its boot layout.
+The32GB USB DISK3.0 was prepared on px20 and flashed on31October. The old
+installer filesystems/partition tables were cleared before writing the image.
+Full image readback matched the official SHA-256, x86-64 UEFI/menu/kernel files
+were present, and the FAT filesystem check passed. The stick was left unmounted.
+Actual Dell boot testing is pending completion of the existing retirement jobs.
+The boot filesystem is approximately355MiB; remaining stick capacity is
+unallocated by the official image layout.
 
 ## Erasing SSDs for resale
 
 This release adds a standalone interactive **Hardware Sanitize** menu. Select
-only operations the drive advertises as supported. The GUI does not implement
+only operations the drive advertises as supported. The Sanitize menu does not implement
 legacy ATA Secure Erase; the included `hdparm` and `nvme-cli` utilities cover
 additional device-specific workflows. Check capabilities before choosing one.
 A new empty filesystem alone is not evidence of SSD sanitization. Preserve any
@@ -45,3 +50,13 @@ cluster currently depends on both online hosts for quorum. Before offline
 rescue boot, shut down remaining guests/HA cleanly while quorum is available.
 Disconnect the verified4TB backup and other drives being kept before selecting
 any disk for resale erasure. Use Dell's F12 boot menu to select the prepared USB.
+
+## Verification details
+
+The flash is an unchanged official image with interactive disk selection.
+No automatic disk-erasure configuration was added. The first worker exhausted
+its256MiB cgroup limit; the retry used a larger worker limit and finished the
+write/readback. A transient partition-identification race was resolved with a
+separate verification pass using direct filesystem probing. The final boot-file
+and filesystem verification completed successfully; existing overwrite jobs and
+NVMe roots were unaffected. Private device identity/proof remains outside Git.
