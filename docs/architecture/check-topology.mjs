@@ -24,5 +24,12 @@ for(const el of els.values()) {
 }
 if(!internal) assert(!/\b(?:\d{1,3}\.){3}\d{1,3}\b/.test(raw),'IP address in public scene');
 const texts=scene.elements.filter(e=>e.type==='text').map(e=>e.text).join('\n');
-for(const label of ['Home router','LAN switching','Outdoor camera','Wipro bulb','Samsung AC','Docker engine','Kubernetes','Home Assistant','Cairn','RustFS','Supabase']) assert(texts.includes(label),'missing '+label);
+// Check the switch by its stable native node/bindings rather than an old title.
+// Its label changes as actual hardware is identified.
+assert.equal(els.get('lan')?.type,'rectangle','missing LAN switch node');
+assert.match(els.get('lan-text')?.text ?? '',/LAN fabric \/ Netgear GS110TPv3/,'missing verified LAN switch label');
+for(const target of ['px10','px20','px30']) {
+ assert(scene.elements.some(e=>e.type==='arrow' && e.startBinding?.elementId==='lan' && e.endBinding?.elementId===target), 'missing LAN connection to '+target);
+}
+for(const label of ['Home router','Outdoor camera','Wipro bulb','Samsung AC','Docker engine','Kubernetes','Home Assistant','Cairn','RustFS','Supabase']) assert(texts.includes(label),'missing '+label);
 console.log(`PASS: ${internal?'internal':'public'} editable scene; ${els.size} unique elements, native arrow/text bindings, required coverage${internal?'':', no IP addresses'}.`);
