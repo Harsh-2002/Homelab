@@ -1,6 +1,6 @@
 {
   "status": "in_progress",
-  "updated_utc": "2026-10-31T15:15:52Z",
+  "updated_utc": "2026-10-31T16:20:27Z",
   "disks": {
     "px10_sata": {
       "phase": "complete",
@@ -14,7 +14,8 @@
     "px10_usb": {
       "phase": "erasing",
       "bytes": 256060514304,
-      "label": "USB256_PX10"
+      "label": "USB256_PX10",
+      "approximate_zero_fill_percent": 57.8
     },
     "px20_sata": {
       "phase": "complete",
@@ -28,7 +29,8 @@
     "px20_usb": {
       "phase": "erasing",
       "bytes": 256060514304,
-      "label": "USB256_PX20"
+      "label": "USB256_PX20",
+      "approximate_zero_fill_percent": 59.2
     }
   },
   "preserved": [
@@ -36,5 +38,6 @@
     "dev VM root disk",
     "4TB verified data backup"
   ],
-  "all_targets_unmounted": false
+  "all_targets_unmounted": false,
+  "progress_note": "Approximate block-write counters; completion requires successful erase, formatting and filesystem verification."
 }

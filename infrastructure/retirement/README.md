@@ -236,3 +236,5 @@ source/history and private diagrams to the SSD, then unmounts it again. Notion
 links to the completion status. OpenViking's pre-stop continuity note is in its
 final cold data; final memory-update material is retained with the completion
 record for import after the backend is restored.
+
+The preserved NVMe drives have a separate [NVMe health snapshot](../proxmox/NVME-HEALTH-2026-10-31.md).
