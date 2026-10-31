@@ -1,6 +1,6 @@
 flowchart LR
   n_flow_1_0["Your phone / workstation<br/>Client addresses vary"]
-  n_flow_1_1["Home Assistant"]
+  n_flow_1_1["Home Assistant / offline"]
   n_flow_1_2["Wipro bulb<br/>Tuya LAN / TCP 6668"]
   n_flow_1_0 -->|"HTTPS / app"| n_flow_1_1
   n_flow_1_1 -->|"Tuya LAN :6668"| n_flow_1_2

@@ -34,9 +34,9 @@ flowchart LR
   n_tree_25["SATA SSD / 1.92 TB<br/>Empty ext4 / unmounted"]
   n_tree_26["px20 / Dell OptiPlex 5060<br/>i5-8400T / 6 cores / 32 GB / NVMe ZFS / SATA ext4"]
   n_tree_27["VM 204 / ctr / stopped / restore data"]
-  n_tree_28["VM 106 / orva"]
+  n_tree_28["VM 106 / orva / Stopped / final backup"]
   n_tree_29["LXC 101 / proxy"]
-  n_tree_30["VM 107 / haos"]
+  n_tree_30["VM 107 / haos / Stopped / final backup"]
   n_tree_31["VM 202 / k8s-202 / stopped / data erased"]
   n_tree_32["NVMe ZFS / rpool retained<br/>Host / guest OS disks retained"]
   n_tree_33["SATA SSD / 1.92 TB<br/>Empty ext4 / unmounted"]
@@ -71,9 +71,9 @@ flowchart LR
   n_tree_62["PVE / node exporters"]
   n_tree_63["Cairn S3 / offline"]
   n_tree_64["RustFS S3 / offline"]
-  n_tree_65["Home Assistant"]
-  n_tree_66["Mosquitto / MQTT"]
-  n_tree_67["Quick Share function<br/>Upload → temporary object / short URL"]
+  n_tree_65["Home Assistant / offline"]
+  n_tree_66["Mosquitto / MQTT / offline"]
+  n_tree_67["Quick Share / offline<br/>Upload → temporary object / short URL"]
   n_tree_68["Docker engine<br/>Intel iGPU passed through to ctr"]
   n_tree_69["Media"]
   n_tree_70["jellyfin / stopped<br/>Restore backup before start"]
@@ -299,8 +299,8 @@ flowchart LR
 flowchart LR
   n_flow_0_0["Outdoor camera<br/>Network attachment type unverified"]
   n_flow_0_1["frigate / stopped<br/>Restore backup before start"]
-  n_flow_0_2["Mosquitto / MQTT"]
-  n_flow_0_3["Home Assistant"]
+  n_flow_0_2["Mosquitto / MQTT / offline"]
+  n_flow_0_3["Home Assistant / offline"]
   n_flow_0_0 -->|"RTSP :554"| n_flow_0_1
   n_flow_0_1 -->|"events / MQTT :1883"| n_flow_0_2
   n_flow_0_2 -->|"HA integration"| n_flow_0_3
@@ -315,7 +315,7 @@ flowchart LR
 ```mermaid
 flowchart LR
   n_flow_1_0["Your phone / workstation<br/>Client addresses vary"]
-  n_flow_1_1["Home Assistant"]
+  n_flow_1_1["Home Assistant / offline"]
   n_flow_1_2["Wipro bulb<br/>Tuya LAN / TCP 6668"]
   n_flow_1_0 -->|"HTTPS / app"| n_flow_1_1
   n_flow_1_1 -->|"Tuya LAN :6668"| n_flow_1_2
@@ -330,7 +330,7 @@ flowchart LR
 ```mermaid
 flowchart LR
   n_flow_2_0["Your phone / workstation<br/>Client addresses vary"]
-  n_flow_2_1["Home Assistant"]
+  n_flow_2_1["Home Assistant / offline"]
   n_flow_2_2["Samsung AC<br/>Local DTLS / UDP 49154"]
   n_flow_2_0 -->|"HTTPS / app"| n_flow_2_1
   n_flow_2_1 -->|"DTLS / CoAP :49154"| n_flow_2_2
@@ -362,7 +362,7 @@ flowchart LR
 ```mermaid
 flowchart LR
   n_flow_4_0["Your phone / workstation<br/>Client addresses vary"]
-  n_flow_4_1["Quick Share function<br/>Upload → temporary object / short URL"]
+  n_flow_4_1["Quick Share / offline<br/>Upload → temporary object / short URL"]
   n_flow_4_2["Cairn S3 / offline"]
   n_flow_4_0 -->|"upload via Orva HTTPS"| n_flow_4_1
   n_flow_4_1 -->|"S3 object PUT / GET"| n_flow_4_2
@@ -410,7 +410,7 @@ flowchart LR
 flowchart LR
   n_flow_10_0["Outdoor camera<br/>Network attachment type unverified"]
   n_flow_10_1["frigate / stopped<br/>Restore backup before start"]
-  n_flow_10_2["Home Assistant"]
+  n_flow_10_2["Home Assistant / offline"]
   n_flow_10_3["Your phone / workstation<br/>Client addresses vary"]
   n_flow_10_0 -->|"RTSP :554"| n_flow_10_1
   n_flow_10_1 -->|"authenticated RTSP :8554"| n_flow_10_2
@@ -561,7 +561,7 @@ flowchart LR
 flowchart LR
   n_flow_9_0["VictoriaMetrics"]
   n_flow_9_1["Grafana"]
-  n_flow_9_2["Home Assistant"]
+  n_flow_9_2["Home Assistant / offline"]
   n_flow_9_3["PVE / node exporters"]
   n_flow_9_1 -.->|"queries API"| n_flow_9_0
   n_flow_9_2 -.->|"queries API"| n_flow_9_0

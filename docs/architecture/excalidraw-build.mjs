@@ -62,8 +62,8 @@ for (const [p,id,label] of [
  ['observability','beszel','Beszel'],['observability','grafana','Grafana'],['observability','victoriametrics','VictoriaMetrics'],
  ['observability','kuma','Uptime Kuma'],['observability','exporters','PVE / node exporters'],
  ['s3','cairn','Cairn S3'],['s3','rustfs','RustFS S3'],['haos','homeassistant','Home Assistant'],['haos','mosquitto','Mosquitto / MQTT']
-] ) add(p,id,label+(inv.retirementFormat && p==='s3'?' / offline':''));
-add('orva','quickshare','Quick Share function','service','Upload → temporary object / short URL');
+] ) add(p,id,label+((inv.retirementFormat && p==='s3') || (inv.retirementCutover && p==='haos')?' / offline':''));
+add('orva','quickshare',inv.retirementCutover?'Quick Share / offline':'Quick Share function','service','Upload → temporary object / short URL');
 add('ctr','docker','Docker engine','logical','Intel iGPU passed through to ctr');
 const stacks = [
  ['media','Media',['jellyfin','frigate','qbittorrent','motrix-server']],

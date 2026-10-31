@@ -1,0 +1,13 @@
+{
+  "complete": true,
+  "files": 1316770,
+  "reused_hardlink_checksums": 1214009,
+  "new_bytes_read": 6551697234,
+  "logical_bytes": 112662930499,
+  "sqlite_checked": 29,
+  "elapsed_seconds": 256,
+  "scope": "Fresh final NVMe/dev/Orva/Home Assistant/LXC/host file copies; earlier CTR/S3/Kubernetes/media manifests remain authoritative for those components",
+  "agent_sqlite_backups": 14,
+  "shutdown_ready": false,
+  "shutdown_guard": "Both 256 GB USB full overwrites and completion finalization must finish first."
+}

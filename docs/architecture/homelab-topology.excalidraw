@@ -2489,9 +2489,9 @@
     {
       "id": "orva-text",
       "type": "text",
-      "x": 1952.9936,
+      "x": 1858.4936,
       "y": 1322.0279600000003,
-      "width": 169.9968,
+      "width": 358.9968,
       "height": 17.000079999999997,
       "angle": 0,
       "strokeColor": "#233647",
@@ -2513,22 +2513,22 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "VM 106 / orva",
+      "text": "VM 106 / orva / Stopped / final backup",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "orva",
-      "originalText": "VM 106 / orva",
+      "originalText": "VM 106 / orva / Stopped / final backup",
       "autoResize": false,
       "lineHeight": 1.25
     },
     {
       "id": "orva",
       "type": "rectangle",
-      "x": 1940.9936,
+      "x": 1846.4936,
       "y": 1312.0279600000003,
-      "width": 193.9968,
+      "width": 382.9968,
       "height": 37.00008,
       "angle": 0,
       "strokeColor": "#263848",
@@ -2651,9 +2651,9 @@
     {
       "id": "haos-text",
       "type": "text",
-      "x": 1952.9936,
+      "x": 1858.4936,
       "y": 1423.9799600000003,
-      "width": 169.9968,
+      "width": 358.9968,
       "height": 17.000079999999997,
       "angle": 0,
       "strokeColor": "#233647",
@@ -2675,22 +2675,22 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "VM 107 / haos",
+      "text": "VM 107 / haos / Stopped / final backup",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "haos",
-      "originalText": "VM 107 / haos",
+      "originalText": "VM 107 / haos / Stopped / final backup",
       "autoResize": false,
       "lineHeight": 1.25
     },
     {
       "id": "haos",
       "type": "rectangle",
-      "x": 1940.9936,
+      "x": 1846.4936,
       "y": 1413.9799600000003,
-      "width": 193.9968,
+      "width": 382.9968,
       "height": 37.00008,
       "angle": 0,
       "strokeColor": "#263848",
@@ -5398,9 +5398,9 @@
     {
       "id": "homeassistant-text",
       "type": "text",
-      "x": 2439.4976,
+      "x": 2415.4964,
       "y": 1423.9799600000003,
-      "width": 169.9968,
+      "width": 217.9992,
       "height": 17.000079999999997,
       "angle": 0,
       "strokeColor": "#233647",
@@ -5422,22 +5422,22 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Home Assistant",
+      "text": "Home Assistant / offline",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "homeassistant",
-      "originalText": "Home Assistant",
+      "originalText": "Home Assistant / offline",
       "autoResize": false,
       "lineHeight": 1.25
     },
     {
       "id": "homeassistant",
       "type": "rectangle",
-      "x": 2427.4976,
+      "x": 2403.4964,
       "y": 1413.9799600000003,
-      "width": 193.9968,
+      "width": 241.9992,
       "height": 37.00008,
       "angle": 0,
       "strokeColor": "#263848",
@@ -5475,9 +5475,9 @@
     {
       "id": "mosquitto-text",
       "type": "text",
-      "x": 2439.4976,
+      "x": 2405.4956,
       "y": 1475.0279600000003,
-      "width": 169.9968,
+      "width": 238.00080000000003,
       "height": 17.000079999999997,
       "angle": 0,
       "strokeColor": "#233647",
@@ -5499,22 +5499,22 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Mosquitto / MQTT",
+      "text": "Mosquitto / MQTT / offline",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "mosquitto",
-      "originalText": "Mosquitto / MQTT",
+      "originalText": "Mosquitto / MQTT / offline",
       "autoResize": false,
       "lineHeight": 1.25
     },
     {
       "id": "mosquitto",
       "type": "rectangle",
-      "x": 2427.4976,
+      "x": 2393.4956,
       "y": 1465.0279600000003,
-      "width": 193.9968,
+      "width": 262.0008,
       "height": 37.00008,
       "angle": 0,
       "strokeColor": "#263848",
@@ -5576,13 +5576,13 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Quick Share function\nUpload → temporary object / short URL",
+      "text": "Quick Share / offline\nUpload → temporary object / short URL",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "quickshare",
-      "originalText": "Quick Share function\nUpload → temporary object / short URL",
+      "originalText": "Quick Share / offline\nUpload → temporary object / short URL",
       "autoResize": false,
       "lineHeight": 1.25
     },
@@ -14461,8 +14461,8 @@
       "type": "arrow",
       "x": 1549.616,
       "y": 1485.328,
-      "width": 385.8480000000002,
-      "height": 143.85600000000022,
+      "width": 311.03999999999996,
+      "height": 135.7199999999998,
       "angle": 0,
       "strokeColor": "#9baab5",
       "backgroundColor": "transparent",
@@ -14505,12 +14505,12 @@
           -129.8159999999998
         ],
         [
-          323.856,
-          -137.15999999999985
+          279.432,
+          -132.33599999999979
         ],
         [
-          385.8480000000002,
-          -143.85600000000022
+          311.03999999999996,
+          -135.7199999999998
         ]
       ],
       "lastCommittedPoint": null,
@@ -14605,8 +14605,8 @@
       "type": "arrow",
       "x": 1651.784,
       "y": 1485.472,
-      "width": 283.68000000000006,
-      "height": 41.975999999999885,
+      "width": 208.87199999999984,
+      "height": 33.912000000000035,
       "angle": 0,
       "strokeColor": "#9baab5",
       "backgroundColor": "transparent",
@@ -14649,12 +14649,12 @@
           -28.008000000000038
         ],
         [
-          221.68799999999987,
-          -35.27999999999997
+          177.2639999999999,
+          -30.455999999999904
         ],
         [
-          283.68000000000006,
-          -41.975999999999885
+          208.87199999999984,
+          -33.912000000000035
         ]
       ],
       "lastCommittedPoint": null,
@@ -15143,10 +15143,10 @@
     {
       "id": "tree-edge-57",
       "type": "arrow",
-      "x": 2134.9759999999997,
-      "y": 1328.2959999999998,
-      "width": 197.64000000000033,
-      "height": 4.463999999999487,
+      "x": 2229.7999999999997,
+      "y": 1326.136,
+      "width": 102.45600000000013,
+      "height": 2.3039999999996326,
       "angle": 0,
       "strokeColor": "#9baab5",
       "backgroundColor": "transparent",
@@ -15173,16 +15173,16 @@
           0
         ],
         [
-          56.52000000000044,
-          -1.2959999999998217
+          33.69600000000037,
+          -0.7199999999997999
         ],
         [
-          129.88800000000037,
-          -2.951999999999771
+          68.76000000000022,
+          -1.5119999999997162
         ],
         [
-          197.64000000000033,
-          -4.463999999999487
+          102.45600000000013,
+          -2.3039999999996326
         ]
       ],
       "lastCommittedPoint": null,
@@ -15263,9 +15263,9 @@
     {
       "id": "tree-edge-59",
       "type": "arrow",
-      "x": 2134.9759999999997,
+      "x": 2229.7999999999997,
       "y": 1432.4800000000002,
-      "width": 287.2800000000002,
+      "width": 168.4079999999999,
       "height": 0,
       "angle": 0,
       "strokeColor": "#9baab5",
@@ -15293,15 +15293,15 @@
           0
         ],
         [
-          83.08800000000019,
+          56.5920000000001,
           0
         ],
         [
-          202.7520000000004,
+          117.07200000000012,
           0
         ],
         [
-          287.2800000000002,
+          168.4079999999999,
           0
         ]
       ],
@@ -15323,10 +15323,10 @@
     {
       "id": "tree-edge-60",
       "type": "arrow",
-      "x": 2134.9759999999997,
-      "y": 1442.632,
-      "width": 287.2800000000002,
-      "height": 30.240000000000236,
+      "x": 2214.968,
+      "y": 1450.984,
+      "width": 173.37599999999975,
+      "height": 18.28800000000024,
       "angle": 0,
       "strokeColor": "#9baab5",
       "backgroundColor": "transparent",
@@ -15353,16 +15353,16 @@
           0
         ],
         [
-          83.08800000000019,
-          8.712000000000216
+          57.16800000000012,
+          6.048000000000002
         ],
         [
-          202.7520000000004,
-          21.311999999999898
+          119.66400000000021,
+          12.600000000000136
         ],
         [
-          287.2800000000002,
-          30.240000000000236
+          173.37599999999975,
+          18.28800000000024
         ]
       ],
       "lastCommittedPoint": null,
@@ -20952,13 +20952,13 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Mosquitto / MQTT",
+      "text": "Mosquitto / MQTT / offline",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "flow-0-mosquitto",
-      "originalText": "Mosquitto / MQTT",
+      "originalText": "Mosquitto / MQTT / offline",
       "autoResize": false,
       "lineHeight": 1.25
     },
@@ -21122,13 +21122,13 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Home Assistant",
+      "text": "Home Assistant / offline",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "flow-0-homeassistant",
-      "originalText": "Home Assistant",
+      "originalText": "Home Assistant / offline",
       "autoResize": false,
       "lineHeight": 1.25
     },
@@ -21431,13 +21431,13 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Home Assistant",
+      "text": "Home Assistant / offline",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "flow-1-homeassistant",
-      "originalText": "Home Assistant",
+      "originalText": "Home Assistant / offline",
       "autoResize": false,
       "lineHeight": 1.25
     },
@@ -21910,13 +21910,13 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Home Assistant",
+      "text": "Home Assistant / offline",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "flow-2-homeassistant",
-      "originalText": "Home Assistant",
+      "originalText": "Home Assistant / offline",
       "autoResize": false,
       "lineHeight": 1.25
     },
@@ -23038,13 +23038,13 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Quick Share function\nUpload → temporary object / short URL",
+      "text": "Quick Share / offline\nUpload → temporary object / short URL",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "flow-4-quickshare",
-      "originalText": "Quick Share function\nUpload → temporary object / short URL",
+      "originalText": "Quick Share / offline\nUpload → temporary object / short URL",
       "autoResize": false,
       "lineHeight": 1.25
     },
@@ -24815,13 +24815,13 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Home Assistant",
+      "text": "Home Assistant / offline",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "flow-10-homeassistant",
-      "originalText": "Home Assistant",
+      "originalText": "Home Assistant / offline",
       "autoResize": false,
       "lineHeight": 1.25
     },
@@ -30352,13 +30352,13 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Home Assistant",
+      "text": "Home Assistant / offline",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "flow-9-homeassistant",
-      "originalText": "Home Assistant",
+      "originalText": "Home Assistant / offline",
       "autoResize": false,
       "lineHeight": 1.25
     },

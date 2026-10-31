@@ -157,8 +157,10 @@
         95
       ],
       "body": [
-        "Serverless functions \u00b7 Quick Share"
-      ]
+        "Serverless functions \u00b7 Quick Share / offline"
+      ],
+      "state": "stopped",
+      "statusLabel": "Stopped / final backup"
     },
     {
       "id": 101,
@@ -223,8 +225,10 @@
         95
       ],
       "body": [
-        "Home Assistant \u00b7 Mosquitto \u00b7 local device control"
-      ]
+        "Home Assistant \u00b7 Mosquitto \u00b7 local device control / offline"
+      ],
+      "state": "stopped",
+      "statusLabel": "Stopped / final backup"
     },
     {
       "id": 201,
@@ -427,5 +431,28 @@
     "leftUnmounted": true,
     "writtenUtc": "2026-10-31T16:50:35Z",
     "physicalBootTest": "Pending; existing retirement jobs must finish before reboot"
+  },
+  "retirementCutover": {
+    "status": "Fresh NVMe file copies retained; see final-cutover verification manifest",
+    "ha": "All ten resources ignored; HA managers disabled/stopped and watchdog-mux stopped on px10/px20",
+    "replication": "All jobs disabled",
+    "stoppedGuests": [
+      105,
+      106,
+      107,
+      109,
+      201,
+      202,
+      204
+    ],
+    "runningGuests": [
+      100,
+      101,
+      102,
+      103,
+      104
+    ],
+    "preferredRestoreMap": "final-cutover/RESTORE-PATHS.json",
+    "shutdownGuard": "Wait for USB erasure completion and clean backup unmount before powering off"
   }
 }

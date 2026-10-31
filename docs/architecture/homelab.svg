@@ -78,8 +78,8 @@
 </g>
 <g data-node="true">
 <rect x="864" y="699" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="886" y="726" font-size="23" fill="#18252c" font-weight="600" >orva · VM 106</text>
-<text x="886" y="751" font-size="20" fill="#52636d" font-weight="400" >Serverless functions · Quick Share</text>
+<text x="886" y="726" font-size="23" fill="#18252c" font-weight="600" >orva · VM 106 · Stopped / final backup</text>
+<text x="886" y="751" font-size="20" fill="#52636d" font-weight="400" >Serverless functions · Quick Share / offline</text>
 </g>
 <g data-node="true">
 <rect x="864" y="802" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -103,8 +103,8 @@
 </g>
 <g data-node="true">
 <rect x="864" y="905" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="886" y="932" font-size="23" fill="#18252c" font-weight="600" >haos · VM 107</text>
-<text x="886" y="957" font-size="20" fill="#52636d" font-weight="400" >Home Assistant · Mosquitto · local device control</text>
+<text x="886" y="932" font-size="23" fill="#18252c" font-weight="600" >haos · VM 107 · Stopped / final backup</text>
+<text x="886" y="957" font-size="20" fill="#52636d" font-weight="400" >Home Assistant · Mosquitto · local device control / offline</text>
 </g>
 <g data-node="true">
 <rect x="88" y="1040" width="672" height="66" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -127,7 +127,7 @@
 <path d="M1976 1106V1176" fill="none" stroke="#225d82" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" />
 <path d="M424 1176H1976" fill="none" stroke="#225d82" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" />
 <path d="M1200 1176V1212" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
-<text x="64" y="1160" font-size="20" fill="#52636d" font-weight="400" >Placement is a snapshot; managed guests can relocate.</text>
+<text x="64" y="1160" font-size="20" fill="#52636d" font-weight="400" >Retirement: HA and replication disabled; placement is frozen.</text>
 <rect x="64" y="1218" width="2272" height="282" rx="16" fill="#edf4f8" stroke="#b5cbd8" stroke-width="1.5"/>
 <text x="88" y="1258" font-size="29" fill="#18252c" font-weight="600" >Kubernetes stopped for retirement; backups verified</text>
 <text x="88" y="1294" font-size="23" fill="#52636d" font-weight="400" >Talos management: Omni on ctr. Kubernetes desired state: GitHub → Argo CD.</text>
@@ -151,9 +151,9 @@
 <text x="64" y="1600" font-size="22" fill="#52636d" font-weight="400" >NVMe ZFS roots retained; SATA data erased</text>
 <text x="64" y="1634" font-size="22" fill="#52636d" font-weight="400" >4 TB backup; 256 GB USB overwrite in progress</text>
 <text x="64" y="1668" font-size="22" fill="#52636d" font-weight="400" >CTR / S3 / Kubernetes require restoration from backup</text>
-<text x="840" y="1600" font-size="22" fill="#52636d" font-weight="400" >NVMe services retained; data services stopped</text>
-<text x="840" y="1634" font-size="22" fill="#52636d" font-weight="400" >Dev, DNS, identity and proxy remain on NVMe</text>
-<text x="840" y="1668" font-size="22" fill="#52636d" font-weight="400" >Restore CTR / S3 / Kubernetes from the backup</text>
+<text x="840" y="1600" font-size="22" fill="#52636d" font-weight="400" >HA disabled; final service file copies retained</text>
+<text x="840" y="1634" font-size="22" fill="#52636d" font-weight="400" >Dev / DNS / identity / proxy / metrics running</text>
+<text x="840" y="1668" font-size="22" fill="#52636d" font-weight="400" >Restore retired services from the portable backup</text>
 <text x="1616" y="1600" font-size="22" fill="#52636d" font-weight="400" >Home Assistant → Wipro bulb / Tuya LAN</text>
 <text x="1616" y="1634" font-size="22" fill="#52636d" font-weight="400" >Home Assistant → Samsung AC / local DTLS</text>
 <text x="1616" y="1668" font-size="22" fill="#52636d" font-weight="400" >Frigate offline; recordings retained in backup</text>

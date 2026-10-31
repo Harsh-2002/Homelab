@@ -90,7 +90,7 @@ for (const g of inventory.guests) {
 for (const x of [424, 1200, 1976]) path(`M${x} 1106V1176`, C.blue, true);
 path('M424 1176H1976', C.blue, true);
 path('M1200 1176V1212', C.muted, true, true);
-text(64, 1160, 'Placement is a snapshot; managed guests can relocate.', 20, C.muted);
+text(64, 1160, inventory.retirementCutover ? 'Retirement: HA and replication disabled; placement is frozen.' : 'Placement is a snapshot; managed guests can relocate.', 20, C.muted);
 
 box(64, 1218, 2272, 282, C.blueBg, '#b5cbd8', 16);
 text(88, 1258, inventory.retirementFormat ? 'Kubernetes stopped for retirement; backups verified' : inventory.maintenance ? 'Kubernetes: two active nodes; k8s-203 host unreachable' : 'One Kubernetes cluster across all three physical hosts', 29, C.ink, 600);
@@ -107,7 +107,7 @@ text(64, 1560, 'Storage boundaries', 27, C.ink, 600);
 text(840, 1560, 'Availability boundaries', 27, C.ink, 600);
 text(1616, 1560, 'Smart home', 27, C.ink, 600);
 lines(64, 1600, [...(inventory.retirementFormat ? ['NVMe ZFS roots retained; SATA data erased', inventory.retirementFormat.externalUsbStatus==='complete' ? '4 TB backup and 256 GB USB disks unmounted' : '4 TB backup; 256 GB USB overwrite in progress', 'CTR / S3 / Kubernetes require restoration from backup'] : ['ZFS → VM/LXC disks and selected 5-minute replicas', 'USB: 4 TB ext4 backup on px20; 256 GB ISO on px10', 'ctr local data → app state; S3 → Cairn / RustFS objects'])], 22, 34);
-lines(840, 1600, inventory.retirementFormat ? ['NVMe services retained; data services stopped', 'Dev, DNS, identity and proxy remain on NVMe', 'Restore CTR / S3 / Kubernetes from the backup'] : ['HA enabled; Docker failover hit an out-of-memory limit.', 'USB shares need physical-disk recovery after host loss.', 'DNS, Caddy and several apps remain single instances.'], 22, 34);
+lines(840, 1600, inventory.retirementFormat ? [inventory.retirementCutover ? 'HA disabled; final service file copies retained' : 'NVMe services retained; data services stopped', inventory.retirementCutover ? 'Dev / DNS / identity / proxy / metrics running' : 'Dev, DNS, identity and proxy remain on NVMe', 'Restore retired services from the portable backup'] : ['HA enabled; Docker failover hit an out-of-memory limit.', 'USB shares need physical-disk recovery after host loss.', 'DNS, Caddy and several apps remain single instances.'], 22, 34);
 lines(1616, 1600, ['Home Assistant → Wipro bulb / Tuya LAN', 'Home Assistant → Samsung AC / local DTLS', inventory.retirementFormat ? 'Frigate offline; recordings retained in backup' : 'Frigate → camera feeds; HA → viewing / automation'], 22, 34);
 end('homelab', 'Switch and host-port map verified; router/AP models and remaining physical cabling are unverified.');
 

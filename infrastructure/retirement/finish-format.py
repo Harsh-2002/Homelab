@@ -155,6 +155,26 @@ def publish(plan,public):
 def hash_format_metadata():
     ssh('px20',"import subprocess\nb='/mnt/homelab-retirement/homelab-backup-2026-10-31'\nsubprocess.run(['python3',b+'/manifests/hash-backup.py',b,'format-result-files','retirement-format'],check=True,stdout=subprocess.DEVNULL)\n")
 
+def verify_cutover(plan):
+    """Require the final NVMe/file backup before declaring disks ready to remove."""
+    backup_mount(plan)
+    return json.loads(ssh('px20',r'''
+import hashlib,json
+from pathlib import Path
+b=Path('/mnt/homelab-retirement/homelab-backup-2026-10-31')
+m=b/'manifests';summary=json.loads((m/'final-cutover-files.progress.json').read_text())
+assert summary['complete'] is True
+expected=(m/'FINAL-CUTOVER-MANIFEST.sha256').read_text().split()[0]
+h=hashlib.sha256()
+with (m/'final-cutover-files.jsonl').open('rb') as inp:
+ while block:=inp.read(4*1024**2):h.update(block)
+assert h.hexdigest()==expected
+mapping=json.loads((b/'final-cutover/dev/consistent-sqlite/restore-map.json').read_text())
+assert len(mapping)>=14 and all(r['integrity']=='ok' for r in mapping)
+assert (b/'final-cutover/RESTORE-PATHS.json').is_file()
+print(json.dumps(summary))
+'''))
+
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--plan',required=True);parser.add_argument('--check',action='store_true');args=parser.parse_args()
     p=Path(args.plan);assert p.stat().st_uid==os.getuid() and p.stat().st_mode&0o077==0
@@ -170,6 +190,7 @@ def main():
         print('USB full overwrites still active; NVMe roots and backup remain preserved',flush=True);time.sleep(30)
     try:
         if public['status']=='complete':verify_targets(plan);public['all_targets_unmounted']=True
+        public['final_cutover_verification']=verify_cutover(plan)
         save_backup_report(plan,public,results);hash_format_metadata();backup_close(plan)
         public['backup_unmounted']=True;public['backup_filesystem_check']='clean'
         commit=publish(plan,public);public['published_commit']=commit

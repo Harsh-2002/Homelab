@@ -1,6 +1,6 @@
 flowchart LR
   n_flow_2_0["Your phone / workstation<br/>Client addresses vary"]
-  n_flow_2_1["Home Assistant"]
+  n_flow_2_1["Home Assistant / offline"]
   n_flow_2_2["Samsung AC<br/>Local DTLS / UDP 49154"]
   n_flow_2_0 -->|"HTTPS / app"| n_flow_2_1
   n_flow_2_1 -->|"DTLS / CoAP :49154"| n_flow_2_2

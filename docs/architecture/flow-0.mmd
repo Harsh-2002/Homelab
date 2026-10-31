@@ -1,8 +1,8 @@
 flowchart LR
   n_flow_0_0["Outdoor camera<br/>Network attachment type unverified"]
   n_flow_0_1["frigate / stopped<br/>Restore backup before start"]
-  n_flow_0_2["Mosquitto / MQTT"]
-  n_flow_0_3["Home Assistant"]
+  n_flow_0_2["Mosquitto / MQTT / offline"]
+  n_flow_0_3["Home Assistant / offline"]
   n_flow_0_0 -->|"RTSP :554"| n_flow_0_1
   n_flow_0_1 -->|"events / MQTT :1883"| n_flow_0_2
   n_flow_0_2 -->|"HA integration"| n_flow_0_3

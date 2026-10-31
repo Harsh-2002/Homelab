@@ -1,5 +1,18 @@
 ## Data-disk retirement, 31 October
 
+## Final retirement cutover — 31 October 2026
+
+HA resources are ignored, both hosts’ HA managers are disabled/stopped, watchdog
+services are stopped and all replication jobs are disabled. Dev100 and core
+network/identity/monitoring containers remain running for backup completion.
+Orva106 and Home Assistant107 are stopped after fresh final exports; CTR, S3,
+Talos and Store remain stopped. The final file backup passed readback:1,316,770 file/link records and29
+SQLite checks; see the retirement verification record.
+Do not shut down until USB erase completion and clean unmount of the backup.
+See the [retirement runbook](../../infrastructure/retirement/README.md).
+Older sections below describe historical recovery states.
+
+
 Both online SATA data disks are now empty ext4 filesystems and unmounted.
 The two external256GB disks are undergoing owner-approved full overwrites.
 The NVMe roots and dev remain intact; CTR, S3 and Kubernetes are stopped pending

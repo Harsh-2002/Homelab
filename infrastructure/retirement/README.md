@@ -1,5 +1,10 @@
 # Data backup for migration away from Proxmox
 
+For the final restore, start with **`final-cutover/RESTORE-PATHS.json`** on the
+4TB backup. It points to the newest files for each component and records the
+point-in-time/live-copy limitations. Require both final-cutover verification
+and disk-format completion before shutting down or removing drives.
+
 The owner plans to sell px10, px20 and px30 and later run a single Linux host.
 The requested deliverable is actual application files, configuration and logical
 database exports, **not VM images or retained VM/container snapshots**.
@@ -18,7 +23,8 @@ host. No automatic mount dependency was added to the retiring hosts.
 The old AV/BACKUP LVM layout and old native VM-image archives were removed with
 owner authorization. Approximately75GiB of media was first copied to internal
 staging and compared successfully, then copied back to the new filesystem.
-The separate256GB USB ISO disk was not formatted. Existing media and ISO SMB
+The separate256GB USB ISO disk was preserved during the initial backup; its
+later full overwrite is explicitly authorized and tracked below. Media and ISO SMB
 services are currently unavailable: Store109 is stopped, the old CIFS storage
 entries and old AV/BACKUP mount units were disabled deliberately.
 
@@ -241,3 +247,45 @@ The preserved NVMe drives have a separate [NVMe health snapshot](../proxmox/NVME
 
 See [bootable erasure media](BOOT-MEDIA.md) for the verified ShredOS image and
 the separate offline resale-erasure workflow.
+
+
+## Final NVMe cutover — 31 October 2026
+
+The owner is preparing to erase the remaining NVMe roots offline. Before that,
+`final-cutover/` contains a fresh full dev file tree and14 online agent SQLite
+backups, a full cold Orva root tree, a fresh native Home Assistant backup plus
+plain extracted files, cold NVMe LXC roots and refreshed host configuration.
+The final readback result is recorded in
+`manifests/final-cutover-files.progress.json`; require `complete: true`.
+`FINAL-CUTOVER-MANIFEST.sha256` seals the new manifest.
+Use **`final-cutover/RESTORE-PATHS.json`** to choose the newest component paths;
+CTR/S3/Kubernetes remain in their previously verified export locations.
+`verify-cutover.py` reads every changed file and reuses checksums only when a
+file shares the exact device/inode with its immutable verified base.
+
+All ten HA resource states are `ignored`; both nodes’ HA LRM/CRM services are
+disabled/stopped, watchdog-mux is stopped, and every replication job is disabled.
+Orva106 and HAOS107 are stopped with autostart disabled after final exports.
+Dev100, proxy101, DNS102, identity103 and monitoring104 remain running for
+completion. Their copies are point-in-time; later writes require another delta.
+Never erase either NVMe root while these guests are running.
+
+The32GB ShredOS stick is flashed, its entire image readback matches the official
+checksum, and FAT/UEFI files were checked. A physical boot test remains pending.
+The256GB full-overwrite jobs must finish before powering off or disconnecting.
+The completion observer must be running, not frozen, after manual backup work
+finishes; it publishes final disk status and unmounts/checks the4TB backup.
+Keep the4TB drive disconnected when selecting disks to erase in ShredOS.
+
+OpenViking is intentionally offline with CTR. Its final cold state is retained;
+reviewed final memory updates are queued on the backup for import after restore.
+px30 local-only files remain unverified because that host is offline.
+
+Final cutover readback **passed**:1,316,770 file/link records,
+112,662,930,499 logical file bytes;1,214,009 unchanged checksums reused from
+verified hardlink inodes and6,551,697,234 changed/new bytes read back.
+29 cold/consistent SQLite databases passed `quick_check`, including all14
+agent backups. Both host PVE configuration databases also passed their separate
+online SQLite backup checks. This supplements, rather than replaces, the
+previous CTR/S3/Kubernetes/media verification.
+See [final cutover verification](FINAL-CUTOVER-STATUS.json).
