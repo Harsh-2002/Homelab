@@ -1,10 +1,10 @@
 flowchart LR
   n_flow_20_0["OpenCode"]
-  n_flow_20_1["Claude subscription bridge<br/>Loopback only / Agent SDK"]
+  n_flow_20_1["Legacy Claude bridge / retiring<br/>Startup disabled; loaded copy until restart"]
   n_flow_20_2["Claude Code CLI / SDK<br/>Existing CLI-owned Claude Max login"]
   n_flow_20_3["Anthropic / Claude plan<br/>Existing CLI-owned subscription login"]
-  n_flow_20_0 -->|"local chat / tool bridge"| n_flow_20_1
-  n_flow_20_1 -->|"official Agent SDK"| n_flow_20_2
+  n_flow_20_0 -->|"legacy startup disabled / migration pending"| n_flow_20_1
+  n_flow_20_1 -->|"loaded SDK until safe restart"| n_flow_20_2
   n_flow_20_2 -->|"Claude CLI / existing Max subscription"| n_flow_20_3
   classDef c_flow_20_0 fill:#ffffff,stroke:#6c7f8c,color:#233647;
   class n_flow_20_0,n_flow_20_1 c_flow_20_0;

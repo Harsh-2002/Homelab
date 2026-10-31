@@ -280,10 +280,19 @@ Pinned source, Clippy references, reproduction, validation and updates are in
 
 ## Claude subscription bridge in OpenCode, 2026-10-27
 
-OpenCode now uses @openchamber/opencode-claude1.6.0 through the official Claude
+Historical setup, superseded by the31 October retirement below. OpenCode used @openchamber/opencode-claude1.6.0 through the official Claude
 Agent SDK and existing CLI-owned Max login. New sessions default to Opus5.5
 (1M context), with xhigh for Build/Plan. A real tool call and session resume
 passed, and all10 existing MCPs stayed connected. The proxy is loopback-only;
 no Claude API key, new login or permission bypass was required. See
 [OPENCODE-CLAUDE.md](OPENCODE-CLAUDE.md) for defaults, environment, reproduction,
 verification, update limits and rollback. Other agents' inference stays separate.
+
+## Legacy Claude bridge retirement, 2026-10-31
+
+Removed the unused external Claude plugin from startup configuration and its
+exact global/Build/Plan model overrides and SDK environment drop-in. Preserved
+other providers, MCPs, skills, credentials and active sessions. No manual service
+restart, location reload or binary upgrade. Native Claude Agent requires2.2.3+;
+current server2.1.4 cannot activate it. Loaded plugin/package files remain until
+a safe restart/upgrade window. See [research and migration gates](OPENCODE-CLAUDE.md).

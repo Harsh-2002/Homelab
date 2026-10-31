@@ -125,20 +125,18 @@ def main():
     try:
         packages = [p if isinstance(p, str) else p.get('package', '')
                     for p in opencode.get('plugins', [])]
-        if '@openchamber/opencode-claude@1.6.0' not in packages:
-            failures.append('OpenCode Claude SDK: reviewed plugin missing')
-        expected = json.loads(Path(__file__).with_name('opencode-claude.fragment.json').read_text())
-        if opencode.get('model') != expected['model']:
-            failures.append('OpenCode Claude SDK: primary model drift')
-        for name, settings in expected['agents'].items():
-            if opencode.get('agents', {}).get(name, {}).get('model') != settings['model']:
-                failures.append(f'OpenCode Claude SDK: {name} model/effort drift')
+        if any(p.startswith('@openchamber/opencode-claude') for p in packages):
+            failures.append('OpenCode Claude: retired external plugin is configured')
+        selections = [opencode.get('model', '')] + [
+            a.get('model', '') for a in opencode.get('agents', {}).values()]
+        if any(isinstance(m, str) and m.startswith('claude-code/') for m in selections):
+            failures.append('OpenCode Claude: stale external-provider model default')
         dropin = Path.home() / '.config/systemd/user/opencode.service.d/claude-sdk.conf'
-        if dropin.read_bytes() != Path(__file__).with_name('opencode-claude.conf').read_bytes():
-            failures.append('OpenCode Claude SDK: service environment drift')
-        print('opencode-claude: native plugin, coding defaults and non-secret service environment checked')
+        if dropin.exists():
+            failures.append('OpenCode Claude: retired SDK environment drop-in remains')
+        print('opencode-claude: legacy startup/defaults retired; built-in Claude Agent activation pending newer server')
     except (OSError, ValueError, KeyError):
-        failures.append('OpenCode Claude SDK: configuration or tracked defaults unavailable')
+        failures.append('OpenCode Claude: unable to validate retirement state')
     for failure in failures:
         print(f'FAIL: {failure}', file=sys.stderr)
     if failures:

@@ -1,5 +1,89 @@
 # Claude subscription in OpenCode
 
+## Current state — legacy startup retired, 31 October 2026
+
+Owner confirmed current agents do not use the external Claude provider models.
+Removed only @openchamber/opencode-claude1.6.0 from protected global startup
+configuration, exact setup-installed global/Build/Plan Claude model overrides,
+and the matching claude-sdk.conf systemd environment drop-in. Defaults before
+installation had no model/agent override; restored that absence without choosing
+another paid provider. Preserved other plugins, MCPs, skills, provider settings,
+existing sessions and Claude CLI credentials. A protected rollback copy was made.
+
+**Not a completed native migration:** installed OpenCode/server remains2.1.4.
+The official built-in provider requires2.2.3+. Its ID is `claude-agent`, not the
+old plugin's `claude-code`. No upgrade, manual restart, daemon-reload or location
+reload was issued. Package/SDK cache files and any already-loaded legacy copy
+remain for the current process; deleting them while it is active is deferred.
+Do not describe runtime/package removal or native inference as completed.
+
+## Verified upstream research
+
+- [Official2.2.3 release](https://github.com/anomalyco/opencode/releases/tag/v2.2.3)
+  adds Claude Agent using the installed Claude Code CLI and its existing login.
+- [Versioned implementation/design](https://github.com/anomalyco/opencode/blob/v2.2.3/specs/v2/claude-agent-provider.md)
+  confirms local Claude Agent SDK execution, OpenCode tools/permissions, agent
+  instructions, MCPs and skills. The native provider does not use Claude Code's
+  separate MCP/skill/auto-memory settings. Preserve the existing native OpenViking
+  integration in OpenCode rather than relying on Claude auto-memory.
+- [Upstream bridge README](https://github.com/openchamber/opencode-claude)
+  now states the plugin is unnecessary on2.2.3+ and the repository is archived.
+- The generic providers page still contains older Anthropic API/OAuth guidance;
+  use the newer release and versioned native-provider specification for this
+  SDK-based path. An Anthropic API-key provider is a different billing route.
+- [Installed-version config reload tests](https://github.com/anomalyco/opencode/blob/v2.1.4/packages/core/test/config/reload.test.ts)
+  distinguish automatic config-domain refresh from external-plugin reload.
+  Config writes are watched, so saving a file is not an inert staging mechanism.
+  No explicit location reload was performed. The service PID/restart count stayed
+  unchanged during the actual retirement edits; HTTPS remained200.
+
+Existing Claude CLI login can be reused on the same Linux user. After upgrading,
+select Claude Agent in `/connect` to record/check that login method. Only sign in
+again with the CLI if its session is expired. Never read/copy .credentials.json,
+extract OAuth tokens or add an API key for subscription usage.
+
+## Safe completion at an idle maintenance window
+
+1. Confirm agents and their tool calls are idle. Preserve protected config,
+   session database and rollback state. Recheck upstream release/plugin compatibility.
+2. Upgrade to a supported release with built-in Claude Agent (2.2.3 minimum;
+   latest observed release during research2.2.5). Activating new server code
+   requires a new server process; do not promise an uninterrupted in-flight turn.
+3. Use existing CLI login, then choose Claude Agent in `/connect`. Discover the
+   actual returned `claude-agent/<model-id>` and supported effort variants.
+   Do not mechanically reuse the old plugin's IDs or assume identical model limits.
+4. Verify an isolated real model/tool turn and resumption, OpenCode permissions,
+   native OpenViking/MCP connections and browser access. Preserve unrelated active
+   model selections. Session history persistence does not prove seamless reuse
+   of the old bridge's separate SDK session cache.
+5. After confirming no process references the old package, remove only its unused
+   cache/SDK dependencies, leaving shared Claude CLI credentials and other packages.
+   Update live verification, shared integration checks and architecture to the
+   actual native route. Do not run the old installer below; its tracked helper
+   now refuses to reinstall the retired bridge.
+
+## Incident observed during read-only verification
+
+A live model-catalog/integration probe initialized extra location/MCP processes.
+At08:10:31 UTC on31 October the dev guest's kernel recorded a global OOM kill of
+OpenCode PID1005. Its existing Restart=on-failure policy restarted it automatically
+at08:10:36 as PID100147; HTTPS recovered200. No explicit restart command was issued.
+The service cgroup peak included child workloads (5.5GiB RAM/1.8GiB swap); this
+is not the main server's RSS or proof that the probe alone caused exhaustion.
+Concurrent sandbox/load/browser processes were present. The verifier also saw
+REA unavailable before the restart. Do not claim every live MCP check passed.
+
+Stopped live catalog/location/MCP probes after the event. The retired-plugin
+verifier now exits without initializing a live location when the startup entry
+is absent. Shared four-agent static integration checks pass. No child workload
+was killed, VM memory changed, or in-flight session replay attempted. This dev
+OOM is distinct from the earlier physical-host incident and does not explain
+px20's abrupt loss or px30's power-key events.
+
+## Historical installation and verification — 27 October 2026
+
+The following is a historical record, not the current deployment instructions.
+
 Configured on dev, 2026-10-27, using
 [@openchamber/opencode-claude](https://github.com/openchamber/opencode-claude)
 1.6.0 (reviewed source 507cb87bfe9f17ee1d560e4da42e4fd27b2ac5c4).

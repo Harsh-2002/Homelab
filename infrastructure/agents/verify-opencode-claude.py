@@ -14,6 +14,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--session', help='Optional known smoke-test session ID to verify recorded tool output')
     args = parser.parse_args()
+    config = json.loads((Path.home() / '.config/opencode/opencode.json').read_text())
+    packages = [p if isinstance(p, str) else p.get('package', '') for p in config.get('plugins', [])]
+    if not any(p.startswith('@openchamber/opencode-claude') for p in packages):
+        print('Legacy plugin retired from startup configuration. Native Claude Agent migration pending OpenCode >=2.2.3.')
+        print('No live model discovery, location initialization or MCP startup performed.')
+        return
     service = json.loads((Path.home() / '.config/opencode/service.json').read_text())
     base = 'http://127.0.0.1:' + str(service['port'])
     authorization = 'Basic ' + base64.b64encode(('opencode:' + service['password']).encode()).decode()
