@@ -106,7 +106,7 @@ lines(1600, 1384, inventory.kubernetes.supabase, 22, 32);
 text(64, 1560, 'Storage boundaries', 27, C.ink, 600);
 text(840, 1560, 'Availability boundaries', 27, C.ink, 600);
 text(1616, 1560, 'Smart home', 27, C.ink, 600);
-lines(64, 1600, ['ZFS → VM/LXC disks and selected 5-minute replicas', 'USB on px10: 4 TB AV / BACKUP + 256 GB ISO', 'ctr local data → app state; S3 → Cairn / RustFS objects'], 22, 34);
+lines(64, 1600, ['ZFS → VM/LXC disks and selected 5-minute replicas', 'USB on px10: 4 TB ext4 backup + 256 GB ISO', 'ctr local data → app state; S3 → Cairn / RustFS objects'], 22, 34);
 lines(840, 1600, ['HA enabled; Docker failover hit an out-of-memory limit.', 'USB shares need physical-disk recovery after host loss.', 'DNS, Caddy and several apps remain single instances.'], 22, 34);
 lines(1616, 1600, ['Home Assistant → Wipro bulb / Tuya LAN', 'Home Assistant → Samsung AC / local DTLS', 'Frigate → camera feeds; HA → viewing / automation'], 22, 34);
 end('homelab', 'Switch and host-port map verified; router/AP models and remaining physical cabling are unverified.');

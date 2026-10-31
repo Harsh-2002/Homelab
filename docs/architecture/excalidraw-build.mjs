@@ -44,9 +44,9 @@ for (const h of inv.hosts) {
   for (const g of inv.guests.filter(g=>g.host===h.name)) add(h.name,g.name,`${g.kind} ${g.id} / ${g.name}${g.statusLabel ? " / " + g.statusLabel : g.state ? " / stopped" : ""}`,'guest');
   add(h.name,h.name+'-zfs','Local ZFS / rpool + data','physical','Guest OS / data volumes');
 }
-add('px10','usb-av','Crucial X9 Pro / 4 TB','physical','USB: AV + BACKUP','USB');
+add(inv.physicalStorage.find(d=>d.name==='Crucial X9 Pro USB SSD')?.host||'px10','usb-av','Crucial X9 Pro / 4 TB','physical','USB: portable ext4 backup / in progress','USB');
 add('px10','usb-iso','SSD / 256 GB','physical','USB: ISO images / imports','USB');
-for (const share of ['AV','BACKUP','ISO']) add('store','share-'+share,`SMB / ${share}`,'service','TCP 445');
+for (const share of ['AV','BACKUP','ISO']) add('store','share-'+share,`SMB / ${share} / offline`,'service','TCP 445');
 add('dev','agents','Coding & personal agents','logical');
 for (const a of ['Codex','Claude Code','Hermes','OpenCode']) add('agents',a.toLowerCase().replaceAll(' ','-'),a);
 add('opencode','opencode-claude','Claude Agent / built-in','service','OpenCode 2.2.5 / official SDK');
@@ -155,7 +155,7 @@ const flows = [
  ['Store / physical media path',['usb-av','store','share-AV','jellyfin'],['host bind mount','encrypted SMB3 :445','media reads']],
  ['Talos / management',['omni','kubernetes'],['manages Talos machines; not app deployment']],
  ['GitOps / desired state',['github','kube-argo-cd','kubernetes'],['tracked manifests / charts','reconciles declared resources']],
- ['Motrix / download to playback',['motrix-server','share-AV','jellyfin','clients'],['writes via SMB3','reads media files','playback']],
+ [inv.retirementBackup ? 'Motrix / former SMB path, currently offline' : 'Motrix / download to playback',['motrix-server','share-AV','jellyfin','clients'],['writes via SMB3','reads media files','playback']],
  ['Longhorn / replicated volumes',['kube-longhorn','k8s-201-disk','k8s-202-disk','k8s-203-disk'],['eligible disk','eligible disk','eligible disk']],
  ['OpenCode / Claude subscription',['opencode','opencode-claude','claude-sdk-cli','anthropic-subscription'],['native provider / OpenCode tools','official Agent SDK','Claude CLI / existing Max subscription']]
 ];
@@ -191,6 +191,7 @@ replaceFlow(9,'Metrics / independent readers','victoriametrics',['grafana','home
 replaceFlow(6,'Memory / independent local and external dependencies','openviking',['agents','openviking-ollama','model-apis'],['memory read / write','local embeddings','remote inference'],['agents']);
 replaceFlow(16,'Omni / Talos machine management','omni',['k8s-201','k8s-202','k8s-203'],['machine management','machine management','machine management']);
 replaceFlow(19,'Longhorn / 2 replicas per volume, across eligible disks','kube-longhorn',['k8s-201-disk','k8s-202-disk','k8s-203-disk'],['eligible disk','eligible disk',inv.maintenance ? 'offline / no replicas' : 'eligible disk']);
+if(inv.retirementBackup) replaceFlow(15,'Portable retirement backup / files on ext4','usb-av',['dev','s3','kubernetes'],['dev files / consistent agent databases','cold container application files','manifests / logical DB / PVC files'],['dev','s3','kubernetes']);
 const scene={type:'excalidraw',version:2,source:'https://excalidraw.com',elements,appState:{viewBackgroundColor:'#f8fafc',gridSize:null,exportBackground:true,exportWithDarkMode:false},files:{}};
 writeFileSync(join(out,'homelab-topology.excalidraw'),JSON.stringify(scene,null,2)+'\n');
 writeFileSync(join(out,'topology-manifest.json'),JSON.stringify({date:inv.verifiedOn,internal,sourceHash,nodes:nodes.size,ownershipEdges:edges.length,frames:['tree',...flows.map((_,i)=>'flow-'+i)],width:W+100,height:H+170},null,2)+'\n');

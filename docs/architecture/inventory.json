@@ -119,9 +119,10 @@
         66
       ],
       "body": [
-        "Samba: AV \u00b7 BACKUP \u00b7 ISO",
-        "Host USB SSDs \u2192 bind mounts \u2192 SMB shares"
-      ]
+        "Samba stopped; old AV/BACKUP layout retired",
+        "4TB USB: portable ext4 backup in progress"
+      ],
+      "statusLabel": "stopped / backup disk transition"
     },
     {
       "id": 204,
@@ -291,8 +292,7 @@
       "size": "4 TB",
       "host": "px10",
       "roles": [
-        "AV",
-        "BACKUP"
+        "Retirement backup / ext4; ordinary files and logical exports"
       ]
     },
     {
@@ -342,5 +342,12 @@
     "nodeOnline": false,
     "poweredOff": true,
     "reason": "Unreachable since 15:45 IST 31 October; six HA affinity rules exclude px30 pending investigation; offline maintenance request rejected; owner confirms node off and cable removed after it stopped responding"
+  },
+  "retirementBackup": {
+    "status": "in progress; px10/dev first, then move drive to px20",
+    "destination": "External Crucial X9 Pro 4TB; single GPT ext4 filesystem; label HOMELAB_BACKUP",
+    "format": "Portable files and logical database exports; no VM images or retained guest snapshots",
+    "storeStatus": "CT109 stopped; old AV/BACKUP volumes removed; media preserved in staging and copying back",
+    "px30": "Offline; local-only data not yet captured"
   }
 }

@@ -1,5 +1,9 @@
 # Homelab architecture
 
+## Retirement data backup in progress
+
+The owner plans a future single Linux host. The4TB USB disk is now a single ext4 filesystem for portable files and logical database exports; old LVM AV/BACKUP and native VM-image archives were removed with authorization. Store109 is stopped and the former SMB routes are offline. px10/dev backups are being completed first, then the owner will move the disk to px20 for CTR and remaining files. See [migration backup procedure](../../infrastructure/retirement/README.md). Do not interpret planned destinations as completed backups.
+
 ## Current: px30 unavailable, 31 October afternoon
 
 px30 is unreachable since15:45IST; the owner subsequently confirmed it is off and unplugged. DNS/identity/S3 run on px10; proxy and Home Assistant run on px20. Six HA node-affinity rules temporarily exclude px30 to prevent repeated failback. The offline maintenance request was rejected, so this is rule-based isolation, not active node maintenance. Kubernetes has two Ready nodes; the unavailable third host and degraded standby/storage state remain under investigation. See [afternoon incident](../../infrastructure/proxmox/INCIDENT-2026-10-31-AFTERNOON.md).

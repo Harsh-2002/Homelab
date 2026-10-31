@@ -67,8 +67,8 @@
 </g>
 <g data-node="true">
 <rect x="88" y="744" width="672" height="66" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="110" y="771" font-size="23" fill="#18252c" font-weight="600" >store · LXC 109</text>
-<text x="110" y="796" font-size="20" fill="#52636d" font-weight="400" >Samba: AV · BACKUP · ISO</text>
+<text x="110" y="771" font-size="23" fill="#18252c" font-weight="600" >store · LXC 109 · stopped / backup disk transition</text>
+<text x="110" y="796" font-size="20" fill="#52636d" font-weight="400" >Samba stopped; old AV/BACKUP layout retired</text>
 </g>
 <g data-node="true">
 <rect x="864" y="596" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -150,7 +150,7 @@
 <text x="840" y="1560" font-size="27" fill="#18252c" font-weight="600" >Availability boundaries</text>
 <text x="1616" y="1560" font-size="27" fill="#18252c" font-weight="600" >Smart home</text>
 <text x="64" y="1600" font-size="22" fill="#52636d" font-weight="400" >ZFS → VM/LXC disks and selected 5-minute replicas</text>
-<text x="64" y="1634" font-size="22" fill="#52636d" font-weight="400" >USB on px10: 4 TB AV / BACKUP + 256 GB ISO</text>
+<text x="64" y="1634" font-size="22" fill="#52636d" font-weight="400" >USB on px10: 4 TB ext4 backup + 256 GB ISO</text>
 <text x="64" y="1668" font-size="22" fill="#52636d" font-weight="400" >ctr local data → app state; S3 → Cairn / RustFS objects</text>
 <text x="840" y="1600" font-size="22" fill="#52636d" font-weight="400" >HA enabled; Docker failover hit an out-of-memory limit.</text>
 <text x="840" y="1634" font-size="22" fill="#52636d" font-weight="400" >USB shares need physical-disk recovery after host loss.</text>

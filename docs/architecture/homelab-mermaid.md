@@ -25,7 +25,7 @@ flowchart LR
   n_tree_16["px10 / Dell OptiPlex 5060<br/>i5-8400T / 6 cores / 32 GB / ZFS"]
   n_tree_17["VM 100 / dev"]
   n_tree_18["LXC 104 / observability"]
-  n_tree_19["LXC 109 / store"]
+  n_tree_19["LXC 109 / store / stopped / backup disk transition"]
   n_tree_20["LXC 102 / dns"]
   n_tree_21["LXC 103 / auth"]
   n_tree_22["LXC 105 / s3"]
@@ -41,11 +41,11 @@ flowchart LR
   n_tree_32["px30 / Dell OptiPlex 5060 / powered off<br/>i5-9400T / 6 cores / 32 GB / ZFS / unavailable"]
   n_tree_33["VM 203 / k8s-203 / host unreachable / NotReady"]
   n_tree_34["Local ZFS / rpool + data<br/>Guest OS / data volumes"]
-  n_tree_35["Crucial X9 Pro / 4 TB<br/>USB: AV + BACKUP"]
+  n_tree_35["Crucial X9 Pro / 4 TB<br/>USB: portable ext4 backup / in progress"]
   n_tree_36["SSD / 256 GB<br/>USB: ISO images / imports"]
-  n_tree_37["SMB / AV<br/>TCP 445"]
-  n_tree_38["SMB / BACKUP<br/>TCP 445"]
-  n_tree_39["SMB / ISO<br/>TCP 445"]
+  n_tree_37["SMB / AV / offline<br/>TCP 445"]
+  n_tree_38["SMB / BACKUP / offline<br/>TCP 445"]
+  n_tree_39["SMB / ISO / offline<br/>TCP 445"]
   n_tree_40["Coding &amp; personal agents"]
   n_tree_41["Codex"]
   n_tree_42["Claude Code"]
@@ -337,7 +337,7 @@ flowchart LR
 ```mermaid
 flowchart LR
   n_flow_3_0["qbittorrent<br/>Docker-internal unless published"]
-  n_flow_3_1["SMB / AV<br/>TCP 445"]
+  n_flow_3_1["SMB / AV / offline<br/>TCP 445"]
   n_flow_3_2["jellyfin<br/>Docker-internal unless published"]
   n_flow_3_3["Your phone / workstation<br/>Client addresses vary"]
   n_flow_3_0 -->|"writes via SMB3 :445"| n_flow_3_1
@@ -481,25 +481,6 @@ flowchart LR
   class n_flow_14_1,n_flow_14_2,n_flow_14_3,n_flow_14_4 c_flow_14_1;
 ```
 
-## Store / physical media path
-
-```mermaid
-flowchart LR
-  n_flow_15_0["Crucial X9 Pro / 4 TB<br/>USB: AV + BACKUP"]
-  n_flow_15_1["LXC 109 / store"]
-  n_flow_15_2["SMB / AV<br/>TCP 445"]
-  n_flow_15_3["jellyfin<br/>Docker-internal unless published"]
-  n_flow_15_0 -->|"host bind mount"| n_flow_15_1
-  n_flow_15_1 -->|"encrypted SMB3 :445"| n_flow_15_2
-  n_flow_15_2 -->|"media reads"| n_flow_15_3
-  classDef c_flow_15_0 fill:#e7eff8,stroke:#6c7f8c,color:#233647;
-  class n_flow_15_0 c_flow_15_0;
-  classDef c_flow_15_1 fill:#e8f4f0,stroke:#6c7f8c,color:#233647;
-  class n_flow_15_1 c_flow_15_1;
-  classDef c_flow_15_2 fill:#ffffff,stroke:#6c7f8c,color:#233647;
-  class n_flow_15_2,n_flow_15_3 c_flow_15_2;
-```
-
 ## GitOps / desired state
 
 ```mermaid
@@ -515,12 +496,12 @@ flowchart LR
   class n_flow_17_1 c_flow_17_1;
 ```
 
-## Motrix / download to playback
+## Motrix / former SMB path, currently offline
 
 ```mermaid
 flowchart LR
   n_flow_18_0["motrix-server<br/>Docker-internal unless published"]
-  n_flow_18_1["SMB / AV<br/>TCP 445"]
+  n_flow_18_1["SMB / AV / offline<br/>TCP 445"]
   n_flow_18_2["jellyfin<br/>Docker-internal unless published"]
   n_flow_18_3["Your phone / workstation<br/>Client addresses vary"]
   n_flow_18_0 -->|"writes via SMB3"| n_flow_18_1
@@ -630,4 +611,23 @@ flowchart LR
   class n_flow_19_0 c_flow_19_0;
   classDef c_flow_19_1 fill:#e7eff8,stroke:#6c7f8c,color:#233647;
   class n_flow_19_1,n_flow_19_2,n_flow_19_3 c_flow_19_1;
+```
+
+## Portable retirement backup / files on ext4
+
+```mermaid
+flowchart LR
+  n_flow_15_0["Crucial X9 Pro / 4 TB<br/>USB: portable ext4 backup / in progress"]
+  n_flow_15_1["VM 100 / dev"]
+  n_flow_15_2["LXC 105 / s3"]
+  n_flow_15_3["Kubernetes / logical cluster<br/>k8s-201 / 202 Ready; k8s-203 host unreachable"]
+  n_flow_15_1 -.->|"dev files / consistent agent databases"| n_flow_15_0
+  n_flow_15_2 -.->|"cold container application files"| n_flow_15_0
+  n_flow_15_3 -.->|"manifests / logical DB / PVC files"| n_flow_15_0
+  classDef c_flow_15_0 fill:#e7eff8,stroke:#6c7f8c,color:#233647;
+  class n_flow_15_0 c_flow_15_0;
+  classDef c_flow_15_1 fill:#e8f4f0,stroke:#6c7f8c,color:#233647;
+  class n_flow_15_1,n_flow_15_2 c_flow_15_1;
+  classDef c_flow_15_2 fill:#f0edf9,stroke:#6c7f8c,color:#233647;
+  class n_flow_15_3 c_flow_15_2;
 ```
