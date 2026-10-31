@@ -1,41 +1,346 @@
 {
   "verifiedOn": "2026-10-31",
-  "lastHardwareSwap": {"node": "px30", "returnedOn": "2026-10-30", "normalPlacementRestored": true, "originalResetCause": "unresolved; prior finite reboot tests and subsequent rack return are not root-cause proof"},
-  "packageMaintenance": {"manager": "9.2.24", "runningKernel": "7.0.14-26-pve", "restartPending": false, "oldKernelCleanup": "All three hosts retain only their active kernel; one-time cleanup completed"},
-  "serviceRecovery": {"proxy": {"services": ["caddy", "prometheus-node-exporter"], "waitFor": "networking.service (ifupdown2)", "restart": "on-failure / 5s / no start-limit lockout", "scope": "Single proxy instance; guest HA does not detect an application-process failure", "verification": "Live HTTPS, authenticated Home Assistant API and browser WebSocket; no cold reboot or injected failure"}, "clusterNameResolution": {"source": "Peer names and ring0 addresses from Corosync in each host hosts file", "reason": "Avoid wildcard guest DNS resolving a cluster peer to the proxy during boot and replication", "verification": "All three hosts resolve every cluster peer; native replication resumed"}},
-  "agentInference": { "hermesPrimary": { "provider": "opencode-go", "model": "deepseek-v4.1-flash" }, "hermesFallback": { "provider": "openai-codex", "model": "gpt-6-luna" }, "reasoning": "medium", "opencodePrimary": { "provider": "session-selected", "model": "No global Claude override", "transport": "Native Claude Agent / official SDK / installed Claude CLI", "nativeClaudeAgent": "OpenCode 2.2.5; existing Max login; native tool and resume verified", "inferenceVerified": true } },
-  "networkSwitch": {"model": "NETGEAR GS110TPv3", "name": "home", "firmware": "7.1.1.13", "ports": {"g1": "camera / 100 Mbps", "g5": "px10 / 1 Gbps", "g6": "px20 / 1 Gbps", "g7": "px30 cable; replacement 5060 reports 1 Gbps", "g10": "router and downstream clients; exact intermediaries unverified"}, "management": "separate legacy subnet; temporary troubleshooting tunnel"},
+  "lastHardwareSwap": {
+    "node": "px30",
+    "returnedOn": "2026-10-30",
+    "normalPlacementRestored": false,
+    "originalResetCause": "unresolved; prior finite reboot tests and subsequent rack return are not root-cause proof"
+  },
+  "packageMaintenance": {
+    "manager": "9.2.24",
+    "runningKernel": "7.0.14-26-pve",
+    "restartPending": false,
+    "oldKernelCleanup": "All three hosts retain only their active kernel; one-time cleanup completed"
+  },
+  "serviceRecovery": {
+    "proxy": {
+      "services": [
+        "caddy",
+        "prometheus-node-exporter"
+      ],
+      "waitFor": "networking.service (ifupdown2)",
+      "restart": "on-failure / 5s / no start-limit lockout",
+      "scope": "Single proxy instance; guest HA does not detect an application-process failure",
+      "verification": "Live HTTPS, authenticated Home Assistant API and browser WebSocket; no cold reboot or injected failure"
+    },
+    "clusterNameResolution": {
+      "source": "Peer names and ring0 addresses from Corosync in each host hosts file",
+      "reason": "Avoid wildcard guest DNS resolving a cluster peer to the proxy during boot and replication",
+      "verification": "All three hosts resolve every cluster peer; native replication resumed"
+    }
+  },
+  "agentInference": {
+    "hermesPrimary": {
+      "provider": "opencode-go",
+      "model": "deepseek-v4.1-flash"
+    },
+    "hermesFallback": {
+      "provider": "openai-codex",
+      "model": "gpt-6-luna"
+    },
+    "reasoning": "medium",
+    "opencodePrimary": {
+      "provider": "session-selected",
+      "model": "No global Claude override",
+      "transport": "Native Claude Agent / official SDK / installed Claude CLI",
+      "nativeClaudeAgent": "OpenCode 2.2.5; existing Max login; native tool and resume verified",
+      "inferenceVerified": true
+    }
+  },
+  "networkSwitch": {
+    "model": "NETGEAR GS110TPv3",
+    "name": "home",
+    "firmware": "7.1.1.13",
+    "ports": {
+      "g1": "camera / 100 Mbps",
+      "g5": "px10 / 1 Gbps",
+      "g6": "px20 / 1 Gbps",
+      "g7": "px30 cable; replacement 5060 reports 1 Gbps",
+      "g10": "router and downstream clients; exact intermediaries unverified"
+    },
+    "management": "separate legacy subnet; temporary troubleshooting tunnel"
+  },
   "hosts": [
-    { "name": "px10", "model": "Dell OptiPlex 5060", "cpu": "i5-8400T / 6 cores", "ramGB": 32 },
-    { "name": "px20", "model": "Dell OptiPlex 5060", "cpu": "i5-8400T / 6 cores", "ramGB": 32 },
-    { "name": "px30", "model": "Dell OptiPlex 5060", "cpu": "i5-9400T / 6 cores", "ramGB": 32 }
+    {
+      "name": "px10",
+      "model": "Dell OptiPlex 5060",
+      "cpu": "i5-8400T / 6 cores",
+      "ramGB": 32
+    },
+    {
+      "name": "px20",
+      "model": "Dell OptiPlex 5060",
+      "cpu": "i5-8400T / 6 cores",
+      "ramGB": 32
+    },
+    {
+      "name": "px30",
+      "model": "Dell OptiPlex 5060",
+      "cpu": "i5-9400T / 6 cores",
+      "ramGB": 32
+    }
   ],
   "guests": [
-    {"id": 100, "name": "dev", "host": "px10", "kind": "VM", "slot": [596, 112], "body": ["Codex \u00b7 Claude Code \u00b7 Hermes \u00b7 OpenCode", "Herdr \u00b7 shared tools / MCP \u00b7 development workloads"]},
-    {"id": 104, "name": "observability", "host": "px10", "kind": "LXC", "slot": [724, 108], "body": ["Beszel \u00b7 Grafana \u00b7 VictoriaMetrics", "Uptime Kuma \u00b7 PVE exporter"]},
-    {"id": 109, "name": "store", "host": "px10", "kind": "LXC", "slot": [848, 114], "body": ["Samba: AV \u00b7 BACKUP \u00b7 ISO", "Host USB SSDs \u2192 bind mounts \u2192 SMB shares"]},
-    {"id": 204, "name": "ctr", "host": "px20", "kind": "VM", "titleSuffix": " / Docker + Portainer", "slot": [596, 290], "body": ["Media       Jellyfin \u00b7 qBittorrent \u00b7 Motrix", "Personal   Immich \u00b7 Karakeep \u00b7 OpenCloud \u00b7 Paperless", "Notes       Nivra \u00b7 separate friend instance", "Build        Forgejo \u00b7 Docker Registry \u00b7 mirror worker", "Automate n8n \u00b7 SearXNG \u00b7 isolated sandbox", "Agents     OpenViking \u00b7 Ollama \u00b7 Omni", "Helpers    PostgreSQL \u00b7 Valkey \u00b7 Meilisearch \u00b7 updater"]},
-    {"id": 106, "name": "orva", "host": "px20", "kind": "VM", "slot": [902, 72], "body": ["Serverless functions \u00b7 Quick Share"]},
-    {"id": 101, "name": "proxy", "host": "px30", "kind": "LXC", "slot": [596, 64], "body": ["Caddy \u00b7 HTTPS routing / TLS"]},
-    {"id": 102, "name": "dns", "host": "px30", "kind": "LXC", "slot": [674, 64], "body": ["AdGuard Home \u2192 Unbound recursion"]},
-    {"id": 103, "name": "auth", "host": "px30", "kind": "LXC", "slot": [752, 64], "body": ["Pocket ID / OIDC \u00b7 Tinyauth / forward-auth"]},
-    {"id": 105, "name": "s3", "host": "px30", "kind": "LXC", "slot": [830, 64], "body": ["Cairn \u00b7 RustFS / S3-compatible storage"]},
-    {"id": 107, "name": "haos", "host": "px30", "kind": "VM", "slot": [908, 66], "body": ["Home Assistant \u00b7 Mosquitto \u00b7 local device control"]},
-    {"id": 201, "name": "k8s-201", "host": "px10", "kind": "VM", "slot": [994, 112], "kubernetes": true, "body": ["Talos \u00b7 control plane + workloads", "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"]},
-    {"id": 202, "name": "k8s-202", "host": "px20", "kind": "VM", "slot": [994, 112], "kubernetes": true, "body": ["Talos \u00b7 control plane + workloads", "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"]},
-    {"id": 203, "name": "k8s-203", "host": "px30", "kind": "VM", "slot": [994, 112], "kubernetes": true, "body": ["Talos \u00b7 control plane + workloads", "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"]}
+    {
+      "id": 100,
+      "name": "dev",
+      "host": "px10",
+      "kind": "VM",
+      "slot": [
+        596,
+        66
+      ],
+      "body": [
+        "Codex \u00b7 Claude Code \u00b7 Hermes \u00b7 OpenCode",
+        "Herdr \u00b7 shared tools / MCP \u00b7 development workloads"
+      ]
+    },
+    {
+      "id": 104,
+      "name": "observability",
+      "host": "px10",
+      "kind": "LXC",
+      "slot": [
+        670,
+        66
+      ],
+      "body": [
+        "Beszel \u00b7 Grafana \u00b7 VictoriaMetrics",
+        "Uptime Kuma \u00b7 PVE exporter"
+      ]
+    },
+    {
+      "id": 109,
+      "name": "store",
+      "host": "px10",
+      "kind": "LXC",
+      "slot": [
+        744,
+        66
+      ],
+      "body": [
+        "Samba: AV \u00b7 BACKUP \u00b7 ISO",
+        "Host USB SSDs \u2192 bind mounts \u2192 SMB shares"
+      ]
+    },
+    {
+      "id": 204,
+      "name": "ctr",
+      "host": "px20",
+      "kind": "VM",
+      "titleSuffix": " / Docker + Portainer",
+      "slot": [
+        596,
+        95
+      ],
+      "body": [
+        "Media       Jellyfin \u00b7 qBittorrent \u00b7 Motrix",
+        "Personal   Immich \u00b7 Karakeep \u00b7 OpenCloud \u00b7 Paperless",
+        "Notes       Nivra \u00b7 separate friend instance",
+        "Build        Forgejo \u00b7 Docker Registry \u00b7 mirror worker",
+        "Automate n8n \u00b7 SearXNG \u00b7 isolated sandbox",
+        "Agents     OpenViking \u00b7 Ollama \u00b7 Omni",
+        "Helpers    PostgreSQL \u00b7 Valkey \u00b7 Meilisearch \u00b7 updater"
+      ]
+    },
+    {
+      "id": 106,
+      "name": "orva",
+      "host": "px20",
+      "kind": "VM",
+      "slot": [
+        699,
+        95
+      ],
+      "body": [
+        "Serverless functions \u00b7 Quick Share"
+      ]
+    },
+    {
+      "id": 101,
+      "name": "proxy",
+      "host": "px20",
+      "kind": "LXC",
+      "slot": [
+        802,
+        95
+      ],
+      "body": [
+        "Caddy \u00b7 HTTPS routing / TLS"
+      ]
+    },
+    {
+      "id": 102,
+      "name": "dns",
+      "host": "px10",
+      "kind": "LXC",
+      "slot": [
+        818,
+        66
+      ],
+      "body": [
+        "AdGuard Home \u2192 Unbound recursion"
+      ]
+    },
+    {
+      "id": 103,
+      "name": "auth",
+      "host": "px10",
+      "kind": "LXC",
+      "slot": [
+        892,
+        66
+      ],
+      "body": [
+        "Pocket ID / OIDC \u00b7 Tinyauth / forward-auth"
+      ]
+    },
+    {
+      "id": 105,
+      "name": "s3",
+      "host": "px10",
+      "kind": "LXC",
+      "slot": [
+        966,
+        66
+      ],
+      "body": [
+        "Cairn \u00b7 RustFS / S3-compatible storage"
+      ]
+    },
+    {
+      "id": 107,
+      "name": "haos",
+      "host": "px20",
+      "kind": "VM",
+      "slot": [
+        905,
+        95
+      ],
+      "body": [
+        "Home Assistant \u00b7 Mosquitto \u00b7 local device control"
+      ]
+    },
+    {
+      "id": 201,
+      "name": "k8s-201",
+      "host": "px10",
+      "kind": "VM",
+      "slot": [
+        1040,
+        66
+      ],
+      "kubernetes": true,
+      "body": [
+        "Talos \u00b7 control plane + workloads",
+        "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"
+      ]
+    },
+    {
+      "id": 202,
+      "name": "k8s-202",
+      "host": "px20",
+      "kind": "VM",
+      "slot": [
+        1008,
+        95
+      ],
+      "kubernetes": true,
+      "body": [
+        "Talos \u00b7 control plane + workloads",
+        "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"
+      ]
+    },
+    {
+      "id": 203,
+      "name": "k8s-203",
+      "host": "px30",
+      "kind": "VM",
+      "slot": [
+        596,
+        112
+      ],
+      "kubernetes": true,
+      "body": [
+        "Talos \u00b7 control plane + workloads",
+        "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"
+      ],
+      "statusLabel": "host unreachable / NotReady"
+    }
   ],
   "kubernetes": {
-    "network": ["Cilium CNI · L2 LoadBalancer services · CoreDNS", "Argo CD · Headlamp · Homepage · metrics-server", "vmagent · kube-state-metrics · node metrics"],
-    "storage": ["Longhorn: both active disks on k8s-201 / k8s-202", "Current volumes: 2 storage replicas each", "Data crosses hosts; replication is not backup."],
-    "supabase": ["Verified: 1 primary + 2 streaming quorum standbys", "Studio · Auth · REST · Realtime · Edge Functions", "Storage / imgproxy · Kong · pooler · logs / analytics"]
+    "network": [
+      "Cilium CNI \u00b7 L2 LoadBalancer services \u00b7 CoreDNS",
+      "Argo CD \u00b7 Headlamp \u00b7 Homepage \u00b7 metrics-server",
+      "vmagent \u00b7 kube-state-metrics \u00b7 node metrics"
+    ],
+    "storage": [
+      "Longhorn: both active disks on k8s-201 / k8s-202",
+      "Current volumes: 2 storage replicas each",
+      "Data crosses hosts; replication is not backup."
+    ],
+    "supabase": [
+      "Two database pods running; standby on k8s-203 terminating",
+      "Studio \u00b7 Auth \u00b7 REST \u00b7 Realtime \u00b7 Edge Functions",
+      "Storage / imgproxy \u00b7 Kong \u00b7 pooler \u00b7 logs / analytics"
+    ]
   },
   "physicalStorage": [
-    { "name": "Crucial X9 Pro USB SSD", "size": "4 TB", "host": "px10", "roles": ["AV", "BACKUP"] },
-    { "name": "CONSISTENT SSD S7 USB SSD", "size": "256 GB", "host": "px10", "roles": ["ISO"] },
-    { "name": "Unallocated USB SSD", "size": "256 GB", "host": "px20", "roles": ["Spare; unmounted, historical inventory only"] }
+    {
+      "name": "Crucial X9 Pro USB SSD",
+      "size": "4 TB",
+      "host": "px10",
+      "roles": [
+        "AV",
+        "BACKUP"
+      ]
+    },
+    {
+      "name": "CONSISTENT SSD S7 USB SSD",
+      "size": "256 GB",
+      "host": "px10",
+      "roles": [
+        "ISO"
+      ]
+    },
+    {
+      "name": "Unallocated USB SSD",
+      "size": "256 GB",
+      "host": "px20",
+      "roles": [
+        "Spare; unmounted, historical inventory only"
+      ]
+    }
   ],
-  "availabilityReview": {"incident": "2026-10-31", "normalPlacementRestored": true, "nPlusOne": "Not assured: px10 OOM-killed the 16 GiB Docker VM during px20 failover", "px20FailureCause": "Unresolved abrupt loss on 30 October; no recorded sleep or panic", "px30PowerEvents": "Unsolicited power-key events before owner intervention; input source unresolved"},
-  "knownIssues": ["HA spare memory insufficient for observed Docker failover", "gitea-mirror container restarting; no repair performed", "External slate live SSH check blocked by Tailscale re-authentication"],
-  "retired": ["ARR", "Readarr", "Lidarr", "Anchor", "PocketBase", "Coolify", "ZimaOS", "Termix", "Warpgate"]
+  "availabilityReview": {
+    "incident": "2026-10-31",
+    "normalPlacementRestored": false,
+    "nPlusOne": "Not assured: px10 OOM-killed the 16 GiB Docker VM during px20 failover",
+    "px20FailureCause": "Unresolved abrupt loss on 30 October; no recorded sleep or panic",
+    "px30PowerEvents": "Unsolicited power-key events before owner intervention; input source unresolved",
+    "currentIncident": "31 October afternoon: px30 repeatedly disconnected; shutdown underway at 15:35 observed by migration task; final trigger unknown; proxy replica recovered on px20"
+  },
+  "knownIssues": [
+    "HA spare memory insufficient for observed Docker failover",
+    "gitea-mirror container restarting; no repair performed",
+    "External slate live SSH check blocked by Tailscale re-authentication",
+    "px30 unreachable; k8s-203 NotReady and cordoned; one Longhorn volume attaching/unknown; px20 available RAM approximately 1 GiB"
+  ],
+  "retired": [
+    "ARR",
+    "Readarr",
+    "Lidarr",
+    "Anchor",
+    "PocketBase",
+    "Coolify",
+    "ZimaOS",
+    "Termix",
+    "Warpgate"
+  ],
+  "maintenance": {
+    "node": "px30",
+    "nodeOnline": false,
+    "poweredOff": true,
+    "reason": "Unreachable since 15:45 IST 31 October; six HA affinity rules exclude px30 pending investigation; offline maintenance request rejected; owner confirms node off and cable removed after it stopped responding"
+  }
 }

@@ -1,6 +1,10 @@
 # Homelab architecture
 
-## Recovery reverified, 31 October 2026
+## Current: px30 unavailable, 31 October afternoon
+
+px30 is unreachable since15:45IST; the owner subsequently confirmed it is off and unplugged. DNS/identity/S3 run on px10; proxy and Home Assistant run on px20. Six HA node-affinity rules temporarily exclude px30 to prevent repeated failback. The offline maintenance request was rejected, so this is rule-based isolation, not active node maintenance. Kubernetes has two Ready nodes; the unavailable third host and degraded standby/storage state remain under investigation. See [afternoon incident](../../infrastructure/proxmox/INCIDENT-2026-10-31-AFTERNOON.md).
+
+## Earlier recovery reverified, 31 October 2026
 
 See the [31 October incident and recovery](../../infrastructure/proxmox/INCIDENT-2026-10-31.md). Normal ownership is restored again. HA capacity is limited: px10 OOM-killed Docker VM204 during failover. px20’s abrupt loss and px30’s unsolicited power-key events remain under investigation; no sleep entry was recorded.
 

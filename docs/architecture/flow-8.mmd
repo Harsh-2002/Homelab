@@ -1,8 +1,8 @@
 flowchart LR
-  n_flow_8_0["Kubernetes / logical cluster<br/>Members: k8s-201 / 202 / 203"]
+  n_flow_8_0["Kubernetes / logical cluster<br/>k8s-201 / 202 Ready; k8s-203 host unreachable"]
   n_flow_8_1["VM 201 / k8s-201"]
   n_flow_8_2["VM 202 / k8s-202"]
-  n_flow_8_3["VM 203 / k8s-203"]
+  n_flow_8_3["VM 203 / k8s-203 / host unreachable / NotReady"]
   n_flow_8_1 -.->|"member"| n_flow_8_0
   n_flow_8_2 -.->|"member"| n_flow_8_0
   n_flow_8_3 -.->|"member"| n_flow_8_0

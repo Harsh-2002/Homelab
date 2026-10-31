@@ -40,7 +40,7 @@ add('internet','github','GitHub / Homelab repository','logical','Declarative con
 add('internet','slate','slate / GCP VM','physical','External, documented; no fresh health check');
 add('slate','slate-caddy','Caddy'); add('slate','slate-kuma','Uptime Kuma'); add('slate','slate-ntfy','ntfy');
 for (const h of inv.hosts) {
-  add('lan',h.name,`${h.name} / ${h.model}${inv.maintenance?.node === h.name && inv.maintenance.poweredOff ? " / powered off" : ""}`,'physical',`${h.cpu} / ${h.ramGB} GB${h.unverifiedHardware ? " reported" : ""} / ZFS${inv.maintenance?.node === h.name ? " / maintenance" : ""}`,'1 GbE');
+  add('lan',h.name,`${h.name} / ${h.model}${inv.maintenance?.node === h.name && inv.maintenance.poweredOff ? " / powered off" : ""}`,'physical',`${h.cpu} / ${h.ramGB} GB${h.unverifiedHardware ? " reported" : ""} / ZFS${inv.maintenance?.node === h.name ? " / unavailable" : ""}`,'1 GbE');
   for (const g of inv.guests.filter(g=>g.host===h.name)) add(h.name,g.name,`${g.kind} ${g.id} / ${g.name}${g.statusLabel ? " / " + g.statusLabel : g.state ? " / stopped" : ""}`,'guest');
   add(h.name,h.name+'-zfs','Local ZFS / rpool + data','physical','Guest OS / data volumes');
 }
@@ -75,7 +75,7 @@ for (const [id,label,services] of stacks) {
   add('docker',id,label,'logical');
   for (const s of services) add(id,s,s,'service',s==='gitea-mirror'?'Restarting / not healthy':'Docker-internal unless published');
 }
-add('lan','kubernetes','Kubernetes / logical cluster','logical',inv.maintenance ? 'k8s-201 / 202 active; k8s-203 stopped' : 'Members: k8s-201 / 202 / 203');
+add('lan','kubernetes','Kubernetes / logical cluster','logical',inv.maintenance ? 'k8s-201 / 202 Ready; k8s-203 host unreachable' : 'Members: k8s-201 / 202 / 203');
 for (const [id,label,services] of [
  ['kube-network','Cluster networking',['Cilium','CoreDNS']],
  ['kube-platform','Platform / GitOps',['Argo CD','Headlamp','Homepage','metrics-server','vmagent','kube-state-metrics']],

@@ -14,7 +14,7 @@
 <text x="534" y="200" font-size="25" fill="#18252c" font-weight="600" >Two access paths</text>
 <text x="534" y="231" font-size="21" fill="#52636d" font-weight="400" >Public: Internet → router → Caddy → selected services</text>
 <text x="534" y="260" font-size="21" fill="#52636d" font-weight="400" >Private: LAN / Tailscale → Caddy or native LAN protocols</text>
-<text x="534" y="289" font-size="21" fill="#52636d" font-weight="400" >Tailscale subnet routing runs on all three Proxmox hosts.</text>
+<text x="534" y="289" font-size="21" fill="#52636d" font-weight="400" >Tailscale routing: px10 / px20 active; px30 powered off.</text>
 </g>
 <g data-node="true">
 <rect x="1436" y="166" width="396" height="150" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -51,86 +51,77 @@
 <text x="864" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-8400T / 6 cores · 32 GB RAM · ZFS OS + data pools</text>
 <path d="M864 578H1536" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <rect x="1616" y="482" width="720" height="650" rx="16" fill="#ffffff" stroke="#aebfc7" stroke-width="1.5"/>
-<text x="1640" y="523" font-size="32" fill="#18252c" font-weight="600" >px30</text>
+<text x="1640" y="523" font-size="32" fill="#18252c" font-weight="600" >px30 · powered off</text>
 <text x="2312" y="520" font-size="24" fill="#52636d" font-weight="400" text-anchor="end">Dell OptiPlex 5060</text>
 <text x="1640" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-9400T / 6 cores · 32 GB RAM · ZFS OS + data pools</text>
 <path d="M1640 578H2312" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <g data-node="true">
-<rect x="88" y="596" width="672" height="112" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="110" y="630" font-size="25" fill="#18252c" font-weight="600" >dev · VM 100</text>
-<text x="110" y="661" font-size="21" fill="#52636d" font-weight="400" >Codex · Claude Code · Hermes · OpenCode</text>
-<text x="110" y="690" font-size="21" fill="#52636d" font-weight="400" >Herdr · shared tools / MCP · development workloads</text>
+<rect x="88" y="596" width="672" height="66" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="110" y="623" font-size="23" fill="#18252c" font-weight="600" >dev · VM 100</text>
+<text x="110" y="648" font-size="20" fill="#52636d" font-weight="400" >Codex · Claude Code · Hermes · OpenCode</text>
 </g>
 <g data-node="true">
-<rect x="88" y="724" width="672" height="108" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="110" y="758" font-size="25" fill="#18252c" font-weight="600" >observability · LXC 104</text>
-<text x="110" y="789" font-size="21" fill="#52636d" font-weight="400" >Beszel · Grafana · VictoriaMetrics</text>
-<text x="110" y="818" font-size="21" fill="#52636d" font-weight="400" >Uptime Kuma · PVE exporter</text>
+<rect x="88" y="670" width="672" height="66" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="110" y="697" font-size="23" fill="#18252c" font-weight="600" >observability · LXC 104</text>
+<text x="110" y="722" font-size="20" fill="#52636d" font-weight="400" >Beszel · Grafana · VictoriaMetrics</text>
 </g>
 <g data-node="true">
-<rect x="88" y="848" width="672" height="114" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="110" y="882" font-size="25" fill="#18252c" font-weight="600" >store · LXC 109</text>
-<text x="110" y="913" font-size="21" fill="#52636d" font-weight="400" >Samba: AV · BACKUP · ISO</text>
-<text x="110" y="942" font-size="21" fill="#52636d" font-weight="400" >Host USB SSDs → bind mounts → SMB shares</text>
+<rect x="88" y="744" width="672" height="66" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="110" y="771" font-size="23" fill="#18252c" font-weight="600" >store · LXC 109</text>
+<text x="110" y="796" font-size="20" fill="#52636d" font-weight="400" >Samba: AV · BACKUP · ISO</text>
 </g>
 <g data-node="true">
-<rect x="864" y="596" width="672" height="290" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<rect x="864" y="596" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
 <text x="886" y="630" font-size="25" fill="#18252c" font-weight="600" >ctr · VM 204 / Docker + Portainer</text>
 <text x="886" y="661" font-size="21" fill="#52636d" font-weight="400" >Media       Jellyfin · qBittorrent · Motrix</text>
 <text x="886" y="690" font-size="21" fill="#52636d" font-weight="400" >Personal   Immich · Karakeep · OpenCloud · Paperless</text>
-<text x="886" y="719" font-size="21" fill="#52636d" font-weight="400" >Notes       Nivra · separate friend instance</text>
-<text x="886" y="748" font-size="21" fill="#52636d" font-weight="400" >Build        Forgejo · Docker Registry · mirror worker</text>
-<text x="886" y="777" font-size="21" fill="#52636d" font-weight="400" >Automate n8n · SearXNG · isolated sandbox</text>
-<text x="886" y="806" font-size="21" fill="#52636d" font-weight="400" >Agents     OpenViking · Ollama · Omni</text>
-<text x="886" y="835" font-size="21" fill="#52636d" font-weight="400" >Helpers    PostgreSQL · Valkey · Meilisearch · updater</text>
 </g>
 <g data-node="true">
-<rect x="864" y="902" width="672" height="72" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="886" y="929" font-size="23" fill="#18252c" font-weight="600" >orva · VM 106</text>
-<text x="886" y="954" font-size="20" fill="#52636d" font-weight="400" >Serverless functions · Quick Share</text>
+<rect x="864" y="699" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="886" y="733" font-size="25" fill="#18252c" font-weight="600" >orva · VM 106</text>
+<text x="886" y="764" font-size="21" fill="#52636d" font-weight="400" >Serverless functions · Quick Share</text>
 </g>
 <g data-node="true">
-<rect x="1640" y="596" width="672" height="64" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="1662" y="623" font-size="23" fill="#18252c" font-weight="600" >proxy · LXC 101</text>
-<text x="1662" y="648" font-size="20" fill="#52636d" font-weight="400" >Caddy · HTTPS routing / TLS</text>
+<rect x="864" y="802" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="886" y="836" font-size="25" fill="#18252c" font-weight="600" >proxy · LXC 101</text>
+<text x="886" y="867" font-size="21" fill="#52636d" font-weight="400" >Caddy · HTTPS routing / TLS</text>
 </g>
 <g data-node="true">
-<rect x="1640" y="674" width="672" height="64" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="1662" y="701" font-size="23" fill="#18252c" font-weight="600" >dns · LXC 102</text>
-<text x="1662" y="726" font-size="20" fill="#52636d" font-weight="400" >AdGuard Home → Unbound recursion</text>
+<rect x="88" y="818" width="672" height="66" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="110" y="845" font-size="23" fill="#18252c" font-weight="600" >dns · LXC 102</text>
+<text x="110" y="870" font-size="20" fill="#52636d" font-weight="400" >AdGuard Home → Unbound recursion</text>
 </g>
 <g data-node="true">
-<rect x="1640" y="752" width="672" height="64" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="1662" y="779" font-size="23" fill="#18252c" font-weight="600" >auth · LXC 103</text>
-<text x="1662" y="804" font-size="20" fill="#52636d" font-weight="400" >Pocket ID / OIDC · Tinyauth / forward-auth</text>
+<rect x="88" y="892" width="672" height="66" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="110" y="919" font-size="23" fill="#18252c" font-weight="600" >auth · LXC 103</text>
+<text x="110" y="944" font-size="20" fill="#52636d" font-weight="400" >Pocket ID / OIDC · Tinyauth / forward-auth</text>
 </g>
 <g data-node="true">
-<rect x="1640" y="830" width="672" height="64" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="1662" y="857" font-size="23" fill="#18252c" font-weight="600" >s3 · LXC 105</text>
-<text x="1662" y="882" font-size="20" fill="#52636d" font-weight="400" >Cairn · RustFS / S3-compatible storage</text>
+<rect x="88" y="966" width="672" height="66" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="110" y="993" font-size="23" fill="#18252c" font-weight="600" >s3 · LXC 105</text>
+<text x="110" y="1018" font-size="20" fill="#52636d" font-weight="400" >Cairn · RustFS / S3-compatible storage</text>
 </g>
 <g data-node="true">
-<rect x="1640" y="908" width="672" height="66" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="1662" y="935" font-size="23" fill="#18252c" font-weight="600" >haos · VM 107</text>
-<text x="1662" y="960" font-size="20" fill="#52636d" font-weight="400" >Home Assistant · Mosquitto · local device control</text>
+<rect x="864" y="905" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="886" y="939" font-size="25" fill="#18252c" font-weight="600" >haos · VM 107</text>
+<text x="886" y="970" font-size="21" fill="#52636d" font-weight="400" >Home Assistant · Mosquitto · local device control</text>
 </g>
 <g data-node="true">
-<rect x="88" y="994" width="672" height="112" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="110" y="1028" font-size="25" fill="#18252c" font-weight="600" >k8s-201 · VM 201</text>
-<text x="110" y="1059" font-size="21" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
-<text x="110" y="1088" font-size="21" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk</text>
+<rect x="88" y="1040" width="672" height="66" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="110" y="1067" font-size="23" fill="#18252c" font-weight="600" >k8s-201 · VM 201</text>
+<text x="110" y="1092" font-size="20" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
 </g>
 <g data-node="true">
-<rect x="864" y="994" width="672" height="112" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="886" y="1028" font-size="25" fill="#18252c" font-weight="600" >k8s-202 · VM 202</text>
-<text x="886" y="1059" font-size="21" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
-<text x="886" y="1088" font-size="21" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk</text>
+<rect x="864" y="1008" width="672" height="95" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="886" y="1042" font-size="25" fill="#18252c" font-weight="600" >k8s-202 · VM 202</text>
+<text x="886" y="1073" font-size="21" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
+<text x="886" y="1102" font-size="21" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk</text>
 </g>
 <g data-node="true">
-<rect x="1640" y="994" width="672" height="112" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="1662" y="1028" font-size="25" fill="#18252c" font-weight="600" >k8s-203 · VM 203</text>
-<text x="1662" y="1059" font-size="21" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
-<text x="1662" y="1088" font-size="21" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk</text>
+<rect x="1640" y="596" width="672" height="112" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
+<text x="1662" y="630" font-size="25" fill="#18252c" font-weight="600" >k8s-203 · VM 203 · host unreachable / NotReady</text>
+<text x="1662" y="661" font-size="21" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
+<text x="1662" y="690" font-size="21" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk</text>
 </g>
 <path d="M424 1106V1176" fill="none" stroke="#225d82" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" />
 <path d="M1200 1106V1176" fill="none" stroke="#225d82" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" />
@@ -139,7 +130,7 @@
 <path d="M1200 1176V1212" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
 <text x="64" y="1160" font-size="20" fill="#52636d" font-weight="400" >Placement is a snapshot; managed guests can relocate.</text>
 <rect x="64" y="1218" width="2272" height="282" rx="16" fill="#edf4f8" stroke="#b5cbd8" stroke-width="1.5"/>
-<text x="88" y="1258" font-size="29" fill="#18252c" font-weight="600" >One Kubernetes cluster across all three physical hosts</text>
+<text x="88" y="1258" font-size="29" fill="#18252c" font-weight="600" >Kubernetes: two active nodes; k8s-203 host unreachable</text>
 <text x="88" y="1294" font-size="23" fill="#52636d" font-weight="400" >Talos management: Omni on ctr. Kubernetes desired state: GitHub → Argo CD.</text>
 <path d="M812 1324V1474" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <path d="M1568 1324V1474" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
@@ -152,7 +143,7 @@
 <text x="844" y="1416" font-size="22" fill="#52636d" font-weight="400" >Current volumes: 2 storage replicas each</text>
 <text x="844" y="1448" font-size="22" fill="#52636d" font-weight="400" >Data crosses hosts; replication is not backup.</text>
 <text x="1600" y="1348" font-size="25" fill="#225d82" font-weight="600" >Supabase</text>
-<text x="1600" y="1384" font-size="22" fill="#52636d" font-weight="400" >Verified: 1 primary + 2 streaming quorum standbys</text>
+<text x="1600" y="1384" font-size="22" fill="#52636d" font-weight="400" >Two database pods running; standby on k8s-203 terminating</text>
 <text x="1600" y="1416" font-size="22" fill="#52636d" font-weight="400" >Studio · Auth · REST · Realtime · Edge Functions</text>
 <text x="1600" y="1448" font-size="22" fill="#52636d" font-weight="400" >Storage / imgproxy · Kong · pooler · logs / analytics</text>
 <text x="64" y="1560" font-size="27" fill="#18252c" font-weight="600" >Storage boundaries</text>

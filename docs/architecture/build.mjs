@@ -79,7 +79,7 @@ function host(x, name, model, cpu, ramGB) {
 }
 for (const [i, h] of inventory.hosts.entries()) {
   const x = 64 + i * 776;
-  host(x, h.name + (inventory.maintenance?.node === h.name ? (inventory.maintenance.poweredOff ? " · powered off" : " · maintenance") : ""), h.model, h.cpu, h.unverifiedHardware ? `${h.ramGB} (reported)` : h.ramGB);
+  host(x, h.name + (inventory.maintenance?.node === h.name ? (inventory.maintenance.poweredOff ? " · powered off" : " · unreachable") : ""), h.model, h.cpu, h.unverifiedHardware ? `${h.ramGB} (reported)` : h.ramGB);
   if (internal) text(x + 190, 523, addresses[h.name] || '', 20, C.blue);
 }
 for (const g of inventory.guests) {
@@ -93,7 +93,7 @@ path('M1200 1176V1212', C.muted, true, true);
 text(64, 1160, 'Placement is a snapshot; managed guests can relocate.', 20, C.muted);
 
 box(64, 1218, 2272, 282, C.blueBg, '#b5cbd8', 16);
-text(88, 1258, inventory.maintenance ? 'Kubernetes: two active nodes; k8s-203 stopped during hardware swap' : 'One Kubernetes cluster across all three physical hosts', 29, C.ink, 600);
+text(88, 1258, inventory.maintenance ? 'Kubernetes: two active nodes; k8s-203 host unreachable' : 'One Kubernetes cluster across all three physical hosts', 29, C.ink, 600);
 text(88, 1294, 'Talos management: Omni on ctr. Kubernetes desired state: GitHub → Argo CD.', 23, C.muted);
 path('M812 1324V1474'); path('M1568 1324V1474');
 text(88, 1348, 'Networking & operations', 25, C.blue, 600);
