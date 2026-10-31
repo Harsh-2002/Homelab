@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1820" viewBox="0 0 2400 1820" role="img" aria-labelledby="title desc"><title id="title">Homelab architecture</title><desc id="desc">Physical hosts, service placement and the shared platform.. Architecture snapshot verified 30 Oct 2026. Share-safe. IP addresses and credentials omitted.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#52636d"/></marker><marker id="tealArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#25675d"/></marker></defs><rect width="2400" height="1820" fill="#f8fafb"/><g font-family="Arial, Liberation Sans, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1820" viewBox="0 0 2400 1820" role="img" aria-labelledby="title desc"><title id="title">Homelab architecture</title><desc id="desc">Physical hosts, service placement and the shared platform.. Architecture snapshot verified 31 Oct 2026. Share-safe. IP addresses and credentials omitted.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#52636d"/></marker><marker id="tealArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#25675d"/></marker></defs><rect width="2400" height="1820" fill="#f8fafb"/><g font-family="Arial, Liberation Sans, sans-serif">
 <text x="64" y="82" font-size="46" fill="#18252c" font-weight="600" >Homelab architecture</text>
 <text x="64" y="122" font-size="23" fill="#52636d" font-weight="400" >Physical hosts, service placement and the shared platform.</text>
-<text x="2336" y="77" font-size="23" fill="#52636d" font-weight="400" text-anchor="end">l3b / 30 Oct 2026</text>
+<text x="2336" y="77" font-size="23" fill="#52636d" font-weight="400" text-anchor="end">l3b / 31 Oct 2026</text>
 <text x="2336" y="113" font-size="21" fill="#52636d" font-weight="400" text-anchor="end">1 / 2</text>
 <g data-node="true">
 <rect x="64" y="166" width="392" height="150" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -152,7 +152,7 @@
 <text x="844" y="1416" font-size="22" fill="#52636d" font-weight="400" >Current volumes: 2 storage replicas each</text>
 <text x="844" y="1448" font-size="22" fill="#52636d" font-weight="400" >Data crosses hosts; replication is not backup.</text>
 <text x="1600" y="1348" font-size="25" fill="#225d82" font-weight="600" >Supabase</text>
-<text x="1600" y="1384" font-size="22" fill="#52636d" font-weight="400" >Configured: 1 primary + 2 standbys; swap: 1 standby pending</text>
+<text x="1600" y="1384" font-size="22" fill="#52636d" font-weight="400" >Verified: 1 primary + 2 streaming quorum standbys</text>
 <text x="1600" y="1416" font-size="22" fill="#52636d" font-weight="400" >Studio · Auth · REST · Realtime · Edge Functions</text>
 <text x="1600" y="1448" font-size="22" fill="#52636d" font-weight="400" >Storage / imgproxy · Kong · pooler · logs / analytics</text>
 <text x="64" y="1560" font-size="27" fill="#18252c" font-weight="600" >Storage boundaries</text>
@@ -161,7 +161,7 @@
 <text x="64" y="1600" font-size="22" fill="#52636d" font-weight="400" >ZFS → VM/LXC disks and selected 5-minute replicas</text>
 <text x="64" y="1634" font-size="22" fill="#52636d" font-weight="400" >USB on px10: 4 TB AV / BACKUP + 256 GB ISO</text>
 <text x="64" y="1668" font-size="22" fill="#52636d" font-weight="400" >ctr local data → app state; S3 → Cairn / RustFS objects</text>
-<text x="840" y="1600" font-size="22" fill="#52636d" font-weight="400" >Proxmox HA manages the listed non-Kubernetes guests.</text>
+<text x="840" y="1600" font-size="22" fill="#52636d" font-weight="400" >HA enabled; Docker failover hit an out-of-memory limit.</text>
 <text x="840" y="1634" font-size="22" fill="#52636d" font-weight="400" >USB shares need physical-disk recovery after host loss.</text>
 <text x="840" y="1668" font-size="22" fill="#52636d" font-weight="400" >DNS, Caddy and several apps remain single instances.</text>
 <text x="1616" y="1600" font-size="22" fill="#52636d" font-weight="400" >Home Assistant → Wipro bulb / Tuya LAN</text>

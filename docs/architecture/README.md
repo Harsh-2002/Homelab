@@ -1,6 +1,8 @@
 # Homelab architecture
 
-## Normal placement restored, 30 October 2026
+## Recovery reverified, 31 October 2026
+
+See the [31 October incident and recovery](../../infrastructure/proxmox/INCIDENT-2026-10-31.md). Normal ownership is restored again. HA capacity is limited: px10 OOM-killed Docker VM204 during failover. px20’s abrupt loss and px30’s unsolicited power-key events remain under investigation; no sleep entry was recorded.
 
 All three physical hosts and Talos VMs are online. Proxy, DNS, identity, S3 and
 Home Assistant are back on px30; px10 retains dev/observability/store and px20

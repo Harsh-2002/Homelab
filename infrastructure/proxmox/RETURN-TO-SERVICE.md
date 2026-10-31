@@ -1,5 +1,7 @@
 # Return to normal placement — 30 October 2026
 
+**Superseding incident, 31 October:** see [incident and recovery](INCIDENT-2026-10-31.md). Workloads were restored again after the owner power-cycled the cluster. The earlier checks did not establish N+1 memory capacity: Docker failover to px10 was OOM-killed.
+
 The owner returned all three hosts to service and authorized restoring the
 pre-evacuation placement, replication and ordinary memory/HA settings, followed
 by cleanup. px30 retains its original identity and drives in the verified

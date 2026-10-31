@@ -122,7 +122,7 @@ function arrow(id,points,frameId,color='#9caab4',label='',startId=null,endId=nul
 }
 function frame(id,x,y,w,h,title) {elements.push({...common(id,'frame',x,y,w,h),name:title});text(id+'-title',x+36,y+30,title,30,'#142b3c',id);}
 frame('tree',0,0,W+100,H+170,'Homelab / physical → virtual → service tree');
-text('tree-key',36,80,`${internal?'INTERNAL / IP:port labels':'Names only / address source not loaded'} · ${inv.verifiedOn} · Arrows show network attachment or service ownership`,17,'#536575','tree');
+text('tree-key',36,80,`${internal?'INTERNAL / IP:port labels':'Names only / address source not loaded'} · ${inv.verifiedOn} · Arrows show network attachment or service ownership · HA spare RAM insufficient for observed Docker failover`,17,'#536575','tree');
 const coords=new Map();
 for (const p of plain.filter(p=>p[0]==='node')) {
  const id=unq(p[1]),cx=Number(p[2])*72+50,cy=H-Number(p[3])*72+130,w=Number(p[4])*72,h=Number(p[5])*72,n=nodes.get(id);
