@@ -1,0 +1,40 @@
+{
+  "status": "in_progress",
+  "updated_utc": "2026-10-31T15:15:52Z",
+  "disks": {
+    "px10_sata": {
+      "phase": "complete",
+      "bytes": 1920383410176,
+      "label": "SATA_PX10",
+      "filesystem": "ext4",
+      "erase_method": "full-device discard, device reports deterministic zeroed TRIM",
+      "filesystem_check": "clean",
+      "left_unmounted": true
+    },
+    "px10_usb": {
+      "phase": "erasing",
+      "bytes": 256060514304,
+      "label": "USB256_PX10"
+    },
+    "px20_sata": {
+      "phase": "complete",
+      "bytes": 1920383410176,
+      "label": "SATA_PX20",
+      "filesystem": "ext4",
+      "erase_method": "full-device discard, device reports deterministic zeroed TRIM",
+      "filesystem_check": "clean",
+      "left_unmounted": true
+    },
+    "px20_usb": {
+      "phase": "erasing",
+      "bytes": 256060514304,
+      "label": "USB256_PX20"
+    }
+  },
+  "preserved": [
+    "NVMe host/root disks",
+    "dev VM root disk",
+    "4TB verified data backup"
+  ],
+  "all_targets_unmounted": false
+}

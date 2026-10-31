@@ -1,7 +1,7 @@
 flowchart LR
   n_flow_17_0["GitHub / Homelab repository<br/>Declarative configuration"]
-  n_flow_17_1["Argo CD<br/>Kubernetes Service"]
-  n_flow_17_2["Kubernetes / logical cluster<br/>k8s-201 / 202 Ready; k8s-203 host unreachable"]
+  n_flow_17_1["Argo CD / offline<br/>Kubernetes Service"]
+  n_flow_17_2["Kubernetes / logical cluster<br/>Stopped for retirement / backups verified"]
   n_flow_17_0 -->|"tracked manifests / charts"| n_flow_17_1
   n_flow_17_1 -->|"reconciles declared resources"| n_flow_17_2
   classDef c_flow_17_0 fill:#f0edf9,stroke:#6c7f8c,color:#233647;

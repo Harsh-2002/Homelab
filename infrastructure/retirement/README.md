@@ -3,9 +3,9 @@
 The owner plans to sell px10, px20 and px30 and later run a single Linux host.
 The requested deliverable is actual application files, configuration and logical
 database exports, **not VM images or retained VM/container snapshots**.
-The original internal disks must remain intact until backup verification and
-owner acceptance. Selling hardware is not authorization to erase those disks
-before a separate reviewed handover.
+The original backup was verified before erasure. The owner subsequently
+explicitly authorized formatting the online SATA data disks and both external
+256 GB disks. NVMe host/root disks, dev root and the 4 TB backup are excluded.
 
 ## Destination and sequencing
 
@@ -94,7 +94,8 @@ for the current primary's logical data. The owner is attempting to revive it.
 Backup contents include credentials and personal data. The mount and backup
 root are root-only; nothing under this backup may be committed, uploaded to
 Notion, published, or imported wholesale into agent memory. Publish only the
-reviewed procedural summary. No internal source disk was formatted or erased.
+reviewed procedural summary. At the initial backup handoff, no internal source disk had been formatted or
+erased. The later authorized data-disk erasure is recorded below.
 
 For read-only integrity verification after moving the drive, run
 `python3 manifests/verify-backup.py /path/to/homelab-backup-2026-10-31`.
@@ -144,7 +145,7 @@ readback. The separate px20 256 GB backup-store disk was inspected read-only
 and is empty; the px10 256 GB ISO disk retains downloadable installer/template
 files and was not erased. These separate disks are not the backup destination.
 
-## Verified accessible-data handoff
+## Initial verified accessible-data handoff
 
 All four data manifests completed: **1,616,613 files/links** and
 **550,160,880,153 bytes read back**. CTR's 239,492 regular-file/symlink entries
@@ -160,10 +161,10 @@ frozen dev copy. `manifests/STATUS.json` is the data verification ledger;
 recovery-document checksums are recorded separately. The Notion runbook records
 the final handoff and filesystem result.
 
-This completes the accessible px10/dev and px20 backup scope. It does **not**
-complete px30 local-only recovery, a new-host runtime restore, or any internal
-source-disk erasure. Existing services may have written newer data after they
-were restarted; preserve the source disks and take a quiesced delta if needed.
+This completed the accessible px10/dev and px20 backup scope, with px30
+local-only recovery and a new-host runtime restore still outstanding. Before
+the subsequent authorized SATA erasure, a final quiesced update was captured
+as described below. NVMe roots and the inaccessible px30 disks remain intact.
 
 ### OpenViking, Portainer and agent configuration
 
@@ -180,3 +181,58 @@ The dev copy contains `.ssh`, `.codex`, `.claude`, `.hermes`,
 projects, other hidden configuration and system files. Agent SQLite recovery
 copies have their own restore map. Database/configuration presence and checksum
 readback do not replace a test startup on the future host.
+
+## Authorized data-disk retirement
+
+The owner explicitly requested erasing the online SATA SSDs and both external
+256 GB disks, then leaving every external/data disk unmounted. px30 remains
+inaccessible and its disks are excluded. Dev VM100 root and both host roots are
+on NVMe, not on the erased SATA disks.
+
+<!-- format-status -->
+Both 1.92 TB SATA SSDs completed full-device discard, deterministic zero-read
+sampling, single-partition ext4 formatting and clean filesystem checks. They
+are unmounted. Full logical overwrites of both 256 GB USB SSDs are in progress;
+the owner chose to continue despite the slow sustained write rate.
+<!-- /format-status -->
+
+[Machine-readable completion status](DISK-FORMAT-STATUS.json) is updated by the
+unattended completion service. Live local progress is
+`~/.local/state/homelab-retirement-20261031/disk-format-status.json`.
+Keep px10, px20 and dev powered on and the4TB SSD connected until the
+completion service finishes. Check the system service with
+`sudo systemctl status homelab-retirement-completion.service` and its log with
+`sudo journalctl -u homelab-retirement-completion.service -n20`.
+
+Before exporting the SATA pools, CTR writers were stopped and fresh Immich/n8n
+SQL dumps captured; final CTR/S3 trees share unchanged verified backup inodes
+while changed files have separate copies. The final manifest covers325,721
+files/links, reuses313,345 verified hardlink checksums, reads2,620,096,609 new
+bytes and passes20 SQLite checks. Fresh Supabase SQL and application-file
+exports are included. Restore from `final-before-format/ctr/{rootfs,data}` and
+`final-before-format/s3/rootfs` preferentially. Previous base copies remain.
+The old sparse ISO-recovery disk image was not retained; its notes/maps/logs
+were preserved. No VM images were created.
+
+CTR VM204, S3 CT105 and Talos VMs201/202 are intentionally stopped with autostart
+disabled. Replication105-0/204-0 and Proxmox `data` storage are disabled. The
+Talos VMs ignored virtual ACPI shutdown and were stopped only after application
+exports; their NVMe OS disks remain intact. Other NVMe guests remain in place.
+Do not start these retired guests until their missing data has been restored.
+OpenViking and Portainer backends are offline with CTR; their final data is saved.
+
+The two SATA drives received full-device discard and zero-read sampling; this
+is logical SSD erasure, not a claim of certified controller/NAND sanitization.
+The USB jobs overwrite the full logical devices with zeros before creating new
+filesystems. Serial/size guards, unmounted/holder checks and root/backup disk
+exclusions protect the erase targets. Private results stay on the backup.
+
+`finish-format.py` never starts an erase. It observes existing jobs, checks the
+four target filesystems and preserved roots, saves completion results, unmounts
+and checks the backup filesystem, and publishes scoped completion/architecture
+updates through a temporary detached Git worktree. It preserves concurrent
+work and removes its worktree. Private IP diagrams stay ignored. It saves final
+source/history and private diagrams to the SSD, then unmounts it again. Notion
+links to the completion status. OpenViking's pre-stop continuity note is in its
+final cold data; final memory-update material is retained with the completion
+record for import after the backend is restored.

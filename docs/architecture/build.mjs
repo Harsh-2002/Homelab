@@ -70,16 +70,16 @@ text(2312, 406, 'Wi-Fi → bulb & AC', 23, C.muted, 400, 'text-anchor="end"');
 for (const x of [424, 1200, 1976]) path(`M${x} 430V478`, C.muted, false, true);
 
 const hostY = 482, hostH = 650;
-function host(x, name, model, cpu, ramGB) {
+function host(x, name, model, cpu, ramGB, storageSummary) {
   box(x, hostY, 720, hostH, C.white, '#aebfc7', 16);
   text(x + 24, 523, name, 32, C.ink, 600);
   text(x + 696, 520, model, 24, C.muted, 400, 'text-anchor="end"');
-  text(x + 24, 558, `${cpu} · ${ramGB} GB RAM · ZFS OS + data pools`, 22, C.muted);
+  text(x + 24, 558, `${cpu} · ${ramGB} GB RAM · ${storageSummary || "ZFS OS + data pools"}`, 22, C.muted);
   path(`M${x + 24} 578H${x + 696}`);
 }
 for (const [i, h] of inventory.hosts.entries()) {
   const x = 64 + i * 776;
-  host(x, h.name + (inventory.maintenance?.node === h.name ? (inventory.maintenance.poweredOff ? " · powered off" : " · unreachable") : ""), h.model, h.cpu, h.unverifiedHardware ? `${h.ramGB} (reported)` : h.ramGB);
+  host(x, h.name + (inventory.maintenance?.node === h.name ? (inventory.maintenance.poweredOff ? " · powered off" : " · unreachable") : ""), h.model, h.cpu, h.unverifiedHardware ? `${h.ramGB} (reported)` : h.ramGB, h.storageSummary);
   if (internal) text(x + 190, 523, addresses[h.name] || '', 20, C.blue);
 }
 for (const g of inventory.guests) {
@@ -93,7 +93,7 @@ path('M1200 1176V1212', C.muted, true, true);
 text(64, 1160, 'Placement is a snapshot; managed guests can relocate.', 20, C.muted);
 
 box(64, 1218, 2272, 282, C.blueBg, '#b5cbd8', 16);
-text(88, 1258, inventory.maintenance ? 'Kubernetes: two active nodes; k8s-203 host unreachable' : 'One Kubernetes cluster across all three physical hosts', 29, C.ink, 600);
+text(88, 1258, inventory.retirementFormat ? 'Kubernetes stopped for retirement; backups verified' : inventory.maintenance ? 'Kubernetes: two active nodes; k8s-203 host unreachable' : 'One Kubernetes cluster across all three physical hosts', 29, C.ink, 600);
 text(88, 1294, 'Talos management: Omni on ctr. Kubernetes desired state: GitHub → Argo CD.', 23, C.muted);
 path('M812 1324V1474'); path('M1568 1324V1474');
 text(88, 1348, 'Networking & operations', 25, C.blue, 600);
@@ -106,9 +106,9 @@ lines(1600, 1384, inventory.kubernetes.supabase, 22, 32);
 text(64, 1560, 'Storage boundaries', 27, C.ink, 600);
 text(840, 1560, 'Availability boundaries', 27, C.ink, 600);
 text(1616, 1560, 'Smart home', 27, C.ink, 600);
-lines(64, 1600, ['ZFS → VM/LXC disks and selected 5-minute replicas', 'USB: 4 TB ext4 backup on px20; 256 GB ISO on px10', 'ctr local data → app state; S3 → Cairn / RustFS objects'], 22, 34);
-lines(840, 1600, ['HA enabled; Docker failover hit an out-of-memory limit.', 'USB shares need physical-disk recovery after host loss.', 'DNS, Caddy and several apps remain single instances.'], 22, 34);
-lines(1616, 1600, ['Home Assistant → Wipro bulb / Tuya LAN', 'Home Assistant → Samsung AC / local DTLS', 'Frigate → camera feeds; HA → viewing / automation'], 22, 34);
+lines(64, 1600, [...(inventory.retirementFormat ? ['NVMe ZFS roots retained; SATA data erased', inventory.retirementFormat.externalUsbStatus==='complete' ? '4 TB backup and 256 GB USB disks unmounted' : '4 TB backup; 256 GB USB overwrite in progress', 'CTR / S3 / Kubernetes require restoration from backup'] : ['ZFS → VM/LXC disks and selected 5-minute replicas', 'USB: 4 TB ext4 backup on px20; 256 GB ISO on px10', 'ctr local data → app state; S3 → Cairn / RustFS objects'])], 22, 34);
+lines(840, 1600, inventory.retirementFormat ? ['NVMe services retained; data services stopped', 'Dev, DNS, identity and proxy remain on NVMe', 'Restore CTR / S3 / Kubernetes from the backup'] : ['HA enabled; Docker failover hit an out-of-memory limit.', 'USB shares need physical-disk recovery after host loss.', 'DNS, Caddy and several apps remain single instances.'], 22, 34);
+lines(1616, 1600, ['Home Assistant → Wipro bulb / Tuya LAN', 'Home Assistant → Samsung AC / local DTLS', inventory.retirementFormat ? 'Frigate offline; recordings retained in backup' : 'Frigate → camera feeds; HA → viewing / automation'], 22, 34);
 end('homelab', 'Switch and host-port map verified; router/AP models and remaining physical cabling are unverified.');
 
 begin('How traffic and data move', 'The important connections, without drawing every packet or replica.', 2);

@@ -1,3 +1,11 @@
+## Data-disk retirement, 31 October
+
+Both online SATA data disks are now empty ext4 filesystems and unmounted.
+The two external256GB disks are undergoing owner-approved full overwrites.
+The NVMe roots and dev remain intact; CTR, S3 and Kubernetes are stopped pending
+restoration. Follow [disk completion status](../../infrastructure/retirement/DISK-FORMAT-STATUS.json)
+and the [retirement runbook](../../infrastructure/retirement/README.md).
+
 # Homelab architecture
 
 ## Retirement data backup verified; px30 outstanding

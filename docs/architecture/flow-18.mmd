@@ -1,7 +1,7 @@
 flowchart LR
-  n_flow_18_0["motrix-server<br/>Docker-internal unless published"]
+  n_flow_18_0["motrix-server / stopped<br/>Restore backup before start"]
   n_flow_18_1["SMB / AV / offline<br/>TCP 445"]
-  n_flow_18_2["jellyfin<br/>Docker-internal unless published"]
+  n_flow_18_2["jellyfin / stopped<br/>Restore backup before start"]
   n_flow_18_3["Your phone / workstation<br/>Client addresses vary"]
   n_flow_18_0 -->|"writes via SMB3"| n_flow_18_1
   n_flow_18_1 -->|"reads media files"| n_flow_18_2

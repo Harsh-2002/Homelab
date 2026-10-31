@@ -1,7 +1,7 @@
 flowchart LR
-  n_flow_6_0["openviking<br/>Docker-internal unless published"]
+  n_flow_6_0["openviking / stopped<br/>Restore backup before start"]
   n_flow_6_1["Coding &amp; personal agents"]
-  n_flow_6_2["openviking-ollama<br/>Docker-internal unless published"]
+  n_flow_6_2["openviking-ollama / stopped<br/>Restore backup before start"]
   n_flow_6_3["External model APIs<br/>Hermes: DeepSeek Flash / Codex fallback"]
   n_flow_6_1 -.->|"memory read / write"| n_flow_6_0
   n_flow_6_0 -.->|"local embeddings"| n_flow_6_2

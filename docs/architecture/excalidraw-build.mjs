@@ -40,12 +40,14 @@ add('internet','github','GitHub / Homelab repository','logical','Declarative con
 add('internet','slate','slate / GCP VM','physical','External, documented; no fresh health check');
 add('slate','slate-caddy','Caddy'); add('slate','slate-kuma','Uptime Kuma'); add('slate','slate-ntfy','ntfy');
 for (const h of inv.hosts) {
-  add('lan',h.name,`${h.name} / ${h.model}${inv.maintenance?.node === h.name && inv.maintenance.poweredOff ? " / powered off" : ""}`,'physical',`${h.cpu} / ${h.ramGB} GB${h.unverifiedHardware ? " reported" : ""} / ZFS${inv.maintenance?.node === h.name ? " / unavailable" : ""}`,'1 GbE');
+  add('lan',h.name,`${h.name} / ${h.model}${inv.maintenance?.node === h.name && inv.maintenance.poweredOff ? " / powered off" : ""}`,'physical',`${h.cpu} / ${h.ramGB} GB${h.unverifiedHardware ? " reported" : ""} / ${h.storageSummary || "ZFS"}${inv.maintenance?.node === h.name ? " / unavailable" : ""}`,'1 GbE');
   for (const g of inv.guests.filter(g=>g.host===h.name)) add(h.name,g.name,`${g.kind} ${g.id} / ${g.name}${g.statusLabel ? " / " + g.statusLabel : g.state ? " / stopped" : ""}`,'guest');
-  add(h.name,h.name+'-zfs','Local ZFS / rpool + data','physical','Guest OS / data volumes');
+  add(h.name,h.name+'-zfs',h.storageSummary ? 'NVMe ZFS / rpool retained' : 'Local ZFS / rpool + data','physical',h.storageSummary ? 'Host / guest OS disks retained' : 'Guest OS / data volumes');
+  if(h.storageSummary) add(h.name,h.name+'-sata','SATA SSD / 1.92 TB','physical','Empty ext4 / unmounted');
 }
 add(inv.physicalStorage.find(d=>d.name==='Crucial X9 Pro USB SSD')?.host||'px10','usb-av','Crucial X9 Pro / 4 TB','physical',inv.retirementBackup?.accessibleDataVerified ? 'USB: ext4 backup / accessible data verified' : 'USB: portable ext4 backup / in progress','USB');
-add('px10','usb-iso','SSD / 256 GB','physical','USB: ISO images / imports','USB');
+add('px10','usb-iso','SSD / 256 GB','physical',inv.retirementFormat ? (inv.retirementFormat.externalUsbStatus==='complete' ? 'USB: empty ext4 / unmounted' : 'USB: full overwrite / ext4 target') : 'USB: ISO images / imports','USB');
+if(inv.retirementFormat) add('px20','usb-spare','SSD / 256 GB','physical',inv.retirementFormat.externalUsbStatus==='complete' ? 'USB: empty ext4 / unmounted' : 'USB: full overwrite / ext4 target','USB');
 for (const share of ['AV','BACKUP','ISO']) add('store','share-'+share,`SMB / ${share} / offline`,'service','TCP 445');
 add('dev','agents','Coding & personal agents','logical');
 for (const a of ['Codex','Claude Code','Hermes','OpenCode']) add('agents',a.toLowerCase().replaceAll(' ','-'),a);
@@ -59,7 +61,7 @@ for (const [p,id,label] of [
  ['observability','beszel','Beszel'],['observability','grafana','Grafana'],['observability','victoriametrics','VictoriaMetrics'],
  ['observability','kuma','Uptime Kuma'],['observability','exporters','PVE / node exporters'],
  ['s3','cairn','Cairn S3'],['s3','rustfs','RustFS S3'],['haos','homeassistant','Home Assistant'],['haos','mosquitto','Mosquitto / MQTT']
-]) add(p,id,label);
+] ) add(p,id,label+(inv.retirementFormat && p==='s3'?' / offline':''));
 add('orva','quickshare','Quick Share function','service','Upload → temporary object / short URL');
 add('ctr','docker','Docker engine','logical','Intel iGPU passed through to ctr');
 const stacks = [
@@ -73,9 +75,9 @@ const stacks = [
 ];
 for (const [id,label,services] of stacks) {
   add('docker',id,label,'logical');
-  for (const s of services) add(id,s,s,'service',s==='gitea-mirror'?'Restarting / not healthy':'Docker-internal unless published');
+  for (const s of services) add(id,s,s+(inv.retirementFormat?' / stopped':''),'service',inv.retirementFormat?'Restore backup before start':s==='gitea-mirror'?'Restarting / not healthy':'Docker-internal unless published');
 }
-add('lan','kubernetes','Kubernetes / logical cluster','logical',inv.maintenance ? 'k8s-201 / 202 Ready; k8s-203 host unreachable' : 'Members: k8s-201 / 202 / 203');
+add('lan','kubernetes','Kubernetes / logical cluster','logical',inv.retirementFormat ? 'Stopped for retirement / backups verified' : inv.maintenance ? 'k8s-201 / 202 Ready; k8s-203 host unreachable' : 'Members: k8s-201 / 202 / 203');
 for (const [id,label,services] of [
  ['kube-network','Cluster networking',['Cilium','CoreDNS']],
  ['kube-platform','Platform / GitOps',['Argo CD','Headlamp','Homepage','metrics-server','vmagent','kube-state-metrics']],
@@ -84,10 +86,10 @@ for (const [id,label,services] of [
  ['cnpg','CloudNativePG',['PostgreSQL primary','PostgreSQL standby A','PostgreSQL standby B']]
 ]) {
   add('kubernetes',id,label,'logical');
-  for (const s of services) add(id,'kube-'+s.toLowerCase().replaceAll(' ','-'),s + (inv.maintenance && s==='PostgreSQL standby B' ? ' / pending' : ''),'service',id==='cnpg'?'Streaming replication':id==='kube-volumes'?'2 replicas per current volume':'Kubernetes Service');
+  for (const s of services) add(id,'kube-'+s.toLowerCase().replaceAll(' ','-'),s + (inv.retirementFormat ? ' / offline' : inv.maintenance && s==='PostgreSQL standby B' ? ' / pending' : ''),'service',id==='cnpg'?(inv.retirementFormat?'SQL exported; stopped':'Streaming replication'):id==='kube-volumes'?(inv.retirementFormat?'Live data erased; backup retained':'2 replicas per current volume'):'Kubernetes Service');
 }
-for(const g of inv.guests.filter(g=>g.kubernetes)) add(g.name,g.name+'-disk','Longhorn data disk','physical',g.state ? '500 GiB / stopped; replicas evacuated' : '500 GiB / host-local ZFS');
-add('frigate','recordings','Frigate recordings','service','ctr local /data/apps/frigate/media');
+for(const g of inv.guests.filter(g=>g.kubernetes)) add(g.name,g.name+'-disk','Longhorn data disk','physical',inv.retirementFormat && [201,202].includes(g.id) ? 'Former SATA volume erased' : g.state ? '500 GiB / stopped; replicas evacuated' : '500 GiB / host-local ZFS');
+add('frigate','recordings','Frigate recordings','service',inv.retirementFormat ? 'Live data erased; files retained in backup' : 'ctr local /data/apps/frigate/media');
 const Q = x=>JSON.stringify(x);
 const dot = ['digraph G {','graph [rankdir=LR, ordering=out, splines=polyline, nodesep=0.20, ranksep=0.95, margin=0.2];',
  'node [shape=box, fontname="Helvetica", fontsize=15, margin="0.15,0.1"];','edge [arrowsize=0.5];'];
@@ -122,7 +124,7 @@ function arrow(id,points,frameId,color='#9caab4',label='',startId=null,endId=nul
 }
 function frame(id,x,y,w,h,title) {elements.push({...common(id,'frame',x,y,w,h),name:title});text(id+'-title',x+36,y+30,title,30,'#142b3c',id);}
 frame('tree',0,0,W+100,H+170,'Homelab / physical → virtual → service tree');
-text('tree-key',36,80,`${internal?'INTERNAL / IP:port labels':'Names only / address source not loaded'} · ${inv.verifiedOn} · Arrows show network attachment or service ownership · HA spare RAM insufficient for observed Docker failover`,17,'#536575','tree');
+text('tree-key',36,80,`${internal?'INTERNAL / IP:port labels':'Names only / address source not loaded'} · ${inv.verifiedOn} · Arrows show network attachment or service ownership · ${inv.retirementFormat ? "SATA data retired; offline services require restore" : "HA spare RAM insufficient for observed Docker failover"}`,17,'#536575','tree');
 const coords=new Map();
 for (const p of plain.filter(p=>p[0]==='node')) {
  const id=unq(p[1]),cx=Number(p[2])*72+50,cy=H-Number(p[3])*72+130,w=Number(p[4])*72,h=Number(p[5])*72,n=nodes.get(id);
@@ -190,7 +192,7 @@ replaceFlow(8,'Kubernetes / three VM members','kubernetes',['k8s-201','k8s-202',
 replaceFlow(9,'Metrics / independent readers','victoriametrics',['grafana','homeassistant','exporters'],['queries API','queries API','scrapes exporters'],['grafana','homeassistant']);
 replaceFlow(6,'Memory / independent local and external dependencies','openviking',['agents','openviking-ollama','model-apis'],['memory read / write','local embeddings','remote inference'],['agents']);
 replaceFlow(16,'Omni / Talos machine management','omni',['k8s-201','k8s-202','k8s-203'],['machine management','machine management','machine management']);
-replaceFlow(19,'Longhorn / 2 replicas per volume, across eligible disks','kube-longhorn',['k8s-201-disk','k8s-202-disk','k8s-203-disk'],['eligible disk','eligible disk',inv.maintenance ? 'offline / no replicas' : 'eligible disk']);
+replaceFlow(19,inv.retirementFormat ? 'Longhorn / stopped; former data disks retired' : 'Longhorn / 2 replicas per volume, across eligible disks','kube-longhorn',['k8s-201-disk','k8s-202-disk','k8s-203-disk'],[inv.retirementFormat?'erased':'eligible disk',inv.retirementFormat?'erased':'eligible disk',inv.maintenance ? 'offline / no replicas' : 'eligible disk']);
 if(inv.retirementBackup) replaceFlow(15,'Portable retirement backup / files on ext4','usb-av',['dev','ctr','kubernetes'],['dev files / consistent agent databases','cold files / volumes / SQL','manifests / logical DB / PVC files'],['dev','ctr','kubernetes']);
 const scene={type:'excalidraw',version:2,source:'https://excalidraw.com',elements,appState:{viewBackgroundColor:'#f8fafc',gridSize:null,exportBackground:true,exportWithDarkMode:false},files:{}};
 writeFileSync(join(out,'homelab-topology.excalidraw'),JSON.stringify(scene,null,2)+'\n');

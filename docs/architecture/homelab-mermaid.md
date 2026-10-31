@@ -22,139 +22,142 @@ flowchart LR
   n_tree_13["Caddy"]
   n_tree_14["Uptime Kuma"]
   n_tree_15["ntfy"]
-  n_tree_16["px10 / Dell OptiPlex 5060<br/>i5-8400T / 6 cores / 32 GB / ZFS"]
+  n_tree_16["px10 / Dell OptiPlex 5060<br/>i5-8400T / 6 cores / 32 GB / NVMe ZFS / SATA ext4"]
   n_tree_17["VM 100 / dev"]
   n_tree_18["LXC 104 / observability"]
-  n_tree_19["LXC 109 / store / stopped / backup disk transition"]
+  n_tree_19["LXC 109 / store / stopped / shares retired"]
   n_tree_20["LXC 102 / dns"]
   n_tree_21["LXC 103 / auth"]
-  n_tree_22["LXC 105 / s3"]
-  n_tree_23["VM 201 / k8s-201"]
-  n_tree_24["Local ZFS / rpool + data<br/>Guest OS / data volumes"]
-  n_tree_25["px20 / Dell OptiPlex 5060<br/>i5-8400T / 6 cores / 32 GB / ZFS"]
-  n_tree_26["VM 204 / ctr"]
-  n_tree_27["VM 106 / orva"]
-  n_tree_28["LXC 101 / proxy"]
-  n_tree_29["VM 107 / haos"]
-  n_tree_30["VM 202 / k8s-202"]
-  n_tree_31["Local ZFS / rpool + data<br/>Guest OS / data volumes"]
-  n_tree_32["px30 / Dell OptiPlex 5060 / powered off<br/>i5-9400T / 6 cores / 32 GB / ZFS / unavailable"]
-  n_tree_33["VM 203 / k8s-203 / host unreachable / NotReady"]
-  n_tree_34["Local ZFS / rpool + data<br/>Guest OS / data volumes"]
-  n_tree_35["Crucial X9 Pro / 4 TB<br/>USB: ext4 backup / accessible data verified"]
-  n_tree_36["SSD / 256 GB<br/>USB: ISO images / imports"]
-  n_tree_37["SMB / AV / offline<br/>TCP 445"]
-  n_tree_38["SMB / BACKUP / offline<br/>TCP 445"]
-  n_tree_39["SMB / ISO / offline<br/>TCP 445"]
-  n_tree_40["Coding &amp; personal agents"]
-  n_tree_41["Codex"]
-  n_tree_42["Claude Code"]
-  n_tree_43["Hermes"]
-  n_tree_44["OpenCode"]
-  n_tree_45["Claude Agent / built-in<br/>OpenCode 2.2.5 / official SDK"]
-  n_tree_46["Claude Code CLI / SDK<br/>Existing CLI-owned Claude Max login"]
-  n_tree_47["Anthropic / Claude plan<br/>Existing CLI-owned subscription login"]
-  n_tree_48["Herdr<br/>Terminal sessions"]
-  n_tree_49["Caddy / HTTPS + PostgreSQL proxy"]
-  n_tree_50["AdGuard Home"]
-  n_tree_51["Unbound"]
-  n_tree_52["Pocket ID / OIDC"]
-  n_tree_53["Tinyauth / forward-auth"]
-  n_tree_54["Beszel"]
-  n_tree_55["Grafana"]
-  n_tree_56["VictoriaMetrics"]
-  n_tree_57["Uptime Kuma"]
-  n_tree_58["PVE / node exporters"]
-  n_tree_59["Cairn S3"]
-  n_tree_60["RustFS S3"]
-  n_tree_61["Home Assistant"]
-  n_tree_62["Mosquitto / MQTT"]
-  n_tree_63["Quick Share function<br/>Upload → temporary object / short URL"]
-  n_tree_64["Docker engine<br/>Intel iGPU passed through to ctr"]
-  n_tree_65["Media"]
-  n_tree_66["jellyfin<br/>Docker-internal unless published"]
-  n_tree_67["frigate<br/>Docker-internal unless published"]
-  n_tree_68["qbittorrent<br/>Docker-internal unless published"]
-  n_tree_69["motrix-server<br/>Docker-internal unless published"]
-  n_tree_70["Immich stack"]
-  n_tree_71["immich-server<br/>Docker-internal unless published"]
-  n_tree_72["immich-machine-learning<br/>Docker-internal unless published"]
-  n_tree_73["immich-postgres<br/>Docker-internal unless published"]
-  n_tree_74["immich-redis<br/>Docker-internal unless published"]
-  n_tree_75["Karakeep stack"]
-  n_tree_76["karakeep<br/>Docker-internal unless published"]
-  n_tree_77["karakeep-chrome<br/>Docker-internal unless published"]
-  n_tree_78["karakeep-meilisearch<br/>Docker-internal unless published"]
-  n_tree_79["Paperless stack"]
-  n_tree_80["paperless<br/>Docker-internal unless published"]
-  n_tree_81["paperless-valkey<br/>Docker-internal unless published"]
-  n_tree_82["Automation stack"]
-  n_tree_83["n8n<br/>Docker-internal unless published"]
-  n_tree_84["n8n-db<br/>Docker-internal unless published"]
-  n_tree_85["searxng<br/>Docker-internal unless published"]
-  n_tree_86["sandbox-api<br/>Docker-internal unless published"]
-  n_tree_87["sandbox-runner<br/>Docker-internal unless published"]
-  n_tree_88["Shared memory stack"]
-  n_tree_89["openviking<br/>Docker-internal unless published"]
-  n_tree_90["openviking-ollama<br/>Docker-internal unless published"]
-  n_tree_91["Applications &amp; management"]
-  n_tree_92["nivra<br/>Docker-internal unless published"]
-  n_tree_93["nivra-theking<br/>Docker-internal unless published"]
-  n_tree_94["opencloud<br/>Docker-internal unless published"]
-  n_tree_95["forgejo<br/>Docker-internal unless published"]
-  n_tree_96["registry<br/>Docker-internal unless published"]
-  n_tree_97["omni<br/>Docker-internal unless published"]
-  n_tree_98["portainer<br/>Docker-internal unless published"]
-  n_tree_99["watchtower<br/>Docker-internal unless published"]
-  n_tree_100["gitea-mirror<br/>Restarting / not healthy"]
-  n_tree_101["Kubernetes / logical cluster<br/>k8s-201 / 202 Ready; k8s-203 host unreachable"]
-  n_tree_102["Cluster networking"]
-  n_tree_103["Cilium<br/>Kubernetes Service"]
-  n_tree_104["CoreDNS<br/>Kubernetes Service"]
-  n_tree_105["Platform / GitOps"]
-  n_tree_106["Argo CD<br/>Kubernetes Service"]
-  n_tree_107["Headlamp<br/>Kubernetes Service"]
-  n_tree_108["Homepage<br/>Kubernetes Service"]
-  n_tree_109["metrics-server<br/>Kubernetes Service"]
-  n_tree_110["vmagent<br/>Kubernetes Service"]
-  n_tree_111["kube-state-metrics<br/>Kubernetes Service"]
-  n_tree_112["Distributed block storage"]
-  n_tree_113["Longhorn<br/>2 replicas per current volume"]
-  n_tree_114["Supabase suite"]
-  n_tree_115["Studio<br/>Kubernetes Service"]
-  n_tree_116["Kong<br/>Kubernetes Service"]
-  n_tree_117["Auth<br/>Kubernetes Service"]
-  n_tree_118["REST<br/>Kubernetes Service"]
-  n_tree_119["Realtime<br/>Kubernetes Service"]
-  n_tree_120["Storage<br/>Kubernetes Service"]
-  n_tree_121["imgproxy<br/>Kubernetes Service"]
-  n_tree_122["pooler<br/>Kubernetes Service"]
-  n_tree_123["meta<br/>Kubernetes Service"]
-  n_tree_124["functions<br/>Kubernetes Service"]
-  n_tree_125["analytics<br/>Kubernetes Service"]
-  n_tree_126["CloudNativePG"]
-  n_tree_127["PostgreSQL primary<br/>Streaming replication"]
-  n_tree_128["PostgreSQL standby A<br/>Streaming replication"]
-  n_tree_129["PostgreSQL standby B / pending<br/>Streaming replication"]
-  n_tree_130["Longhorn data disk<br/>500 GiB / host-local ZFS"]
-  n_tree_131["Longhorn data disk<br/>500 GiB / host-local ZFS"]
-  n_tree_132["Longhorn data disk<br/>500 GiB / host-local ZFS"]
-  n_tree_133["Frigate recordings<br/>ctr local /data/apps/frigate/media"]
+  n_tree_22["LXC 105 / s3 / stopped / root erased"]
+  n_tree_23["VM 201 / k8s-201 / stopped / data erased"]
+  n_tree_24["NVMe ZFS / rpool retained<br/>Host / guest OS disks retained"]
+  n_tree_25["SATA SSD / 1.92 TB<br/>Empty ext4 / unmounted"]
+  n_tree_26["px20 / Dell OptiPlex 5060<br/>i5-8400T / 6 cores / 32 GB / NVMe ZFS / SATA ext4"]
+  n_tree_27["VM 204 / ctr / stopped / restore data"]
+  n_tree_28["VM 106 / orva"]
+  n_tree_29["LXC 101 / proxy"]
+  n_tree_30["VM 107 / haos"]
+  n_tree_31["VM 202 / k8s-202 / stopped / data erased"]
+  n_tree_32["NVMe ZFS / rpool retained<br/>Host / guest OS disks retained"]
+  n_tree_33["SATA SSD / 1.92 TB<br/>Empty ext4 / unmounted"]
+  n_tree_34["px30 / Dell OptiPlex 5060 / powered off<br/>i5-9400T / 6 cores / 32 GB / ZFS / unavailable"]
+  n_tree_35["VM 203 / k8s-203 / host unreachable / NotReady"]
+  n_tree_36["Local ZFS / rpool + data<br/>Guest OS / data volumes"]
+  n_tree_37["Crucial X9 Pro / 4 TB<br/>USB: ext4 backup / accessible data verified"]
+  n_tree_38["SSD / 256 GB<br/>USB: full overwrite / ext4 target"]
+  n_tree_39["SSD / 256 GB<br/>USB: full overwrite / ext4 target"]
+  n_tree_40["SMB / AV / offline<br/>TCP 445"]
+  n_tree_41["SMB / BACKUP / offline<br/>TCP 445"]
+  n_tree_42["SMB / ISO / offline<br/>TCP 445"]
+  n_tree_43["Coding &amp; personal agents"]
+  n_tree_44["Codex"]
+  n_tree_45["Claude Code"]
+  n_tree_46["Hermes"]
+  n_tree_47["OpenCode"]
+  n_tree_48["Claude Agent / built-in<br/>OpenCode 2.2.5 / official SDK"]
+  n_tree_49["Claude Code CLI / SDK<br/>Existing CLI-owned Claude Max login"]
+  n_tree_50["Anthropic / Claude plan<br/>Existing CLI-owned subscription login"]
+  n_tree_51["Herdr<br/>Terminal sessions"]
+  n_tree_52["Caddy / HTTPS + PostgreSQL proxy"]
+  n_tree_53["AdGuard Home"]
+  n_tree_54["Unbound"]
+  n_tree_55["Pocket ID / OIDC"]
+  n_tree_56["Tinyauth / forward-auth"]
+  n_tree_57["Beszel"]
+  n_tree_58["Grafana"]
+  n_tree_59["VictoriaMetrics"]
+  n_tree_60["Uptime Kuma"]
+  n_tree_61["PVE / node exporters"]
+  n_tree_62["Cairn S3 / offline"]
+  n_tree_63["RustFS S3 / offline"]
+  n_tree_64["Home Assistant"]
+  n_tree_65["Mosquitto / MQTT"]
+  n_tree_66["Quick Share function<br/>Upload → temporary object / short URL"]
+  n_tree_67["Docker engine<br/>Intel iGPU passed through to ctr"]
+  n_tree_68["Media"]
+  n_tree_69["jellyfin / stopped<br/>Restore backup before start"]
+  n_tree_70["frigate / stopped<br/>Restore backup before start"]
+  n_tree_71["qbittorrent / stopped<br/>Restore backup before start"]
+  n_tree_72["motrix-server / stopped<br/>Restore backup before start"]
+  n_tree_73["Immich stack"]
+  n_tree_74["immich-server / stopped<br/>Restore backup before start"]
+  n_tree_75["immich-machine-learning / stopped<br/>Restore backup before start"]
+  n_tree_76["immich-postgres / stopped<br/>Restore backup before start"]
+  n_tree_77["immich-redis / stopped<br/>Restore backup before start"]
+  n_tree_78["Karakeep stack"]
+  n_tree_79["karakeep / stopped<br/>Restore backup before start"]
+  n_tree_80["karakeep-chrome / stopped<br/>Restore backup before start"]
+  n_tree_81["karakeep-meilisearch / stopped<br/>Restore backup before start"]
+  n_tree_82["Paperless stack"]
+  n_tree_83["paperless / stopped<br/>Restore backup before start"]
+  n_tree_84["paperless-valkey / stopped<br/>Restore backup before start"]
+  n_tree_85["Automation stack"]
+  n_tree_86["n8n / stopped<br/>Restore backup before start"]
+  n_tree_87["n8n-db / stopped<br/>Restore backup before start"]
+  n_tree_88["searxng / stopped<br/>Restore backup before start"]
+  n_tree_89["sandbox-api / stopped<br/>Restore backup before start"]
+  n_tree_90["sandbox-runner / stopped<br/>Restore backup before start"]
+  n_tree_91["Shared memory stack"]
+  n_tree_92["openviking / stopped<br/>Restore backup before start"]
+  n_tree_93["openviking-ollama / stopped<br/>Restore backup before start"]
+  n_tree_94["Applications &amp; management"]
+  n_tree_95["nivra / stopped<br/>Restore backup before start"]
+  n_tree_96["nivra-theking / stopped<br/>Restore backup before start"]
+  n_tree_97["opencloud / stopped<br/>Restore backup before start"]
+  n_tree_98["forgejo / stopped<br/>Restore backup before start"]
+  n_tree_99["registry / stopped<br/>Restore backup before start"]
+  n_tree_100["omni / stopped<br/>Restore backup before start"]
+  n_tree_101["portainer / stopped<br/>Restore backup before start"]
+  n_tree_102["watchtower / stopped<br/>Restore backup before start"]
+  n_tree_103["gitea-mirror / stopped<br/>Restore backup before start"]
+  n_tree_104["Kubernetes / logical cluster<br/>Stopped for retirement / backups verified"]
+  n_tree_105["Cluster networking"]
+  n_tree_106["Cilium / offline<br/>Kubernetes Service"]
+  n_tree_107["CoreDNS / offline<br/>Kubernetes Service"]
+  n_tree_108["Platform / GitOps"]
+  n_tree_109["Argo CD / offline<br/>Kubernetes Service"]
+  n_tree_110["Headlamp / offline<br/>Kubernetes Service"]
+  n_tree_111["Homepage / offline<br/>Kubernetes Service"]
+  n_tree_112["metrics-server / offline<br/>Kubernetes Service"]
+  n_tree_113["vmagent / offline<br/>Kubernetes Service"]
+  n_tree_114["kube-state-metrics / offline<br/>Kubernetes Service"]
+  n_tree_115["Distributed block storage"]
+  n_tree_116["Longhorn / offline<br/>Live data erased; backup retained"]
+  n_tree_117["Supabase suite"]
+  n_tree_118["Studio / offline<br/>Kubernetes Service"]
+  n_tree_119["Kong / offline<br/>Kubernetes Service"]
+  n_tree_120["Auth / offline<br/>Kubernetes Service"]
+  n_tree_121["REST / offline<br/>Kubernetes Service"]
+  n_tree_122["Realtime / offline<br/>Kubernetes Service"]
+  n_tree_123["Storage / offline<br/>Kubernetes Service"]
+  n_tree_124["imgproxy / offline<br/>Kubernetes Service"]
+  n_tree_125["pooler / offline<br/>Kubernetes Service"]
+  n_tree_126["meta / offline<br/>Kubernetes Service"]
+  n_tree_127["functions / offline<br/>Kubernetes Service"]
+  n_tree_128["analytics / offline<br/>Kubernetes Service"]
+  n_tree_129["CloudNativePG"]
+  n_tree_130["PostgreSQL primary / offline<br/>SQL exported; stopped"]
+  n_tree_131["PostgreSQL standby A / offline<br/>SQL exported; stopped"]
+  n_tree_132["PostgreSQL standby B / offline<br/>SQL exported; stopped"]
+  n_tree_133["Longhorn data disk<br/>Former SATA volume erased"]
+  n_tree_134["Longhorn data disk<br/>Former SATA volume erased"]
+  n_tree_135["Longhorn data disk<br/>500 GiB / host-local ZFS"]
+  n_tree_136["Frigate recordings<br/>Live data erased; files retained in backup"]
   n_tree_0 --> n_tree_1
   n_tree_0 --> n_tree_8
   n_tree_0 --> n_tree_9
   n_tree_0 --> n_tree_10
   n_tree_0 --> n_tree_11
   n_tree_0 --> n_tree_12
-  n_tree_0 --> n_tree_47
+  n_tree_0 --> n_tree_50
   n_tree_1 --> n_tree_2
   n_tree_1 --> n_tree_3
   n_tree_2 --> n_tree_6
   n_tree_2 --> n_tree_7
   n_tree_2 --> n_tree_16
-  n_tree_2 --> n_tree_25
-  n_tree_2 --> n_tree_32
-  n_tree_2 --> n_tree_101
+  n_tree_2 --> n_tree_26
+  n_tree_2 --> n_tree_34
+  n_tree_2 --> n_tree_104
   n_tree_3 --> n_tree_4
   n_tree_3 --> n_tree_5
   n_tree_12 --> n_tree_13
@@ -168,121 +171,124 @@ flowchart LR
   n_tree_16 --> n_tree_22
   n_tree_16 --> n_tree_23
   n_tree_16 --> n_tree_24
-  n_tree_16 --> n_tree_36
-  n_tree_17 --> n_tree_40
-  n_tree_17 --> n_tree_48
-  n_tree_18 --> n_tree_54
-  n_tree_18 --> n_tree_55
-  n_tree_18 --> n_tree_56
+  n_tree_16 --> n_tree_25
+  n_tree_16 --> n_tree_38
+  n_tree_17 --> n_tree_43
+  n_tree_17 --> n_tree_51
   n_tree_18 --> n_tree_57
   n_tree_18 --> n_tree_58
-  n_tree_19 --> n_tree_37
-  n_tree_19 --> n_tree_38
-  n_tree_19 --> n_tree_39
-  n_tree_20 --> n_tree_50
-  n_tree_21 --> n_tree_52
-  n_tree_21 --> n_tree_53
-  n_tree_22 --> n_tree_59
-  n_tree_22 --> n_tree_60
-  n_tree_23 --> n_tree_130
-  n_tree_25 --> n_tree_26
-  n_tree_25 --> n_tree_27
-  n_tree_25 --> n_tree_28
-  n_tree_25 --> n_tree_29
-  n_tree_25 --> n_tree_30
-  n_tree_25 --> n_tree_31
-  n_tree_25 --> n_tree_35
-  n_tree_26 --> n_tree_64
-  n_tree_27 --> n_tree_63
-  n_tree_28 --> n_tree_49
-  n_tree_29 --> n_tree_61
-  n_tree_29 --> n_tree_62
-  n_tree_30 --> n_tree_131
-  n_tree_32 --> n_tree_33
-  n_tree_32 --> n_tree_34
-  n_tree_33 --> n_tree_132
-  n_tree_40 --> n_tree_41
-  n_tree_40 --> n_tree_42
-  n_tree_40 --> n_tree_43
-  n_tree_40 --> n_tree_44
-  n_tree_44 --> n_tree_45
-  n_tree_45 --> n_tree_46
-  n_tree_50 --> n_tree_51
-  n_tree_64 --> n_tree_65
-  n_tree_64 --> n_tree_70
-  n_tree_64 --> n_tree_75
-  n_tree_64 --> n_tree_79
-  n_tree_64 --> n_tree_82
-  n_tree_64 --> n_tree_88
-  n_tree_64 --> n_tree_91
-  n_tree_65 --> n_tree_66
-  n_tree_65 --> n_tree_67
-  n_tree_65 --> n_tree_68
-  n_tree_65 --> n_tree_69
-  n_tree_67 --> n_tree_133
-  n_tree_70 --> n_tree_71
-  n_tree_70 --> n_tree_72
-  n_tree_70 --> n_tree_73
-  n_tree_70 --> n_tree_74
-  n_tree_75 --> n_tree_76
-  n_tree_75 --> n_tree_77
-  n_tree_75 --> n_tree_78
-  n_tree_79 --> n_tree_80
-  n_tree_79 --> n_tree_81
+  n_tree_18 --> n_tree_59
+  n_tree_18 --> n_tree_60
+  n_tree_18 --> n_tree_61
+  n_tree_19 --> n_tree_40
+  n_tree_19 --> n_tree_41
+  n_tree_19 --> n_tree_42
+  n_tree_20 --> n_tree_53
+  n_tree_21 --> n_tree_55
+  n_tree_21 --> n_tree_56
+  n_tree_22 --> n_tree_62
+  n_tree_22 --> n_tree_63
+  n_tree_23 --> n_tree_133
+  n_tree_26 --> n_tree_27
+  n_tree_26 --> n_tree_28
+  n_tree_26 --> n_tree_29
+  n_tree_26 --> n_tree_30
+  n_tree_26 --> n_tree_31
+  n_tree_26 --> n_tree_32
+  n_tree_26 --> n_tree_33
+  n_tree_26 --> n_tree_37
+  n_tree_26 --> n_tree_39
+  n_tree_27 --> n_tree_67
+  n_tree_28 --> n_tree_66
+  n_tree_29 --> n_tree_52
+  n_tree_30 --> n_tree_64
+  n_tree_30 --> n_tree_65
+  n_tree_31 --> n_tree_134
+  n_tree_34 --> n_tree_35
+  n_tree_34 --> n_tree_36
+  n_tree_35 --> n_tree_135
+  n_tree_43 --> n_tree_44
+  n_tree_43 --> n_tree_45
+  n_tree_43 --> n_tree_46
+  n_tree_43 --> n_tree_47
+  n_tree_47 --> n_tree_48
+  n_tree_48 --> n_tree_49
+  n_tree_53 --> n_tree_54
+  n_tree_67 --> n_tree_68
+  n_tree_67 --> n_tree_73
+  n_tree_67 --> n_tree_78
+  n_tree_67 --> n_tree_82
+  n_tree_67 --> n_tree_85
+  n_tree_67 --> n_tree_91
+  n_tree_67 --> n_tree_94
+  n_tree_68 --> n_tree_69
+  n_tree_68 --> n_tree_70
+  n_tree_68 --> n_tree_71
+  n_tree_68 --> n_tree_72
+  n_tree_70 --> n_tree_136
+  n_tree_73 --> n_tree_74
+  n_tree_73 --> n_tree_75
+  n_tree_73 --> n_tree_76
+  n_tree_73 --> n_tree_77
+  n_tree_78 --> n_tree_79
+  n_tree_78 --> n_tree_80
+  n_tree_78 --> n_tree_81
   n_tree_82 --> n_tree_83
   n_tree_82 --> n_tree_84
-  n_tree_82 --> n_tree_85
-  n_tree_82 --> n_tree_86
-  n_tree_82 --> n_tree_87
-  n_tree_88 --> n_tree_89
-  n_tree_88 --> n_tree_90
+  n_tree_85 --> n_tree_86
+  n_tree_85 --> n_tree_87
+  n_tree_85 --> n_tree_88
+  n_tree_85 --> n_tree_89
+  n_tree_85 --> n_tree_90
   n_tree_91 --> n_tree_92
   n_tree_91 --> n_tree_93
-  n_tree_91 --> n_tree_94
-  n_tree_91 --> n_tree_95
-  n_tree_91 --> n_tree_96
-  n_tree_91 --> n_tree_97
-  n_tree_91 --> n_tree_98
-  n_tree_91 --> n_tree_99
-  n_tree_91 --> n_tree_100
-  n_tree_101 --> n_tree_102
-  n_tree_101 --> n_tree_105
-  n_tree_101 --> n_tree_112
-  n_tree_101 --> n_tree_114
-  n_tree_101 --> n_tree_126
-  n_tree_102 --> n_tree_103
-  n_tree_102 --> n_tree_104
+  n_tree_94 --> n_tree_95
+  n_tree_94 --> n_tree_96
+  n_tree_94 --> n_tree_97
+  n_tree_94 --> n_tree_98
+  n_tree_94 --> n_tree_99
+  n_tree_94 --> n_tree_100
+  n_tree_94 --> n_tree_101
+  n_tree_94 --> n_tree_102
+  n_tree_94 --> n_tree_103
+  n_tree_104 --> n_tree_105
+  n_tree_104 --> n_tree_108
+  n_tree_104 --> n_tree_115
+  n_tree_104 --> n_tree_117
+  n_tree_104 --> n_tree_129
   n_tree_105 --> n_tree_106
   n_tree_105 --> n_tree_107
-  n_tree_105 --> n_tree_108
-  n_tree_105 --> n_tree_109
-  n_tree_105 --> n_tree_110
-  n_tree_105 --> n_tree_111
-  n_tree_112 --> n_tree_113
-  n_tree_114 --> n_tree_115
-  n_tree_114 --> n_tree_116
-  n_tree_114 --> n_tree_117
-  n_tree_114 --> n_tree_118
-  n_tree_114 --> n_tree_119
-  n_tree_114 --> n_tree_120
-  n_tree_114 --> n_tree_121
-  n_tree_114 --> n_tree_122
-  n_tree_114 --> n_tree_123
-  n_tree_114 --> n_tree_124
-  n_tree_114 --> n_tree_125
-  n_tree_126 --> n_tree_127
-  n_tree_126 --> n_tree_128
-  n_tree_126 --> n_tree_129
+  n_tree_108 --> n_tree_109
+  n_tree_108 --> n_tree_110
+  n_tree_108 --> n_tree_111
+  n_tree_108 --> n_tree_112
+  n_tree_108 --> n_tree_113
+  n_tree_108 --> n_tree_114
+  n_tree_115 --> n_tree_116
+  n_tree_117 --> n_tree_118
+  n_tree_117 --> n_tree_119
+  n_tree_117 --> n_tree_120
+  n_tree_117 --> n_tree_121
+  n_tree_117 --> n_tree_122
+  n_tree_117 --> n_tree_123
+  n_tree_117 --> n_tree_124
+  n_tree_117 --> n_tree_125
+  n_tree_117 --> n_tree_126
+  n_tree_117 --> n_tree_127
+  n_tree_117 --> n_tree_128
+  n_tree_129 --> n_tree_130
+  n_tree_129 --> n_tree_131
+  n_tree_129 --> n_tree_132
   classDef c_tree_0 fill:#e7eff8,stroke:#6c7f8c,color:#233647;
-  class n_tree_0,n_tree_1,n_tree_2,n_tree_3,n_tree_12,n_tree_16,n_tree_24,n_tree_25,n_tree_31,n_tree_32,n_tree_34,n_tree_35,n_tree_36,n_tree_130,n_tree_131,n_tree_132 c_tree_0;
+  class n_tree_0,n_tree_1,n_tree_2,n_tree_3,n_tree_12,n_tree_16,n_tree_24,n_tree_25,n_tree_26,n_tree_32,n_tree_33,n_tree_34,n_tree_36,n_tree_37,n_tree_38,n_tree_39,n_tree_133,n_tree_134,n_tree_135 c_tree_0;
   classDef c_tree_1 fill:#fff3df,stroke:#6c7f8c,color:#233647;
   class n_tree_4,n_tree_5,n_tree_6,n_tree_7 c_tree_1;
   classDef c_tree_2 fill:#f0edf9,stroke:#6c7f8c,color:#233647;
-  class n_tree_8,n_tree_9,n_tree_10,n_tree_11,n_tree_40,n_tree_46,n_tree_47,n_tree_64,n_tree_65,n_tree_70,n_tree_75,n_tree_79,n_tree_82,n_tree_88,n_tree_91,n_tree_101,n_tree_102,n_tree_105,n_tree_112,n_tree_114,n_tree_126 c_tree_2;
+  class n_tree_8,n_tree_9,n_tree_10,n_tree_11,n_tree_43,n_tree_49,n_tree_50,n_tree_67,n_tree_68,n_tree_73,n_tree_78,n_tree_82,n_tree_85,n_tree_91,n_tree_94,n_tree_104,n_tree_105,n_tree_108,n_tree_115,n_tree_117,n_tree_129 c_tree_2;
   classDef c_tree_3 fill:#ffffff,stroke:#6c7f8c,color:#233647;
-  class n_tree_13,n_tree_14,n_tree_15,n_tree_37,n_tree_38,n_tree_39,n_tree_41,n_tree_42,n_tree_43,n_tree_44,n_tree_45,n_tree_48,n_tree_49,n_tree_50,n_tree_51,n_tree_52,n_tree_53,n_tree_54,n_tree_55,n_tree_56,n_tree_57,n_tree_58,n_tree_59,n_tree_60,n_tree_61,n_tree_62,n_tree_63,n_tree_66,n_tree_67,n_tree_68,n_tree_69,n_tree_71,n_tree_72,n_tree_73,n_tree_74,n_tree_76,n_tree_77,n_tree_78,n_tree_80,n_tree_81,n_tree_83,n_tree_84,n_tree_85,n_tree_86,n_tree_87,n_tree_89,n_tree_90,n_tree_92,n_tree_93,n_tree_94,n_tree_95,n_tree_96,n_tree_97,n_tree_98,n_tree_99,n_tree_100,n_tree_103,n_tree_104,n_tree_106,n_tree_107,n_tree_108,n_tree_109,n_tree_110,n_tree_111,n_tree_113,n_tree_115,n_tree_116,n_tree_117,n_tree_118,n_tree_119,n_tree_120,n_tree_121,n_tree_122,n_tree_123,n_tree_124,n_tree_125,n_tree_127,n_tree_128,n_tree_129,n_tree_133 c_tree_3;
+  class n_tree_13,n_tree_14,n_tree_15,n_tree_40,n_tree_41,n_tree_42,n_tree_44,n_tree_45,n_tree_46,n_tree_47,n_tree_48,n_tree_51,n_tree_52,n_tree_53,n_tree_54,n_tree_55,n_tree_56,n_tree_57,n_tree_58,n_tree_59,n_tree_60,n_tree_61,n_tree_62,n_tree_63,n_tree_64,n_tree_65,n_tree_66,n_tree_69,n_tree_70,n_tree_71,n_tree_72,n_tree_74,n_tree_75,n_tree_76,n_tree_77,n_tree_79,n_tree_80,n_tree_81,n_tree_83,n_tree_84,n_tree_86,n_tree_87,n_tree_88,n_tree_89,n_tree_90,n_tree_92,n_tree_93,n_tree_95,n_tree_96,n_tree_97,n_tree_98,n_tree_99,n_tree_100,n_tree_101,n_tree_102,n_tree_103,n_tree_106,n_tree_107,n_tree_109,n_tree_110,n_tree_111,n_tree_112,n_tree_113,n_tree_114,n_tree_116,n_tree_118,n_tree_119,n_tree_120,n_tree_121,n_tree_122,n_tree_123,n_tree_124,n_tree_125,n_tree_126,n_tree_127,n_tree_128,n_tree_130,n_tree_131,n_tree_132,n_tree_136 c_tree_3;
   classDef c_tree_4 fill:#e8f4f0,stroke:#6c7f8c,color:#233647;
-  class n_tree_17,n_tree_18,n_tree_19,n_tree_20,n_tree_21,n_tree_22,n_tree_23,n_tree_26,n_tree_27,n_tree_28,n_tree_29,n_tree_30,n_tree_33 c_tree_4;
+  class n_tree_17,n_tree_18,n_tree_19,n_tree_20,n_tree_21,n_tree_22,n_tree_23,n_tree_27,n_tree_28,n_tree_29,n_tree_30,n_tree_31,n_tree_35 c_tree_4;
 ```
 
 ## Camera / events to Home Assistant
@@ -290,7 +296,7 @@ flowchart LR
 ```mermaid
 flowchart LR
   n_flow_0_0["Outdoor camera<br/>Network attachment type unverified"]
-  n_flow_0_1["frigate<br/>Docker-internal unless published"]
+  n_flow_0_1["frigate / stopped<br/>Restore backup before start"]
   n_flow_0_2["Mosquitto / MQTT"]
   n_flow_0_3["Home Assistant"]
   n_flow_0_0 -->|"RTSP :554"| n_flow_0_1
@@ -336,9 +342,9 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  n_flow_3_0["qbittorrent<br/>Docker-internal unless published"]
+  n_flow_3_0["qbittorrent / stopped<br/>Restore backup before start"]
   n_flow_3_1["SMB / AV / offline<br/>TCP 445"]
-  n_flow_3_2["jellyfin<br/>Docker-internal unless published"]
+  n_flow_3_2["jellyfin / stopped<br/>Restore backup before start"]
   n_flow_3_3["Your phone / workstation<br/>Client addresses vary"]
   n_flow_3_0 -->|"writes via SMB3 :445"| n_flow_3_1
   n_flow_3_1 -->|"reads media over SMB3"| n_flow_3_2
@@ -355,7 +361,7 @@ flowchart LR
 flowchart LR
   n_flow_4_0["Your phone / workstation<br/>Client addresses vary"]
   n_flow_4_1["Quick Share function<br/>Upload → temporary object / short URL"]
-  n_flow_4_2["Cairn S3"]
+  n_flow_4_2["Cairn S3 / offline"]
   n_flow_4_0 -->|"upload via Orva HTTPS"| n_flow_4_1
   n_flow_4_1 -->|"S3 object PUT / GET"| n_flow_4_2
   classDef c_flow_4_0 fill:#fff3df,stroke:#6c7f8c,color:#233647;
@@ -369,8 +375,8 @@ flowchart LR
 ```mermaid
 flowchart LR
   n_flow_5_0["Your phone / workstation<br/>Client addresses vary"]
-  n_flow_5_1["registry<br/>Docker-internal unless published"]
-  n_flow_5_2["RustFS S3"]
+  n_flow_5_1["registry / stopped<br/>Restore backup before start"]
+  n_flow_5_2["RustFS S3 / offline"]
   n_flow_5_0 -->|"Docker Registry API / HTTPS"| n_flow_5_1
   n_flow_5_1 -->|"S3 image layer storage"| n_flow_5_2
   classDef c_flow_5_0 fill:#fff3df,stroke:#6c7f8c,color:#233647;
@@ -401,7 +407,7 @@ flowchart LR
 ```mermaid
 flowchart LR
   n_flow_10_0["Outdoor camera<br/>Network attachment type unverified"]
-  n_flow_10_1["frigate<br/>Docker-internal unless published"]
+  n_flow_10_1["frigate / stopped<br/>Restore backup before start"]
   n_flow_10_2["Home Assistant"]
   n_flow_10_3["Your phone / workstation<br/>Client addresses vary"]
   n_flow_10_0 -->|"RTSP :554"| n_flow_10_1
@@ -418,8 +424,8 @@ flowchart LR
 ```mermaid
 flowchart LR
   n_flow_11_0["Outdoor camera<br/>Network attachment type unverified"]
-  n_flow_11_1["frigate<br/>Docker-internal unless published"]
-  n_flow_11_2["Frigate recordings<br/>ctr local /data/apps/frigate/media"]
+  n_flow_11_1["frigate / stopped<br/>Restore backup before start"]
+  n_flow_11_2["Frigate recordings<br/>Live data erased; files retained in backup"]
   n_flow_11_0 -->|"RTSP main stream"| n_flow_11_1
   n_flow_11_1 -->|"writes local recording files"| n_flow_11_2
   classDef c_flow_11_0 fill:#fff3df,stroke:#6c7f8c,color:#233647;
@@ -434,7 +440,7 @@ flowchart LR
 flowchart LR
   n_flow_12_0["Your phone / workstation<br/>Client addresses vary"]
   n_flow_12_1["Caddy / HTTPS + PostgreSQL proxy"]
-  n_flow_12_2["nivra<br/>Docker-internal unless published"]
+  n_flow_12_2["nivra / stopped<br/>Restore backup before start"]
   n_flow_12_0 -->|"HTTPS :443"| n_flow_12_1
   n_flow_12_1 -->|"HTTP backend :3020"| n_flow_12_2
   classDef c_flow_12_0 fill:#fff3df,stroke:#6c7f8c,color:#233647;
@@ -468,9 +474,9 @@ flowchart LR
 flowchart LR
   n_flow_14_0["Your phone / workstation<br/>Client addresses vary"]
   n_flow_14_1["Caddy / HTTPS + PostgreSQL proxy"]
-  n_flow_14_2["Kong<br/>Kubernetes Service"]
-  n_flow_14_3["REST<br/>Kubernetes Service"]
-  n_flow_14_4["PostgreSQL primary<br/>Streaming replication"]
+  n_flow_14_2["Kong / offline<br/>Kubernetes Service"]
+  n_flow_14_3["REST / offline<br/>Kubernetes Service"]
+  n_flow_14_4["PostgreSQL primary / offline<br/>SQL exported; stopped"]
   n_flow_14_0 -->|"HTTPS :443"| n_flow_14_1
   n_flow_14_1 -->|"gateway upstream"| n_flow_14_2
   n_flow_14_2 -->|"REST API"| n_flow_14_3
@@ -486,8 +492,8 @@ flowchart LR
 ```mermaid
 flowchart LR
   n_flow_17_0["GitHub / Homelab repository<br/>Declarative configuration"]
-  n_flow_17_1["Argo CD<br/>Kubernetes Service"]
-  n_flow_17_2["Kubernetes / logical cluster<br/>k8s-201 / 202 Ready; k8s-203 host unreachable"]
+  n_flow_17_1["Argo CD / offline<br/>Kubernetes Service"]
+  n_flow_17_2["Kubernetes / logical cluster<br/>Stopped for retirement / backups verified"]
   n_flow_17_0 -->|"tracked manifests / charts"| n_flow_17_1
   n_flow_17_1 -->|"reconciles declared resources"| n_flow_17_2
   classDef c_flow_17_0 fill:#f0edf9,stroke:#6c7f8c,color:#233647;
@@ -500,9 +506,9 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  n_flow_18_0["motrix-server<br/>Docker-internal unless published"]
+  n_flow_18_0["motrix-server / stopped<br/>Restore backup before start"]
   n_flow_18_1["SMB / AV / offline<br/>TCP 445"]
-  n_flow_18_2["jellyfin<br/>Docker-internal unless published"]
+  n_flow_18_2["jellyfin / stopped<br/>Restore backup before start"]
   n_flow_18_3["Your phone / workstation<br/>Client addresses vary"]
   n_flow_18_0 -->|"writes via SMB3"| n_flow_18_1
   n_flow_18_1 -->|"reads media files"| n_flow_18_2
@@ -534,9 +540,9 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  n_flow_8_0["Kubernetes / logical cluster<br/>k8s-201 / 202 Ready; k8s-203 host unreachable"]
-  n_flow_8_1["VM 201 / k8s-201"]
-  n_flow_8_2["VM 202 / k8s-202"]
+  n_flow_8_0["Kubernetes / logical cluster<br/>Stopped for retirement / backups verified"]
+  n_flow_8_1["VM 201 / k8s-201 / stopped / data erased"]
+  n_flow_8_2["VM 202 / k8s-202 / stopped / data erased"]
   n_flow_8_3["VM 203 / k8s-203 / host unreachable / NotReady"]
   n_flow_8_1 -.->|"member"| n_flow_8_0
   n_flow_8_2 -.->|"member"| n_flow_8_0
@@ -566,9 +572,9 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  n_flow_6_0["openviking<br/>Docker-internal unless published"]
+  n_flow_6_0["openviking / stopped<br/>Restore backup before start"]
   n_flow_6_1["Coding &amp; personal agents"]
-  n_flow_6_2["openviking-ollama<br/>Docker-internal unless published"]
+  n_flow_6_2["openviking-ollama / stopped<br/>Restore backup before start"]
   n_flow_6_3["External model APIs<br/>Hermes: DeepSeek Flash / Codex fallback"]
   n_flow_6_1 -.->|"memory read / write"| n_flow_6_0
   n_flow_6_0 -.->|"local embeddings"| n_flow_6_2
@@ -583,9 +589,9 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  n_flow_16_0["omni<br/>Docker-internal unless published"]
-  n_flow_16_1["VM 201 / k8s-201"]
-  n_flow_16_2["VM 202 / k8s-202"]
+  n_flow_16_0["omni / stopped<br/>Restore backup before start"]
+  n_flow_16_1["VM 201 / k8s-201 / stopped / data erased"]
+  n_flow_16_2["VM 202 / k8s-202 / stopped / data erased"]
   n_flow_16_3["VM 203 / k8s-203 / host unreachable / NotReady"]
   n_flow_16_0 -.->|"machine management"| n_flow_16_1
   n_flow_16_0 -.->|"machine management"| n_flow_16_2
@@ -596,16 +602,16 @@ flowchart LR
   class n_flow_16_1,n_flow_16_2,n_flow_16_3 c_flow_16_1;
 ```
 
-## Longhorn / 2 replicas per volume, across eligible disks
+## Longhorn / stopped; former data disks retired
 
 ```mermaid
 flowchart LR
-  n_flow_19_0["Longhorn<br/>2 replicas per current volume"]
-  n_flow_19_1["Longhorn data disk<br/>500 GiB / host-local ZFS"]
-  n_flow_19_2["Longhorn data disk<br/>500 GiB / host-local ZFS"]
+  n_flow_19_0["Longhorn / offline<br/>Live data erased; backup retained"]
+  n_flow_19_1["Longhorn data disk<br/>Former SATA volume erased"]
+  n_flow_19_2["Longhorn data disk<br/>Former SATA volume erased"]
   n_flow_19_3["Longhorn data disk<br/>500 GiB / host-local ZFS"]
-  n_flow_19_0 -.->|"eligible disk"| n_flow_19_1
-  n_flow_19_0 -.->|"eligible disk"| n_flow_19_2
+  n_flow_19_0 -.->|"erased"| n_flow_19_1
+  n_flow_19_0 -.->|"erased"| n_flow_19_2
   n_flow_19_0 -.->|"offline / no replicas"| n_flow_19_3
   classDef c_flow_19_0 fill:#ffffff,stroke:#6c7f8c,color:#233647;
   class n_flow_19_0 c_flow_19_0;
@@ -619,8 +625,8 @@ flowchart LR
 flowchart LR
   n_flow_15_0["Crucial X9 Pro / 4 TB<br/>USB: ext4 backup / accessible data verified"]
   n_flow_15_1["VM 100 / dev"]
-  n_flow_15_2["VM 204 / ctr"]
-  n_flow_15_3["Kubernetes / logical cluster<br/>k8s-201 / 202 Ready; k8s-203 host unreachable"]
+  n_flow_15_2["VM 204 / ctr / stopped / restore data"]
+  n_flow_15_3["Kubernetes / logical cluster<br/>Stopped for retirement / backups verified"]
   n_flow_15_1 -.->|"dev files / consistent agent databases"| n_flow_15_0
   n_flow_15_2 -.->|"cold files / volumes / SQL"| n_flow_15_0
   n_flow_15_3 -.->|"manifests / logical DB / PVC files"| n_flow_15_0

@@ -1,7 +1,7 @@
 flowchart LR
   n_flow_4_0["Your phone / workstation<br/>Client addresses vary"]
   n_flow_4_1["Quick Share function<br/>Upload → temporary object / short URL"]
-  n_flow_4_2["Cairn S3"]
+  n_flow_4_2["Cairn S3 / offline"]
   n_flow_4_0 -->|"upload via Orva HTTPS"| n_flow_4_1
   n_flow_4_1 -->|"S3 object PUT / GET"| n_flow_4_2
   classDef c_flow_4_0 fill:#fff3df,stroke:#6c7f8c,color:#233647;

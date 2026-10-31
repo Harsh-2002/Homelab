@@ -1,6 +1,6 @@
 flowchart LR
   n_flow_10_0["Outdoor camera<br/>Network attachment type unverified"]
-  n_flow_10_1["frigate<br/>Docker-internal unless published"]
+  n_flow_10_1["frigate / stopped<br/>Restore backup before start"]
   n_flow_10_2["Home Assistant"]
   n_flow_10_3["Your phone / workstation<br/>Client addresses vary"]
   n_flow_10_0 -->|"RTSP :554"| n_flow_10_1

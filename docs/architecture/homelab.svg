@@ -43,12 +43,12 @@
 <rect x="64" y="482" width="720" height="650" rx="16" fill="#ffffff" stroke="#aebfc7" stroke-width="1.5"/>
 <text x="88" y="523" font-size="32" fill="#18252c" font-weight="600" >px10</text>
 <text x="760" y="520" font-size="24" fill="#52636d" font-weight="400" text-anchor="end">Dell OptiPlex 5060</text>
-<text x="88" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-8400T / 6 cores · 32 GB RAM · ZFS OS + data pools</text>
+<text x="88" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-8400T / 6 cores · 32 GB RAM · NVMe ZFS / SATA ext4</text>
 <path d="M88 578H760" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <rect x="840" y="482" width="720" height="650" rx="16" fill="#ffffff" stroke="#aebfc7" stroke-width="1.5"/>
 <text x="864" y="523" font-size="32" fill="#18252c" font-weight="600" >px20</text>
 <text x="1536" y="520" font-size="24" fill="#52636d" font-weight="400" text-anchor="end">Dell OptiPlex 5060</text>
-<text x="864" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-8400T / 6 cores · 32 GB RAM · ZFS OS + data pools</text>
+<text x="864" y="558" font-size="22" fill="#52636d" font-weight="400" >i5-8400T / 6 cores · 32 GB RAM · NVMe ZFS / SATA ext4</text>
 <path d="M864 578H1536" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <rect x="1616" y="482" width="720" height="650" rx="16" fill="#ffffff" stroke="#aebfc7" stroke-width="1.5"/>
 <text x="1640" y="523" font-size="32" fill="#18252c" font-weight="600" >px30 · powered off</text>
@@ -67,13 +67,13 @@
 </g>
 <g data-node="true">
 <rect x="88" y="744" width="672" height="66" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="110" y="771" font-size="23" fill="#18252c" font-weight="600" >store · LXC 109 · stopped / backup disk transition</text>
+<text x="110" y="771" font-size="23" fill="#18252c" font-weight="600" >store · LXC 109 · stopped / shares retired</text>
 <text x="110" y="796" font-size="20" fill="#52636d" font-weight="400" >Samba stopped; old AV/BACKUP layout retired</text>
 </g>
 <g data-node="true">
 <rect x="864" y="596" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="886" y="623" font-size="23" fill="#18252c" font-weight="600" >ctr · VM 204 / Docker + Portainer</text>
-<text x="886" y="648" font-size="20" fill="#52636d" font-weight="400" >Media       Jellyfin · qBittorrent · Motrix</text>
+<text x="886" y="623" font-size="23" fill="#18252c" font-weight="600" >ctr · VM 204 · stopped / restore data / Docker + Portainer</text>
+<text x="886" y="648" font-size="20" fill="#52636d" font-weight="400" >Application data erased; restore backup before start</text>
 <text x="886" y="677" font-size="20" fill="#52636d" font-weight="400" >Personal   Immich · Karakeep · OpenCloud · Paperless</text>
 </g>
 <g data-node="true">
@@ -98,8 +98,8 @@
 </g>
 <g data-node="true">
 <rect x="88" y="966" width="672" height="66" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="110" y="993" font-size="23" fill="#18252c" font-weight="600" >s3 · LXC 105</text>
-<text x="110" y="1018" font-size="20" fill="#52636d" font-weight="400" >Cairn · RustFS / S3-compatible storage</text>
+<text x="110" y="993" font-size="23" fill="#18252c" font-weight="600" >s3 · LXC 105 · stopped / root erased</text>
+<text x="110" y="1018" font-size="20" fill="#52636d" font-weight="400" >SATA root erased; cold file backup verified</text>
 </g>
 <g data-node="true">
 <rect x="864" y="905" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -108,14 +108,13 @@
 </g>
 <g data-node="true">
 <rect x="88" y="1040" width="672" height="66" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="110" y="1067" font-size="23" fill="#18252c" font-weight="600" >k8s-201 · VM 201</text>
-<text x="110" y="1092" font-size="20" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
+<text x="110" y="1067" font-size="23" fill="#18252c" font-weight="600" >k8s-201 · VM 201 · stopped / data erased</text>
+<text x="110" y="1092" font-size="20" fill="#52636d" font-weight="400" >NVMe OS retained; former SATA data disk erased</text>
 </g>
 <g data-node="true">
 <rect x="864" y="1008" width="672" height="95" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="886" y="1035" font-size="23" fill="#18252c" font-weight="600" >k8s-202 · VM 202</text>
-<text x="886" y="1060" font-size="20" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
-<text x="886" y="1089" font-size="20" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · 500 GiB data</text>
+<text x="886" y="1035" font-size="23" fill="#18252c" font-weight="600" >k8s-202 · VM 202 · stopped / data erased</text>
+<text x="886" y="1060" font-size="20" fill="#52636d" font-weight="400" >NVMe OS retained; former SATA data disk erased</text>
 </g>
 <g data-node="true">
 <rect x="1640" y="596" width="672" height="112" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -130,7 +129,7 @@
 <path d="M1200 1176V1212" fill="none" stroke="#52636d" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
 <text x="64" y="1160" font-size="20" fill="#52636d" font-weight="400" >Placement is a snapshot; managed guests can relocate.</text>
 <rect x="64" y="1218" width="2272" height="282" rx="16" fill="#edf4f8" stroke="#b5cbd8" stroke-width="1.5"/>
-<text x="88" y="1258" font-size="29" fill="#18252c" font-weight="600" >Kubernetes: two active nodes; k8s-203 host unreachable</text>
+<text x="88" y="1258" font-size="29" fill="#18252c" font-weight="600" >Kubernetes stopped for retirement; backups verified</text>
 <text x="88" y="1294" font-size="23" fill="#52636d" font-weight="400" >Talos management: Omni on ctr. Kubernetes desired state: GitHub → Argo CD.</text>
 <path d="M812 1324V1474" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <path d="M1568 1324V1474" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
@@ -139,25 +138,25 @@
 <text x="88" y="1416" font-size="22" fill="#52636d" font-weight="400" >Argo CD · Headlamp · Homepage · metrics-server</text>
 <text x="88" y="1448" font-size="22" fill="#52636d" font-weight="400" >vmagent · kube-state-metrics · node metrics</text>
 <text x="844" y="1348" font-size="25" fill="#225d82" font-weight="600" >Persistent storage</text>
-<text x="844" y="1384" font-size="22" fill="#52636d" font-weight="400" >Longhorn: both active disks on k8s-201 / k8s-202</text>
-<text x="844" y="1416" font-size="22" fill="#52636d" font-weight="400" >Current volumes: 2 storage replicas each</text>
-<text x="844" y="1448" font-size="22" fill="#52636d" font-weight="400" >Data crosses hosts; replication is not backup.</text>
+<text x="844" y="1384" font-size="22" fill="#52636d" font-weight="400" >Cluster stopped; px10/px20 data disks erased</text>
+<text x="844" y="1416" font-size="22" fill="#52636d" font-weight="400" >Logical application backups verified on external SSD</text>
+<text x="844" y="1448" font-size="22" fill="#52636d" font-weight="400" >px30 local disk remains inaccessible and untouched</text>
 <text x="1600" y="1348" font-size="25" fill="#225d82" font-weight="600" >Supabase</text>
-<text x="1600" y="1384" font-size="22" fill="#52636d" font-weight="400" >Two database pods running; standby on k8s-203 terminating</text>
+<text x="1600" y="1384" font-size="22" fill="#52636d" font-weight="400" >Offline; authoritative SQL and application files saved</text>
 <text x="1600" y="1416" font-size="22" fill="#52636d" font-weight="400" >Studio · Auth · REST · Realtime · Edge Functions</text>
 <text x="1600" y="1448" font-size="22" fill="#52636d" font-weight="400" >Storage / imgproxy · Kong · pooler · logs / analytics</text>
 <text x="64" y="1560" font-size="27" fill="#18252c" font-weight="600" >Storage boundaries</text>
 <text x="840" y="1560" font-size="27" fill="#18252c" font-weight="600" >Availability boundaries</text>
 <text x="1616" y="1560" font-size="27" fill="#18252c" font-weight="600" >Smart home</text>
-<text x="64" y="1600" font-size="22" fill="#52636d" font-weight="400" >ZFS → VM/LXC disks and selected 5-minute replicas</text>
-<text x="64" y="1634" font-size="22" fill="#52636d" font-weight="400" >USB: 4 TB ext4 backup on px20; 256 GB ISO on px10</text>
-<text x="64" y="1668" font-size="22" fill="#52636d" font-weight="400" >ctr local data → app state; S3 → Cairn / RustFS objects</text>
-<text x="840" y="1600" font-size="22" fill="#52636d" font-weight="400" >HA enabled; Docker failover hit an out-of-memory limit.</text>
-<text x="840" y="1634" font-size="22" fill="#52636d" font-weight="400" >USB shares need physical-disk recovery after host loss.</text>
-<text x="840" y="1668" font-size="22" fill="#52636d" font-weight="400" >DNS, Caddy and several apps remain single instances.</text>
+<text x="64" y="1600" font-size="22" fill="#52636d" font-weight="400" >NVMe ZFS roots retained; SATA data erased</text>
+<text x="64" y="1634" font-size="22" fill="#52636d" font-weight="400" >4 TB backup; 256 GB USB overwrite in progress</text>
+<text x="64" y="1668" font-size="22" fill="#52636d" font-weight="400" >CTR / S3 / Kubernetes require restoration from backup</text>
+<text x="840" y="1600" font-size="22" fill="#52636d" font-weight="400" >NVMe services retained; data services stopped</text>
+<text x="840" y="1634" font-size="22" fill="#52636d" font-weight="400" >Dev, DNS, identity and proxy remain on NVMe</text>
+<text x="840" y="1668" font-size="22" fill="#52636d" font-weight="400" >Restore CTR / S3 / Kubernetes from the backup</text>
 <text x="1616" y="1600" font-size="22" fill="#52636d" font-weight="400" >Home Assistant → Wipro bulb / Tuya LAN</text>
 <text x="1616" y="1634" font-size="22" fill="#52636d" font-weight="400" >Home Assistant → Samsung AC / local DTLS</text>
-<text x="1616" y="1668" font-size="22" fill="#52636d" font-weight="400" >Frigate → camera feeds; HA → viewing / automation</text>
+<text x="1616" y="1668" font-size="22" fill="#52636d" font-weight="400" >Frigate offline; recordings retained in backup</text>
 <path d="M64 1732H2336" fill="none" stroke="#c7d2d7" stroke-width="2" stroke-linejoin="round"  />
 <text x="64" y="1771" font-size="20" fill="#52636d" font-weight="400" >Switch and host-port map verified; router/AP models and remaining physical cabling are unverified.</text>
 <text x="2336" y="1771" font-size="20" fill="#52636d" font-weight="400" text-anchor="end">Share-safe · editable SVG</text>

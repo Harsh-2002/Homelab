@@ -1,7 +1,7 @@
 flowchart LR
   n_flow_12_0["Your phone / workstation<br/>Client addresses vary"]
   n_flow_12_1["Caddy / HTTPS + PostgreSQL proxy"]
-  n_flow_12_2["nivra<br/>Docker-internal unless published"]
+  n_flow_12_2["nivra / stopped<br/>Restore backup before start"]
   n_flow_12_0 -->|"HTTPS :443"| n_flow_12_1
   n_flow_12_1 -->|"HTTP backend :3020"| n_flow_12_2
   classDef c_flow_12_0 fill:#fff3df,stroke:#6c7f8c,color:#233647;

@@ -65,13 +65,15 @@
       "name": "px10",
       "model": "Dell OptiPlex 5060",
       "cpu": "i5-8400T / 6 cores",
-      "ramGB": 32
+      "ramGB": 32,
+      "storageSummary": "NVMe ZFS / SATA ext4"
     },
     {
       "name": "px20",
       "model": "Dell OptiPlex 5060",
       "cpu": "i5-8400T / 6 cores",
-      "ramGB": 32
+      "ramGB": 32,
+      "storageSummary": "NVMe ZFS / SATA ext4"
     },
     {
       "name": "px30",
@@ -120,9 +122,9 @@
       ],
       "body": [
         "Samba stopped; old AV/BACKUP layout retired",
-        "4TB USB: portable ext4 data backup on px20"
+        "External disks retired; data retained on 4TB backup"
       ],
-      "statusLabel": "stopped / backup disk transition"
+      "statusLabel": "stopped / shares retired"
     },
     {
       "id": 204,
@@ -135,14 +137,15 @@
         95
       ],
       "body": [
-        "Media       Jellyfin \u00b7 qBittorrent \u00b7 Motrix",
+        "Application data erased; restore backup before start",
         "Personal   Immich \u00b7 Karakeep \u00b7 OpenCloud \u00b7 Paperless",
         "Notes       Nivra \u00b7 separate friend instance",
         "Build        Forgejo \u00b7 Docker Registry \u00b7 mirror worker",
         "Automate n8n \u00b7 SearXNG \u00b7 isolated sandbox",
         "Agents     OpenViking \u00b7 Ollama \u00b7 Omni",
         "Helpers    PostgreSQL \u00b7 Valkey \u00b7 Meilisearch \u00b7 updater"
-      ]
+      ],
+      "statusLabel": "stopped / restore data"
     },
     {
       "id": 106,
@@ -206,8 +209,9 @@
         66
       ],
       "body": [
-        "Cairn \u00b7 RustFS / S3-compatible storage"
-      ]
+        "SATA root erased; cold file backup verified"
+      ],
+      "statusLabel": "stopped / root erased"
     },
     {
       "id": 107,
@@ -233,9 +237,9 @@
       ],
       "kubernetes": true,
       "body": [
-        "Talos \u00b7 control plane + workloads",
-        "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 500 GiB data"
-      ]
+        "NVMe OS retained; former SATA data disk erased"
+      ],
+      "statusLabel": "stopped / data erased"
     },
     {
       "id": 202,
@@ -248,9 +252,9 @@
       ],
       "kubernetes": true,
       "body": [
-        "Talos \u00b7 control plane + workloads",
-        "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 500 GiB data"
-      ]
+        "NVMe OS retained; former SATA data disk erased"
+      ],
+      "statusLabel": "stopped / data erased"
     },
     {
       "id": 203,
@@ -276,12 +280,12 @@
       "vmagent \u00b7 kube-state-metrics \u00b7 node metrics"
     ],
     "storage": [
-      "Longhorn: both active disks on k8s-201 / k8s-202",
-      "Current volumes: 2 storage replicas each",
-      "Data crosses hosts; replication is not backup."
+      "Cluster stopped; px10/px20 data disks erased",
+      "Logical application backups verified on external SSD",
+      "px30 local disk remains inaccessible and untouched"
     ],
     "supabase": [
-      "Two database pods running; standby on k8s-203 terminating",
+      "Offline; authoritative SQL and application files saved",
       "Studio \u00b7 Auth \u00b7 REST \u00b7 Realtime \u00b7 Edge Functions",
       "Storage / imgproxy \u00b7 Kong \u00b7 pooler \u00b7 logs / analytics"
     ]
@@ -300,7 +304,7 @@
       "size": "256 GB",
       "host": "px10",
       "roles": [
-        "ISO"
+        "Full overwrite in progress; ext4 target; unmounted"
       ]
     },
     {
@@ -308,7 +312,23 @@
       "size": "256 GB",
       "host": "px20",
       "roles": [
-        "Spare; unmounted, historical inventory only"
+        "Full overwrite in progress; ext4 target; unmounted"
+      ]
+    },
+    {
+      "name": "Seagate Nytro XF1230 SATA SSD",
+      "size": "1.92 TB",
+      "host": "px10",
+      "roles": [
+        "Discarded; empty ext4; unmounted"
+      ]
+    },
+    {
+      "name": "Seagate Nytro XF1230 SATA SSD",
+      "size": "1.92 TB",
+      "host": "px20",
+      "roles": [
+        "Discarded; empty ext4; unmounted"
       ]
     }
   ],
@@ -322,9 +342,8 @@
   },
   "knownIssues": [
     "HA spare memory insufficient for observed Docker failover",
-    "gitea-mirror container restarting; no repair performed",
     "External slate live SSH check blocked by Tailscale re-authentication",
-    "px30 unreachable; k8s-203 NotReady and cordoned; one Longhorn volume attaching/unknown; px20 available RAM approximately 1 GiB"
+    "Retirement: CTR, S3 and Kubernetes stopped; restore data before restarting. OpenViking backend is offline; memory data is backed up."
   ],
   "retired": [
     "ARR",
@@ -363,5 +382,27 @@
       "ctrMountSourcesChecked": 52,
       "filesystemCheck": "clean after normal unmount on px20; final documentation copy follows"
     }
+  },
+  "retirementFormat": {
+    "status": "SATA SSDs formatted; full USB overwrite in progress",
+    "externalUsbStatus": "in progress",
+    "preserved": "NVMe host roots, dev root, and verified 4TB backup",
+    "stoppedGuests": [
+      105,
+      201,
+      202,
+      204
+    ],
+    "replicationDisabled": [
+      "105-0",
+      "204-0"
+    ],
+    "finalDataVerification": {
+      "filesAndLinks": 325721,
+      "unchangedHardlinkChecksumsReused": 313345,
+      "newBytesRead": 2620096609,
+      "sqliteDatabasesChecked": 20
+    },
+    "completionStatus": "infrastructure/retirement/DISK-FORMAT-STATUS.json"
   }
 }

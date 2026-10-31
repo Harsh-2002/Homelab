@@ -1,7 +1,7 @@
 flowchart LR
   n_flow_5_0["Your phone / workstation<br/>Client addresses vary"]
-  n_flow_5_1["registry<br/>Docker-internal unless published"]
-  n_flow_5_2["RustFS S3"]
+  n_flow_5_1["registry / stopped<br/>Restore backup before start"]
+  n_flow_5_2["RustFS S3 / offline"]
   n_flow_5_0 -->|"Docker Registry API / HTTPS"| n_flow_5_1
   n_flow_5_1 -->|"S3 image layer storage"| n_flow_5_2
   classDef c_flow_5_0 fill:#fff3df,stroke:#6c7f8c,color:#233647;
