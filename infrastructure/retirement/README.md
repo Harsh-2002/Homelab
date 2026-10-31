@@ -238,3 +238,6 @@ final cold data; final memory-update material is retained with the completion
 record for import after the backend is restored.
 
 The preserved NVMe drives have a separate [NVMe health snapshot](../proxmox/NVME-HEALTH-2026-10-31.md).
+
+See [bootable erasure media](BOOT-MEDIA.md) for the verified ShredOS image and
+the separate offline resale-erasure workflow.
