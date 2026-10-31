@@ -296,3 +296,12 @@ other providers, MCPs, skills, credentials and active sessions. No manual servic
 restart, location reload or binary upgrade. Native Claude Agent requires2.2.3+;
 current server2.1.4 cannot activate it. Loaded plugin/package files remain until
 a safe restart/upgrade window. See [research and migration gates](OPENCODE-CLAUDE.md).
+
+## Native Claude Agent migration completed, 2026-10-31
+
+Owner authorized the upgrade/restart. CLI and live OpenCode server now run2.2.5;
+native Claude Agent uses the existing Max CLI login. A real shell-tool turn and
+resume passed, all10 MCPs connected, shared four-agent checks passed and HTTPS
+returned200. No global model default was forced. Removed343MiB of legacy plugin
+cache after verifying no process references it. See the current section of
+[OPENCODE-CLAUDE.md](OPENCODE-CLAUDE.md); older pending-migration notes are history.

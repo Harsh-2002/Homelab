@@ -47,7 +47,7 @@ edge [arrowsize=0.5];
 "claude-code" [label="Claude Code", width=2.70, height=.52];
 "hermes" [label="Hermes", width=2.70, height=.52];
 "opencode" [label="OpenCode", width=2.70, height=.52];
-"opencode-claude" [label="Legacy Claude bridge / retiring\nStartup disabled; loaded copy until restart", width=6.02, height=.8];
+"opencode-claude" [label="Claude Agent / built-in\nOpenCode 2.2.5 / official SDK", width=4.06, height=.8];
 "claude-sdk-cli" [label="Claude Code CLI / SDK\nExisting CLI-owned Claude Max login", width=4.90, height=.8];
 "anthropic-subscription" [label="Anthropic / Claude plan\nExisting CLI-owned subscription login", width=5.18, height=.8];
 "herdr" [label="Herdr\nTerminal sessions", width=2.70, height=.8];

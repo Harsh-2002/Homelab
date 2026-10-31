@@ -1,6 +1,55 @@
 # Claude subscription in OpenCode
 
-## Current state — legacy startup retired, 31 October 2026
+## Current state — native migration completed, 31 October 2026
+
+The owner subsequently authorized upgrading immediately. Installed the explicit
+current v2 release2.2.5 through the official curl upgrade path and restarted the
+user service to activate it. Do not use GitHub's unqualified latest-release
+endpoint for v2: it returned the separate v1.19.5 line during this upgrade.
+The newest v2 release was verified from the release list and official changelog.
+
+Saved protected configuration, previous binary and a consistent SQLite session
+snapshot (quick_check=ok) before upgrade. The old service exited130 during the
+requested stop; the new service is active as PID136077, starting08:27:23UTC.
+Running-server executable and CLI both report2.2.5. No unexpected restart has
+occurred since activation. Existing HTTPS endpoint responds200. All63 pre-upgrade stored session IDs and
+all pre-upgrade message IDs remain present; the new verification session makes64.
+
+Connected built-in `claude-agent` with `opencode auth login claude-agent --method
+claude-login`. Existing Claude CLI2.1.302 reports claude.ai/firstParty/Max; no new
+browser sign-in or API key. Actual native model discovery supplies IDs and effort
+variants; no global/Build/Plan Claude default was reintroduced. Other agents'
+model selections and all shared tools/memory configuration remain intact.
+
+A real turn using claude-agent/claude-haiku-4-5-20251001 completed exactly one
+shell call (`printf NATIVE_CLAUDE_TOOL_OK`) and replied NATIVE_CLAUDE_OK. A second
+turn in the same OpenCode session recalled the exact tool output without tools.
+Session: ses_e6eed1c2cfferwvvyOMJjwRBAs. Both requests reported subscription cost0.
+Native provider/model variants and all10 MCPs, including OpenViking and REA,
+were then verified in the already-live Homelab location. Four-agent static checks
+pass. No saturation, concurrency or automatic memory-capture guarantee is implied.
+
+The old plugin is absent from configuration and live provider discovery; its
+343MiB private cache/dependencies were removed after checking process command
+lines and mappings for references. Shared Claude CLI/login and unrelated caches
+remain. The native provider uses no third-party loopback bridge. Current diagrams
+show the native SDK route. Historical setup/retirement evidence below is retained.
+
+Read-only validation for an already-used location (never initialize extra
+locations just for a health poll under memory pressure):
+
+```bash
+python3 infrastructure/agents/check-integrations.py
+python3 infrastructure/agents/verify-opencode-claude.py --directory /home/dev/Homelab
+```
+
+The native verifier sends no prompt, does not call `opencode models`, and explicitly
+sets x-opencode-directory so it does not accidentally initialize the server's
+home location with another set of MCP processes. `--session` can check the known
+smoke test's persisted tool/resume evidence. Existing Claude CLI login and native
+OpenViking account identity were preserved; no expanded credentials were printed.
+
+## Earlier checkpoint — legacy startup retired, 31 October 2026
 
 Owner confirmed current agents do not use the external Claude provider models.
 Removed only @openchamber/opencode-claude1.6.0 from protected global startup

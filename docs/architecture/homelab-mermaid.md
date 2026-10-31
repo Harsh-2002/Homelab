@@ -51,7 +51,7 @@ flowchart LR
   n_tree_42["Claude Code"]
   n_tree_43["Hermes"]
   n_tree_44["OpenCode"]
-  n_tree_45["Legacy Claude bridge / retiring<br/>Startup disabled; loaded copy until restart"]
+  n_tree_45["Claude Agent / built-in<br/>OpenCode 2.2.5 / official SDK"]
   n_tree_46["Claude Code CLI / SDK<br/>Existing CLI-owned Claude Max login"]
   n_tree_47["Anthropic / Claude plan<br/>Existing CLI-owned subscription login"]
   n_tree_48["Herdr<br/>Terminal sessions"]
@@ -537,11 +537,11 @@ flowchart LR
 ```mermaid
 flowchart LR
   n_flow_20_0["OpenCode"]
-  n_flow_20_1["Legacy Claude bridge / retiring<br/>Startup disabled; loaded copy until restart"]
+  n_flow_20_1["Claude Agent / built-in<br/>OpenCode 2.2.5 / official SDK"]
   n_flow_20_2["Claude Code CLI / SDK<br/>Existing CLI-owned Claude Max login"]
   n_flow_20_3["Anthropic / Claude plan<br/>Existing CLI-owned subscription login"]
-  n_flow_20_0 -->|"legacy startup disabled / migration pending"| n_flow_20_1
-  n_flow_20_1 -->|"loaded SDK until safe restart"| n_flow_20_2
+  n_flow_20_0 -->|"native provider / OpenCode tools"| n_flow_20_1
+  n_flow_20_1 -->|"official Agent SDK"| n_flow_20_2
   n_flow_20_2 -->|"Claude CLI / existing Max subscription"| n_flow_20_3
   classDef c_flow_20_0 fill:#ffffff,stroke:#6c7f8c,color:#233647;
   class n_flow_20_0,n_flow_20_1 c_flow_20_0;

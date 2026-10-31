@@ -49,7 +49,7 @@ add('px10','usb-iso','SSD / 256 GB','physical','USB: ISO images / imports','USB'
 for (const share of ['AV','BACKUP','ISO']) add('store','share-'+share,`SMB / ${share}`,'service','TCP 445');
 add('dev','agents','Coding & personal agents','logical');
 for (const a of ['Codex','Claude Code','Hermes','OpenCode']) add('agents',a.toLowerCase().replaceAll(' ','-'),a);
-add('opencode','opencode-claude','Legacy Claude bridge / retiring','service','Startup disabled; loaded copy until restart');
+add('opencode','opencode-claude','Claude Agent / built-in','service','OpenCode 2.2.5 / official SDK');
 add('opencode-claude','claude-sdk-cli','Claude Code CLI / SDK','logical','Existing CLI-owned Claude Max login');
 add('internet','anthropic-subscription','Anthropic / Claude plan','logical','Existing CLI-owned subscription login');
 add('dev','herdr','Herdr','service','Terminal sessions');
@@ -157,7 +157,7 @@ const flows = [
  ['GitOps / desired state',['github','kube-argo-cd','kubernetes'],['tracked manifests / charts','reconciles declared resources']],
  ['Motrix / download to playback',['motrix-server','share-AV','jellyfin','clients'],['writes via SMB3','reads media files','playback']],
  ['Longhorn / replicated volumes',['kube-longhorn','k8s-201-disk','k8s-202-disk','k8s-203-disk'],['eligible disk','eligible disk','eligible disk']],
- ['OpenCode / Claude subscription',['opencode','opencode-claude','claude-sdk-cli','anthropic-subscription'],['legacy startup disabled / migration pending','loaded SDK until safe restart','Claude CLI / existing Max subscription']]
+ ['OpenCode / Claude subscription',['opencode','opencode-claude','claude-sdk-cli','anthropic-subscription'],['native provider / OpenCode tools','official Agent SDK','Claude CLI / existing Max subscription']]
 ];
 // Maximum five nodes per flow; exact internal endpoints come from the local map.
 const flowX=W+240, fw=2800, fh=400;

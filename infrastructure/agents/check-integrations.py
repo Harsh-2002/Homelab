@@ -134,7 +134,7 @@ def main():
         dropin = Path.home() / '.config/systemd/user/opencode.service.d/claude-sdk.conf'
         if dropin.exists():
             failures.append('OpenCode Claude: retired SDK environment drop-in remains')
-        print('opencode-claude: legacy startup/defaults retired; built-in Claude Agent activation pending newer server')
+        print('opencode-claude: legacy startup/defaults absent; native Claude Agent verified separately')
     except (OSError, ValueError, KeyError):
         failures.append('OpenCode Claude: unable to validate retirement state')
     for failure in failures:
