@@ -1,10 +1,10 @@
 flowchart LR
-  n_flow_15_0["Crucial X9 Pro / 4 TB<br/>USB: portable ext4 backup / in progress"]
+  n_flow_15_0["Crucial X9 Pro / 4 TB<br/>USB: ext4 backup / accessible data verified"]
   n_flow_15_1["VM 100 / dev"]
-  n_flow_15_2["LXC 105 / s3"]
+  n_flow_15_2["VM 204 / ctr"]
   n_flow_15_3["Kubernetes / logical cluster<br/>k8s-201 / 202 Ready; k8s-203 host unreachable"]
   n_flow_15_1 -.->|"dev files / consistent agent databases"| n_flow_15_0
-  n_flow_15_2 -.->|"cold container application files"| n_flow_15_0
+  n_flow_15_2 -.->|"cold files / volumes / SQL"| n_flow_15_0
   n_flow_15_3 -.->|"manifests / logical DB / PVC files"| n_flow_15_0
   classDef c_flow_15_0 fill:#e7eff8,stroke:#6c7f8c,color:#233647;
   class n_flow_15_0 c_flow_15_0;

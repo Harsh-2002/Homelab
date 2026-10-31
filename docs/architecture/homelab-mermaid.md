@@ -41,7 +41,7 @@ flowchart LR
   n_tree_32["px30 / Dell OptiPlex 5060 / powered off<br/>i5-9400T / 6 cores / 32 GB / ZFS / unavailable"]
   n_tree_33["VM 203 / k8s-203 / host unreachable / NotReady"]
   n_tree_34["Local ZFS / rpool + data<br/>Guest OS / data volumes"]
-  n_tree_35["Crucial X9 Pro / 4 TB<br/>USB: portable ext4 backup / in progress"]
+  n_tree_35["Crucial X9 Pro / 4 TB<br/>USB: ext4 backup / accessible data verified"]
   n_tree_36["SSD / 256 GB<br/>USB: ISO images / imports"]
   n_tree_37["SMB / AV / offline<br/>TCP 445"]
   n_tree_38["SMB / BACKUP / offline<br/>TCP 445"]
@@ -168,7 +168,6 @@ flowchart LR
   n_tree_16 --> n_tree_22
   n_tree_16 --> n_tree_23
   n_tree_16 --> n_tree_24
-  n_tree_16 --> n_tree_35
   n_tree_16 --> n_tree_36
   n_tree_17 --> n_tree_40
   n_tree_17 --> n_tree_48
@@ -192,6 +191,7 @@ flowchart LR
   n_tree_25 --> n_tree_29
   n_tree_25 --> n_tree_30
   n_tree_25 --> n_tree_31
+  n_tree_25 --> n_tree_35
   n_tree_26 --> n_tree_64
   n_tree_27 --> n_tree_63
   n_tree_28 --> n_tree_49
@@ -617,12 +617,12 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  n_flow_15_0["Crucial X9 Pro / 4 TB<br/>USB: portable ext4 backup / in progress"]
+  n_flow_15_0["Crucial X9 Pro / 4 TB<br/>USB: ext4 backup / accessible data verified"]
   n_flow_15_1["VM 100 / dev"]
-  n_flow_15_2["LXC 105 / s3"]
+  n_flow_15_2["VM 204 / ctr"]
   n_flow_15_3["Kubernetes / logical cluster<br/>k8s-201 / 202 Ready; k8s-203 host unreachable"]
   n_flow_15_1 -.->|"dev files / consistent agent databases"| n_flow_15_0
-  n_flow_15_2 -.->|"cold container application files"| n_flow_15_0
+  n_flow_15_2 -.->|"cold files / volumes / SQL"| n_flow_15_0
   n_flow_15_3 -.->|"manifests / logical DB / PVC files"| n_flow_15_0
   classDef c_flow_15_0 fill:#e7eff8,stroke:#6c7f8c,color:#233647;
   class n_flow_15_0 c_flow_15_0;

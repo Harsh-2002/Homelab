@@ -72,19 +72,19 @@
 </g>
 <g data-node="true">
 <rect x="864" y="596" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="886" y="630" font-size="25" fill="#18252c" font-weight="600" >ctr · VM 204 / Docker + Portainer</text>
-<text x="886" y="661" font-size="21" fill="#52636d" font-weight="400" >Media       Jellyfin · qBittorrent · Motrix</text>
-<text x="886" y="690" font-size="21" fill="#52636d" font-weight="400" >Personal   Immich · Karakeep · OpenCloud · Paperless</text>
+<text x="886" y="623" font-size="23" fill="#18252c" font-weight="600" >ctr · VM 204 / Docker + Portainer</text>
+<text x="886" y="648" font-size="20" fill="#52636d" font-weight="400" >Media       Jellyfin · qBittorrent · Motrix</text>
+<text x="886" y="677" font-size="20" fill="#52636d" font-weight="400" >Personal   Immich · Karakeep · OpenCloud · Paperless</text>
 </g>
 <g data-node="true">
 <rect x="864" y="699" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="886" y="733" font-size="25" fill="#18252c" font-weight="600" >orva · VM 106</text>
-<text x="886" y="764" font-size="21" fill="#52636d" font-weight="400" >Serverless functions · Quick Share</text>
+<text x="886" y="726" font-size="23" fill="#18252c" font-weight="600" >orva · VM 106</text>
+<text x="886" y="751" font-size="20" fill="#52636d" font-weight="400" >Serverless functions · Quick Share</text>
 </g>
 <g data-node="true">
 <rect x="864" y="802" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="886" y="836" font-size="25" fill="#18252c" font-weight="600" >proxy · LXC 101</text>
-<text x="886" y="867" font-size="21" fill="#52636d" font-weight="400" >Caddy · HTTPS routing / TLS</text>
+<text x="886" y="829" font-size="23" fill="#18252c" font-weight="600" >proxy · LXC 101</text>
+<text x="886" y="854" font-size="20" fill="#52636d" font-weight="400" >Caddy · HTTPS routing / TLS</text>
 </g>
 <g data-node="true">
 <rect x="88" y="818" width="672" height="66" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -103,8 +103,8 @@
 </g>
 <g data-node="true">
 <rect x="864" y="905" width="672" height="95" rx="12" fill="#ffffff" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="886" y="939" font-size="25" fill="#18252c" font-weight="600" >haos · VM 107</text>
-<text x="886" y="970" font-size="21" fill="#52636d" font-weight="400" >Home Assistant · Mosquitto · local device control</text>
+<text x="886" y="932" font-size="23" fill="#18252c" font-weight="600" >haos · VM 107</text>
+<text x="886" y="957" font-size="20" fill="#52636d" font-weight="400" >Home Assistant · Mosquitto · local device control</text>
 </g>
 <g data-node="true">
 <rect x="88" y="1040" width="672" height="66" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
@@ -113,15 +113,15 @@
 </g>
 <g data-node="true">
 <rect x="864" y="1008" width="672" height="95" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
-<text x="886" y="1042" font-size="25" fill="#18252c" font-weight="600" >k8s-202 · VM 202</text>
-<text x="886" y="1073" font-size="21" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
-<text x="886" y="1102" font-size="21" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk</text>
+<text x="886" y="1035" font-size="23" fill="#18252c" font-weight="600" >k8s-202 · VM 202</text>
+<text x="886" y="1060" font-size="20" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
+<text x="886" y="1089" font-size="20" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · 500 GiB data</text>
 </g>
 <g data-node="true">
 <rect x="1640" y="596" width="672" height="112" rx="12" fill="#edf4f8" stroke="#c7d2d7" stroke-width="1.5"/>
 <text x="1662" y="630" font-size="25" fill="#18252c" font-weight="600" >k8s-203 · VM 203 · host unreachable / NotReady</text>
 <text x="1662" y="661" font-size="21" fill="#52636d" font-weight="400" >Talos · control plane + workloads</text>
-<text x="1662" y="690" font-size="21" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · dedicated 500 GiB data disk</text>
+<text x="1662" y="690" font-size="21" fill="#52636d" font-weight="400" >4 vCPU · up to 16 GiB RAM · 500 GiB data</text>
 </g>
 <path d="M424 1106V1176" fill="none" stroke="#225d82" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" />
 <path d="M1200 1106V1176" fill="none" stroke="#225d82" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 7" />
@@ -150,7 +150,7 @@
 <text x="840" y="1560" font-size="27" fill="#18252c" font-weight="600" >Availability boundaries</text>
 <text x="1616" y="1560" font-size="27" fill="#18252c" font-weight="600" >Smart home</text>
 <text x="64" y="1600" font-size="22" fill="#52636d" font-weight="400" >ZFS → VM/LXC disks and selected 5-minute replicas</text>
-<text x="64" y="1634" font-size="22" fill="#52636d" font-weight="400" >USB on px10: 4 TB ext4 backup + 256 GB ISO</text>
+<text x="64" y="1634" font-size="22" fill="#52636d" font-weight="400" >USB: 4 TB ext4 backup on px20; 256 GB ISO on px10</text>
 <text x="64" y="1668" font-size="22" fill="#52636d" font-weight="400" >ctr local data → app state; S3 → Cairn / RustFS objects</text>
 <text x="840" y="1600" font-size="22" fill="#52636d" font-weight="400" >HA enabled; Docker failover hit an out-of-memory limit.</text>
 <text x="840" y="1634" font-size="22" fill="#52636d" font-weight="400" >USB shares need physical-disk recovery after host loss.</text>

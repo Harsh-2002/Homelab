@@ -1,8 +1,8 @@
 # Homelab architecture
 
-## Retirement data backup in progress
+## Retirement data backup verified; px30 outstanding
 
-The owner plans a future single Linux host. The4TB USB disk is now a single ext4 filesystem for portable files and logical database exports; old LVM AV/BACKUP and native VM-image archives were removed with authorization. Store109 is stopped and the former SMB routes are offline. px10/dev backups are being completed first, then the owner will move the disk to px20 for CTR and remaining files. See [migration backup procedure](../../infrastructure/retirement/README.md). Do not interpret planned destinations as completed backups.
+The owner plans a future single Linux host. The4TB USB disk is now a single ext4 filesystem for portable files and logical database exports; old LVM AV/BACKUP and native VM-image archives were removed with authorization. Store109 is stopped and the former SMB routes are offline. px10/dev files were verified first and the disk is now connected to px20. CTR and remaining px20 copies passed readback checks. The data manifests cover 1,616,613 files/links and 550,160,880,153 bytes. The filesystem checked clean after normal unmount; px30 local-only files remain outstanding. See [migration backup procedure](../../infrastructure/retirement/README.md). Do not interpret planned destinations as completed backups.
 
 ## Current: px30 unavailable, 31 October afternoon
 

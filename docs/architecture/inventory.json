@@ -120,7 +120,7 @@
       ],
       "body": [
         "Samba stopped; old AV/BACKUP layout retired",
-        "4TB USB: portable ext4 backup in progress"
+        "4TB USB: portable ext4 data backup on px20"
       ],
       "statusLabel": "stopped / backup disk transition"
     },
@@ -234,7 +234,7 @@
       "kubernetes": true,
       "body": [
         "Talos \u00b7 control plane + workloads",
-        "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"
+        "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 500 GiB data"
       ]
     },
     {
@@ -249,7 +249,7 @@
       "kubernetes": true,
       "body": [
         "Talos \u00b7 control plane + workloads",
-        "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"
+        "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 500 GiB data"
       ]
     },
     {
@@ -264,7 +264,7 @@
       "kubernetes": true,
       "body": [
         "Talos \u00b7 control plane + workloads",
-        "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 dedicated 500 GiB data disk"
+        "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 500 GiB data"
       ],
       "statusLabel": "host unreachable / NotReady"
     }
@@ -290,7 +290,7 @@
     {
       "name": "Crucial X9 Pro USB SSD",
       "size": "4 TB",
-      "host": "px10",
+      "host": "px20",
       "roles": [
         "Retirement backup / ext4; ordinary files and logical exports"
       ]
@@ -344,10 +344,24 @@
     "reason": "Unreachable since 15:45 IST 31 October; six HA affinity rules exclude px30 pending investigation; offline maintenance request rejected; owner confirms node off and cable removed after it stopped responding"
   },
   "retirementBackup": {
-    "status": "in progress; px10/dev first, then move drive to px20",
+    "status": "Accessible px10/dev and px20 data copied and read back; px30 local-only files outstanding",
     "destination": "External Crucial X9 Pro 4TB; single GPT ext4 filesystem; label HOMELAB_BACKUP",
     "format": "Portable files and logical database exports; no VM images or retained guest snapshots",
-    "storeStatus": "CT109 stopped; old AV/BACKUP volumes removed; media preserved in staging and copying back",
-    "px30": "Offline; local-only data not yet captured"
+    "storeStatus": "CT109 stopped; old AV/BACKUP volumes removed; media preserved and verified on ext4",
+    "px30": "Offline; local-only data not yet captured",
+    "px10Verification": {
+      "filesAndLinksChecksummed": 1283749,
+      "agentSqliteDatabasesChecked": 14,
+      "filesystemCheck": "clean after normal unmount; critical hashes and SQLite rechecked on px20"
+    },
+    "accessibleDataVerified": true,
+    "verification": {
+      "filesAndLinksChecksummed": 1616613,
+      "bytesRead": 550160880153,
+      "agentSqliteDatabasesChecked": 14,
+      "phase2SqliteDatabasesChecked": 22,
+      "ctrMountSourcesChecked": 52,
+      "filesystemCheck": "clean after normal unmount on px20; final documentation copy follows"
+    }
   }
 }

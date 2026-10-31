@@ -46,7 +46,7 @@ virtual network, not by relaying bulk bytes through dev over physical LAN.
   etcd state database; complete PostgreSQL SQL export; functions/snippets and
   storage-object file archives. The etcd export is logical cluster recovery
   state, not a virtual-machine image.
-- `ctr/`: planned ordinary Linux application files, bind data, named Docker
+- `ctr/`: cold-copied ordinary Linux application files, bind data, named Docker
   volumes, Compose/Portainer definitions, private container metadata and logical
   database exports. Exclude re-downloadable Docker/containerd image caches;
   retain registry blobs because those are application data.
@@ -94,10 +94,73 @@ for the current primary's logical data. The owner is attempting to revive it.
 Backup contents include credentials and personal data. The mount and backup
 root are root-only; nothing under this backup may be committed, uploaded to
 Notion, published, or imported wholesale into agent memory. Publish only the
-reviewed procedural summary. No destructive write touched internal source disks.
+reviewed procedural summary. No internal source disk was formatted or erased.
 
 For read-only integrity verification after moving the drive, run
 `python3 manifests/verify-backup.py /path/to/homelab-backup-2026-10-31`.
 Checksums cover regular-file bytes; symlink destinations and numeric ownership
 are recorded in JSONL manifests. Successful copy/readback is not a full test
 restore of every application on the future Linux host.
+
+## 31 October transfer verification
+
+The px10/dev phase completed before unplugging the drive: 1,283,749 manifest
+entries and 266,411,806,985 bytes read back. All 14 consistent agent SQLite
+copies passed integrity checks, selected critical source/configuration hashes
+matched, and the unmounted filesystem checked clean. After attachment to px20,
+the disk identity, selected hashes and all 14 databases were checked again.
+The px20 USB-C link negotiated 10 Gbps.
+
+CTR containers were stopped before copying. Application writers stopped before
+fresh Immich/n8n logical PostgreSQL exports, then database containers stopped.
+The copy includes 272,578,867,269 logical bytes under CTR data plus its root
+configuration/projects; image caches are excluded. Saved private Docker inspect
+and image-digest metadata describe all 30 containers, bind mounts and named
+volumes. Previously running containers were restarted after the copy. Media
+services and Watchtower remain deliberately stopped with the retired SMB layout.
+The existing Gitea mirror restart loop is not resolved by this backup.
+
+Home Assistant includes its unprotected application backup and extracted plain
+configuration/add-on data. Orva's service was stopped for its file copy; its
+SQLite database passed integrity checks. HAOS, Orva and proxy were temporarily
+stopped during transfer and returned to their previous started requests.
+`hosts-extra/` contains additional monitoring/host-local state. Original media
+ownership may carry the old unprivileged LXC mapping; remap it to the new media
+user when restoring. The backup ledger records final checksum completion.
+
+px30 remains unavailable. Do not erase or sell its disks until its local-only
+files are recovered or explicitly accepted as missing. Successful readback does
+not establish that every service has been restored on the future Linux machine.
+
+Phase-two checks passed for 22 cold SQLite databases, both gzip PostgreSQL
+cluster exports (Immich and n8n), and all 52 mount sources referenced by the
+30-container restore inventory. The phase-two service/host files produced
+93,372 checksum entries and 11,170,373,612 bytes of readback. CTR bulk-data
+readback is tracked separately in `ctr-data-files.progress.json`.
+
+Home Assistant returned HTTP 200 and Orva returned its normal redirect after
+restart. px20 retained cluster quorum and reported healthy ZFS pools during
+readback. The separate px20 256 GB backup-store disk was inspected read-only
+and is empty; the px10 256 GB ISO disk retains downloadable installer/template
+files and was not erased. These separate disks are not the backup destination.
+
+## Verified accessible-data handoff
+
+All four data manifests completed: **1,616,613 files/links** and
+**550,160,880,153 bytes read back**. CTR's 239,492 regular-file/symlink entries
+match the completed rsync inventory exactly. The ext4 filesystem reported clean
+after normal unmount on px20. The drive was remounted only to save the latest
+committed Homelab repository and final recovery metadata, followed by another
+normal unmount/filesystem check. Backup allocation is approximately457GiB;
+logical byte counts include duplicated paths and sparse content.
+
+`current-docs/Homelab/` preserves the latest repository separately from the
+frozen dev copy. `manifests/STATUS.json` is the data verification ledger;
+`DATA-MANIFESTS.sha256.json` seals the four data-manifest files. Additional
+recovery-document checksums are recorded separately. The Notion runbook records
+the final handoff and filesystem result.
+
+This completes the accessible px10/dev and px20 backup scope. It does **not**
+complete px30 local-only recovery, a new-host runtime restore, or any internal
+source-disk erasure. Existing services may have written newer data after they
+were restarted; preserve the source disks and take a quiesced delta if needed.
