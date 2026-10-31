@@ -35,7 +35,7 @@ virtual network, not by relaying bulk bytes through dev over physical LAN.
 - `dev/rootfs/`: files from the live dev VM, including user homes, all working
   copies/uncommitted files, hidden agent state, SSH keys, configuration and tools.
   Virtual filesystems, temporary mounts, external shares and swap are excluded.
-- `dev/consistent-sqlite/`: online SQLite backups of seven OpenCode/Hermes
+- `dev/consistent-sqlite/`: online SQLite backups of all detected Codex/OpenCode/Hermes
   databases, checked with `PRAGMA quick_check`; `restore-map.json` records paths.
 - `containers/`: cold file copies and PVE config references. Unprivileged LXC
   ownership is translated back to normal guest UID/GID, not retained as100000+.
@@ -95,3 +95,9 @@ Backup contents include credentials and personal data. The mount and backup
 root are root-only; nothing under this backup may be committed, uploaded to
 Notion, published, or imported wholesale into agent memory. Publish only the
 reviewed procedural summary. No destructive write touched internal source disks.
+
+For read-only integrity verification after moving the drive, run
+`python3 manifests/verify-backup.py /path/to/homelab-backup-2026-10-31`.
+Checksums cover regular-file bytes; symlink destinations and numeric ownership
+are recorded in JSONL manifests. Successful copy/readback is not a full test
+restore of every application on the future Linux host.
