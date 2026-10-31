@@ -164,3 +164,19 @@ This completes the accessible px10/dev and px20 backup scope. It does **not**
 complete px30 local-only recovery, a new-host runtime restore, or any internal
 source-disk erasure. Existing services may have written newer data after they
 were restarted; preserve the source disks and take a quiesced delta if needed.
+
+### OpenViking, Portainer and agent configuration
+
+Verified persistent locations in the cold CTR data copy:
+
+- OpenViking state: `ctr/data/apps/openviking/state/` (including its persisted
+  memory/resources/index data and server configuration).
+- OpenViking Ollama data: `ctr/data/apps/openviking/ollama/`.
+- Portainer data: `ctr/data/portainer/`, including `portainer.db` and stack files.
+
+The Docker socket is a runtime endpoint recreated by Docker, not backup data.
+The dev copy contains `.ssh`, `.codex`, `.claude`, `.hermes`,
+`.config/opencode` and `.openviking` under `dev/rootfs/home/dev/`, alongside
+projects, other hidden configuration and system files. Agent SQLite recovery
+copies have their own restore map. Database/configuration presence and checksum
+readback do not replace a test startup on the future host.
