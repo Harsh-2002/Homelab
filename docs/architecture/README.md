@@ -229,3 +229,12 @@ replication is separate from PostgreSQL streaming replication and from backups.
 The diagram is an overview, not a firewall audit, security certification, wire
 capture, complete database dependency model or failover test. See the individual
 runbooks for exact private addresses, native authentication and recovery steps.
+
+## CI validation repair — 31 October 2026
+
+The Architecture diagrams workflow failed because check-topology.mjs required
+the obsolete text “LAN switching” after the verified Netgear node was renamed.
+The validator now checks the stable lan node, its verified switch label and
+native arrow bindings to all three hosts. Required scene coverage, privacy,
+source hashes and generated-SVG freshness checks remain enforced. Public and
+internal local checks passed; [GitHub Actions run41172121640](https://github.com/Harsh-2002/Homelab/actions/runs/41172121640) passed on commit991459c.

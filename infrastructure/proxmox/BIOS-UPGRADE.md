@@ -1,5 +1,21 @@
 # Dell BIOS maintenance
 
+## Current hardware and firmware audit — 31 October 2026
+
+All three live hosts now identify as **OptiPlex5060**, BIOS1.32.0. px30 is the
+i5-9400T replacement; references to a7040 below are dated history, not current
+package mapping. Dell’s current published5060 BIOS matches1.32.0, so no BIOS
+flash was offered or attempted. The earlier failed px10 capsule path was not
+retried. See [current driver/firmware audit](FIRMWARE-AUDIT-2026-10-31.md).
+
+The existing Linux kernel, firmware package and CPU microcode already match the
+refreshed configured repositories on all nodes. No new driver activation or
+reboot is required. Catalog offers for Secure Boot keys/revocations remain
+separate and unapplied; this audit does not claim every firmware database is
+current.
+
+## Historical execution record — September 2026
+
 ## Hardware and package mapping
 
 | Node | Model | BIOS observed 2026-09-22 | Package/status |
