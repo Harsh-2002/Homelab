@@ -1,0 +1,23 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage@sha256:643bd0be730d40f69d58028a55d1a896739333e8815786df42bc97f109ecbe61
+    container_name: homepage
+    user: 1000:1000
+    # Next.js regenerates /app/.next/server/pages for settings/theme changes.
+    # Keep that image-owned runtime writable; persistent config is the bind mount.
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: l3b.cc.cd,homepage:3000
+    env_file:
+      - /data/apps/homepage/runtime.env
+    volumes:
+      - /data/apps/homepage/config:/app/config
+    tmpfs:
+      - /tmp:size=64m,uid=1000,gid=1000
+    networks: [l3b]
+    restart: unless-stopped
+
+networks:
+  l3b:
+    external: true

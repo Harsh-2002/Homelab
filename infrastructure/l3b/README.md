@@ -1,0 +1,232 @@
+# l3b core services — 2 November 2026
+
+Current target: **one Debian host**, with the core applications managed through
+Portainer stacks. OpenCode and the separately completed WireGuard installation
+remain **host-native**. Historical Proxmox/VM/LXC instructions are not deployment
+instructions for this node.
+
+Read the [setup/WireGuard handoff](HANDOFF-2026-11-02.md),
+[restore checkpoint](RESTORE-STATUS.md) and
+[live acceptance record](CORE-VERIFICATION-2026-11-02.json) together.
+
+## Deployed core
+
+| Service | Placement / definition | Access |
+| --- | --- | --- |
+| Portainer BE 2.45.3 | `portainer-bootstrap`; [Compose](portainer.compose.yaml) | `https://portainer.l3b.cc.cd`; internal `portainer:9000` |
+| AdGuard Home 0.107.79 | Portainer `core-dns`, ID163; [stack](dns.compose.yaml) | Host **53/UDP only**; UI `adguard:3000` through `https://dns.l3b.cc.cd` |
+| Unbound 1.26.2 | Same `core-dns` stack | Internal `unbound:5335`; no host port |
+| Caddy 2.11.4 + saved custom plugins | Portainer `core-proxy`, ID165; [stack](caddy.compose.yaml) | Host **443/TCP and 443/UDP only** |
+| Pocket ID 2.16.0 | Portainer `core-identity`, ID164; [stack](identity.compose.yaml) | Internal `pocket-id:1411`; `https://auth.l3b.cc.cd` |
+| Tinyauth 5.2.0 | Same `core-identity` stack | Internal `tinyauth:3000`; `https://login.l3b.cc.cd` |
+| Homepage 2.4.0 | Portainer `homepage`, ID168; [stack](homepage.compose.yaml) | Internal `homepage:3000`; `https://l3b.cc.cd` behind Tinyauth |
+
+All application containers use the existing external Docker network `l3b` and
+service-name upstreams. **There are no published Portainer, UI, MCP, CDP, HTTP80
+or TCP53 ports**, including loopback publications. Image `EXPOSE` metadata shown
+by `docker ps` is not a host publication. Only the `PortBindings`/live listeners
+establish exposure.
+
+Host-native SSH22, OpenCode on loopback4096 and WireGuard UDP51820 are separate,
+previously approved services; this restoration did not replace their identities
+or firewall management. `oc` and `hermes` HTTPS routes are deliberately absent:
+the unwanted host proxy was removed rather than retained as a workaround.
+
+The owner retired Tailscale on 2 November. No package, daemon or container is
+installed on this node; no tailnet enrollment, remote-node removal or identity
+deletion was attempted. WireGuard is the current VPN. Historical Tailscale
+instructions are not deployment instructions.
+
+## Dashboard
+
+Homepage runs at the existing apex with the restored exact-owner/group Tinyauth
+policy. The [current configuration](homepage/) preserves the neutral automatic
+light/dark theme. It shows AdGuard Home (live DNS statistics), Portainer and
+Pocket ID, each with a real service-name HTTP monitor. Retired cluster cards,
+Kubernetes metrics, stopped Hermes and a nonexistent OpenCode HTTPS endpoint
+are deliberately absent. No Docker socket, privileged widget or host port was
+added. AdGuard credentials stay in the private runtime environment/Portainer
+stack values; the browser receives the widget results, not those credentials.
+
+Configuration persists at `/data/apps/homepage/config`. Homepage runs as UID1000
+with capabilities dropped and no-new-privileges. Unlike the core daemons, its
+image-owned runtime filesystem is writable because Next.js must regenerate
+`/app/.next/server/pages` for settings/custom-theme changes. A read-only trial
+left the default theme/title cached; it was corrected before acceptance.
+
+The apex hostname in `/etc/hosts` was corrected from loopback to the host's
+existing LAN address; DNS already answered correctly. The allowlisted Docker
+hostname is `homepage:3000`, not a wildcard. The Caddy config was restarted
+through Portainer after replacement of its bind-mounted source inode; future
+edits should preserve that inode and use Caddy reload.
+
+```bash
+sudo python3 infrastructure/l3b/portainer-api.py deploy --name homepage \
+  --file infrastructure/l3b/homepage.compose.yaml
+python3 infrastructure/l3b/verify-homepage.py
+```
+
+[Browser acceptance](HOMEPAGE-VERIFICATION-2026-11-02.json) verifies desktop/light
+and mobile/dark, three current cards, no overflow or console errors, and no
+widget error panel. The HTTPS gate rejects anonymous/spoofed requests. Actual
+human passkey/OIDC completion remains separate: UI rendering was tested inside
+the Docker network, not by bypassing or weakening public authentication.
+
+## Images, bootstrap and management
+
+Compose files pin immutable published-image digests. AdGuard0.107.79 was checked
+against its official current stable release. Unbound uses the maintained,
+community-published **`klutchell/unbound:1.26.2`** distroless image, not a locally
+built image and not the old saved ARM-targeted `mvance/unbound-rpi` definition.
+Caddy uses the published official image with the already compiled, static
+custom binary mounted read-only; Cloudflare DNS and the existing layer4 modules
+were verified. No custom application Dockerfile remains.
+
+Portainer is the bootstrap prerequisite, not a stack it should recreate through
+its own running API process. Its single server uses the dedicated
+`portainer-bootstrap` Compose project and existing `/data/apps/portainer` state.
+It has no published API port. This is the only bootstrap/maintenance exception;
+the application stacks above and the browser-tool stack are managed by
+Portainer's API. No second Portainer server is running.
+
+The initial saved Compose environment pointed at2.45.1, whereas the backup's
+actual running-container manifest identified2.45.3. The older reader rejected
+the schema; it was stopped, and the matching saved runtime digest was used.
+No database reset or downgrade was performed. A failed self-management entry
+created during setup was removed through the native API after moving the
+bootstrap container to its distinct project; no Portainer DB editing was used.
+
+Thirty saved legacy stack definitions remain available as recovery material.
+They were **not** blindly redeployed. Their saved status is not evidence those
+applications exist on this host. Only the current core stacks were accepted.
+
+Normal management from this node:
+
+```bash
+python3 infrastructure/l3b/portainer-api.py status
+python3 infrastructure/l3b/portainer-api.py deploy --name core-dns \
+  --file infrastructure/l3b/dns.compose.yaml --env L3B_BIND_IP=10.1.1.10
+sudo python3 infrastructure/l3b/portainer-api.py deploy --name core-proxy \
+  --file infrastructure/l3b/caddy.compose.yaml --env L3B_BIND_IP=10.1.1.10
+sudo python3 infrastructure/l3b/portainer-api.py deploy --name core-identity \
+  --file infrastructure/l3b/identity.compose.yaml
+```
+
+The helper authenticates through the scoped HomeLab service account, calls
+`https://portainer.l3b.cc.cd`, and waits for **actual native deployment completion**.
+An initial status3 means deploying, not success. `sudo` is needed only to read
+protected root-owned runtime environment sources; credentials are not printed.
+It converts host `env_file` sources into Portainer environment references and
+protected stack `Env` values, because Portainer cannot read arbitrary host paths.
+Do not paste expanded stack environments into Git, output or shared memory.
+
+If rebuilding from zero, Portainer must be bootstrapped first, then reached by
+an authenticated client on the Docker network at `portainer:9000` to install
+DNS/Caddy. Do not re-open permanent management ports as a shortcut. The HTTPS
+helper's normal endpoint requires the DNS/proxy foundation to be operational.
+
+## Persistent data and credentials
+
+| Host path | Purpose |
+| --- | --- |
+| `/data/apps/portainer` | Original users, DB/key material, saved stack definitions |
+| `/data/apps/adguard/conf`, `work` | AdGuard configuration, filters and application data |
+| `/data/apps/unbound/unbound.conf`, `state` | Reviewed resolver configuration and persistent DNSSEC trust anchor |
+| `/data/apps/caddy/caddy`, `Caddyfile`, `data`, `config` | Custom binary, routes, original certificate/account storage, runtime config |
+| `/data/apps/pocket-id/data`, `encryption-key` | Original identity database/uploads and matching encryption key |
+| `/data/apps/tinyauth/data` | Original SQLite data and resources |
+
+`/data` is the UUID-mounted Seagate XFS filesystem. Docker-managed images,
+runtime and named volumes remain on Samsung NVMe. These are bind mounts, not a
+Docker data-root relocation. Docker retains its existing storage dependency on
+the actual `/data` mount.
+
+Runtime `.env` sources and keys stay outside Git with private permissions.
+Portainer/Caddy state remains root-managed; Pocket ID/Tinyauth and Unbound run
+with explicit non-root UIDs. Application roots are read-only, capabilities are
+dropped except AdGuard/Caddy's low-port capability, and privilege escalation is
+disabled. Writable application state is limited to declared mounts/tmpfs.
+
+The one-shot [core staging script](prepare-core.py) records how selected cold
+application files were copied from the backup's preferred final paths. **Do not
+rerun it over a production directory.** It refuses existing destinations by
+default and refuses interrupted-staging resume while a core service is running.
+Resume is for the same reviewed interrupted first copy, not a deployment method.
+
+The external HOMELAB_BACKUP remains temporarily mounted at
+`/mnt/HOMELAB_BACKUP`, UUID `c05e9f2d-a64e-4012-9407-a3dc94475dbb`, without fstab
+persistence. Its files were read only; no formatting, repair, restore over its
+contents, recursive permission change or unmount occurred. This is not proof of
+a current-node backup. Portainer's restored UI also carries an old failed-backup
+notice; backup scheduling/recovery coverage needs its own reviewed task.
+
+## DNS, TLS and identity policy
+
+- AdGuard sends ordinary queries only to `unbound:5335`, with no public fallback.
+  Docker DNS resolves that service name. Unbound performs recursion and DNSSEC
+  validation; invalid signatures return SERVFAIL.
+- Unbound uses two workers,32MiB message/64MiB RRset caches, prefetch, minimized
+  responses/QNAMEs and a1232-byte EDNS buffer. AdGuard's restored128MiB cache,
+  optimistic caching, DNSSEC request policy and100-query rate limit were retained;
+  no universal performance advantage or workload benchmark is claimed.
+- Only UDP53 is published by owner choice. Oversized/truncated client replies
+  have **no TCP fallback** on the host. Unbound may still use TCP for upstream
+  recursion. AdGuard DoH/DoT listeners are disabled.
+- Host resolver is now only `10.1.1.10`. The parallel config snapshot records it.
+  Router/client DNS settings and the working WireGuard profiles remain unchanged;
+  those profiles still use1.1.1.1.
+- Private zone answers target this node. Cloudflare apex and explicit `oc` A
+  records were changed from the retired proxy to this node; other records,
+  including the new `wg` record and existing public exceptions, were preserved.
+- Caddy DNS-01 uses the saved Cloudflare token and certificate/account storage.
+  No HTTP80 listener or redirect is enabled. Public DNS does not by itself
+  expose an application; the core routes retain LAN/WireGuard source controls.
+- The routed WireGuard subnet is included in Caddy and AdGuard access rules,
+  because source NAT is intentionally absent. No WireGuard key/profile/firewall
+  changes were made. Its iPhone acceptance record remains authoritative.
+- Pocket ID retains its original encryption key, one user and18 OIDC clients.
+  `auth.l3b.cc.cd`/`login.l3b.cc.cd` are Docker network aliases for Caddy, so
+  server-side OAuth requests also use the real HTTPS origins.
+- Portainer retains native OAuth and its existing local-admin fallback. Tinyauth
+  retains deny-by-default owner/group ACLs; AdGuard UI requires forward-auth.
+  An unauthenticated request, including spoofed identity headers, returns401.
+
+## Agent boundary and deferred work
+
+OpenCode remains the existing native host process. Its current authentication,
+sessions and Herdr integration were preserved. Skills and selected MCP settings
+were restored; Codex/Claude configuration was excluded explicitly.
+
+The Portainer-managed [agent-tools stack](agent-tools.compose.yaml), ID162,
+provides one shared Chromium process. Host Playwright and Chrome DevTools use
+Docker exec/stdio, without MCP/CDP host publications. Hermes's prepared clients
+use Docker service discovery internally. Context7, shadcn and REA also connect;
+unrestored-service MCPs remain disabled. This is a privileged browser tool, not
+an isolation boundary. No owner profile/session was imported into the browser.
+
+Hermes configuration/persona/skills were staged but its stack166 is stopped.
+No old conversation DB, cron jobs, process locks or messaging gateway was
+restored into active execution. Complete Hermes/model/messaging acceptance only
+after the owner accepts the core. Telegram/Tavily rotation warnings and
+OpenViking restoration/synchronization remain deferred. The temporary duplicate
+OpenCode Docker server, its unused data/images and the unwanted host proxy were
+removed; none remains in the desired stack files.
+
+## Verification
+
+```bash
+python3 infrastructure/l3b/verify-core.py --browser
+python3 infrastructure/l3b/verify-homepage.py
+python3 infrastructure/agents/check-integrations.py --single-node
+```
+
+The browser option checks an actual signed-in Portainer administrator session
+and Secure/HttpOnly/Strict cookie attributes, without reading or printing keys.
+The saved acceptance JSON records UDP DNS, valid/invalid DNSSEC, trusted TLS and
+HTTP2, identity discovery/JWKS, auth bypass rejection, exact Docker port bindings,
+mount identities, container hardening and preservation of the WireGuard service.
+
+Human passkey/OIDC completion, remote client application requests, independent
+HTTP3 transport testing, reboot/Docker-daemon restart and new backup/restore
+coverage remain distinct acceptance items. No paid agent model request or
+additional application restore was performed to claim core success.

@@ -1,0 +1,7 @@
+- datetime:
+    text_size: md
+    locale: en-IN
+    format:
+      dateStyle: medium
+      timeStyle: short
+      hourCycle: h23

@@ -7,6 +7,11 @@ import {createHash} from 'node:crypto';
 const base = dirname(fileURLToPath(import.meta.url));
 const inv = JSON.parse(readFileSync(join(base, 'inventory.json')));
 const internal = process.argv.includes('--internal');
+if (inv.currentDeployment?.platform === 'single-node-docker') {
+  const {buildSingleNodeScene} = await import('./single-node.mjs');
+  buildSingleNodeScene(base, inv.currentDeployment, internal);
+  process.exit(0);
+}
 const addresses = internal ? JSON.parse(readFileSync(join(base, 'internal-addresses.local.json'))) : {};
 const extra = internal ? JSON.parse(readFileSync(join(base, 'topology-addresses.local.json'))) : {};
 const out = internal ? join(base, 'internal') : base;

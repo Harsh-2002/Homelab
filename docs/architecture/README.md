@@ -1,4 +1,36 @@
-## Data-disk retirement, 31 October
+## Current single node — 2 November 2026
+
+The primary editable topology and current SVG/PNG/PDF sheets now describe one
+bare-metal Debian `l3b`, its NVMe/SATA/external-backup boundaries, Portainer-managed
+core services, native OpenCode and accepted host WireGuard. Docker publishes only
+UDP DNS and HTTPS TCP/UDP. Hermes is staged/stopped, OpenViking is not restored,
+and no HA/current-node backup guarantee is implied. See the
+[core runbook](../../infrastructure/l3b/README.md) and
+[WireGuard acceptance](../../infrastructure/l3b/wireguard/VERIFICATION-2026-11-02.json).
+
+`inventory.json.currentDeployment` is current. The remaining older inventory
+fields and older individual Mermaid/flow exports are retained historical
+snapshots, not claims that the retired guests remain deployed. The generators
+select the single-node model for the current native board and overview sheets.
+
+On this node the existing Docker browser can render with the official CLI:
+
+```bash
+node docs/architecture/build.mjs
+node docs/architecture/excalidraw-build.mjs
+node docs/architecture/check.mjs
+node docs/architecture/check-topology.mjs
+EXCALIDRAW_BROWSER_CONTAINER=playwright-mcp node docs/architecture/excalidraw-render.mjs
+node docs/architecture/export-overviews.mjs
+```
+
+Add `--internal` for the Git-ignored address-bearing native scene/exports.
+Rendering uses the local Docker browser, not an uploaded/cloud diagram service.
+The historical retirement/recovery notes below are superseded where they conflict.
+Homepage is now a live private-apex Docker stack. Tailscale is retired and absent;
+historical tailnet references in older exports do not describe the current node.
+
+## Data-disk retirement, 31 October (historical)
 
 ## Final retirement cutover — 31 October 2026
 

@@ -1,0 +1,51 @@
+{
+    admin localhost:2019
+    auto_https disable_redirects
+}
+
+*.l3b.cc.cd, l3b.cc.cd {
+    tls {
+        dns cloudflare {env.CF_API_TOKEN}
+        resolvers 1.1.1.1 1.0.0.1
+    }
+
+    @outside not remote_ip {$LAN_CIDR} {$VPN_CIDR} {$DOCKER_CIDR} 127.0.0.1/8 ::1
+    respond @outside 403
+
+    @identity host auth.l3b.cc.cd
+    handle @identity {
+        reverse_proxy pocket-id:1411
+    }
+
+    @login host login.l3b.cc.cd
+    handle @login {
+        reverse_proxy tinyauth:3000
+    }
+
+    @portainer host portainer.l3b.cc.cd
+    handle @portainer {
+        reverse_proxy portainer:9000
+    }
+
+    @homepage host l3b.cc.cd
+    handle @homepage {
+        forward_auth tinyauth:3000 {
+            uri /api/auth/caddy
+            copy_headers Remote-User Remote-Email Remote-Groups
+        }
+        reverse_proxy homepage:3000
+    }
+
+    @dns host dns.l3b.cc.cd
+    handle @dns {
+        forward_auth tinyauth:3000 {
+            uri /api/auth/caddy
+            copy_headers Remote-User Remote-Email Remote-Groups
+        }
+        reverse_proxy adguard:3000
+    }
+
+    handle {
+        respond "Service not restored" 503
+    }
+}

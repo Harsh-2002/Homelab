@@ -5,6 +5,11 @@ import { fileURLToPath } from 'node:url';
 // Deterministic, dependency-free source for the share-safe architecture sheets.
 const out = dirname(fileURLToPath(import.meta.url));
 const inventory = JSON.parse(readFileSync(join(out, 'inventory.json'), 'utf8'));
+if (inventory.currentDeployment?.platform === 'single-node-docker') {
+  const {renderSingleNodeSheets} = await import('./single-node.mjs');
+  renderSingleNodeSheets(out, inventory.currentDeployment, process.argv.includes('--internal'));
+  process.exit(0);
+}
 const internal = process.argv.includes('--internal');
 const addresses = internal ? JSON.parse(readFileSync(join(out, 'internal-addresses.local.json'), 'utf8')) : {};
 const output = internal ? join(out, 'internal') : out;

@@ -1,0 +1,40 @@
+services:
+  pocket-id:
+    image: ghcr.io/pocket-id/pocket-id@sha256:9366436f3fd21619ed7e5709fa0acac88130f73414ec8ee1caf768fc487111ea
+    container_name: pocket-id
+    user: 1000:1000
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs:
+      - /tmp:size=64m
+    env_file:
+      - /data/apps/pocket-id/runtime.env
+    volumes:
+      - /data/apps/pocket-id/data:/app/data
+      - /data/apps/pocket-id/encryption-key:/run/secrets/pocket-id-key:ro
+    healthcheck:
+      test: [CMD, /app/pocket-id, healthcheck]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+  tinyauth:
+    image: ghcr.io/tinyauthapp/tinyauth@sha256:220aa235c76393a73fece831d7ba967b8698d3907fd8e3c4c952f699c7b142a5
+    container_name: tinyauth
+    user: 1000:1000
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs:
+      - /tmp:size=64m
+    env_file:
+      - /data/apps/tinyauth/runtime.env
+    volumes:
+      - /data/apps/tinyauth/data:/data
+    restart: unless-stopped
+
+networks:
+  default:
+    external: true
+    name: l3b

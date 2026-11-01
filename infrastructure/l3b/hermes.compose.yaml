@@ -1,0 +1,20 @@
+services:
+  hermes:
+    image: nousresearch/hermes-agent@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+    container_name: hermes
+    init: false
+    environment:
+      HERMES_UID: "1000"
+      HERMES_GID: "1000"
+      HERMES_DASHBOARD: "0"
+    command: [dashboard, --host, 0.0.0.0, --no-open, --skip-build]
+    volumes:
+      - /data/apps/hermes/home:/opt/data
+      - /home/dev/Homelab:/workspace/Homelab
+    restart: unless-stopped
+    stop_grace_period: 60s
+
+networks:
+  default:
+    external: true
+    name: l3b

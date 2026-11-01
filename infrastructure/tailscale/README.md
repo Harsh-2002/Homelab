@@ -1,4 +1,14 @@
-# Tailscale
+# Tailscale — retired 2 November 2026
+
+The owner no longer uses Tailscale. The current Debian `l3b` has no Tailscale
+package, daemon or container; no uninstall or re-enrollment was needed.
+Host-native WireGuard is the only current VPN. Preserve its working identities,
+profiles and firewall. No remote tailnet/admin-account deletion was attempted.
+
+Everything below is historical recovery context for the retired environment,
+not an instruction to install Tailscale on this node.
+
+## Historical deployment
 
 Tailscale runs directly on Proxmox hosts `px10`, `px20`, and `px30` as three approved, redundant subnet routers for `10.1.1.0/24`. Devices that need to initiate tailnet connections run their own Tailscale client; `dev` is the first such guest. There is no outbound gateway VIP, Keepalived, or custom NAT service.
 

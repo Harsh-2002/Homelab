@@ -1,5 +1,46 @@
 {
   "verifiedOn": "2026-10-31",
+  "currentDeployment": {
+    "verifiedOn": "2026-11-02",
+    "platform": "single-node-docker",
+    "host": {
+      "name": "l3b",
+      "model": "Dell OptiPlex 5060",
+      "cpu": "Intel Core i5-9400T / six cores",
+      "ram": "32 GB nominal",
+      "os": "Debian 13.7 / Backports kernel"
+    },
+    "storage": {
+      "root": "Samsung NVMe / XFS root, Docker images/runtime/named volumes",
+      "applications": "Seagate SATA / XFS /data/apps/<service>",
+      "backup": "Crucial USB / existing ext4 backup mounted temporarily; source unchanged"
+    },
+    "services": [
+      {"id": "portainer", "label": "Portainer BE 2.45.3", "stack": "portainer-bootstrap", "state": "internal-only; actual browser login through Caddy verified; failed self-stack entry removed"},
+      {"id": "adguard", "label": "AdGuard Home 0.107.79", "stack": "core-dns", "state": "running; only UDP DNS published; UI through Caddy"},
+      {"id": "unbound", "label": "Unbound", "stack": "core-dns", "state": "running; recursive DNSSEC validation"},
+      {"id": "caddy", "label": "Caddy / custom binary", "stack": "core-proxy", "state": "running; HTTPS TCP/UDP only"},
+      {"id": "pocketid", "label": "Pocket ID", "stack": "core-identity", "state": "healthy; original identity and encryption key retained"},
+      {"id": "tinyauth", "label": "Tinyauth", "stack": "core-identity", "state": "healthy; private forward-auth"},
+      {"id": "homepage", "label": "Homepage 2.4.0", "stack": "homepage", "state": "healthy; private apex behind Tinyauth; actual desktop/mobile backend browser tests passed"},
+      {"id": "opencode", "label": "OpenCode 2.2.5", "placement": "native dev host process", "state": "existing service preserved; tools/config restored; no second instance"},
+      {"id": "hermes", "label": "Hermes / staged", "stack": "hermes", "state": "stopped; configuration staged; application acceptance deferred"},
+      {"id": "playwright", "label": "Playwright / Chrome DevTools", "stack": "agent-tools", "state": "running; shared Chromium; host stdio via Docker exec; no published MCP/CDP ports"}
+    ],
+    "vpn": {
+      "placement": "host-native WireGuard / wg0; Tailscale retired by owner",
+      "acceptance": "Owner reports working; iPhone handshake and bidirectional traffic recorded",
+      "routing": "Routed LAN access without source NAT; router route and UDP forwarding confirmed by owner screenshots",
+      "limits": "MacBook and cold-boot/Docker-restart checks remain separate; client DNS unchanged"
+    },
+    "limits": [
+      "Single host: no HA or independent current-node backup established",
+      "OpenCode intentionally remains native on the host; duplicate Docker instance removed",
+      "OpenViking and other application stacks not restored",
+      "WireGuard is accepted for iPhone; router/client DNS cutover, human passkey/OIDC sign-in and model turns not acceptance-tested",
+      "Older inventory fields below are the retired environment snapshot, not live state"
+    ]
+  },
   "lastHardwareSwap": {
     "node": "px30",
     "returnedOn": "2026-10-30",

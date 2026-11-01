@@ -1,0 +1,25 @@
+{
+  "checkedOn": "2026-11-02",
+  "stack": 168,
+  "publicGatewayAndSpoofRejection": true,
+  "backendBrowser": [
+    {
+      "device": "desktop",
+      "overflow": false,
+      "theme": "light",
+      "cards": 3,
+      "consoleErrors": 0
+    },
+    {
+      "device": "mobile",
+      "overflow": false,
+      "theme": "dark",
+      "cards": 3,
+      "consoleErrors": 0
+    }
+  ],
+  "limits": [
+    "Public browser passkey/OIDC sign-in remains a human acceptance test",
+    "Backend browser test uses internal Docker service DNS; it does not claim SSO completion"
+  ]
+}

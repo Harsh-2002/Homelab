@@ -1,0 +1,22 @@
+- Control:
+    - AdGuard Home:
+        icon: adguard-home.png
+        href: https://dns.l3b.cc.cd
+        description: DNS filtering and recursive DNSSEC
+        siteMonitor: http://adguard:3000/
+        widget:
+          type: adguard
+          url: http://adguard:3000
+          username: "{{HOMEPAGE_VAR_ADGUARD_USERNAME}}"
+          password: "{{HOMEPAGE_VAR_ADGUARD_PASSWORD}}"
+          fields: [queries, blocked, latency]
+    - Portainer:
+        icon: portainer.png
+        href: https://portainer.l3b.cc.cd
+        description: Docker stacks on l3b
+        siteMonitor: http://portainer:9000/api/status
+    - Pocket ID:
+        icon: pocket-id.png
+        href: https://auth.l3b.cc.cd
+        description: Passkeys and application identity
+        siteMonitor: http://pocket-id:1411/healthz

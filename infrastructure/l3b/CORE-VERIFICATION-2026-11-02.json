@@ -1,0 +1,34 @@
+{
+  "checkedOn": "2026-11-02",
+  "node": "l3b",
+  "checks": {
+    "dockerPublishedPortsExact": {
+      "adguard": [
+        "53/udp"
+      ],
+      "caddy": [
+        "443/tcp",
+        "443/udp"
+      ]
+    },
+    "coreContainersRunningAndHardened": true,
+    "duplicateAgentAndProxyAbsent": true,
+    "hermesDeferred": true,
+    "tailscaleNotRunning": true,
+    "storagePlacementAndMountedBackupIdentity": true,
+    "udpDnsPrivateAnswerAndDnssec": true,
+    "noDnsTcpHttpOrManagementHostPorts": true,
+    "httpsPortainerAndOidcDiscovery": true,
+    "dnsDashboardForwardAuthAndSpoofRejection": true,
+    "trustedTlsAndHttp2": true,
+    "actualPortainerBrowserAdminSessionAndSecureCookie": true,
+    "wireguardHostServicePreserved": true
+  },
+  "limits": [
+    "UDP-only client DNS intentionally has no TCP fallback for truncated replies",
+    "Published UDP443/listener is checked; independent end-to-end HTTP3 test not performed",
+    "Human passkey/OIDC completion and remote client application access need owner acceptance",
+    "No reboot, Docker-daemon restart, durability drill or current-node backup created"
+  ],
+  "secrets": "No credentials, key contents or expanded agent configuration displayed"
+}

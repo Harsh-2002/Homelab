@@ -1,0 +1,40 @@
+/* Preserve the owner's existing neutral, automatic light/dark portal theme. */
+.theme-neutral {
+  --color-50: 244 244 244;
+  --color-900: 22 22 22;
+}
+:root {
+  --portal-canvas: #f4f4f4;
+  --portal-card: #fff;
+  --portal-hover: #f4f4f4;
+  --portal-border: #dedede;
+  --portal-text: #161616;
+  --portal-muted: #525252;
+}
+:root.dark {
+  --portal-canvas: #161616;
+  --portal-card: #262626;
+  --portal-hover: #333333;
+  --portal-border: #393939;
+  --portal-text: #f4f4f4;
+  --portal-muted: #c6c6c6;
+}
+body, #__next { background-color: var(--portal-canvas) !important; }
+.service-card {
+  background-color: var(--portal-card) !important;
+  border: 1px solid var(--portal-border);
+  color: var(--portal-text);
+  box-shadow: none;
+}
+.service-card:hover { background-color: var(--portal-hover) !important; }
+.service-card .font-thin { font-weight: 400; }
+.service-description { color: var(--portal-muted) !important; }
+.service-group-name { color: var(--portal-text) !important; }
+.service-icon img { filter: grayscale(1); }
+.dark .service-icon img { filter: grayscale(1) brightness(1.5); }
+.dark .service[data-name="Portainer"] .service-icon img { filter: grayscale(1) invert(1); }
+.service-card a:focus-visible, .service-group > button:focus-visible {
+  outline: 2px solid var(--portal-text);
+  outline-offset: 3px;
+}
+#theme { display: none; }

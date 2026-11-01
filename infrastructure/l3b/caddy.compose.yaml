@@ -1,0 +1,29 @@
+services:
+  caddy:
+    image: caddy@sha256:6aeddd44c3078b0f9a35206472a11420648a79c184603ef95957d0a20044cb2b
+    container_name: caddy
+    env_file:
+      - /data/apps/caddy/runtime.env
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    security_opt: [no-new-privileges:true]
+    ports:
+      - ${L3B_BIND_IP}:443:443/tcp
+      - ${L3B_BIND_IP}:443:443/udp
+    volumes:
+      - /data/apps/caddy/caddy:/usr/bin/caddy:ro
+      - /data/apps/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - /data/apps/caddy/data:/data
+      - /data/apps/caddy/config:/config
+    networks:
+      default:
+        aliases:
+          - auth.l3b.cc.cd
+          - login.l3b.cc.cd
+    restart: unless-stopped
+
+networks:
+  default:
+    external: true
+    name: l3b

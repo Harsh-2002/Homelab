@@ -5,6 +5,11 @@ host. See [manifest.json](manifest.json) for the exact source allowlist, origina
 owner/mode and SHA-256 of every snapshot. The `etc/` subtree mirrors the selected
 absolute source paths. Nothing in this directory automatically deploys itself.
 
+The `/etc/hosts` snapshot/hash was refreshed after Homepage deployment corrected
+the apex hostname from loopback to the node's existing LAN address. This allows
+the host itself to reach the private HTTPS dashboard; the host listener remains
+LAN-only. WireGuard profiles and DNS were not changed.
+
 Read the [current agent handoff](../HANDOFF-2026-11-02.md) before using these
 files. The complete [baseline handoff](../HANDOFF-2026-11-01.md) explains the
 original decisions; live snapshots can reflect later authorized changes by the

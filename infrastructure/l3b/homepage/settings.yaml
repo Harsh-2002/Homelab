@@ -1,0 +1,15 @@
+title: l3b.cc.cd
+description: Private single-node homelab
+color: neutral
+headerStyle: underlined
+statusStyle: dot
+hideVersion: true
+layout:
+  Control:
+    style: row
+    columns: 3
+    useEqualHeights: true
+quicklaunch:
+  searchDescriptions: true
+  hideInternetSearch: true
+  showSearchSuggestions: false

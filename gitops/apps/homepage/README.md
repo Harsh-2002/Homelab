@@ -1,5 +1,16 @@
 # Homepage
 
+## Current single-node deployment — 2 November 2026
+
+This Kubernetes chart is historical. Homepage now runs as Portainer stack168
+on the Debian Docker node, still at `https://l3b.cc.cd`. Current source and
+verification: [`infrastructure/l3b/README.md`](../../../infrastructure/l3b/README.md)
+and [`infrastructure/l3b/homepage/`](../../../infrastructure/l3b/homepage/).
+Only restored core cards are shown; no old cluster health or Tailscale claim
+is carried forward. The owner-selected neutral automatic theme is retained.
+
+The sections below describe the retired deployment.
+
 OpenCode now appears under Applications at `https://oc.l3b.cc.cd`, with native
 HTTP availability monitor10.1.1.5:49374 and favicon. It has native authentication
 and private Caddy access, no supported Homepage metrics widget. There are33cards.

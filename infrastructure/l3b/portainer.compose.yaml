@@ -1,0 +1,19 @@
+name: portainer-bootstrap
+
+services:
+  portainer:
+    image: portainer/portainer-ee@sha256:8166e2376756d1ad3194e336cd1707c28a5764af7acc8bb9f21a5f28d1903566
+    container_name: portainer
+    command:
+      - --http-enabled
+      - --trusted-origins
+      - https://portainer.l3b.cc.cd
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /data/apps/portainer:/data
+    restart: unless-stopped
+
+networks:
+  default:
+    external: true
+    name: l3b

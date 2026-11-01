@@ -4,6 +4,17 @@ This repository is the reproducible configuration brain for the homelab. The Not
 
 Start a new agent or chat with [`HANDOFF.md`](HANDOFF.md). It lists the authoritative Notion pages, access conventions, deployed architecture, pending work, safety rules, and the ready-to-paste continuation prompt.
 
+## Current single-node core
+
+The [l3b core runbook](infrastructure/l3b/README.md) records restored Portainer,
+AdGuard Home/Unbound, Caddy and Pocket ID/Tinyauth, their Portainer stack sources,
+persistent paths and [acceptance checks](infrastructure/l3b/CORE-VERIFICATION-2026-11-02.json).
+Docker publishes only **53/UDP and443/TCP+UDP**. OpenCode and WireGuard remain
+native on the host. Other application restorations are deferred; older cluster
+endpoint/deployment tables below are historical, not current live inventory.
+The private [Homepage dashboard](https://l3b.cc.cd) is deployed through Portainer
+with current core cards. WireGuard is the chosen VPN; Tailscale is retired.
+
 ## Host WireGuard
 
 **Current completion handoff:** [2 November 2026](infrastructure/l3b/HANDOFF-2026-11-02.md).

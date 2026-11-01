@@ -1,5 +1,22 @@
 # Homelab agent handoff
 
+## Single-node core restored — 2026-11-02
+
+Read the [core runbook](infrastructure/l3b/README.md),
+[restore checkpoint](infrastructure/l3b/RESTORE-STATUS.md) and
+[acceptance record](infrastructure/l3b/CORE-VERIFICATION-2026-11-02.json).
+Portainer, AdGuard/Unbound, Caddy and Pocket ID/Tinyauth are restored on this
+Debian Docker node. Docker publishes only53/UDP and443/TCP+UDP; applications
+communicate by service name, and UIs/API are reached through Caddy. Native
+OpenCode/SSH/WireGuard are preserved. Browser admin login and core DNS/TLS/auth
+checks passed; human passkey/OIDC completion remains distinct. Hermes is staged
+and stopped. No old cluster/application suite or OpenViking was resurrected.
+The living topology now shows this single node; historical inventory is retained
+as history. Keep the separate working WireGuard acceptance below intact.
+Homepage is also deployed at the private apex, behind Tinyauth, with only current
+core cards. Desktop/mobile backend UI tests passed; human public SSO remains a
+separate test. Tailscale is retired by owner decision and absent on this host.
+
 ## Setup completion and working WireGuard — 2026-11-02
 
 Start with [the current agent handoff](infrastructure/l3b/HANDOFF-2026-11-02.md).

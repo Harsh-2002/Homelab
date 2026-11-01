@@ -10,6 +10,48 @@ import subprocess
 import yaml
 
 
+def single_node():
+    """Owner-scoped l3b check; never create excluded Codex/Claude configs."""
+    home = Path.home()
+    op_path = home / '.config/opencode/opencode.json'
+    hermes_path = Path('/data/apps/hermes/home/config.yaml')
+    opencode = json.loads(op_path.read_text())
+    hermes = yaml.safe_load(hermes_path.read_text())
+    clients = {'OpenCode': opencode['mcp']['servers'], 'Hermes': hermes['mcp_servers']}
+    expected = {'playwright', 'chrome-devtools', 'context7', 'shadcn', 'rea'}
+    failures = []
+    names = set().union(*(set(servers) for servers in clients.values()))
+    for name in sorted(names):
+        for client, servers in clients.items():
+            entry = servers.get(name)
+            if entry is None:
+                failures.append(f'{client}: missing {name}')
+                continue
+            enabled = not entry.get('disabled', False) and entry.get('enabled', True)
+            if enabled != (name in expected):
+                failures.append(f'{client}: unexpected enabled state for {name}')
+        print(f'{name}: scoped presence/enabled-state checked')
+    for path in [op_path, hermes_path]:
+        if path.stat().st_mode & 0o077:
+            failures.append('Credential-bearing agent config is not private')
+    if hermes.get('memory', {}).get('provider') == 'openviking':
+        failures.append('Hermes: unrestored OpenViking provider is active')
+    if any('openviking' in (item if isinstance(item, str) else item.get('package', ''))
+           for item in opencode.get('plugins', [])):
+        failures.append('OpenCode: unrestored OpenViking plugin is active')
+    if not (home / '.agents/skills/herdr-control/SKILL.md').is_file():
+        failures.append('OpenCode: shared Herdr control skill missing')
+    if not (Path('/data/apps/hermes/home/memories')).is_dir():
+        failures.append('Hermes: local memories missing')
+    for failure in failures:
+        print('FAIL: ' + failure, file=sys.stderr)
+    if failures:
+        return 1
+    print('PASS: l3b OpenCode/Hermes restore scope; excluded clients untouched.')
+    print('This checks configuration, not live connectivity, auth or model execution.')
+    return 0
+
+
 def load():
     home = Path.home()
     codex = tomllib.loads((home / '.codex/config.toml').read_text())
@@ -148,7 +190,7 @@ def main():
 
 if __name__ == '__main__':
     try:
-        sys.exit(main())
+        sys.exit(single_node() if '--single-node' in sys.argv else main())
     except (OSError, ValueError, KeyError, TypeError):
         print('FAIL: unable to validate an agent configuration; inspect locally without printing secrets', file=sys.stderr)
         sys.exit(1)

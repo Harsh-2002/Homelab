@@ -7,6 +7,11 @@ Run `python3 infrastructure/agents/check-integrations.py` after agent changes.
 
 ## Living architecture
 
+Current deployment is one Debian Docker host. WireGuard is the chosen VPN;
+the owner retired Tailscale on 2 November 2026. Do not install/re-enroll it or
+restore historical tailnet routing. Docker publishes only 53/UDP and 443/TCP+UDP;
+keep container communication on service names and management ports internal.
+
 Primary artifact is now the owner's internal Excalidraw topology tree/flow board,
 not the rejected presentation sheets. Update `excalidraw-build.mjs`, rebuild and
 render with the official CLI after material changes; see docs/architecture.
