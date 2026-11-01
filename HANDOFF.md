@@ -1,5 +1,18 @@
 # Homelab agent handoff
 
+## New Debian node l3b — complete handoff, 2026-11-01
+
+Read the [dated Debian setup handoff](infrastructure/l3b/HANDOFF-2026-11-01.md)
+for the current bare-metal node and its dev account. It covers the complete setup:
+official Backports kernel and old-image cleanup, static networking, key-only SSH,
+accounts and Git identity, swap/performance, SSD health/firmware, persistent /data,
+Docker's shared l3b network, MOTD, development toolchains, Herdr/OpenCode/Claude,
+dev-only 1Password/GitHub/Notion CLIs, and verified Notion browser authentication.
+It records final configuration, superseded decisions, tests and explicit limits.
+Older Proxmox/service entries below are history; they do not prove those services
+or the former dev VM were restored onto the new node. No cluster architecture
+or service deployment was changed by this documentation update.
+
 ## Living architecture diagrams, 2026-10-25
 
 Current share-safe physical/service overview, flow sheet and PNG/PDF exports:

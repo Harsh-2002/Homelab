@@ -4,6 +4,14 @@ This repository is the reproducible configuration brain for the homelab. The Not
 
 Start a new agent or chat with [`HANDOFF.md`](HANDOFF.md). It lists the authoritative Notion pages, access conventions, deployed architecture, pending work, safety rules, and the ready-to-paste continuation prompt.
 
+## New Debian node handoff — 1 November 2026
+
+The [complete l3b setup handoff](infrastructure/l3b/HANDOFF-2026-11-01.md)
+records the fresh bare-metal Debian installation, storage, security, Docker,
+development/agent tools and authenticated headless Notion CLI. It distinguishes
+live checks from earlier tests and future work. Older cluster documentation
+remains historical context and is not evidence of restoration onto this node.
+
 ## Architecture diagrams
 
 Primary artifact: the internal, editable **Excalidraw topology tree and flow
