@@ -32,3 +32,8 @@ __pycache__/
 docs/architecture/internal/
 docs/architecture/internal-addresses.local.json
 docs/architecture/topology-addresses.local.json
+
+# WireGuard generated private state and client exports
+infrastructure/l3b/wireguard/clients/
+infrastructure/l3b/wireguard/wg0.conf
+infrastructure/l3b/wireguard/l3b.json

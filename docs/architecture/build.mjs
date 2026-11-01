@@ -184,4 +184,11 @@ if (internal) {
   });
   end('endpoints', 'Internal-only copy. Never publish this sheet, its address source or its exports to public Git.');
 }
+if (inventory.hostWireguard) {
+ const v=inventory.hostWireguard;
+ const labels=['Remote WireGuard client','Router / UDP port forward','l3b host / wg0','Home LAN'];
+ const nodes=labels.map((label,i)=>{const x=30+i*390;return '<rect x="'+x+'" y="100" width="350" height="100" rx="10" fill="#edf4f8" stroke="#52636d"/><text x="'+(x+175)+'" y="155" text-anchor="middle" font-family="sans-serif" font-size="20">'+esc(label)+'</text>';}).join('');
+ const arrows=[380,770,1160].map(x=>'<path d="M'+x+' 150 h40" stroke="#52636d" marker-end="url(#a)"/>').join('');
+ writeFileSync(join(output,'wireguard.svg'),'<svg xmlns="http://www.w3.org/2000/svg" width="1580" height="320" viewBox="0 0 1580 320" role="img"><title>New l3b host WireGuard routed access</title><desc>Local handshake passed. Public DNS ready; router route and external forwarding acceptance pending.</desc><defs><marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0L10 4L0 8" fill="#52636d"/></marker></defs><rect width="1580" height="320" fill="#f8fafb"/><text x="30" y="48" font-family="sans-serif" font-size="26">WireGuard / '+esc(v.host)+' / '+esc(v.verifiedOn)+'</text>'+nodes+arrows+'<text x="30" y="245" font-family="sans-serif" font-size="20">Routed return path through home router; peer isolation; Docker firewall preserved.</text><text x="30" y="280" font-family="sans-serif" font-size="18">Local encrypted handshake and SSH passed. Public DNS ready. Router forwarding / route and remote acceptance pending.</text></svg>\n');
+}
 console.log(`Built ${internal ? 'internal' : 'share-safe'} SVGs from inventory.json.`);

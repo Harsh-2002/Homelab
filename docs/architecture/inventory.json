@@ -454,5 +454,25 @@
     ],
     "preferredRestoreMap": "final-cutover/RESTORE-PATHS.json",
     "shutdownGuard": "Wait for USB erasure completion and clean backup unmount before powering off"
+  },
+  "hostWireguard": {
+    "verifiedOn": "2026-11-01",
+    "host": "l3b",
+    "deployment": "bare-metal Debian; distinct from historical dev VM",
+    "interface": "wg0",
+    "port": 51820,
+    "mode": "routed",
+    "endpoint": "wg.l3b.cc.cd",
+    "firewall": "iptables-nft; Docker backend retained",
+    "clientIsolation": true,
+    "tests": "Local encrypted handshake and SSH response passed",
+    "pending": [
+      "Router return route",
+      "UDP port forward",
+      "External client acceptance",
+      "Cold boot"
+    ],
+    "tailscale": "Owner deleted account; no CLI on new host",
+    "publicDns": "Explicit DNS-only A record created; API and Google resolver confirmed"
   }
 }

@@ -31,6 +31,13 @@ add('router','lan','LAN fabric / Netgear GS110TPv3','physical','g5: px10 / g6: p
 add('router','wifi','Home Wi-Fi / AP','physical','AP model not verified','Wi-Fi');
 add('wifi','bulb','Wipro bulb','device','Tuya LAN / TCP 6668');
 add('wifi','ac','Samsung AC','device','Local DTLS / UDP 49154');
+if(inv.hostWireguard) {
+ add('router','wg-current-lan','Current home LAN','logical','Physical switch/cabling path not reverified');
+ add('wg-current-lan','l3b-native','l3b / new Debian host','physical','Current node / separate from historical guests');
+ add('l3b-native','l3b-wg0','WireGuard / wg0','service','UDP 51820 / routed LAN access');
+ add('internet','wg-remote','WireGuard remote device','device','Unique per-device key + PSK');
+ add('router','wg-forward','WireGuard WAN forwarding','logical','Public DNS ready / router forwarding + route pending');
+}
 add('lan','camera','Outdoor camera','device','Network attachment type unverified');
 add('lan','clients','Your phone / workstation','device','Client addresses vary');
 add('internet','tailscale','Tailscale','logical',inv.maintenance ? (inv.maintenance.nodeOnline ? 'All three hosts online; px30 maintenance' : (inv.maintenance.poweredOff ? 'px10 / px20 active; px30 powered off' : 'px10 / px20 active; px30 unreachable')) : 'Subnet routes on px10 / px20 / px30');
@@ -162,6 +169,7 @@ const flows = [
  ['Longhorn / replicated volumes',['kube-longhorn','k8s-201-disk','k8s-202-disk','k8s-203-disk'],['eligible disk','eligible disk','eligible disk']],
  ['OpenCode / Claude subscription',['opencode','opencode-claude','claude-sdk-cli','anthropic-subscription'],['native provider / OpenCode tools','official Agent SDK','Claude CLI / existing Max subscription']]
 ];
+if(inv.hostWireguard) flows.push(['New l3b / WireGuard routed access / router acceptance pending',['wg-remote','wg-forward','l3b-wg0','wg-current-lan'],['DNS ready / UDP forward pending','UDP 51820 to host','LAN forwarding / router return route']]);
 // Maximum five nodes per flow; exact internal endpoints come from the local map.
 const flowX=W+240, fw=2800, fh=400;
 flows.forEach(([title,ids,labels],i)=>{

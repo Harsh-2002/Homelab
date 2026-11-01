@@ -1,5 +1,14 @@
 # Homelab agent handoff
 
+## Host WireGuard, 2026-11-01
+
+Host-native wg0 and the verified profile manager are installed. Read the
+[WireGuard runbook](infrastructure/l3b/wireguard/README.md) for router routes,
+endpoint/DNS prerequisites, protected profile export, firewall coexistence and
+test limits. Local encrypted handshake and SSH passed; external acceptance and
+router completion remain pending. Cloudflare CLI device OAuth completed as dev;
+the explicit DNS-only WireGuard A record was created and publicly verified. Do not publish generated profiles or keys.
+
 ## New Debian node l3b — complete handoff, 2026-11-01
 
 Read the [dated Debian setup handoff](infrastructure/l3b/HANDOFF-2026-11-01.md)

@@ -4,6 +4,13 @@ This repository is the reproducible configuration brain for the homelab. The Not
 
 Start a new agent or chat with [`HANDOFF.md`](HANDOFF.md). It lists the authoritative Notion pages, access conventions, deployed architecture, pending work, safety rules, and the ready-to-paste continuation prompt.
 
+## Host WireGuard
+
+The [host-native WireGuard runbook](infrastructure/l3b/wireguard/README.md)
+records deployment, profile management, router prerequisites and test limits.
+[Current VPN flow](docs/architecture/wireguard.svg) distinguishes the new node
+from the historical cluster diagrams.
+
 ## New Debian node handoff — 1 November 2026
 
 The [complete l3b setup handoff](infrastructure/l3b/HANDOFF-2026-11-01.md)
