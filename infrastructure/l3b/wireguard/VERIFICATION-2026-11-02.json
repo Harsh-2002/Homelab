@@ -1,0 +1,30 @@
+{
+  "checkedOn": "2026-11-02",
+  "timezone": "Asia/Kolkata",
+  "server": "l3b",
+  "serviceActive": true,
+  "serviceEnabled": true,
+  "ownerAcceptance": "Owner reported WireGuard working on 2026-11-02",
+  "peerEvidence": [
+    {
+      "name": "iphone",
+      "handshakeObserved": true,
+      "latestHandshakeUtc": "2026-11-01T18:41:45+00:00",
+      "receivedBytes": 135776,
+      "sentBytes": 86752
+    },
+    {
+      "name": "macbook",
+      "handshakeObserved": false,
+      "latestHandshakeUtc": null,
+      "receivedBytes": 0,
+      "sentBytes": 0
+    }
+  ],
+  "limits": [
+    "Owner device network and specific LAN targets were not independently observed",
+    "MacBook requires a separate client test if no handshake is recorded",
+    "Cold boot and actual Docker restart persistence not exercised"
+  ],
+  "secrets": "No keys, preshared keys, tokens or remote client addresses included"
+}

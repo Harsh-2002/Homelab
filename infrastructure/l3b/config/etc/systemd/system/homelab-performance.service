@@ -1,0 +1,11 @@
+[Unit]
+Description=Homelab CPU and memory policy
+After=systemd-sysctl.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/python3 -c "from pathlib import Path; [p.write_text('performance') for p in Path('/sys/devices/system/cpu/cpufreq').glob('policy*/scaling_governor')]; Path('/sys/kernel/mm/transparent_hugepage/enabled').write_text('madvise')"
+
+[Install]
+WantedBy=multi-user.target

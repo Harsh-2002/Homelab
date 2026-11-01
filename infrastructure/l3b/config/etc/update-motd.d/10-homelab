@@ -1,0 +1,81 @@
+#!/usr/bin/python3
+import json
+import os
+import platform
+import subprocess
+import textwrap
+import time
+from pathlib import Path
+
+def run(args):
+    try:
+        return subprocess.check_output(args, text=True, stderr=subprocess.DEVNULL, timeout=2).strip()
+    except subprocess.CalledProcessError as error:
+        return error.output.strip()
+    except (OSError, subprocess.SubprocessError):
+        return ""
+
+mem = {}
+for line in Path("/proc/meminfo").read_text().splitlines():
+    key, value = line.split(":", 1)
+    mem[key] = int(value.split()[0])
+gb = 1_000_000_000
+kib_per_gb = gb / 1024
+used = (mem["MemTotal"] - mem["MemAvailable"]) / kib_per_gb
+swap = (mem["SwapTotal"] - mem["SwapFree"]) / kib_per_gb
+seconds = int(float(Path("/proc/uptime").read_text().split()[0]))
+days, seconds = divmod(seconds, 86400)
+hours, seconds = divmod(seconds, 3600)
+minutes = seconds // 60
+disk = os.statvfs("/")
+total = disk.f_blocks * disk.f_frsize
+available = disk.f_bavail * disk.f_frsize
+disk_used = (disk.f_blocks - disk.f_bfree) * disk.f_frsize
+addresses = []
+try:
+    for interface in json.loads(run(["ip", "-j", "-4", "address", "show", "scope", "global"]) or "[]"):
+        addresses.extend(a["local"] for a in interface.get("addr_info", []))
+except (ValueError, KeyError):
+    pass
+def cpu_times():
+    values = [int(v) for v in Path("/proc/stat").read_text().splitlines()[0].split()[1:9]]
+    return sum(values), values[3] + values[4]
+
+before_total, before_idle = cpu_times()
+time.sleep(1)
+after_total, after_idle = cpu_times()
+delta = after_total - before_total
+cpu = max(0.0, min(100.0, 100 * (1 - (after_idle - before_idle) / delta))) if delta > 0 else 0.0
+try:
+    output = subprocess.check_output(
+        ["systemctl", "--failed", "--no-legend", "--plain", "--no-pager"],
+        text=True, stderr=subprocess.DEVNULL, timeout=2)
+    failed_count = len([line for line in output.splitlines() if line.strip()])
+    warning = f"{failed_count} failed unit(s)" if failed_count else ""
+except (OSError, subprocess.SubprocessError):
+    warning = "Check unavailable"
+release = platform.freedesktop_os_release()
+rows = [
+    ("Host", platform.node()),
+    ("OS", f"Debian {release['VERSION_ID']}"),
+    ("Kernel", platform.release()),
+    ("IP", ", ".join(addresses) or "unavailable"),
+    ("Uptime", f"{days}d {hours}h {minutes}m"),
+    ("CPU", f"{cpu:.1f}% used (1s avg)"),
+    ("RAM", f"{used:.1f}/{mem['MemTotal'] / kib_per_gb:.1f} GB used"),
+    ("Swap", f"{swap:.1f}/{mem['SwapTotal'] / kib_per_gb:.1f} GB used"),
+    ("Disk /", f"{disk_used / gb:.1f}/{total / gb:.1f} GB used"),
+]
+if warning:
+    rows.append(("Status", warning))
+border = "+" + "-" * 8 + "+" + "-" * 25 + "+"
+reset, dim, cyan, yellow = "\033[0m", "\033[90m", "\033[36m", "\033[33m"
+print()
+print(f"{dim}{border}{reset}")
+for label, value in rows:
+    value = value.encode("ascii", "replace").decode("ascii")
+    for index, line in enumerate(textwrap.wrap(value, width=23) or [""]):
+        color = yellow if label == "Status" else reset
+        print(f"{dim}|{reset} {cyan}{label if index == 0 else '':<6}{reset} {dim}|{reset} {color}{line:<23}{reset} {dim}|{reset}")
+print(f"{dim}{border}{reset}")
+print()

@@ -1,0 +1,11 @@
+[Interface]
+Address = 10.1.2.1/24
+ListenPort = 51820
+PrivateKey = <SERVER_PRIVATE_KEY_GENERATED_LOCALLY>
+PostUp = /usr/local/libexec/l3b-wg-firewall up
+PostDown = /usr/local/libexec/l3b-wg-firewall down
+
+[Peer]
+PublicKey = <DEVICE_PUBLIC_KEY>
+PresharedKey = <UNIQUE_DEVICE_PRESHARED_KEY>
+AllowedIPs = <DEVICE_VPN_IP>/32

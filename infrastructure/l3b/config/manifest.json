@@ -1,0 +1,116 @@
+{
+  "capturedOn": "2026-11-02",
+  "timezone": "Asia/Kolkata",
+  "scope": "Explicit non-secret configuration allowlist; read-only capture, not an automatic deployment",
+  "files": [
+    {
+      "source": "/etc/network/interfaces",
+      "snapshot": "config/etc/network/interfaces",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "3b5de03313254eea366fe627ce6eb3f77f9c94773d271c62a3e7e5f98e09ce82"
+    },
+    {
+      "source": "/etc/resolv.conf",
+      "snapshot": "config/etc/resolv.conf",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "b2b046c864f3b56f01dce6b3d5612b2880d85021b97b697dfe6ff3b27caec125"
+    },
+    {
+      "source": "/etc/hosts",
+      "snapshot": "config/etc/hosts",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "d11306351d071333d9fc9efda5bfea08dfa43b212b64a868e68c0eea204f4870"
+    },
+    {
+      "source": "/etc/fstab",
+      "snapshot": "config/etc/fstab",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "7de7cf8c6ce1b8c45dd87e723e0854bf89709e8aaff61be74ce8005550fa3290"
+    },
+    {
+      "source": "/etc/ssh/sshd_config.d/00-homelab.conf",
+      "snapshot": "config/etc/ssh/sshd_config.d/00-homelab.conf",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "dce2fe868fd8e44ff9d46322933edcba14b77bace4b34204274672270d3e1277"
+    },
+    {
+      "source": "/etc/sudoers.d/90-homelab",
+      "snapshot": "config/etc/sudoers.d/90-homelab",
+      "sourcePermissions": "440 root:root",
+      "snapshotSha256": "3de081f047bff0ac0a38d9c6d46a54db4cdd2c3ef49f4b0d41d1c8d62040ae00"
+    },
+    {
+      "source": "/etc/sysctl.d/90-homelab.conf",
+      "snapshot": "config/etc/sysctl.d/90-homelab.conf",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "0567bda9df711b7f87cbd416dabbb10ec719569c104f3f03feaa06fa2bebe875"
+    },
+    {
+      "source": "/etc/systemd/system/homelab-performance.service",
+      "snapshot": "config/etc/systemd/system/homelab-performance.service",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "9e0eeecce2a5144b20749bc617875945c148553344782c65ce20fc5585207555"
+    },
+    {
+      "source": "/etc/systemd/system/docker.service.d/10-storage.conf",
+      "snapshot": "config/etc/systemd/system/docker.service.d/10-storage.conf",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "5ba7d1811989b2f63068e695b1a85734cea7fca5395efda89e98df5dd28c2884"
+    },
+    {
+      "source": "/etc/systemd/system/docker.service.d/20-wireguard.conf",
+      "snapshot": "config/etc/systemd/system/docker.service.d/20-wireguard.conf",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "94a819bdde648d036a1439f0a09073328fb390b0509ed4196cbb4dddd2c92900"
+    },
+    {
+      "source": "/etc/systemd/system/wg-quick@wg0.service.d/10-ordering.conf",
+      "snapshot": "config/etc/systemd/system/wg-quick@wg0.service.d/10-ordering.conf",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "a5e83ab3b540efe5bbe142dd1ab99c2110e7a6dda661c1e967980b615ab865a3"
+    },
+    {
+      "source": "/etc/docker/daemon.json",
+      "snapshot": "config/etc/docker/daemon.json",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "01a40956b482bca82db395252611c551d1098a6c6ff702d97ebbb03b6b27ab68"
+    },
+    {
+      "source": "/etc/profile.d/dev-toolchains.sh",
+      "snapshot": "config/etc/profile.d/dev-toolchains.sh",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "00563dd76851c56bb548fe134009c95eb3170c2b78acbab8984a212293c4084b"
+    },
+    {
+      "source": "/etc/initramfs-tools/conf.d/resume",
+      "snapshot": "config/etc/initramfs-tools/conf.d/resume",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "103320ab6d664ee27985f27a152aaa969fe1c0beb7068141e3d130894d0b6e2f"
+    },
+    {
+      "source": "/etc/update-motd.d/10-homelab",
+      "snapshot": "config/etc/update-motd.d/10-homelab",
+      "sourcePermissions": "755 root:root",
+      "snapshotSha256": "229c36ce1e664291772ef950256572eacb382480e40f141f6489bbc9e76d71ba"
+    },
+    {
+      "source": "/etc/apt/sources.list.d/trixie-backports.list",
+      "snapshot": "config/etc/apt/sources.list.d/trixie-backports.list",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "65ea626117ea2191cfa5dd94653cecdf2fd9a4b71c55c8372d825840e9617b43"
+    },
+    {
+      "source": "/etc/apt/sources.list.d/claude-code.list",
+      "snapshot": "config/etc/apt/sources.list.d/claude-code.list",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "160af593b059da3d72f297c3ea16f0e0f69dd55b991e28b576e92331c270178f"
+    },
+    {
+      "source": "/etc/default/grub",
+      "snapshot": "config/etc/default/grub",
+      "scope": "Only the three setup-owned menu settings; not the complete distribution file",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "678fa57606b2a879d92cae9c189a5ad2ef64f5234971330fdcc7520dc2d3b1fd"
+    }
+  ]
+}

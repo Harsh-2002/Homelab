@@ -1,0 +1,10 @@
+{
+  "bridge": "none",
+  "init": true,
+  "live-restore": true,
+  "log-driver": "local",
+  "log-opts": {
+    "max-size": "20m",
+    "max-file": "3"
+  }
+}

@@ -1,5 +1,22 @@
 # Host-native WireGuard on l3b
 
+## Current acceptance — 2 November 2026
+
+The owner reports WireGuard working. The [live verification record](VERIFICATION-2026-11-02.json)
+confirms an iPhone handshake and bidirectional traffic, active/enabled service
+and matching saved/running peer state. MacBook has not connected in that
+snapshot. The corrected router /24 route and UDP forward are shown in the
+owner's screenshots. This supersedes historical pending-first-client language
+below; cold boot, actual Docker restart and separate MacBook testing remain
+distinct checks. The exact remote network/LAN targets were not independently
+observed.
+
+For continuation, read [the current handoff](../HANDOFF-2026-11-02.md) and
+[configuration index](../config/README.md). Root-only live WireGuard state is
+excluded from Git; key-free server/client examples are provided beside this
+runbook. Client Documents remain **MacBook** and **iPhone** in HomeLab.
+
+
 Deployed 1 November 2026. WireGuard runs on the Debian host, not Docker.
 The kernel data path uses the existing signed Debian kernel; the Debian
 `wireguard-tools` package is `1.0.20210914-3`.

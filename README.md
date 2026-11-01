@@ -6,6 +6,11 @@ Start a new agent or chat with [`HANDOFF.md`](HANDOFF.md). It lists the authorit
 
 ## Host WireGuard
 
+**Current completion handoff:** [2 November 2026](infrastructure/l3b/HANDOFF-2026-11-02.md).
+The owner reports WireGuard working; iPhone handshake/traffic were observed.
+[Non-secret configuration reference](infrastructure/l3b/config/README.md)
+includes source permissions/hashes and explains excluded private state.
+
 The [host-native WireGuard runbook](infrastructure/l3b/wireguard/README.md)
 records deployment, profile management, router prerequisites and test limits.
 [Current VPN flow](docs/architecture/wireguard.svg) distinguishes the new node

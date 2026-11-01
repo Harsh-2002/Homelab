@@ -1,0 +1,11 @@
+[Interface]
+PrivateKey = <DEVICE_PRIVATE_KEY_GENERATED_LOCALLY>
+Address = <DEVICE_VPN_IP>/32
+DNS = 1.1.1.1
+
+[Peer]
+PublicKey = <SERVER_PUBLIC_KEY>
+PresharedKey = <UNIQUE_DEVICE_PRESHARED_KEY>
+Endpoint = wg.l3b.cc.cd:51820
+AllowedIPs = 10.1.1.0/24, 10.1.2.0/24
+PersistentKeepalive = 25
