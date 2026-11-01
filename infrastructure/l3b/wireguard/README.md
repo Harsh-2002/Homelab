@@ -227,3 +227,32 @@ The static route must use LAN, because its next hop is the Debian LAN address.
 The separate inbound UDP forward must use the active PPPoE WAN interface.
 This confirms the displayed WAN/public-IP match; successful inbound handshake
 still requires the actual enabled port-forward rule and a remote client test.
+
+## Device profiles saved in HomeLab — 2 November 2026
+
+Two distinct active peers have downloadable 1Password Document items in the
+owner's HomeLab vault:
+
+| Document title | Download filename | Peer | VPN address |
+| --- | --- | --- | --- |
+| MacBook | MacBook.conf | macbook | 10.1.2.2/32 |
+| iPhone | iPhone.conf | iphone | 10.1.2.3/32 |
+
+Each device has separate keys and a preshared key. Both profiles passed manager
+verification, then were streamed directly into the scoped service-account
+document API. Private download/readback matched the generated configuration
+byte for byte. No temporary profile files or key contents were exposed.
+The first MacBook upload was renamed to the requested simple title; no extra
+long-title copy remains. Existing unrelated vault documents were preserved.
+
+The endpoint is wg.l3b.cc.cd:51820 with split routes for the home LAN and VPN
+subnet; client DNS remains 1.1.1.1 as requested. The owner supplied screenshots
+showing the corrected /24 router route and enabled UDP forwarding. Successful
+internet-client connection and real LAN access remain pending the owner's app
+import/test. Test the iPhone on cellular with Wi-Fi off to exercise inbound
+router forwarding rather than only a local connection.
+
+The upload encountered an unreachable IPv6 destination during one request.
+A retry using a per-process system-resolver setting succeeded; no permanent
+DNS, firewall or IPv6 policy was changed by this profile-storage task.
+Do not infer a proven general DNS root cause from that retry.
