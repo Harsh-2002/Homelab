@@ -1,7 +1,7 @@
 # Pending restores on l3b
 
 Checked 2 November 2026. Omni is removed from scope because Kubernetes is gone.
-Omni and Supabase are out of scope and are not deployed.
+Omni is out of scope and is not deployed.
 
 ## Deployed now
 
