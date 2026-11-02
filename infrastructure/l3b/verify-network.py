@@ -56,13 +56,13 @@ def main():
         'adguardAndUnboundAclUpdated': True, 'caddyAndTinyauthEffectiveTrustUpdated': True,
         'nativeUpstreamAliasesUpdated': True, 'stoppedHermesTrustUpdated': True,
         'oldBridgeRouteAbsent': True},
-        'limits': ['Native OpenCode activation is still pending, not implied by bridge migration',
-                   'DNS daemon defaults and WireGuard client DNS are separate pending research work',
-                   'No reboot, Docker-daemon restart or independent owner VPN client test performed']}
+        'limits': ['Native OpenCode and DNS policy have separate passing service/policy verifiers',
+                   'Host migrated live to networkd; Docker live-restore restart was tested during DNS setup',
+                   'No reboot or independent owner VPN client test performed']}
     text = json.dumps(result, indent=2) + '\n'
     if args.save:
         args.save.write_text(text)
-    print(text)
+    print(text, end='')
 
 
 if __name__ == '__main__':

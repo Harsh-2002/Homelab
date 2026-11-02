@@ -17,6 +17,14 @@ the superseded 172.17.0.0/16 bridge or old native-host gateway aliases.
 Let Docker manage its bridge/NAT/publication firewall rules, and the existing
 WireGuard manager own VPN forwarding. Do not add manual iptables rules for
 application routing. Caddy owns HTTP source/auth gates.
+DNS: internal AdGuard may use wildcard rewrites. Public Cloudflare must have no
+wildcard DNS; add exact DNS-only private mappings for deployed private services.
+Only explicitly approved public services get exact public-IP records and a
+matching public Caddy policy. Wildcard TLS certificates are independent of DNS.
+Host networking uses native systemd-networkd only for eno1; keep Docker/WireGuard
+links unmanaged by it. DNS belongs in the same .network file and flows through
+systemd-resolved's generated uplink file, with stub/public fallback disabled.
+Do not restore ifupdown/resolvconf or add Netplan as another configuration layer.
 Use generic single-word stack names and actual single-word service/container
 names. The owner has now authorized OpenViking memory restoration/integration
 for OpenCode and the native OpenCode HTTPS remote UI; keep existing identities

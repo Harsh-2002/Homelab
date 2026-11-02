@@ -1,5 +1,18 @@
 # DNS
 
+## Current policy correction — 2 November 2026
+
+The single-node deployment uses internal AdGuard/Unbound. **Internal wildcard
+is allowed; Cloudflare has no wildcard DNS record.** Each current private HTTPS
+origin has an exact DNS-only A record to the private Caddy address. Only an
+explicitly approved public service uses an exact public-IP record and matching
+Caddy public access policy. The live address inventory below is refreshed in
+`cloudflare-records.tsv`; old exact public/direct-host records are retained for
+separate cleanup, not proof their applications run. See
+[`../l3b/DNS-POLICY.md`](../l3b/DNS-POLICY.md) and
+[`../l3b/PUBLIC-DNS-VERIFICATION-2026-11-02.json`](../l3b/PUBLIC-DNS-VERIFICATION-2026-11-02.json).
+The older cluster/apex-public-wildcard design below is historical and superseded.
+
 DNS LXC `10.1.1.2` runs:
 
 - AdGuard Home `v0.107.79` on TCP/UDP 53 and management port 3000.

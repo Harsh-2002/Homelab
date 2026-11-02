@@ -23,7 +23,7 @@ function layout(inv, addresses = {}) {
   const edge = (page,a,b) => pages[page].edges.push({a,b});
   add(0,'clients',55,620,'Phone / workstation',['Private LAN access']);
   add(0,'lan',500,620,'LAN',['Physical path not re-audited']);
-  add(0,'l3b',945,620,inv.host.name+' / '+inv.host.model,[inv.host.cpu,inv.host.ram+' / Debian 13.7']);
+  add(0,'l3b',945,620,inv.host.name+' / '+inv.host.model,[inv.host.cpu,inv.host.ram+' / Debian 13.7','Native networkd + resolved']);
   add(0,'docker',1390,160,'Docker engine / l3b bridge',['One bare-metal Debian host','Dedicated subnet; service-name routing','Embedded DNS → internal AdGuard']);
   add(0,'wireguard',1390,620,'WireGuard / native host',['Routed LAN access; no source NAT','iPhone accepted; MacBook not yet tested']);
   add(0,'opencode',1390,800,'OpenCode / native host',['Session history preserved; no duplicate',inv.opencodeRemote?.state==='verified'?'Private HTTPS / browser verified':'Private HTTPS / handover pending']);
@@ -43,13 +43,13 @@ function layout(inv, addresses = {}) {
   ];
   groups.forEach(([id,title,body],i)=>{add(0,id,1835,170+i*185,title,body,'#edf5f1');edge(0,'docker',id);});
 
-  add(1,'flow-client',80,260,'DNS clients',['LAN / WireGuard / host / Docker','Internal AdGuard; no public fallback']);
-  add(1,'flow-adguard',650,260,'AdGuard Home',['UDP DNS only; UI through Caddy']);
+  add(1,'flow-client',80,260,'DNS clients',['LAN / WireGuard / host / Docker','Host: native systemd-networkd','Internal AdGuard; no public fallback']);
+  add(1,'flow-adguard',650,260,'AdGuard Home',['UDP DNS only; UI through Caddy','Internal apex / wildcard rewrites']);
   add(1,'flow-unbound',1220,260,'Unbound',['Recursion; DNSSEC validation']);
   add(1,'flow-root',1790,260,'Authoritative DNS',['External recursion, not forwarding']);
   for (const [a,b] of [['flow-client','flow-adguard'],['flow-adguard','flow-unbound'],['flow-unbound','flow-root']]) edge(1,a,b);
   add(1,'flow-browser',80,620,'Browser',['Existing service subdomains']);
-  add(1,'flow-caddy',650,620,'Caddy',['Source denial before auth/proxy','DNS-01 TLS; no HTTP listener']);
+  add(1,'flow-caddy',650,620,'Caddy',['Source denial before auth/proxy','Public DNS: exact names, no wildcard','DNS-01 TLS; no HTTP listener']);
   add(1,'flow-apps',1220,620,'Portainer / AdGuard UI',['Portainer: native authentication','AdGuard: Tinyauth forward-auth']);
   add(1,'flow-tinyauth',650,870,'Tinyauth',['DNS / Homepage UI forward-auth']);
   add(1,'flow-homepage',1790,620,'Homepage / private apex',['Current core cards and DNS metrics','No host port or Docker socket']);

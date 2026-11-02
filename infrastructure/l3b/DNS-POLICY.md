@@ -1,5 +1,33 @@
 # DNS and private/public routing — 2 November 2026
 
+## Owner correction — public exact records only
+
+This supersedes the historical public wildcard model described below.
+**AdGuard may use an internal apex/wildcard; Cloudflare must not have a wildcard.**
+Every deployed private HTTPS origin has an explicit DNS-only A record pointing
+to the private Caddy address. Only an explicitly approved public service gets an
+exact public-IP record and corresponding public Caddy route/path policy.
+
+Applied: exact `auth`, `login`, `portainer`, `dns`, and `memory` mappings added;
+apex and `oc` were already exact/correct. After verifying all seven mappings,
+the Cloudflare apex wildcard CNAME was removed. All other existing records,
+including `wg`, external monitoring, historical public apps and direct-host
+exceptions, were preserved unchanged. Retired-app WAN records are flagged for
+separate owner-approved cleanup, not treated as current deployment approval.
+
+Both authoritative nameservers must return matching private answers for the
+seven current origins and NXDOMAIN for an unknown public name; AdGuard must
+still resolve an unknown internal name through its private wildcard. See
+[`PUBLIC-DNS-VERIFICATION-2026-11-02.json`](PUBLIC-DNS-VERIFICATION-2026-11-02.json).
+Recursive caches may retain old wildcard answers until TTL expiry.
+
+This is about **DNS records**, not TLS certificates: Caddy's wildcard certificate
+and hostname matcher remain valid, and its source/auth gates still apply.
+For future private deployments add an explicit Cloudflare private A record as
+well as the Caddy route; never infer a public exception from a new hostname.
+`public-dns.py` is a manual, narrowly guarded maintenance operation, not a watch
+or generic synchronization job. No service/firewall/publication rules changed.
+
 ## Historical policy, confirmed against the actual backup
 
 Reviewed the DNS/proxy runbooks, indexed memory, and original/final-cutover proxy
@@ -20,8 +48,27 @@ retired service or tailnet configuration was restored wholesale.
 
 ## Effective DNS
 
-The static host `/etc/resolv.conf` uses only **10.1.1.10**. Host IPv4 configuration
-is static, not DHCP DNS. The Docker daemon now explicitly merges
+The owner chose **native systemd-networkd**, not ifupdown or a Netplan frontend.
+The single source for eno1's static IP, gateway and **DNS=10.1.1.10** is
+`/etc/systemd/network/10-eno1.network`, tracked as
+[`10-eno1.network`](10-eno1.network). Only eno1 matches; Docker bridges/veths and
+wg0 remain unmanaged by networkd and owned by Docker/WireGuard.
+
+The complementary `systemd-resolved` service receives per-link DNS from networkd
+and generates `/run/systemd/resolve/resolv.conf`; `/etc/resolv.conf` is a symlink
+to that generated uplink file, not a hand-maintained file. The tracked
+[`resolved.conf`](resolved.conf) disables public fallback, stub DNS listeners,
+LLMNR and mDNS. Applications still query AdGuard directly. DNSSEC validation stays
+in Unbound. There is one network manager, not two: resolved is its DNS companion.
+
+The previous ifupdown/resolvconf integration was superseded and both packages
+purged; Netplan is not installed. The protected live migration adopted the
+existing address/routes without ifdown or an interface bounce. A detached
+rollback timer was armed, then cancelled after DNS/HTTPS/Docker/WireGuard checks.
+The existing system bus was reloaded (not restarted) to load the newly installed
+resolved policy, and resolved was restarted; its D-Bus API and generated file
+were both verified. No recurring migration task remains, and no reboot is claimed.
+The Docker daemon separately and explicitly merges
 [`docker-dns.fragment.json`](docker-dns.fragment.json) without replacing its
 other options. Docker was restarted with its existing live-restore setting
 retained. Browser MCP exec connections were reconnected; the shared browser
@@ -57,9 +104,10 @@ full tunneling are not claimed.
 
 ## Cloudflare, source gate and403
 
-Read-only live Cloudflare audit confirmed apex and exact `oc` already target
-**10.1.1.10**, wildcard CNAME targets apex, and all are DNS-only. No DNS mutation
-was needed. Existing public WAN exceptions/external monitoring records were not
+The initial read-only Cloudflare audit found the old private apex/wildcard model
+and an already-correct exact `oc` record. The latest owner correction above
+removed that public wildcard after creating missing exact private mappings.
+Existing public WAN exceptions/external monitoring records were not
 retargeted, deleted or activated. Stale retired-app/direct-host records need
 separately scoped cleanup; they are not evidence of deployed applications.
 

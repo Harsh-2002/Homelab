@@ -11,6 +11,16 @@ Read the [setup/WireGuard handoff](HANDOFF-2026-11-02.md),
 
 ## Network plan — owner correction, 2 November 2026
 
+DNS rule: **internal wildcard allowed; public Cloudflare wildcard prohibited**.
+Each deployed private origin has an explicit DNS-only private-IP record; only
+explicitly approved public exceptions use public-IP records. See
+[public DNS verification](PUBLIC-DNS-VERIFICATION-2026-11-02.json). Docker's daemon
+default and the host's static-interface DNS setting both use internal AdGuard.
+Native systemd-networkd is the sole network manager; edit `DNS=` alongside the
+static address in `/etc/systemd/network/10-eno1.network`. systemd-resolved
+generates the uplink resolver file with its stub/fallback disabled. Do not edit
+generated `/etc/resolv.conf`. ifupdown/resolvconf are removed; no Netplan installed.
+
 - LAN: **10.1.1.0/24**, host unchanged at 10.1.1.10.
 - WireGuard peers: **10.1.2.0/24**, gateway unchanged at 10.1.2.1.
 - Docker custom bridge **`l3b`**: **10.1.3.0/24**, gateway **10.1.3.1**.

@@ -1,0 +1,16 @@
+[Match]
+Name=eno1
+
+[Network]
+Address=10.1.1.10/24
+DNS=10.1.1.10
+Domains=~.
+DNSDefaultRoute=yes
+DHCP=no
+IPv6AcceptRA=no
+LinkLocalAddressing=ipv6
+KeepConfiguration=static
+
+[Route]
+Gateway=10.1.1.1
+GatewayOnLink=yes

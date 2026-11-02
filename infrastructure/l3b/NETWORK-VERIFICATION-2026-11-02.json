@@ -13,8 +13,8 @@
     "oldBridgeRouteAbsent": true
   },
   "limits": [
-    "Native OpenCode activation is still pending, not implied by bridge migration",
-    "DNS daemon defaults and WireGuard client DNS are separate pending research work",
-    "No reboot, Docker-daemon restart or independent owner VPN client test performed"
+    "Native OpenCode and DNS policy have separate passing service/policy verifiers",
+    "Host migrated live to networkd; Docker live-restore restart was tested during DNS setup",
+    "No reboot or independent owner VPN client test performed"
   ]
 }

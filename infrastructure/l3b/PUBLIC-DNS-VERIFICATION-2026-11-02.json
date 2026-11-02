@@ -1,0 +1,24 @@
+{
+  "checkedOn": "2026-11-02",
+  "checks": {
+    "cloudflareHasNoWildcardRecords": true,
+    "sevenCurrentPrivateOriginsHaveExactDnsOnlyARecords": true,
+    "authoritativeNameserversMatchInternalForCurrentOrigins": true,
+    "unknownPublicNameIsNxdomain": true,
+    "unknownInternalNameStillUsesWildcard": true
+  },
+  "privateOrigins": [
+    "l3b.cc.cd",
+    "auth.l3b.cc.cd",
+    "login.l3b.cc.cd",
+    "portainer.l3b.cc.cd",
+    "dns.l3b.cc.cd",
+    "memory.l3b.cc.cd",
+    "oc.l3b.cc.cd"
+  ],
+  "limits": [
+    "Existing exact historical public/direct-host records preserved, not newly approved or activated",
+    "Recursive caches may retain former wildcard answers until TTL expiry",
+    "Wildcard TLS certificate and Caddy hostname matcher are not public wildcard DNS"
+  ]
+}

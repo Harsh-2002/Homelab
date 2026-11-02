@@ -18,11 +18,13 @@
 <g data-node="true"><rect x="80" y="260" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="94" y="287" font-size="19" fill="#18252c">DNS clients</text>
 <text x="94" y="312" font-size="16" fill="#18252c">LAN / WireGuard / host / Docker</text>
-<text x="94" y="337" font-size="16" fill="#18252c">Internal AdGuard; no public fallback</text>
+<text x="94" y="337" font-size="16" fill="#18252c">Host: native systemd-networkd</text>
+<text x="94" y="362" font-size="16" fill="#18252c">Internal AdGuard; no public fallback</text>
 </g>
 <g data-node="true"><rect x="650" y="260" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="664" y="287" font-size="19" fill="#18252c">AdGuard Home</text>
 <text x="664" y="312" font-size="16" fill="#18252c">UDP DNS only; UI through Caddy</text>
+<text x="664" y="337" font-size="16" fill="#18252c">Internal apex / wildcard rewrites</text>
 </g>
 <g data-node="true"><rect x="1220" y="260" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="1234" y="287" font-size="19" fill="#18252c">Unbound</text>
@@ -39,7 +41,8 @@
 <g data-node="true"><rect x="650" y="620" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="664" y="647" font-size="19" fill="#18252c">Caddy</text>
 <text x="664" y="672" font-size="16" fill="#18252c">Source denial before auth/proxy</text>
-<text x="664" y="697" font-size="16" fill="#18252c">DNS-01 TLS; no HTTP listener</text>
+<text x="664" y="697" font-size="16" fill="#18252c">Public DNS: exact names, no wildcard</text>
+<text x="664" y="722" font-size="16" fill="#18252c">DNS-01 TLS; no HTTP listener</text>
 </g>
 <g data-node="true"><rect x="1220" y="620" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="1234" y="647" font-size="19" fill="#18252c">Portainer / AdGuard UI</text>

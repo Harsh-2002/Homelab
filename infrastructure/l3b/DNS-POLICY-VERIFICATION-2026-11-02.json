@@ -2,6 +2,10 @@
   "checkedOn": "2026-11-02",
   "checks": {
     "hostInternalResolverOnly": true,
+    "hostDnsOwnedByNetworkdAndResolved": true,
+    "ifupdownResolvconfAndNetplanAbsent": true,
+    "dockerAndWireguardLinksUnmanagedByNetworkd": true,
+    "resolvedHasNoDnsStubListener": true,
     "dockerDaemonInternalDefault": true,
     "allTenContainersEmbeddedDnsInternalUpstream": true,
     "privateWildcardPublicRecursionAndServiceDns": true,

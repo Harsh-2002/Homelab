@@ -18,6 +18,24 @@ def main():
         return subprocess.check_output(command, text=True, timeout=60)
 
     assert json.loads(Path('/etc/docker/daemon.json').read_text())['dns'] == ['10.1.1.10']
+    host = Path('/etc/resolv.conf')
+    assert host.is_symlink() and host.resolve() == Path('/run/systemd/resolve/resolv.conf')
+    config = Path('/etc/systemd/network/10-eno1.network').read_text()
+    assert 'DNS=10.1.1.10' in config and 'Name=eno1' in config
+    status = run('networkctl', 'status', 'eno1', '--no-pager')
+    assert '/etc/systemd/network/10-eno1.network' in status and 'configured' in status
+    assert run('resolvectl', 'dns', 'eno1').strip().endswith('10.1.1.10')
+    for service in ['systemd-networkd', 'systemd-resolved']:
+        run('systemctl', 'is-enabled', service)
+        run('systemctl', 'is-active', service)
+    for package in ['ifupdown', 'resolvconf', 'netplan.io']:
+        installed = subprocess.run(['dpkg-query', '-W', '-f=${Status}', package], capture_output=True, text=True)
+        assert 'install ok installed' not in installed.stdout
+    links = run('networkctl', 'list', '--no-legend', '--no-pager')
+    for line in links.splitlines():
+        if ' wg0 ' in line or ' br-' in line:
+            assert 'unmanaged' in line
+    assert not any(ip in run('ss', '-H', '-lunt') for ip in ['127.0.0.53:53', '127.0.0.54:53'])
     assert [s for s in Path('/etc/resolv.conf').read_text().splitlines()
             if s.startswith('nameserver')] == ['nameserver 10.1.1.10']
     containers = json.loads(run('docker', 'inspect', *run('docker', 'ps', '-q').split()))
@@ -64,7 +82,10 @@ def main():
     finally:
         run('ip', 'address', 'del', source + '/32', 'dev', 'lo')
     print(json.dumps({'checkedOn': '2026-11-02', 'checks': {
-        'hostInternalResolverOnly': True, 'dockerDaemonInternalDefault': True,
+        'hostInternalResolverOnly': True, 'hostDnsOwnedByNetworkdAndResolved': True,
+        'ifupdownResolvconfAndNetplanAbsent': True, 'dockerAndWireguardLinksUnmanagedByNetworkd': True,
+        'resolvedHasNoDnsStubListener': True,
+        'dockerDaemonInternalDefault': True,
         'allTenContainersEmbeddedDnsInternalUpstream': len(containers) == 10,
         'privateWildcardPublicRecursionAndServiceDns': True,
         'adguardUnboundNoPublicFallback': True, 'wireguardProfilesInternalDns': True,

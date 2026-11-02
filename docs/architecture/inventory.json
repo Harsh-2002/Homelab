@@ -86,9 +86,11 @@
     "dnsPolicy": {
       "state": "verified",
       "clients": "host, Docker embedded DNS and generated WireGuard profiles use internal AdGuard only",
+      "hostResolverManagement": "native systemd-networkd owns only physical eno1 static IP/gateway/DNS; systemd-resolved generates uplink resolver file with stub/fallback disabled; ifupdown/resolvconf removed, no Netplan",
       "upstream": "AdGuard to Unbound recursive DNSSEC; no public fallback",
       "exposure": "restored services private; explicit source denial before authentication/proxying; custom no-store HTML403",
-      "cloudflare": "private apex/wildcard and exact OpenCode already aligned; historical public exceptions not reactivated",
+      "cloudflare": "no public wildcard DNS; seven exact DNS-only private origins aligned with internal DNS; historical public exceptions preserved, not reactivated",
+      "publicDnsEvidence": "infrastructure/l3b/PUBLIC-DNS-VERIFICATION-2026-11-02.json",
       "ownerStep": "re-import updated MacBook/iPhone vault Documents; existing imported tunnels cannot be changed remotely",
       "evidence": "infrastructure/l3b/DNS-POLICY-VERIFICATION-2026-11-02.json"
     },
