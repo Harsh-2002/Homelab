@@ -31,6 +31,6 @@ Quick Share bucket/user and successful upload/download round trip).
 - Portainer is the only running container without an in-container healthcheck (no shell in image); monitor its API externally.
 - Home Assistant Frigate camera and MQTT are working; the Tuya bulb and Localthings AC are working after their DHCP addresses changed. VictoriaMetrics/Grafana are retired in favour of Beszel. No Supervisor/add-ons in Container mode.
 - Independent off-network checks for public routes.
-- WireGuard profile re-import on MacBook/iPhone.
+- WireGuard: iPhone handshake verified and router route/forward owner-confirmed; MacBook profile import and cold-boot recheck remain.
 - Reboot, Docker-daemon restart and current-node backup/restore drills.
 - OpenCloud LDAP bind credential rotation remains a controlled follow-up.

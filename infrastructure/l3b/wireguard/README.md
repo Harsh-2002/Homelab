@@ -214,8 +214,7 @@ node's observed public egress IPv4 address. Cloudflare API readback, host
 resolution and Google's public DNS resolver confirmed the correct result.
 This supersedes the initial wildcard/private-address prerequisite above.
 The record is not dynamic DNS; update it if the home public address changes.
-Router port-forward/static-route and actual internet-client acceptance remain
-pending. No public IPv4 address is embedded in the architecture inventory.
+Owner confirmation on 2026-11-02: the router static route and UDP 51820 forward are configured and verified; the iPhone handshake is recorded in the live verification. Cold boot and MacBook testing remain separate. No public IPv4 address is embedded in the architecture inventory.
 
 ### Cloudflare CLI for dev
 
