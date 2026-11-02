@@ -162,7 +162,7 @@ def main():
             CLIENTS.mkdir(mode=0o700, exist_ok=True)
             if STATE.exists() or CONF.exists():
                 raise RuntimeError('Existing state/config preserved; refusing to initialize again')
-            s = {'private': run('wg', 'genkey'), 'endpoint': '', 'dns': '1.1.1.1',
+            s = {'private': run('wg', 'genkey'), 'endpoint': '', 'dns': '10.1.1.10',
                  'mode': 'nat', 'peers': {}}
             apply(s)
             print('Initialized wg0; configure a real public endpoint before adding clients.')

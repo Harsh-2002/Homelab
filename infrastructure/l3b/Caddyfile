@@ -1,69 +1,87 @@
 {
-    admin localhost:2019
-    auto_https disable_redirects
+	admin localhost:2019
+	auto_https disable_redirects
 }
 
 *.l3b.cc.cd, l3b.cc.cd {
-    tls {
-        dns cloudflare {env.CF_API_TOKEN}
-        resolvers 1.1.1.1 1.0.0.1
-    }
+	tls {
+		dns cloudflare {env.CF_API_TOKEN}
+		resolvers 1.1.1.1 1.0.0.1
+	}
 
-    @outside not remote_ip {$LAN_CIDR} {$VPN_CIDR} {$DOCKER_CIDR} 127.0.0.1/8 ::1
-    respond @outside 403
+	# Preserve source denial before host routing and forward-auth.
+	route {
+		@outside not remote_ip {$LAN_CIDR} {$VPN_CIDR} {$DOCKER_CIDR} 127.0.0.1/8 ::1
+		header @outside {
+			Content-Type "text/html; charset=utf-8"
+			Cache-Control "no-store"
+		}
+		respond @outside <<HTML
+        <!doctype html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>403 - Access Denied</title>
+            <style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#000;color:#fff;font-family:Arial,sans-serif;text-align:center}h1{margin:0;font-size:8rem;line-height:1}p{margin:1.5rem 0 0;font-size:1.25rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em}</style>
+        </head>
+        <body><main><h1>403</h1><p>You don't have access.</p></main></body>
+        </html>
+        HTML 403
 
-    @identity host auth.l3b.cc.cd
-    handle @identity {
-        reverse_proxy pocketid:1411
-    }
+		@identity host auth.l3b.cc.cd
+		handle @identity {
+			reverse_proxy pocketid:1411
+		}
 
-    @login host login.l3b.cc.cd
-    handle @login {
-        reverse_proxy tinyauth:3000
-    }
+		@login host login.l3b.cc.cd
+		handle @login {
+			reverse_proxy tinyauth:3000
+		}
 
-    @portainer host portainer.l3b.cc.cd
-    handle @portainer {
-        reverse_proxy portainer:9000
-    }
+		@portainer host portainer.l3b.cc.cd
+		handle @portainer {
+			reverse_proxy portainer:9000
+		}
 
-    @opencode host oc.l3b.cc.cd
-    handle @opencode {
-        reverse_proxy opencode:4096 {
-            flush_interval -1
-            header_down Set-Cookie "(opencode[^=]*=[^;]+)(.*)" "$1$2; Secure"
-        }
-    }
+		@opencode host oc.l3b.cc.cd
+		handle @opencode {
+			reverse_proxy opencode:4096 {
+				flush_interval -1
+				header_down Set-Cookie "(opencode[^=]*=[^;]+)(.*)" "$1$2; Secure"
+			}
+		}
 
-    @memory host memory.l3b.cc.cd
-    handle @memory {
-        @studio path /studio /studio/*
-        forward_auth @studio tinyauth:3000 {
-            uri /api/auth/caddy
-            copy_headers Remote-User Remote-Email Remote-Groups
-        }
-        reverse_proxy openviking:1933
-    }
+		@memory host memory.l3b.cc.cd
+		handle @memory {
+			@studio path /studio /studio/*
+			forward_auth @studio tinyauth:3000 {
+				uri /api/auth/caddy
+				copy_headers Remote-User Remote-Email Remote-Groups
+			}
+			reverse_proxy openviking:1933
+		}
 
-    @homepage host l3b.cc.cd
-    handle @homepage {
-        forward_auth tinyauth:3000 {
-            uri /api/auth/caddy
-            copy_headers Remote-User Remote-Email Remote-Groups
-        }
-        reverse_proxy homepage:3000
-    }
+		@homepage host l3b.cc.cd
+		handle @homepage {
+			forward_auth tinyauth:3000 {
+				uri /api/auth/caddy
+				copy_headers Remote-User Remote-Email Remote-Groups
+			}
+			reverse_proxy homepage:3000
+		}
 
-    @dns host dns.l3b.cc.cd
-    handle @dns {
-        forward_auth tinyauth:3000 {
-            uri /api/auth/caddy
-            copy_headers Remote-User Remote-Email Remote-Groups
-        }
-        reverse_proxy adguard:3000
-    }
+		@dns host dns.l3b.cc.cd
+		handle @dns {
+			forward_auth tinyauth:3000 {
+				uri /api/auth/caddy
+				copy_headers Remote-User Remote-Email Remote-Groups
+			}
+			reverse_proxy adguard:3000
+		}
 
-    handle {
-        respond "Service not restored" 503
-    }
+		handle {
+			respond "Service not restored" 503
+		}
+	}
 }

@@ -3,20 +3,20 @@
 <text x="55" y="120" font-size="21">2026-11-02 · Single host, no HA claim · OpenViking memory restored</text>
 <path d="M435 679L500 679" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M880 679L945 679" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M1325 679L1390 219" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1325 679L1390 231.5" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1325 679L1390 679" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1325 679L1390 859" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1325 679L1390 1049" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1325 679L1390 1209" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1325 679L1390 1369" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M1770 219L1835 229" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M1770 219L1835 414" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M1770 219L1835 599" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M1770 219L1835 784" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M1770 219L1835 969" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M1770 219L1835 1154" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M1770 219L1835 1339" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M1770 219L1835 1524" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1770 231.5L1835 229" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1770 231.5L1835 414" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1770 231.5L1835 599" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1770 231.5L1835 784" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1770 231.5L1835 969" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1770 231.5L1835 1154" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1770 231.5L1835 1339" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1770 231.5L1835 1524" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <g data-node="true"><rect x="55" y="620" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="69" y="647" font-size="19" fill="#18252c">Phone / workstation</text>
 <text x="69" y="672" font-size="16" fill="#18252c">Private LAN access</text>
@@ -30,11 +30,12 @@
 <text x="959" y="672" font-size="16" fill="#18252c">Intel Core i5-9400T / six cores</text>
 <text x="959" y="697" font-size="16" fill="#18252c">32 GB nominal / Debian 13.7</text>
 </g>
-<g data-node="true"><rect x="1390" y="160" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
+<g data-node="true"><rect x="1390" y="160" width="380" height="143" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="1404" y="187" font-size="19" fill="#18252c">Docker engine / l3b bridge</text>
 <text x="1404" y="212" font-size="16" fill="#18252c">One bare-metal Debian host</text>
 <text x="1404" y="237" font-size="16" fill="#18252c">Dedicated subnet; service-name</text>
 <text x="1404" y="262" font-size="16" fill="#18252c">routing</text>
+<text x="1404" y="287" font-size="16" fill="#18252c">Embedded DNS → internal AdGuard</text>
 </g>
 <g data-node="true"><rect x="1390" y="620" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="1404" y="647" font-size="19" fill="#18252c">WireGuard / native host</text>

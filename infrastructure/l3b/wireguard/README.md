@@ -31,14 +31,14 @@ The kernel data path uses the existing signed Debian kernel; the Debian
 | Listen port | UDP 51820 |
 | Endpoint | `wg.l3b.cc.cd:51820` |
 | Client routes | `10.1.1.0/24`, `10.1.2.0/24` |
-| Client DNS | `1.1.1.1` pending the owner's DNS deployment |
+| Client DNS | `10.1.1.10` internal AdGuard; existing device profiles need re-import |
 | LAN mode | Routed; no VPN-to-LAN masquerading |
 | First retained profile | `macbook`, `10.1.2.2/32` |
 | MTU | wg-quick automatic selection |
 | Roaming-client keepalive | 25 seconds |
 
-This is split-tunnel access. General internet traffic, including the current
-public DNS resolver, remains on the client's normal connection. WireGuard does
+This is split-tunnel access. General internet traffic remains on the client's
+normal connection; DNS goes through the tunnel to internal AdGuard. WireGuard does
 not distribute DNS settings dynamically to already imported profiles; update
 and re-import them after changing DNS. Client profile routes do not override
 server firewall restrictions. VPN client-to-client forwarding and arbitrary
@@ -161,7 +161,9 @@ sudo wg.sh configure --dns 10.1.1.10
 sudo wg.sh configure --endpoint wg.l3b.cc.cd
 ```
 
-The DNS address above is an example: only select it once the intended DNS
+The DNS address above is now deployed and verified. Re-import the updated
+MacBook/iPhone vault Documents on owner devices. Historical prerequisite:
+only select it once the intended DNS
 service is deployed and reachable. Re-export/re-import existing client profiles.
 If a router cannot supply the return route, an explicit fallback is:
 

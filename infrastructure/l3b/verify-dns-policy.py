@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+"""Verify internal DNS and private routing, including a temporary untrusted source.
+
+Run as root. The reserved test address is removed in finally; no public service,
+DNS record, container, listener or credential is created by these checks.
+"""
+import json
+import socket
+import ssl
+import subprocess
+from pathlib import Path
+
+import yaml
+
+
+def main():
+    def run(*command):
+        return subprocess.check_output(command, text=True, timeout=60)
+
+    assert json.loads(Path('/etc/docker/daemon.json').read_text())['dns'] == ['10.1.1.10']
+    assert [s for s in Path('/etc/resolv.conf').read_text().splitlines()
+            if s.startswith('nameserver')] == ['nameserver 10.1.1.10']
+    containers = json.loads(run('docker', 'inspect', *run('docker', 'ps', '-q').split()))
+    for c in containers:
+        resolver = Path(c['ResolvConfPath']).read_text()
+        assert 'nameserver 127.0.0.11' in resolver
+        assert any('ExtServers:' in s and '10.1.1.10' in s for s in resolver.splitlines())
+        assert not c['HostConfig'].get('Dns') or c['HostConfig']['Dns'] == ['10.1.1.10']
+    config = yaml.safe_load(Path('/data/apps/adguard/conf/AdGuardHome.yaml').read_text())
+    assert config['dns']['upstream_dns'] == ['unbound:5335']
+    assert not config['dns']['fallback_dns']
+    assert set(config['dns']['allowed_clients']) == {'127.0.0.0/8', '10.1.1.0/24', '10.1.2.0/24', '10.1.3.0/24'}
+    state = json.loads(Path('/etc/wireguard/l3b.json').read_text())
+    assert state['dns'] == '10.1.1.10'
+    for name in state['peers']:
+        lines = Path('/etc/wireguard/clients', name + '.conf').read_text().splitlines()
+        assert 'DNS = 10.1.1.10' in lines
+        assert 'AllowedIPs = 10.1.1.0/24, 10.1.2.0/24' in lines
+    run('wg.sh', 'verify')
+    script = r'''const dns=require('node:dns').promises;(async()=>{for(const name of ['dns-policy-check.l3b.cc.cd','oc.l3b.cc.cd']){const a=await dns.resolve4(name);if(!a.includes('10.1.1.10'))throw Error('Private DNS')}await dns.resolve4('example.com');await dns.lookup('unbound');console.log('Internal wildcard, public recursion and service DNS pass')})().catch(()=>process.exit(1));'''
+    assert 'pass' in run('docker', 'exec', 'playwright', 'node', '-e', script)
+
+    # Direct bridge connection avoids local published-port proxy source rewriting.
+    caddy = next(c for c in containers if c['Name'] == '/caddy')
+    target = caddy['NetworkSettings']['Networks']['l3b']['IPAddress']
+    source = '198.18.0.2'
+    addresses = json.loads(run('ip', '-j', 'address'))
+    assert not any(a.get('local') == source for device in addresses for a in device['addr_info'])
+    run('ip', 'address', 'add', source + '/32', 'dev', 'lo')
+    try:
+        for host in ['oc.l3b.cc.cd', 'dns.l3b.cc.cd', 'auth.l3b.cc.cd',
+                     'portainer.l3b.cc.cd', 'memory.l3b.cc.cd', 'l3b.cc.cd']:
+            connection = socket.create_connection((target, 443), timeout=15, source_address=(source, 0))
+            with ssl.create_default_context().wrap_socket(connection, server_hostname=host) as stream:
+                stream.sendall(('GET / HTTP/1.1\r\nHost: ' + host +
+                                '\r\nX-Forwarded-For: 10.1.1.10\r\nConnection: close\r\n\r\n').encode())
+                data = b''
+                while chunk := stream.recv(4096):
+                    data += chunk
+                assert data.startswith(b'HTTP/1.1 403')
+                assert b"You don't have access." in data
+                assert b'cache-control: no-store' in data.lower()
+                assert b'content-type: text/html' in data.lower()
+    finally:
+        run('ip', 'address', 'del', source + '/32', 'dev', 'lo')
+    print(json.dumps({'checkedOn': '2026-11-02', 'checks': {
+        'hostInternalResolverOnly': True, 'dockerDaemonInternalDefault': True,
+        'allTenContainersEmbeddedDnsInternalUpstream': len(containers) == 10,
+        'privateWildcardPublicRecursionAndServiceDns': True,
+        'adguardUnboundNoPublicFallback': True, 'wireguardProfilesInternalDns': True,
+        'sourceDenialBeforeProxyAndAuth': True, 'forwardedHeaderCannotBypassSourceGate': True,
+        'customHtml403NoStore': True},
+        'limits': ['Synthetic untrusted source, not independent WAN/VPN-device acceptance',
+                   'Already imported owner VPN profiles require re-import',
+                   'Single internal resolver remains a dependency; no public secondary configured']}, indent=2))
+
+
+if __name__ == '__main__':
+    main()

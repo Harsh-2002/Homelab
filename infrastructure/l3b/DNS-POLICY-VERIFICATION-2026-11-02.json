@@ -1,0 +1,19 @@
+{
+  "checkedOn": "2026-11-02",
+  "checks": {
+    "hostInternalResolverOnly": true,
+    "dockerDaemonInternalDefault": true,
+    "allTenContainersEmbeddedDnsInternalUpstream": true,
+    "privateWildcardPublicRecursionAndServiceDns": true,
+    "adguardUnboundNoPublicFallback": true,
+    "wireguardProfilesInternalDns": true,
+    "sourceDenialBeforeProxyAndAuth": true,
+    "forwardedHeaderCannotBypassSourceGate": true,
+    "customHtml403NoStore": true
+  },
+  "limits": [
+    "Synthetic untrusted source, not independent WAN/VPN-device acceptance",
+    "Already imported owner VPN profiles require re-import",
+    "Single internal resolver remains a dependency; no public secondary configured"
+  ]
+}

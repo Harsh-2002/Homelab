@@ -1,5 +1,9 @@
 # Native OpenCode remote access
 
+The DNS/source-policy review is complete: see [DNS-POLICY.md](DNS-POLICY.md).
+Cloudflare's exact `oc` record already matches the internal proxy address;
+the native bind change, not another DNS/public exception, fixes the upstream502.
+
 Owner-authorized origin: **https://oc.l3b.cc.cd**. This is the existing native
 OpenCode server, not another Docker deployment. Session history, the Herdr
 integration, provider authentication and skills remain on the host.

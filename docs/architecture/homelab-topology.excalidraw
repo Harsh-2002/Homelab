@@ -359,7 +359,7 @@
       "x": 1390,
       "y": 160,
       "width": 380,
-      "height": 118,
+      "height": 143,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -428,8 +428,8 @@
       "type": "text",
       "x": 1404,
       "y": 174,
-      "width": 278.4,
-      "height": 80,
+      "width": 287.68,
+      "height": 100,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -449,8 +449,8 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Docker engine / l3b bridge\nOne bare-metal Debian host\nDedicated subnet; service-name\nrouting",
-      "originalText": "Docker engine / l3b bridge\nOne bare-metal Debian host\nDedicated subnet; service-name\nrouting",
+      "text": "Docker engine / l3b bridge\nOne bare-metal Debian host\nDedicated subnet; service-name\nrouting\nEmbedded DNS → internal AdGuard",
+      "originalText": "Docker engine / l3b bridge\nOne bare-metal Debian host\nDedicated subnet; service-name\nrouting\nEmbedded DNS → internal AdGuard",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
@@ -1529,7 +1529,7 @@
       "x": 1325,
       "y": 679,
       "width": 65,
-      "height": 460,
+      "height": 447.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -1556,7 +1556,7 @@
         ],
         [
           65,
-          -460
+          -447.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -1833,9 +1833,9 @@
       "id": "tree-edge-8",
       "type": "arrow",
       "x": 1770,
-      "y": 219,
+      "y": 231.5,
       "width": 65,
-      "height": 10,
+      "height": 2.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -1862,7 +1862,7 @@
         ],
         [
           65,
-          10
+          -2.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -1884,9 +1884,9 @@
       "id": "tree-edge-9",
       "type": "arrow",
       "x": 1770,
-      "y": 219,
+      "y": 231.5,
       "width": 65,
-      "height": 195,
+      "height": 182.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -1913,7 +1913,7 @@
         ],
         [
           65,
-          195
+          182.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -1935,9 +1935,9 @@
       "id": "tree-edge-10",
       "type": "arrow",
       "x": 1770,
-      "y": 219,
+      "y": 231.5,
       "width": 65,
-      "height": 380,
+      "height": 367.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -1964,7 +1964,7 @@
         ],
         [
           65,
-          380
+          367.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -1986,9 +1986,9 @@
       "id": "tree-edge-11",
       "type": "arrow",
       "x": 1770,
-      "y": 219,
+      "y": 231.5,
       "width": 65,
-      "height": 565,
+      "height": 552.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -2015,7 +2015,7 @@
         ],
         [
           65,
-          565
+          552.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -2037,9 +2037,9 @@
       "id": "tree-edge-12",
       "type": "arrow",
       "x": 1770,
-      "y": 219,
+      "y": 231.5,
       "width": 65,
-      "height": 750,
+      "height": 737.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -2066,7 +2066,7 @@
         ],
         [
           65,
-          750
+          737.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -2088,9 +2088,9 @@
       "id": "tree-edge-13",
       "type": "arrow",
       "x": 1770,
-      "y": 219,
+      "y": 231.5,
       "width": 65,
-      "height": 935,
+      "height": 922.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -2117,7 +2117,7 @@
         ],
         [
           65,
-          935
+          922.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -2139,9 +2139,9 @@
       "id": "tree-edge-14",
       "type": "arrow",
       "x": 1770,
-      "y": 219,
+      "y": 231.5,
       "width": 65,
-      "height": 1120,
+      "height": 1107.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -2168,7 +2168,7 @@
         ],
         [
           65,
-          1120
+          1107.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -2190,9 +2190,9 @@
       "id": "tree-edge-15",
       "type": "arrow",
       "x": 1770,
-      "y": 219,
+      "y": 231.5,
       "width": 65,
-      "height": 1305,
+      "height": 1292.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -2219,7 +2219,7 @@
         ],
         [
           65,
-          1305
+          1292.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -2416,8 +2416,8 @@
       "type": "text",
       "x": 94,
       "y": 2174,
-      "width": 278.4,
-      "height": 40,
+      "width": 334.08,
+      "height": 60,
       "frameId": "core-flow",
       "angle": 0,
       "strokeColor": "#263848",
@@ -2437,8 +2437,8 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Client\nPrivate LAN / routed WireGuard",
-      "originalText": "Client\nPrivate LAN / routed WireGuard",
+      "text": "DNS clients\nLAN / WireGuard / host / Docker\nInternal AdGuard; no public fallback",
+      "originalText": "DNS clients\nLAN / WireGuard / host / Docker\nInternal AdGuard; no public fallback",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
@@ -2827,8 +2827,8 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Caddy\nPrivate source gate; DNS-01 TLS\nNo HTTP listener or redirect",
-      "originalText": "Caddy\nPrivate source gate; DNS-01 TLS\nNo HTTP listener or redirect",
+      "text": "Caddy\nSource denial before auth/proxy\nDNS-01 TLS; no HTTP listener",
+      "originalText": "Caddy\nSource denial before auth/proxy\nDNS-01 TLS; no HTTP listener",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",

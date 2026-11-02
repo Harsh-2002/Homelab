@@ -37,13 +37,15 @@ logs/backups were not rewritten.
 [`verify-network.py`](verify-network.py) checks actual endpoints, aliases,
 gateway, live trust settings, upstream host aliases and unchanged LAN/VPN routes;
 see [network evidence](NETWORK-VERIFICATION-2026-11-02.json). Core DNS/TLS/auth,
-memory and both browser MCPs passed after reconnection. No reboot/daemon-restart
-or independent VPN-client test is claimed.
+memory and both browser MCPs passed after reconnection. Docker's later daemon
+restart with live-restore passed during DNS setup; no reboot or independent
+VPN-client test is claimed.
 
 Native OpenCode still listens on loopback pending its separate handover; its
 prepared bridge address is now **10.1.3.1:4096**. This migration does not repair
-the existing HTTPS502 by itself. DNS daemon defaults, WireGuard profile DNS and
-public/private exposure policy remain held for the requested research review.
+the existing HTTPS502 by itself. DNS daemon defaults, WireGuard profiles and
+private/public policy are now applied and tested; see [DNS policy](DNS-POLICY.md).
+Native OpenCode activation is tracked by its separate handover evidence.
 
 ## Deployed core
 

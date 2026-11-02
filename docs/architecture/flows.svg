@@ -16,8 +16,9 @@
 <path d="M1030 1299L1220 1299" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M840 1358L840 1443L1980 1443L1980 1358" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <g data-node="true"><rect x="80" y="260" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
-<text x="94" y="287" font-size="19" fill="#18252c">Client</text>
-<text x="94" y="312" font-size="16" fill="#18252c">Private LAN / routed WireGuard</text>
+<text x="94" y="287" font-size="19" fill="#18252c">DNS clients</text>
+<text x="94" y="312" font-size="16" fill="#18252c">LAN / WireGuard / host / Docker</text>
+<text x="94" y="337" font-size="16" fill="#18252c">Internal AdGuard; no public fallback</text>
 </g>
 <g data-node="true"><rect x="650" y="260" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="664" y="287" font-size="19" fill="#18252c">AdGuard Home</text>
@@ -37,8 +38,8 @@
 </g>
 <g data-node="true"><rect x="650" y="620" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="664" y="647" font-size="19" fill="#18252c">Caddy</text>
-<text x="664" y="672" font-size="16" fill="#18252c">Private source gate; DNS-01 TLS</text>
-<text x="664" y="697" font-size="16" fill="#18252c">No HTTP listener or redirect</text>
+<text x="664" y="672" font-size="16" fill="#18252c">Source denial before auth/proxy</text>
+<text x="664" y="697" font-size="16" fill="#18252c">DNS-01 TLS; no HTTP listener</text>
 </g>
 <g data-node="true"><rect x="1220" y="620" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="1234" y="647" font-size="19" fill="#18252c">Portainer / AdGuard UI</text>

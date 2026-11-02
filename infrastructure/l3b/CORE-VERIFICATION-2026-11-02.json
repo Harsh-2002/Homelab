@@ -24,6 +24,7 @@
       "ollama": "memory"
     },
     "coreContainersRunningAndHardened": true,
+    "customCaddyCloudflareAndLayer4Modules": true,
     "duplicateAgentAndProxyAbsent": true,
     "hermesDeferred": true,
     "tailscaleNotRunning": true,
@@ -40,7 +41,7 @@
     "UDP-only client DNS intentionally has no TCP fallback for truncated replies",
     "Published UDP443/listener is checked; independent end-to-end HTTP3 test not performed",
     "Human passkey/OIDC completion and remote client application access need owner acceptance",
-    "No reboot, Docker-daemon restart, durability drill or current-node backup created"
+    "Docker daemon restart with live-restore passed during DNS setup; no reboot, durability drill or current-node backup created"
   ],
   "secrets": "No credentials, key contents or expanded agent configuration displayed"
 }

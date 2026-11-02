@@ -48,6 +48,11 @@ def main():
     assert 'opencode' not in by_name and 'opencode-host-proxy' not in by_name, 'Unwanted agent duplicate/proxy'
     assert 'hermes' not in by_name, 'Hermes must remain stopped until core acceptance'
     checks['coreContainersRunningAndHardened'] = True
+    modules = set(run('docker', 'exec', 'caddy', 'caddy', 'list-modules').splitlines())
+    assert {'dns.providers.cloudflare', 'layer4', 'layer4.handlers.proxy'} <= modules
+    binary = next(m for m in by_name['caddy']['Mounts'] if m['Destination'] == '/usr/bin/caddy')
+    assert binary['Source'] == '/data/apps/caddy/caddy' and not binary['RW']
+    checks['customCaddyCloudflareAndLayer4Modules'] = True
     checks['duplicateAgentAndProxyAbsent'] = True
     checks['hermesDeferred'] = True
     assert not any('tailscale' in name.lower() for name in by_name)
@@ -118,7 +123,7 @@ def main():
         'UDP-only client DNS intentionally has no TCP fallback for truncated replies',
         'Published UDP443/listener is checked; independent end-to-end HTTP3 test not performed',
         'Human passkey/OIDC completion and remote client application access need owner acceptance',
-        'No reboot, Docker-daemon restart, durability drill or current-node backup created',
+        'Docker daemon restart with live-restore passed during DNS setup; no reboot, durability drill or current-node backup created',
     ]
     result['secrets'] = 'No credentials, key contents or expanded agent configuration displayed'
     text = json.dumps(result, indent=2) + '\n'

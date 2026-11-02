@@ -33,6 +33,7 @@ def main():
     run('docker', 'version', '--format', '{{.Server.Version}}')
     run('docker', 'exec', 'playwright', 'node', '-e',
         'fetch("http://127.0.0.1:9222/json/version").then(r=>{if(!r.ok)process.exit(1)})')
+    run('sudo', '-n', 'python3', 'infrastructure/l3b/verify-dns-policy.py')
     STAGE = 'native-activation'
     run('python3', 'infrastructure/l3b/activate-opencode.py', timeout=420)
     for name in ['services.yaml', 'settings.yaml']:
@@ -54,7 +55,14 @@ def main():
     inventory_path = ROOT / 'docs/architecture/inventory.json'
     inventory = json.loads(inventory_path.read_text())
     inventory['currentDeployment']['opencodeRemote']['state'] = 'verified'
+    inventory['currentDeployment']['opencodeRemote']['firstAttempt'] = 'Initial group-membership failure resolved by verified sg docker handover.'
     inventory_path.write_text(json.dumps(inventory, indent=2) + '\n')
+    # Keep the private scene truthful after activation, without publishing IP data.
+    private_path = ROOT / 'docs/architecture/internal-addresses.local.json'
+    private = json.loads(private_path.read_text())
+    for name in ['opencode', 'flow-opencode']:
+        private[name] = 'Native bridge 10.1.3.1:4096 / private HTTPS verified'
+    private_path.write_text(json.dumps(private, indent=2) + '\n')
     for script in ['build', 'excalidraw-build']:
         for flags in [[], ['--internal']]:
             run('node', f'docs/architecture/{script}.mjs', *flags)
@@ -71,6 +79,7 @@ def main():
               'sessionHistoryPreserved': True, 'previousVaultPasswordRestored': True,
               'loopbackReplacedByDockerBridgeOnlyListener': True,
               'pairedBrowserAndCoreMemoryDashboardChecks': 'passed',
+              'internalDnsAndPrivateSourcePolicy': 'verified before activation',
               'limits': ['Owner devices need fresh pairing; prior logins were intentionally invalidated',
                          'No public tunnel, duplicate server, reboot or failure-injection test']}
     record_path.write_text(json.dumps(record, indent=2) + '\n')

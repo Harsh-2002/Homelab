@@ -11,7 +11,8 @@ gateway from the [current network plan](README.md#network-plan--owner-correction
 Ten existing containers and their aliases are retained; LAN/WireGuard routes
 are unchanged. DNS/proxy ACLs, native-host aliases and stopped Hermes trust were
 updated. Core and memory checks pass. Native remote activation and the wider
-DNS/public-private research remain separate pending work.
+DNS/public-private policy is now applied and verified in [DNS-POLICY.md](DNS-POLICY.md).
+Native remote activation remains tracked by its separate handover evidence.
 
 - One restored Portainer BE2.45.3, internal-only behind Caddy. Original users and
   30 legacy stack definitions are preserved; actual browser admin login passed.
