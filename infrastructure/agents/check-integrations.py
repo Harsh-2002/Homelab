@@ -19,7 +19,7 @@ def single_node():
     opencode = json.loads(op_path.read_text())
     hermes = yaml.safe_load(hermes_path.read_text())
     clients = {'OpenCode': opencode['mcp']['servers'], 'Hermes': hermes['mcp_servers']}
-    expected = {'context7', 'shadcn', 'rea', 'nivra', 'orva'}
+    expected = {'context7', 'shadcn', 'rea', 'nivra', 'orva', 'olx'}
     browser_mcps = {'playwright', 'chrome-devtools'}
     failures = []
     names = set().union(*(set(servers) for servers in clients.values()))
@@ -68,6 +68,16 @@ def single_node():
         if str(skill_root) not in opencode.get('skills', []):
             failures.append('OpenCode: bundled memory skills directory not configured')
         print('OpenViking: official plugin, private account config and three bundled skills checked')
+    claude_path = home / '.claude.json'
+    if claude_path.is_file():
+        claude = json.loads(claude_path.read_text()).get('mcpServers', {})
+        ov = claude.get('openviking', {})
+        if ov.get('url') != 'https://memory.l3b.cc.cd/mcp' or not (ov.get('headers') or {}).get('Authorization'):
+            failures.append('Claude Code: OpenViking MCP missing or incomplete')
+        ox = claude.get('olx', {})
+        if '--network' not in ox.get('args', []) or 'ghcr.io/harsh-2002/olx-mcp:latest' not in ox.get('args', []):
+            failures.append('Claude Code: OLX MCP missing or not on the l3b network')
+        print('Claude Code: OpenViking and OLX MCP entries checked')
     if not (home / '.agents/skills/herdr-control/SKILL.md').is_file():
         failures.append('OpenCode: shared Herdr control skill missing')
     if not (home / '.hermes/memories').is_dir():

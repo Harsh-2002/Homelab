@@ -74,7 +74,7 @@
         "id": "hermes",
         "label": "Hermes 0.22.5 (native)",
         "stack": "hermes",
-        "state": "native /home/dev/.hermes; hermes-gateway.service active and enabled; Telegram, Photon/iMessage and API server connected; OpenViking memory provider active; browser MCPs removed; Playwright CLI only"
+        "state": "native /home/dev/.hermes; hermes-gateway.service active and enabled; API server, Telegram, Photon/iMessage and Home Assistant platforms connected; OpenViking memory provider active; OLX MCP enabled; browser MCPs removed; Playwright CLI only"
       },
       {
         "id": "nivra",

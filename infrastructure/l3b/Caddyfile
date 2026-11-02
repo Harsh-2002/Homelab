@@ -3,6 +3,15 @@
 	auto_https disable_redirects
 }
 
+# Public origins are opt-in: `import public <host> <upstream> <id>`. Anything
+# not imported here stays behind the private source gate in the site block.
+(public) {
+	@public_{args[2]} host {args[0]}
+	handle @public_{args[2]} {
+		reverse_proxy {args[1]}
+	}
+}
+
 *.l3b.cc.cd, l3b.cc.cd {
 	tls {
 		dns cloudflare {env.CF_API_TOKEN}
@@ -10,32 +19,13 @@
 	}
 
 	# Owner-approved public application origins. Native app authentication is
-	# still required; these handlers intentionally run before the private gate.
+	# still required; these run before the private gate. Default is private.
 	route {
-		@public_nivra host notes.l3b.cc.cd
-		handle @public_nivra {
-			reverse_proxy nivra:3000
-		}
-
-		@public_karakeep host pin.l3b.cc.cd
-		handle @public_karakeep {
-			reverse_proxy karakeep:3000
-		}
-
-		@public_immich host photos.l3b.cc.cd
-		handle @public_immich {
-			reverse_proxy immich:2283
-		}
-
-		@public_opencloud host drive.l3b.cc.cd
-		handle @public_opencloud {
-			reverse_proxy opencloud:9200
-		}
-
-		@public_cairn host cairn-s3.l3b.cc.cd
-		handle @public_cairn {
-			reverse_proxy cairn:7373
-		}
+		import public notes.l3b.cc.cd nivra:3000 notes
+		import public pin.l3b.cc.cd karakeep:3000 pin
+		import public photos.l3b.cc.cd immich:2283 photos
+		import public drive.l3b.cc.cd opencloud:9200 drive
+		import public cairn-s3.l3b.cc.cd cairn:7373 cairn
 
 		# Preserve source denial before host routing and forward-auth.
 		@outside not remote_ip {$LAN_CIDR} {$VPN_CIDR} {$DOCKER_CIDR} 127.0.0.1/8 ::1

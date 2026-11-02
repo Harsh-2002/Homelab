@@ -11,15 +11,16 @@ path: the only keys intentionally absent are `mcp_servers.playwright` and
 All 18 previous `.env` keys are present and non-empty; no value is recorded here.
 
 `hermes-gateway.service` is installed as an enabled **user** service with
-`loginctl` linger, so it survives logout and reboot. It reports three connected
-platforms: **API server, Telegram and Photon/iMessage**. Telegram `getMe`
+`loginctl` linger, so it survives logout and reboot. It reports four connected
+platforms: **API server, Telegram, Photon/iMessage and Home Assistant**. Telegram `getMe`
 returns `@heyhermesai_bot`; the allowlist contains only the owner's numeric ID
 and `gateway.allow_all_users` is false. Photon reports stored device/project
 credentials and its sidecar listens only on `127.0.0.1:8789`. The OpenViking
 memory provider is installed, enabled and available; its API returned 200.
 `HASS_URL` now points at `https://home.l3b.cc.cd` and the token-authenticated
 Home Assistant API returns 200. Browser and computer-use toolsets are disabled;
-the official `playwright-cli` skill remains available. There are no cron jobs.
+the official `playwright-cli` skill remains available. The **OLX MCP** is enabled with four tools and runs on the `l3b` network.
+There are no cron jobs. Claude Code also has OpenViking and OLX MCPs configured.
 
 The historical sections below describe the earlier cluster/container-era setup;
 where they conflict with this banner, this banner is current.

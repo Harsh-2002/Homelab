@@ -19,6 +19,14 @@ the [architecture inventory and diagrams](../../docs/architecture/README.md),
 rebuild/validate, refresh Notion/OpenViking and commit/push scoped work. Private
 address annotations and internal diagram exports remain outside public Git.
 
+Current agent state, 2 November 2026: OpenCode and Hermes both use the
+OpenViking memory provider at `https://memory.l3b.cc.cd` with the same
+account-scoped key. Claude Code has OpenViking and OLX MCPs configured and both
+connect; Codex CLI/config is absent. OLX runs on the `l3b` Docker network because
+the daemon's default bridge is disabled. Browser MCPs remain removed; Playwright
+CLI is the only browser interface. The historical all-four sections below are
+retained as migration context.
+
 Herdr management support added2026-10-25 for all four agents: native lifecycle
 hooks/plugins installed/current, plus shared local `herdr-control` skill. Existing
 settings/MCPs/memory and launch commands preserved. See [HERDR.md](HERDR.md) for

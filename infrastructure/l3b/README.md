@@ -101,8 +101,10 @@ the stack is retained for a separate upgrade decision.
 The owner approved **Nivra, Karakeep, Immich and OpenCloud** as public app
 origins (`notes`, `pin`, `photos`, `drive`). They have exact DNS-only public A
 records and narrow public Caddy handlers, while each application still enforces
-its native authentication/OIDC. **Orva** remains behind the private Caddy source
-gate; its historical public DNS record was preserved but does not grant a route.
+its native authentication/OIDC. Public services are opted in with
+`import public <host> <upstream> <id>` in `Caddyfile`; the default is private.
+**Orva** remains behind the private Caddy source gate; its historical public
+DNS record was preserved but does not grant a route.
 Core services remain private. Nivra and Orva MCPs are connected; Olx remains
 disabled and Supabase is retired. Karakeep uses its local asset store (no S3 dependency); OpenCloud uses
 local decomposed storage. Immich keeps the same PostgreSQL 14 image and data
