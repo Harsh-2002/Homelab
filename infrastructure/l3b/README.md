@@ -100,6 +100,14 @@ OpenViking 0.4.22 and Registry 2.8.3 stay pinned pending controlled rebuilds or
 major-version validation. Forgejo 14 is EOL and its containers are stopped;
 the stack is retained for a separate upgrade decision.
 
+Tinyauth/Pocket ID forward-auth currently covers Homepage (apex), `dns`,
+`memory` Studio, `frigate` and `beszel`, using the owner email and the
+`infrastructure-admins` group. Beszel additionally trusts `Remote-Email`
+only from `10.1.3.0/24`, so it auto-signs in after the Tinyauth gate.
+Portainer, n8n, Paperless, Jellyfin, downloads, Home Assistant and the
+public apps keep native app authentication; their APIs and WebSockets are
+not intercepted by the SSO gate.
+
 The owner approved **Nivra, Karakeep, Immich and OpenCloud** as public app
 origins (`notes`, `pin`, `photos`, `drive`). They have exact DNS-only public A
 records and narrow public Caddy handlers, while each application still enforces
