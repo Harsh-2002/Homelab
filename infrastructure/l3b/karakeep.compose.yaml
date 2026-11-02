@@ -1,0 +1,53 @@
+services:
+  karakeep:
+    image: ghcr.io/karakeep-app/karakeep:0.34.1
+    container_name: karakeep
+    restart: unless-stopped
+    init: false
+    env_file:
+      - /data/apps/karakeep/runtime.env
+    environment:
+      DATA_DIR: /data
+      MEILI_ADDR: http://karakeep-meilisearch:7700
+      BROWSER_WEB_URL: http://karakeep-chrome:9222
+    volumes:
+      - /data/apps/karakeep/data:/data
+    expose:
+      - "3000"
+    depends_on:
+      karakeep-meilisearch:
+        condition: service_started
+      karakeep-chrome:
+        condition: service_started
+    networks:
+      - l3b
+
+  karakeep-chrome:
+    image: ghcr.io/karakeep-app/karakeep-chrome:release
+    container_name: karakeep-chrome
+    restart: unless-stopped
+    init: true
+    command:
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --hide-scrollbars
+      - --disable-blink-features=AutomationControlled
+      - --window-size=1440,900
+    networks:
+      - l3b
+
+  karakeep-meilisearch:
+    image: getmeili/meilisearch:v1.41.0
+    container_name: karakeep-meilisearch
+    restart: unless-stopped
+    env_file:
+      - /data/apps/karakeep/meili.env
+    volumes:
+      - /data/apps/karakeep/meilisearch:/meili_data
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b

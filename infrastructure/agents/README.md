@@ -1,5 +1,13 @@
 # Shared coding-agent tools on dev
 
+## Current browser policy — 2 November 2026
+
+Browser automation is **Playwright CLI only**: `playwright-cli` plus the official
+`playwright-cli` skill in `~/.agents/skills/playwright-cli`. Playwright MCP,
+Chrome DevTools MCP, the `tools` browser stack, `agent-browser`, Puppeteer-based
+agent tools and duplicate browser MCPs are retired. The historical all-four MCP
+notes below are migration context, not current configuration.
+
 Excalidraw CLI added 2026-10-25: official user-global CLI plus shared local
 skill for all four agents. Local scene rendering is account-free; no cloud
 uploads or MCP added. See [EXCALIDRAW.md](EXCALIDRAW.md). The Homelab's current

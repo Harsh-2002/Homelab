@@ -31,3 +31,28 @@
         href: https://oc.l3b.cc.cd
         description: Native coding workspace
         siteMonitor: http://opencode:4096/
+    - Nivra:
+        icon: nivra.png
+        href: https://notes.l3b.cc.cd
+        description: Private notes and tasks
+        siteMonitor: http://nivra:3000/health
+    - Orva:
+        icon: https://orva.l3b.cc.cd/favicon.ico
+        href: https://orva.l3b.cc.cd
+        description: Serverless functions and Quick Share
+        siteMonitor: http://orva:8443/api/v1/system/health
+    - Karakeep:
+        icon: https://pin.l3b.cc.cd/favicon.ico
+        href: https://pin.l3b.cc.cd
+        description: Bookmarks, notes and search
+        siteMonitor: http://karakeep:3000/
+    - Immich:
+        icon: https://photos.l3b.cc.cd/favicon.ico
+        href: https://photos.l3b.cc.cd
+        description: Private photo and video library
+        siteMonitor: http://immich:2283/api/server/ping
+    - OpenCloud:
+        icon: https://drive.l3b.cc.cd/favicon.ico
+        href: https://drive.l3b.cc.cd
+        description: Private files and collaboration
+        siteMonitor: http://opencloud:9200/

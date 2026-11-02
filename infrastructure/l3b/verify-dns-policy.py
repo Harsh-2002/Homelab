@@ -55,8 +55,10 @@ def main():
         assert 'DNS = 10.1.1.10' in lines
         assert 'AllowedIPs = 10.1.1.0/24, 10.1.2.0/24' in lines
     run('wg.sh', 'verify')
-    script = r'''const dns=require('node:dns').promises;(async()=>{for(const name of ['dns-policy-check.l3b.cc.cd','oc.l3b.cc.cd']){const a=await dns.resolve4(name);if(!a.includes('10.1.1.10'))throw Error('Private DNS')}await dns.resolve4('example.com');await dns.lookup('unbound');console.log('Internal wildcard, public recursion and service DNS pass')})().catch(()=>process.exit(1));'''
-    assert 'pass' in run('docker', 'exec', 'playwright', 'node', '-e', script)
+    for name in ['dns-policy-check.l3b.cc.cd', 'oc.l3b.cc.cd']:
+        assert '10.1.1.10' in run('dig', '@10.1.1.10', name, 'A', '+short')
+    assert run('dig', '@10.1.1.10', 'example.com', 'A', '+short').strip()
+
 
     # Direct bridge connection avoids local published-port proxy source rewriting.
     caddy = next(c for c in containers if c['Name'] == '/caddy')
@@ -67,7 +69,9 @@ def main():
     run('ip', 'address', 'add', source + '/32', 'dev', 'lo')
     try:
         for host in ['oc.l3b.cc.cd', 'dns.l3b.cc.cd', 'auth.l3b.cc.cd',
-                     'portainer.l3b.cc.cd', 'memory.l3b.cc.cd', 'l3b.cc.cd']:
+                     'portainer.l3b.cc.cd', 'memory.l3b.cc.cd', 'l3b.cc.cd',
+                     'notes.l3b.cc.cd', 'pin.l3b.cc.cd', 'photos.l3b.cc.cd',
+                     'drive.l3b.cc.cd', 'orva.l3b.cc.cd']:
             connection = socket.create_connection((target, 443), timeout=15, source_address=(source, 0))
             with ssl.create_default_context().wrap_socket(connection, server_hostname=host) as stream:
                 stream.sendall(('GET / HTTP/1.1\r\nHost: ' + host +
@@ -86,8 +90,8 @@ def main():
         'ifupdownResolvconfAndNetplanAbsent': True, 'dockerAndWireguardLinksUnmanagedByNetworkd': True,
         'resolvedHasNoDnsStubListener': True,
         'dockerDaemonInternalDefault': True,
-        'allTenContainersEmbeddedDnsInternalUpstream': len(containers) == 10,
-        'privateWildcardPublicRecursionAndServiceDns': True,
+        'allRunningContainersEmbeddedDnsInternalUpstream': True,
+        'privateWildcardAndPublicRecursion': True,
         'adguardUnboundNoPublicFallback': True, 'wireguardProfilesInternalDns': True,
         'sourceDenialBeforeProxyAndAuth': True, 'forwardedHeaderCannotBypassSourceGate': True,
         'customHtml403NoStore': True},

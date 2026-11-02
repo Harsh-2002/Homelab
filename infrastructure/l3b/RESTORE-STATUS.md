@@ -42,8 +42,12 @@ Native remote activation remains tracked by its separate handover evidence.
   No new host ports or Docker socket. Tailscale is retired and absent on l3b;
   WireGuard remains the current VPN.
 - OpenCode is **host-native only**. Session history/Herdr retained;
-  36 skills and six MCPs available. Playwright/Chrome DevTools share one Docker
-  browser through the `tools`173 stack; no MCP/CDP host ports.
+  39 skills and eight configured MCPs (six connected; Olx/Supabase disabled).
+  Browser automation is Playwright CLI with its official skill; the former
+  `tools` browser stack and Playwright/Chrome DevTools MCPs are removed.
+- Nivra, Orva, Karakeep, Immich and OpenCloud are restored as private Portainer
+  stacks with original application data. All remain behind the private Caddy
+  source gate; public DNS records alone do not expose them.
 - Docker publications are exactly **53/UDP,443/TCP,443/UDP**. Native SSH,
   OpenCode's approved native handover is tracked separately; WireGuard is unchanged.
 - The temporary duplicate OpenCode server, custom Unbound build and unwanted

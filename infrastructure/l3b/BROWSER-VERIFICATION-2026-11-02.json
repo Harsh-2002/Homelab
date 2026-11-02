@@ -14,5 +14,7 @@
     "agentBrowserNotInstalled": true
   },
   "repair": "Explicit sg docker group selection in browser MCP commands, the native unit, and its detached handover launcher. Host process UID remains dev/1000. No user-manager restart, new group grant, socket chmod or new port.",
-  "nativeHandover": "First attempt rolled back; fixed unit installed, remote activation still pending its verified retry."
+  "nativeHandover": "First attempt rolled back; fixed unit installed, remote activation still pending its verified retry.",
+  "supersededBy": "infrastructure/agents/BROWSER-CLI-VERIFICATION-2026-11-02.json",
+  "currentInterface": "playwright-cli only; the browser MCP and tools stack are retired"
 }

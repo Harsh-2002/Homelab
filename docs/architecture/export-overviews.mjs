@@ -1,19 +1,19 @@
-// Export current SVG sheets locally through the already-running tool browser.
+// Export current SVG sheets locally through the host Playwright CLI browser.
 import {readFileSync, writeFileSync} from 'node:fs';
 import {dirname, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {execFileSync} from 'node:child_process';
+import {homedir} from 'node:os';
 
 const base = dirname(fileURLToPath(import.meta.url));
 const dir = process.argv.includes('--internal') ? join(base, 'internal') : base;
-const container = process.env.EXCALIDRAW_BROWSER_CONTAINER || 'playwright';
 const source = ['homelab', 'flows'].map(name => readFileSync(join(dir, name + '.svg'), 'utf8'));
 const code = `
 const fs=require('node:fs');
-const {chromium}=require('/app/node_modules/playwright-core');
+const {chromium}=require('playwright-core');
 (async()=>{
  const source=JSON.parse(fs.readFileSync(0,'utf8'));
- const browser=await chromium.connectOverCDP('http://127.0.0.1:9222');
+ const browser=await chromium.launch({headless:true,channel:'chromium'});
  const context=await browser.newContext({viewport:{width:2400,height:1820}});
  try {
   const page=await context.newPage(); const images=[];
@@ -28,8 +28,10 @@ const {chromium}=require('/app/node_modules/playwright-core');
  process.exit(0);
 })().catch(()=>{console.error('Local overview export failed');process.exit(1)});
 `;
-const result = JSON.parse(execFileSync('docker', ['exec', '-i', container, 'node', '-e', code], {
+const playwrightModules = join(homedir(), '.local/lib/node_modules/@playwright/cli/node_modules');
+const result = JSON.parse(execFileSync('node', ['-e', code], {
   input: JSON.stringify(source), encoding: 'utf8', maxBuffer: 50 * 1024 * 1024, timeout: 90000,
+  env: {...process.env, NODE_PATH: playwrightModules},
 }));
 for (const [index, name] of ['homelab', 'flows'].entries()) {
   writeFileSync(join(dir, name + '.png'), Buffer.from(result.images[index], 'base64'));

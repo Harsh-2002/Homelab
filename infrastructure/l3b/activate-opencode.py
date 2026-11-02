@@ -61,7 +61,7 @@ def main():
                 if time.monotonic() >= deadline:
                     raise RuntimeError('Native service did not become ready') from None
                 time.sleep(2)
-        run('python3', 'infrastructure/l3b/verify-opencode.py', '--browser', '--save',
+        run('python3', 'infrastructure/l3b/verify-opencode.py', '--save',
             'infrastructure/l3b/OPENCODE-VERIFICATION-2026-11-02.json')
         print('Native OpenCode service takeover and HTTPS/browser verification passed; session history preserved')
     except Exception:

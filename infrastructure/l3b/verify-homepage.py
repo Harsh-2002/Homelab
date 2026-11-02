@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Check Homepage's real UI and private gateway separately; never bypass public SSO."""
+"""Historical MCP-era Homepage check. Current UI checks use the official Playwright CLI skill.
+
+The browser section below expects the retired `playwright` container and will not
+run after the tools stack removal. Gateway HTTP checks remain useful; do not
+recreate the stack just for this verifier.
+"""
 import argparse
 import json
 import subprocess
@@ -36,7 +41,7 @@ const {chromium}=require('/app/node_modules/playwright-core');
     for(const title of ['AdGuard Home','Portainer','Pocket ID','OpenViking','OpenCode'])await page.getByRole('link',{name:new RegExp('^'+title)}).first().waitFor();
     if(await page.getByText('API Error',{exact:false}).count())throw Error('Widget API error');
     const details=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,theme:document.documentElement.classList.contains('dark')?'dark':'light',cards:document.querySelectorAll('.service-card').length}));
-    if(details.overflow||details.cards!==5||details.theme!==colorScheme||errors.length){console.error(JSON.stringify({device:name,...details,errors}));throw Error('UI acceptance');}
+    if(details.overflow||details.cards!==10||details.theme!==colorScheme||errors.length){console.error(JSON.stringify({device:name,...details,errors}));throw Error('UI acceptance');}
     await page.screenshot({path:'/tmp/homepage-'+name+'.png',fullPage:true});
     results.push({device:name,...details,consoleErrors:errors.length});
     await context.close();

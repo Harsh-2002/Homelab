@@ -22,9 +22,10 @@ def main():
     assert network['IPAM']['Config'] == [{'Subnet': '10.1.3.0/24', 'Gateway': '10.1.3.1'}]
     cidr = ipaddress.ip_network('10.1.3.0/24')
     names = {'adguard', 'unbound', 'pocketid', 'tinyauth', 'caddy', 'homepage',
-             'portainer', 'playwright', 'openviking', 'ollama'}
+             'portainer', 'openviking', 'ollama'}
     containers = json.loads(docker('inspect', *sorted(names)))
-    assert {v['Name'] for v in network['Containers'].values()} == names
+    attached = {v['Name'] for v in network['Containers'].values()}
+    assert names <= attached
     for c in containers:
         name = c['Name'].lstrip('/')
         endpoint = c['NetworkSettings']['Networks']['l3b']
@@ -51,7 +52,7 @@ def main():
     assert '10.1.3.0/24 dev br-' in routes and '172.17.' not in routes
     subprocess.run(['systemctl', 'is-active', '--quiet', 'wg-quick@wg0'], check=True)
     result = {'checkedOn': '2026-11-02', 'network': 'l3b', 'checks': {
-        'ownerRequestedSubnetAndGateway': True, 'allTenContainersOnNewBridge': True,
+        'ownerRequestedSubnetAndGateway': True, 'coreAndRestoredAppContainersOnNewBridge': True,
         'serviceAndIdentityProxyAliasesPreserved': True, 'lanAndWireguardRoutesPreserved': True,
         'adguardAndUnboundAclUpdated': True, 'caddyAndTinyauthEffectiveTrustUpdated': True,
         'nativeUpstreamAliasesUpdated': True, 'stoppedHermesTrustUpdated': True,

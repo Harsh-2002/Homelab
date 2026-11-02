@@ -19,7 +19,6 @@
       "tinyauth": "identity",
       "caddy": "proxy",
       "homepage": "dashboard",
-      "playwright": "tools",
       "openviking": "memory",
       "ollama": "memory"
     },
@@ -34,7 +33,6 @@
     "httpsPortainerAndOidcDiscovery": true,
     "dnsDashboardForwardAuthAndSpoofRejection": true,
     "trustedTlsAndHttp2": true,
-    "actualPortainerBrowserAdminSessionAndSecureCookie": true,
     "wireguardHostServicePreserved": true
   },
   "limits": [

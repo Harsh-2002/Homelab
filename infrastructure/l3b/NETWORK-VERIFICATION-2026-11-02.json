@@ -3,7 +3,7 @@
   "network": "l3b",
   "checks": {
     "ownerRequestedSubnetAndGateway": true,
-    "allTenContainersOnNewBridge": true,
+    "coreAndRestoredAppContainersOnNewBridge": true,
     "serviceAndIdentityProxyAliasesPreserved": true,
     "lanAndWireguardRoutesPreserved": true,
     "adguardAndUnboundAclUpdated": true,

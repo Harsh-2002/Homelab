@@ -3,6 +3,7 @@
 import json
 import hashlib
 from pathlib import Path
+import shutil
 import sys
 import tomllib
 import subprocess
@@ -18,19 +19,30 @@ def single_node():
     opencode = json.loads(op_path.read_text())
     hermes = yaml.safe_load(hermes_path.read_text())
     clients = {'OpenCode': opencode['mcp']['servers'], 'Hermes': hermes['mcp_servers']}
-    expected = {'playwright', 'chrome-devtools', 'context7', 'shadcn', 'rea'}
+    expected = {'context7', 'shadcn', 'rea', 'nivra', 'orva'}
+    browser_mcps = {'playwright', 'chrome-devtools'}
     failures = []
     names = set().union(*(set(servers) for servers in clients.values()))
     for name in sorted(names):
         for client, servers in clients.items():
             entry = servers.get(name)
             if entry is None:
-                failures.append(f'{client}: missing {name}')
+                if name not in browser_mcps:
+                    failures.append(f'{client}: missing {name}')
                 continue
             enabled = not entry.get('disabled', False) and entry.get('enabled', True)
+            if name in browser_mcps:
+                if enabled:
+                    failures.append(f'{client}: browser MCP {name} must be removed or disabled')
+                continue
             if enabled != (name in expected):
                 failures.append(f'{client}: unexpected enabled state for {name}')
         print(f'{name}: scoped presence/enabled-state checked')
+    if not shutil.which('playwright-cli'):
+        failures.append('Playwright CLI is not installed')
+    if not (home / '.agents/skills/playwright-cli/SKILL.md').is_file():
+        failures.append('Playwright CLI official skill missing')
+    print('Playwright CLI: installed and official skill present; browser MCPs forbidden')
     for path in [op_path, hermes_path]:
         if path.stat().st_mode & 0o077:
             failures.append('Credential-bearing agent config is not private')
@@ -101,11 +113,12 @@ def normalized(entry, client):
 
 def main():
     clients, opencode = load()
-    required = {'playwright', 'chrome-devtools', 'context7', 'shadcn',
-                'orva', 'supabase', 'nivra', 'rea', 'olx'}
-    # Any newly added standalone integration must propagate to all four clients.
+    required = {'context7', 'shadcn', 'orva', 'supabase', 'nivra', 'rea', 'olx'}
+    # Browser automation is Playwright CLI + its official skill only; no browser MCPs.
     names = required | set().union(*(set(items) for items in clients.values()))
-    names.discard('openviking')  # Native plugins/provider, not duplicate MCP entries.
+    names.discard('openviking')
+    names.discard('playwright')
+    names.discard('chrome-devtools')
     failures = []
     for name in sorted(names):
         missing = [client for client, servers in clients.items() if name not in servers]
@@ -119,6 +132,10 @@ def main():
             failures.append(f'{name}: configuration drift in {", ".join(mismatches)}')
         else:
             print(f'{name}: aligned across four agents')
+    if not shutil.which('playwright-cli'):
+        failures.append('Playwright CLI is not installed')
+    if not (Path.home() / '.agents/skills/playwright-cli/SKILL.md').is_file():
+        failures.append('Playwright CLI official skill missing')
     packages = opencode.get('plugins', [])
     if not any('@openviking/opencode-plugin' in
                (p if isinstance(p, str) else p.get('package', '')) for p in packages):

@@ -31,17 +31,14 @@ def main():
     baseline = run('git', 'rev-parse', 'HEAD').strip()
     # Check the detached worker's credentials before interrupting the server.
     run('docker', 'version', '--format', '{{.Server.Version}}')
-    run('docker', 'exec', 'playwright', 'node', '-e',
-        'fetch("http://127.0.0.1:9222/json/version").then(r=>{if(!r.ok)process.exit(1)})')
     run('sudo', '-n', 'python3', 'infrastructure/l3b/verify-dns-policy.py')
     STAGE = 'native-activation'
     run('python3', 'infrastructure/l3b/activate-opencode.py', timeout=420)
     for name in ['services.yaml', 'settings.yaml']:
         (Path('/data/apps/homepage/config') / name).write_bytes(
             (ROOT / 'infrastructure/l3b/homepage' / name).read_bytes())
-    run('docker', 'exec', 'playwright', 'node', '-e',
-        'fetch("http://homepage:3000/api/revalidate").then(r=>{if(!r.ok)process.exit(1)})')
-    for name, flags in [('core', ['--browser']), ('homepage', []), ('memory', [])]:
+    run('docker', 'exec', 'homepage', 'wget', '-qO-', '--post-data=', 'http://127.0.0.1:3000/api/revalidate')
+    for name, flags in [('core', []), ('memory', [])]:
         STAGE = name + '-verification'
         filename = {'core': 'CORE', 'homepage': 'HOMEPAGE', 'memory': 'MEMORY'}[name]
         run('python3', f'infrastructure/l3b/verify-{name}.py', *flags, '--save',
@@ -66,7 +63,7 @@ def main():
     for script in ['build', 'excalidraw-build']:
         for flags in [[], ['--internal']]:
             run('node', f'docs/architecture/{script}.mjs', *flags)
-    env = {**os.environ, 'EXCALIDRAW_BROWSER_CONTAINER': 'playwright'}
+    env = {**os.environ}
     for script in ['excalidraw-render', 'export-overviews']:
         for flags in [[], ['--internal']]:
             run('node', f'docs/architecture/{script}.mjs', *flags, env=env)

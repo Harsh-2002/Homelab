@@ -1,25 +1,27 @@
 {
   "checkedOn": "2026-11-02",
   "stack": 172,
+  "interface": "playwright-cli",
   "publicGatewayAndSpoofRejection": true,
   "backendBrowser": [
     {
       "device": "desktop",
       "overflow": false,
       "theme": "light",
-      "cards": 5,
+      "cards": 10,
       "consoleErrors": 0
     },
     {
       "device": "mobile",
       "overflow": false,
       "theme": "dark",
-      "cards": 5,
+      "cards": 10,
       "consoleErrors": 0
     }
   ],
   "limits": [
     "Public browser passkey/OIDC sign-in remains a human acceptance test",
-    "Backend browser test uses internal Docker service DNS; it does not claim SSO completion"
+    "Backend browser check used Playwright CLI against the internal Homepage service; it does not claim SSO completion",
+    "The temporary /etc/hosts entry used for the internal service name was removed"
   ]
 }

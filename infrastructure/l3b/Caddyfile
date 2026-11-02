@@ -52,6 +52,33 @@
 			}
 		}
 
+		@nivra host notes.l3b.cc.cd
+		handle @nivra {
+			reverse_proxy nivra:3000
+		}
+
+		@orva host orva.l3b.cc.cd
+		handle @orva {
+			reverse_proxy orva:8443 {
+				flush_interval -1
+			}
+		}
+
+		@karakeep host pin.l3b.cc.cd
+		handle @karakeep {
+			reverse_proxy karakeep:3000
+		}
+
+		@immich host photos.l3b.cc.cd
+		handle @immich {
+			reverse_proxy immich:2283
+		}
+
+		@opencloud host drive.l3b.cc.cd
+		handle @opencloud {
+			reverse_proxy opencloud:9200
+		}
+
 		@memory host memory.l3b.cc.cd
 		handle @memory {
 			@studio path /studio /studio/*

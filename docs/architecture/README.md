@@ -13,21 +13,23 @@ fields and older individual Mermaid/flow exports are retained historical
 snapshots, not claims that the retired guests remain deployed. The generators
 select the single-node model for the current native board and overview sheets.
 
-On this node the existing Docker browser can render with the official CLI:
+On this node the host Playwright CLI browser can render with the official CLI:
 
 ```bash
 node docs/architecture/build.mjs
 node docs/architecture/excalidraw-build.mjs
 node docs/architecture/check.mjs
 node docs/architecture/check-topology.mjs
-EXCALIDRAW_BROWSER_CONTAINER=playwright node docs/architecture/excalidraw-render.mjs
+node docs/architecture/excalidraw-render.mjs
 node docs/architecture/export-overviews.mjs
 ```
 
 Add `--internal` for the Git-ignored address-bearing native scene/exports.
-Rendering uses the local Docker browser, not an uploaded/cloud diagram service.
+Rendering uses the local host Playwright browser, not an uploaded/cloud diagram service.
 The historical retirement/recovery notes below are superseded where they conflict.
-Homepage is now a live private-apex Docker stack. Tailscale is retired and absent;
+Nivra, Orva, Karakeep, Immich and OpenCloud are now restored as private
+Portainer stacks with their original application data. Homepage is a live
+private-apex Docker stack. Tailscale is retired and absent;
 historical tailnet references in older exports do not describe the current node.
 Current stack labels are generic single words.
 The current board also identifies the dedicated `l3b` bridge separately from

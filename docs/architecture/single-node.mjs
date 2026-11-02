@@ -23,7 +23,7 @@ function layout(inv, addresses = {}) {
   const edge = (page,a,b) => pages[page].edges.push({a,b});
   add(0,'clients',55,620,'Phone / workstation',['Private LAN access']);
   add(0,'lan',500,620,'LAN',['Physical path not re-audited']);
-  add(0,'l3b',945,620,inv.host.name+' / '+inv.host.model,[inv.host.cpu,inv.host.ram+' / Debian 13.7','Native networkd + resolved']);
+  add(0,'l3b',945,620,inv.host.name+' / '+inv.host.model,[inv.host.cpu,inv.host.ram+' / Debian 13.7','Native networkd + resolved','Playwright CLI browser']);
   add(0,'docker',1390,160,'Docker engine / l3b bridge',['One bare-metal Debian host','Dedicated subnet; service-name routing','Embedded DNS → internal AdGuard']);
   add(0,'wireguard',1390,620,'WireGuard / native host',['Routed LAN access; no source NAT','iPhone accepted; MacBook not yet tested']);
   add(0,'opencode',1390,800,'OpenCode / native host',['Session history preserved; no duplicate',inv.opencodeRemote?.state==='verified'?'Private HTTPS / browser verified':'Private HTTPS / handover pending']);
@@ -38,8 +38,8 @@ function layout(inv, addresses = {}) {
     ['core-identity','identity / Pocket ID and Tinyauth',['Container: pocketid / tinyauth','Original identity and OIDC clients']],
     ['homepage','dashboard / Homepage',['Private apex; Tinyauth forward-auth','Only current core service cards']],
     ['memory','memory / OpenViking and Ollama',['Restored context; local embeddings','OpenCode plugin and memory skills']],
-    ['hermes','Hermes / staged and stopped',['Configuration/persona/skills retained','Deferred until core acceptance']],
-    ['playwright','tools / Playwright',['Playwright / Chrome DevTools','Container: playwright; shared browser']]
+    ['apps','apps / Portainer restores',['nivra, orva, karakeep, immich, opencloud','private Caddy routes; data restored']],
+    ['hermes','Hermes / staged and stopped',['Configuration/persona/skills retained','Deferred until core acceptance']]
   ];
   groups.forEach(([id,title,body],i)=>{add(0,id,1835,170+i*185,title,body,'#edf5f1');edge(0,'docker',id);});
 

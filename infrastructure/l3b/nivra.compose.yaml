@@ -1,0 +1,26 @@
+services:
+  nivra:
+    image: ghcr.io/harsh-2002/nivra:latest
+    container_name: nivra
+    restart: unless-stopped
+    environment:
+      NIVRA_DATA_DIR: /data
+      NIVRA_ENCRYPTION_ENABLED: "false"
+      NIVRA_PUBLIC_URL: https://notes.l3b.cc.cd
+    volumes:
+      - /data/apps/nivra:/data
+    expose:
+      - "3000"
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b

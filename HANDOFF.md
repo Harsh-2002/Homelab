@@ -16,7 +16,9 @@ The owner expanded the scope after the core completion. Current generic stacks
 are `dns`169, `identity`170, `proxy`171, `dashboard`172, `tools`173 and `memory`174;
 `portainer` is the bootstrap project, and `hermes`166 remains stopped. Actual
 container names are single words: portainer, adguard, unbound, pocketid, tinyauth,
-caddy, homepage, playwright, openviking, ollama. Bind paths and domains are unchanged.
+caddy, homepage, openviking, ollama, nivra, orva, karakeep, immich and opencloud.
+Browser automation is Playwright CLI only; the former tools/playwright container
+and browser MCPs were removed. Bind paths and domains are unchanged.
 
 [OpenViking memory](infrastructure/l3b/MEMORY.md) is restored and verified, with
 the official native OpenCode plugin/MCP and all three skills. The owner explicitly

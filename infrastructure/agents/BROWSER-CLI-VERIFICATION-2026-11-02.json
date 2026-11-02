@@ -1,0 +1,44 @@
+{
+  "checkedOn": "2026-11-02",
+  "interface": "playwright-cli",
+  "package": "@playwright/cli",
+  "version": "0.1.23",
+  "skill": "~/.agents/skills/playwright-cli/SKILL.md",
+  "browser": "Chromium 157.0.8103.15 (playwright chromium v1252)",
+  "checks": {
+    "packageLatestStableInstalled": true,
+    "officialAgentSkillsInstalled": true,
+    "hostBrowserLaunches": true,
+    "exampleNavigation": true,
+    "accessibilitySnapshot": true,
+    "elementSearchAndEval": true,
+    "screenshotWrittenAndInspected": true,
+    "consoleInspection": true,
+    "networkInspection": true,
+    "sessionClosed": true,
+    "internalHttpsNavigationAndSsoRedirect": true,
+    "openCodeBrowserMcpRemoved": true,
+    "hermesBrowserMcpDisabled": true,
+    "toolsBrowserStackRemoved": true,
+    "mcpBrowserImageRemoved": true,
+    "agentBrowserAbsent": true,
+    "puppeteerAgentToolAbsent": true,
+    "karakeepApplicationBrowserRetained": true
+  },
+  "liveOpenCodeMcpNames": [
+    "context7",
+    "nivra",
+    "olx",
+    "openviking",
+    "orva",
+    "rea",
+    "shadcn",
+    "supabase"
+  ],
+  "limits": [
+    "Internal site validation reached the Pocket ID/Tinyauth login surface; no human passkey sign-in was performed",
+    "Example.com and internal navigation are smoke tests, not full application E2E suites",
+    "No owner profile or saved authentication state was imported",
+    "Karakeep's Chrome is an application dependency, not an agent browser interface"
+  ]
+}

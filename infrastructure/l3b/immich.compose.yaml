@@ -1,0 +1,63 @@
+services:
+  immich:
+    image: ghcr.io/immich-app/immich-server:v3.3.5
+    container_name: immich
+    restart: unless-stopped
+    env_file:
+      - /data/apps/immich/runtime.env
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    volumes:
+      - /data/apps/immich/media:/data
+      - /etc/localtime:/etc/localtime:ro
+    expose:
+      - "2283"
+    depends_on:
+      immich-redis:
+        condition: service_healthy
+      immich-postgres:
+        condition: service_healthy
+    networks:
+      - l3b
+
+  immich-ml:
+    image: ghcr.io/immich-app/immich-machine-learning:v3.3.5
+    container_name: immich-ml
+    restart: unless-stopped
+    env_file:
+      - /data/apps/immich/ml.env
+    volumes:
+      - /data/apps/immich/model:/cache
+    networks:
+      - l3b
+
+  immich-redis:
+    image: docker.io/valkey/valkey:9@sha256:c123e3715db63d06d4ad6964884037aa0d5d4d703939b9929954112889708e1d
+    container_name: immich-redis
+    restart: unless-stopped
+    healthcheck:
+      test: redis-cli ping | grep -q PONG || exit 1
+    networks:
+      - l3b
+
+  immich-postgres:
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
+    container_name: immich-postgres
+    restart: unless-stopped
+    env_file:
+      - /data/apps/immich/postgres.env
+    volumes:
+      - /data/apps/immich/postgres:/var/lib/postgresql/data
+    shm_size: 128mb
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b

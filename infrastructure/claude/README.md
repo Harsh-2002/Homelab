@@ -1,5 +1,11 @@
 # Claude Code on dev
 
+> **Current policy (2 November 2026):** browser automation is Playwright CLI only,
+> `playwright-cli` with its official skill. Playwright MCP and Chrome DevTools MCP
+> are retired in this environment. The historical Claude MCP configuration below
+> must not be recreated for browser work; do not restore Claude authentication or
+> unrelated client configuration.
+
 Configured on 2026-10-05 for the existing dev account, Claude Code2.1.289. User-scope MCP configuration lives in `~/.claude.json`; plugin settings live in `~/.claude/settings.json`.
 
 Enabled development connections: Playwright (`@playwright/mcp@latest`, Chrome/headless), Chrome DevTools (`chrome-devtools-mcp@latest`, headless), Context7 (`@upstash/context7-mcp@latest`), shadcn (`shadcn@latest mcp`), and HTTP Orva (`https://orva.l3b.cc.cd/mcp`). All local launchers use `npx -y`. Orva reuses the existing Codex bearer credential without exposing it or creating another vault item. Preserve all existing settings when changing MCPs. Do not print the whole user configuration because it contains that header.

@@ -261,7 +261,7 @@
       "x": 945,
       "y": 620,
       "width": 380,
-      "height": 118,
+      "height": 143,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -323,7 +323,7 @@
       "x": 959,
       "y": 634,
       "width": 287.68,
-      "height": 80,
+      "height": 100,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -343,8 +343,8 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "l3b / Dell OptiPlex 5060\nIntel Core i5-9400T / six cores\n32 GB nominal / Debian 13.7\nNative networkd + resolved",
-      "originalText": "l3b / Dell OptiPlex 5060\nIntel Core i5-9400T / six cores\n32 GB nominal / Debian 13.7\nNative networkd + resolved",
+      "text": "l3b / Dell OptiPlex 5060\nIntel Core i5-9400T / six cores\n32 GB nominal / Debian 13.7\nNative networkd + resolved\nPlaywright CLI browser",
+      "originalText": "l3b / Dell OptiPlex 5060\nIntel Core i5-9400T / six cores\n32 GB nominal / Debian 13.7\nNative networkd + resolved\nPlaywright CLI browser",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
@@ -1274,7 +1274,7 @@
       "lineHeight": 1.25
     },
     {
-      "id": "hermes",
+      "id": "apps",
       "type": "rectangle",
       "x": 1835,
       "y": 1280,
@@ -1299,7 +1299,7 @@
       "isDeleted": false,
       "boundElements": [
         {
-          "id": "hermes-text",
+          "id": "apps-text",
           "type": "text"
         },
         {
@@ -1312,11 +1312,11 @@
       "locked": false
     },
     {
-      "id": "hermes-text",
+      "id": "apps-text",
       "type": "text",
       "x": 1849,
       "y": 1294,
-      "width": 278.4,
+      "width": 324.79999999999995,
       "height": 80,
       "frameId": "tree",
       "angle": 0,
@@ -1337,18 +1337,18 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Hermes / staged and stopped\nConfiguration/persona/skills\nretained\nDeferred until core acceptance",
-      "originalText": "Hermes / staged and stopped\nConfiguration/persona/skills\nretained\nDeferred until core acceptance",
+      "text": "apps / Portainer restores\nnivra, orva, karakeep, immich,\nopencloud\nprivate Caddy routes; data restored",
+      "originalText": "apps / Portainer restores\nnivra, orva, karakeep, immich,\nopencloud\nprivate Caddy routes; data restored",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
-      "containerId": "hermes",
+      "containerId": "apps",
       "autoResize": true,
       "lineHeight": 1.25
     },
     {
-      "id": "playwright",
+      "id": "hermes",
       "type": "rectangle",
       "x": 1835,
       "y": 1465,
@@ -1373,7 +1373,7 @@
       "isDeleted": false,
       "boundElements": [
         {
-          "id": "playwright-text",
+          "id": "hermes-text",
           "type": "text"
         },
         {
@@ -1386,11 +1386,11 @@
       "locked": false
     },
     {
-      "id": "playwright-text",
+      "id": "hermes-text",
       "type": "text",
       "x": 1849,
       "y": 1479,
-      "width": 269.12,
+      "width": 278.4,
       "height": 80,
       "frameId": "tree",
       "angle": 0,
@@ -1411,13 +1411,13 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "tools / Playwright\nPlaywright / Chrome DevTools\nContainer: playwright; shared\nbrowser",
-      "originalText": "tools / Playwright\nPlaywright / Chrome DevTools\nContainer: playwright; shared\nbrowser",
+      "text": "Hermes / staged and stopped\nConfiguration/persona/skills\nretained\nDeferred until core acceptance",
+      "originalText": "Hermes / staged and stopped\nConfiguration/persona/skills\nretained\nDeferred until core acceptance",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
-      "containerId": "playwright",
+      "containerId": "hermes",
       "autoResize": true,
       "lineHeight": 1.25
     },
@@ -1478,7 +1478,7 @@
       "x": 880,
       "y": 679,
       "width": 65,
-      "height": 0,
+      "height": 12.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -1505,7 +1505,7 @@
         ],
         [
           65,
-          0
+          12.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -1527,9 +1527,9 @@
       "id": "tree-edge-2",
       "type": "arrow",
       "x": 1325,
-      "y": 679,
+      "y": 691.5,
       "width": 65,
-      "height": 447.5,
+      "height": 460,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -1556,7 +1556,7 @@
         ],
         [
           65,
-          -447.5
+          -460
         ]
       ],
       "lastCommittedPoint": null,
@@ -1578,9 +1578,9 @@
       "id": "tree-edge-3",
       "type": "arrow",
       "x": 1325,
-      "y": 679,
+      "y": 691.5,
       "width": 65,
-      "height": 0,
+      "height": 12.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -1607,7 +1607,7 @@
         ],
         [
           65,
-          0
+          -12.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -1629,9 +1629,9 @@
       "id": "tree-edge-4",
       "type": "arrow",
       "x": 1325,
-      "y": 679,
+      "y": 691.5,
       "width": 65,
-      "height": 180,
+      "height": 167.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -1658,7 +1658,7 @@
         ],
         [
           65,
-          180
+          167.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -1680,9 +1680,9 @@
       "id": "tree-edge-5",
       "type": "arrow",
       "x": 1325,
-      "y": 679,
+      "y": 691.5,
       "width": 65,
-      "height": 370,
+      "height": 357.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -1709,7 +1709,7 @@
         ],
         [
           65,
-          370
+          357.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -1731,9 +1731,9 @@
       "id": "tree-edge-6",
       "type": "arrow",
       "x": 1325,
-      "y": 679,
+      "y": 691.5,
       "width": 65,
-      "height": 530,
+      "height": 517.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -1760,7 +1760,7 @@
         ],
         [
           65,
-          530
+          517.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -1782,9 +1782,9 @@
       "id": "tree-edge-7",
       "type": "arrow",
       "x": 1325,
-      "y": 679,
+      "y": 691.5,
       "width": 65,
-      "height": 690,
+      "height": 677.5,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -1811,7 +1811,7 @@
         ],
         [
           65,
-          690
+          677.5
         ]
       ],
       "lastCommittedPoint": null,
@@ -2180,7 +2180,7 @@
         "gap": 0
       },
       "endBinding": {
-        "elementId": "hermes",
+        "elementId": "apps",
         "focus": 0,
         "gap": 0
       },
@@ -2231,7 +2231,7 @@
         "gap": 0
       },
       "endBinding": {
-        "elementId": "playwright",
+        "elementId": "hermes",
         "focus": 0,
         "gap": 0
       },

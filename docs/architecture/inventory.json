@@ -77,10 +77,34 @@
         "state": "stopped; configuration staged; application acceptance deferred"
       },
       {
-        "id": "playwright",
-        "label": "Playwright / Chrome DevTools",
-        "stack": "tools",
-        "state": "running; container playwright; actual MCP calls verified after explicit authorized Docker-group selection; shared Chromium; no published MCP/CDP ports"
+        "id": "nivra",
+        "label": "Nivra / notes",
+        "stack": "nivra",
+        "state": "restored SQLite/data; private HTTPS; MCP connected"
+      },
+      {
+        "id": "orva",
+        "label": "Orva / functions",
+        "stack": "orva",
+        "state": "latest digest; restored users/functions; MCP connected"
+      },
+      {
+        "id": "karakeep",
+        "label": "Karakeep / bookmarks",
+        "stack": "karakeep",
+        "state": "restored SQLite/assets; local asset store; private HTTPS"
+      },
+      {
+        "id": "immich",
+        "label": "Immich / photos",
+        "stack": "immich",
+        "state": "v3.3.5; restored Postgres/media; healthy; private HTTPS"
+      },
+      {
+        "id": "opencloud",
+        "label": "OpenCloud / files",
+        "stack": "opencloud",
+        "state": "7.2.4 stable; restored decomposed storage; private HTTPS"
       }
     ],
     "dnsPolicy": {

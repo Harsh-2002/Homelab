@@ -18,6 +18,8 @@ secrets/
 
 # Generated and local tooling files
 .playwright-mcp/
+.playwright-cli/
+.playwright/
 .DS_Store
 .idea/
 .vscode/

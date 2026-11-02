@@ -1,0 +1,74 @@
+{
+  "checkedOn": "2026-11-02",
+  "applications": {
+    "nivra": {
+      "stack": 157,
+      "image": "ghcr.io/harsh-2002/nivra:latest",
+      "data": "/data/apps/nivra",
+      "health": "healthy",
+      "content": {"notes": 8, "journals": 1, "total": 9},
+      "origin": "https://notes.l3b.cc.cd",
+      "mcp": "connected",
+      "exposure": "private Caddy source gate"
+    },
+    "orva": {
+      "stack": 175,
+      "image": "ghcr.io/harsh-2002/orva@sha256:9000820d4ea43d0f3ab9d2bc12434d62cb2bf292910139ac3dd71aae8bdb37fa",
+      "version": "v2026.10.25",
+      "data": "/data/apps/orva",
+      "health": "healthy",
+      "functions": 3,
+      "origin": "https://orva.l3b.cc.cd",
+      "mcp": "connected",
+      "exposure": "private Caddy source gate"
+    },
+    "karakeep": {
+      "stack": 80,
+      "image": "ghcr.io/karakeep-app/karakeep:0.34.1",
+      "data": "/data/apps/karakeep",
+      "health": "healthy",
+      "bookmarks": 169,
+      "assetFiles": 855,
+      "origin": "https://pin.l3b.cc.cd",
+      "exposure": "private Caddy source gate"
+    },
+    "immich": {
+      "stack": 147,
+      "image": "ghcr.io/immich-app/immich-server:v3.3.5",
+      "data": "/data/apps/immich",
+      "health": "healthy",
+      "assets": 9383,
+      "albums": 43,
+      "users": 2,
+      "origin": "https://photos.l3b.cc.cd",
+      "exposure": "private Caddy source gate"
+    },
+    "opencloud": {
+      "stack": 148,
+      "image": "opencloudeu/opencloud:7.2.4",
+      "data": "/data/apps/opencloud",
+      "health": "running; login HTTP 200",
+      "storage": "local decomposed",
+      "origin": "https://drive.l3b.cc.cd",
+      "exposure": "private Caddy source gate"
+    }
+  },
+  "checks": {
+    "applicationDataRestoredFromReadOnlyBackup": true,
+    "containersHealthy": true,
+    "allOnDedicatedL3bBridge": true,
+    "noApplicationHostPorts": true,
+    "privateSourceGateApplies": true,
+    "nivraAndOrvaMcpConnected": true,
+    "karakeepLocalAssetsUsed": true,
+    "immichSamePostgresMajorAndData": true,
+    "opencloudLocalDecomposedStorage": true
+  },
+  "limits": [
+    "Applications are private until the owner explicitly approves public routes; public DNS records alone do not expose them",
+    "Human passkey/OIDC sign-in for each app was not performed",
+    "Orva quick-share retains its historical Cairn S3 dependency; that object store is not currently deployed",
+    "OpenCloud v9 is a rolling release and was not applied; stable 7.2.4 preserves the restored data",
+    "Supabase remains deferred and its MCP remains disabled"
+  ]
+}

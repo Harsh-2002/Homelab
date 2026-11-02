@@ -1,0 +1,22 @@
+services:
+  opencloud:
+    image: opencloudeu/opencloud:7.2.4
+    container_name: opencloud
+    restart: unless-stopped
+    user: "1000:1000"
+    entrypoint: ["/bin/sh"]
+    command: ["-c", "opencloud init --insecure false || true; opencloud server"]
+    env_file:
+      - /data/apps/opencloud/runtime.env
+    volumes:
+      - /data/apps/opencloud/config:/etc/opencloud
+      - /data/apps/opencloud/data:/var/lib/opencloud
+    expose:
+      - "9200"
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b

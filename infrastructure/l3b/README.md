@@ -47,7 +47,7 @@ logs/backups were not rewritten.
 [`verify-network.py`](verify-network.py) checks actual endpoints, aliases,
 gateway, live trust settings, upstream host aliases and unchanged LAN/VPN routes;
 see [network evidence](NETWORK-VERIFICATION-2026-11-02.json). Core DNS/TLS/auth,
-memory and both browser MCPs passed after reconnection. Docker's later daemon
+memory checks passed after reconnection; browser automation is now Playwright CLI only. Docker's later daemon
 restart with live-restore passed during DNS setup; no reboot or independent
 VPN-client test is claimed.
 
@@ -69,6 +69,23 @@ are applied and tested; see [DNS policy](DNS-POLICY.md) and
 | Tinyauth 5.2.0 | Same `identity` stack | Internal `tinyauth:3000`; `https://login.l3b.cc.cd` |
 | Homepage 2.4.0 | Portainer `dashboard`, ID172; [stack](dashboard.compose.yaml) | Internal `homepage:3000`; `https://l3b.cc.cd` behind Tinyauth |
 | OpenViking 0.4.22 / Ollama 0.34.4 | Portainer `memory`, ID174; [stack](memory.compose.yaml) | Internal `openviking:1933` / `ollama:11434`; `https://memory.l3b.cc.cd` |
+| Nivra latest | Portainer `nivra`, ID157; [stack](nivra.compose.yaml) | Restored SQLite/notes; internal `nivra:3000`; `https://notes.l3b.cc.cd` |
+| Orva 2026.10.25 | Portainer `orva`, ID175; [stack](orva.compose.yaml) | Restored functions/users; internal `orva:8443`; `https://orva.l3b.cc.cd`; MCP connected |
+| Karakeep 0.34.1 | Portainer `karakeep`, ID80; [stack](karakeep.compose.yaml) | Restored bookmarks/assets; internal `karakeep:3000`; `https://pin.l3b.cc.cd` |
+| Immich 3.3.5 | Portainer `immich`, ID147; [stack](immich.compose.yaml) | Restored 9,383 assets/43 albums; internal `immich:2283`; `https://photos.l3b.cc.cd` |
+| OpenCloud 7.2.4 | Portainer `opencloud`, ID148; [stack](opencloud.compose.yaml) | Restored decomposed storage; internal `opencloud:9200`; `https://drive.l3b.cc.cd` |
+
+All five application origins currently remain behind the private Caddy source
+gate. Their public Cloudflare records point at the WAN address, but external
+clients receive the custom 403 until the owner explicitly approves a public
+route/path exception. Nivra and Orva MCPs are connected; Olx and Supabase remain
+disabled. Karakeep uses its local asset store (no S3 dependency); OpenCloud uses
+local decomposed storage. Immich keeps the same PostgreSQL 14 image and data
+layout as the backup. Orva's `quick-share` function and data are restored, but
+its configured Cairn S3 endpoint is not currently deployed, so uploads fail
+until that object store is restored. The `tools`/browser-MCP stack was removed;
+Playwright CLI is the only agent browser interface. Application evidence:
+[apps verification](APPS-VERIFICATION-2026-11-02.json), [browser CLI](BROWSER-CLI-VERIFICATION-2026-11-02.json).
 
 All application containers use the existing external Docker network `l3b` and
 service-name upstreams. **There are no published Portainer, UI, MCP, CDP, HTTP80
@@ -250,24 +267,19 @@ OpenCode remains the existing native host process. Its current authentication,
 sessions and Herdr integration were preserved. Skills and selected MCP settings
 were restored; Codex/Claude configuration was excluded explicitly.
 
-The Portainer-managed [tools stack](tools.compose.yaml), ID173,
-provides one shared Chromium process. Host Playwright and Chrome DevTools use
-Docker exec/stdio, without MCP/CDP host publications. Hermes's prepared clients
-use Docker service discovery internally. Context7, shadcn and REA also connect;
-unrestored-service MCPs remain disabled. This is a privileged browser tool, not
-an isolation boundary. No owner profile/session was imported into the browser.
-
-Browser MCP permission repair: the running user manager predated `dev`'s Docker
-group membership. Both native browser MCP launches now explicitly select that
-already-authorized group with `sg docker -c`, retaining the host dev UID, without socket chmod,
-extra ports or another browser. Actual tool calls pass; see
-[browser verification](BROWSER-VERIFICATION-2026-11-02.json). The native unit and
-detached handover launcher use the same selection and preflight Docker access.
-Agent Browser was researched as an optional CLI/MCP alternative, not installed.
+Browser automation is standardized on **Playwright CLI only**:
+`playwright-cli` with the official `playwright-cli` skill in
+`~/.agents/skills/playwright-cli`. It uses the host Playwright Chromium and
+reuses named CLI sessions. The former `tools` stack and its Chromium/MCP
+container were removed; the Playwright MCP and Chrome DevTools MCP entries are
+gone from OpenCode and disabled in the stopped Hermes config. No browser MCP,
+CDP host publication, `agent-browser` or Puppeteer-based agent tool is part of
+the current setup. The historical browser-MCP evidence is retained only as a
+record, not as current configuration.
 
 Owner naming standard: generic, single-word stack names; actual, single-word
 service/container names. Containers are `portainer`, `adguard`, `unbound`,
-`caddy`, `pocketid`, `tinyauth`, `homepage`, `playwright`, `openviking`, and
+`caddy`, `pocketid`, `tinyauth`, `homepage`, `openviking`, and
 `ollama`. `hermes` stays
 stopped. Portainer compose stack names cannot be updated in place: the five
 old managed records were replaced through the native API, reusing all bind data
@@ -286,17 +298,26 @@ removed; none remains in the desired stack files.
 ## Verification
 
 ```bash
-python3 infrastructure/l3b/verify-core.py --browser
-python3 infrastructure/l3b/verify-homepage.py
+python3 infrastructure/l3b/verify-core.py
 python3 infrastructure/l3b/verify-memory.py
 python3 infrastructure/agents/check-integrations.py --single-node --memory
 ```
 
-The browser option checks an actual signed-in Portainer administrator session
-and Secure/HttpOnly/Strict cookie attributes, without reading or printing keys.
+Browser checks now use the official Playwright CLI, not a container MCP:
+
+```bash
+playwright-cli -s=ui open https://l3b.cc.cd
+playwright-cli -s=ui snapshot
+playwright-cli -s=ui console
+playwright-cli -s=ui requests
+playwright-cli -s=ui close
+```
+
 The saved acceptance JSON records UDP DNS, valid/invalid DNSSEC, trusted TLS and
 HTTP2, identity discovery/JWKS, auth bypass rejection, exact Docker port bindings,
 mount identities, container hardening and preservation of the WireGuard service.
+The old `--browser`/`verify-homepage.py` MCP-era checks are historical; do not
+recreate the retired tools stack to run them.
 
 Human passkey/OIDC completion, remote client application requests, independent
 HTTP3 transport testing, reboot/Docker-daemon restart and new backup/restore

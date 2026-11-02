@@ -54,12 +54,7 @@ def main():
     servers = saved.get('mcp', {}).get('servers', {})
     for name, entry in servers.items():
         entry['disabled'] = name not in ['context7', 'shadcn', 'rea']
-    servers['playwright'] = {
-        'type': 'local', 'command': ['sg', 'docker', '-c',
-            'exec docker exec -i playwright node /app/cli.js '
-            '--cdp-endpoint http://127.0.0.1:9222 '
-            '--shared-browser-context --caps devtools,pdf,vision'],
-        'disabled': False, 'timeout': {'startup': 60000, 'catalog': 30000}}
+    # Browser automation is Playwright CLI + its official skill only.
     restored = {
         '$schema': 'https://opencode.ai/config.json',
         'mcp': {'servers': servers},
@@ -75,7 +70,7 @@ def main():
     for parent in [home / '.agents', home / '.agents/skills']:
         os.chown(parent, 1000, 1000)
     print('Reusable skills restored; OpenCode MCP config merged without credential output.')
-    print('Enabled: playwright, context7, shadcn, rea. Others retained disabled.')
+    print('Enabled: context7, shadcn, rea. Browser automation is Playwright CLI only.')
 
 
 if __name__ == '__main__':

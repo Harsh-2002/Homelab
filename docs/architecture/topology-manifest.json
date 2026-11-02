@@ -1,5 +1,5 @@
 {
-  "sourceHash": "3ec8b06f8fe7e19262b77f250b939a89e4796a8bb8c5fe0fe4a22c519ef10fe3",
+  "sourceHash": "21afc0ae990aa40211f7c61af298785b5f2b573db646d376108210c387964ac3",
   "frames": [
     "tree",
     "core-flow"
@@ -20,8 +20,8 @@
     "core-identity",
     "homepage",
     "memory",
+    "apps",
     "hermes",
-    "playwright",
     "flow-client",
     "flow-adguard",
     "flow-unbound",

@@ -40,7 +40,11 @@ activation is pending, not verified. The scheduled unit is
 ```bash
 systemctl --user status opencode.service
 systemctl --user status opencode-handover.service
-python3 infrastructure/l3b/verify-opencode.py --browser
+python3 infrastructure/l3b/verify-opencode.py
+playwright-cli -s=ui open https://oc.l3b.cc.cd
+playwright-cli -s=ui snapshot
+playwright-cli -s=ui console
+playwright-cli -s=ui close
 ```
 
 If the scoped handover fails, its activation script restores the pre-handover

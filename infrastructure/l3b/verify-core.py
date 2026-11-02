@@ -13,7 +13,6 @@ from pathlib import Path
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--save', type=Path)
-    parser.add_argument('--browser', action='store_true', help='Verify the actual authenticated browser session without reading credentials')
     args = parser.parse_args()
     result = {'checkedOn': '2026-11-02', 'node': 'l3b', 'checks': {}}
     checks = result['checks']
@@ -32,7 +31,7 @@ def main():
     expected_projects = {'portainer': 'portainer', 'adguard': 'dns',
                          'unbound': 'dns', 'pocketid': 'identity',
                          'tinyauth': 'identity', 'caddy': 'proxy',
-                         'homepage': 'dashboard', 'playwright': 'tools',
+                         'homepage': 'dashboard',
                          'openviking': 'memory', 'ollama': 'memory'}
     for name, project in expected_projects.items():
         item = by_name[name]
@@ -112,11 +111,6 @@ def main():
         with context.wrap_socket(raw, server_hostname='portainer.l3b.cc.cd') as tls:
             assert tls.selected_alpn_protocol() == 'h2'
     checks['trustedTlsAndHttp2'] = True
-    if args.browser:
-        code = r'''const {chromium}=require('/app/node_modules/playwright-core');
-(async()=>{const b=await chromium.connectOverCDP('http://127.0.0.1:9222');const c=b.contexts()[0];const r=await c.request.get('https://portainer.l3b.cc.cd/api/users/me');if(r.status()!==200)throw Error('Not signed in');const u=await r.json();if(u.Role!==1)throw Error('Not administrator');const s=(await c.cookies('https://portainer.l3b.cc.cd')).find(x=>x.name==='portainer_api_key');if(!s||!s.secure||!s.httpOnly||s.sameSite!=='Strict')throw Error('Cookie policy');console.log('PASS');process.exit(0)})().catch(()=>{console.error('Authenticated browser acceptance failed');process.exit(1)});'''
-        assert run('docker', 'exec', 'playwright', 'node', '-e', code) == 'PASS'
-        checks['actualPortainerBrowserAdminSessionAndSecureCookie'] = True
     checks['wireguardHostServicePreserved'] = run('systemctl', 'is-active', 'wg-quick@wg0') == 'active'
     assert checks['wireguardHostServicePreserved']
     result['limits'] = [

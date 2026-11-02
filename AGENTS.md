@@ -17,6 +17,13 @@ the superseded 172.17.0.0/16 bridge or old native-host gateway aliases.
 Let Docker manage its bridge/NAT/publication firewall rules, and the existing
 WireGuard manager own VPN forwarding. Do not add manual iptables rules for
 application routing. Caddy owns HTTP source/auth gates.
+
+Browser automation is **Playwright CLI only**: `playwright-cli` plus the
+official `playwright-cli` skill under `~/.agents/skills/playwright-cli`.
+Use it for navigation, form filling, UI/UX review, responsive checks,
+screenshots, console/network inspection and E2E work. Reuse the named CLI
+session; close it when done. Do not add or use Playwright MCP, Chrome DevTools
+MCP, `agent-browser`, Puppeteer-based agent tools or another browser MCP.
 DNS: internal AdGuard may use wildcard rewrites. Public Cloudflare must have no
 wildcard DNS; add exact DNS-only private mappings for deployed private services.
 Only explicitly approved public services get exact public-IP records and a
