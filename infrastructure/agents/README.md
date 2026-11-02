@@ -33,6 +33,19 @@ settings/MCPs/memory and launch commands preserved. See [HERDR.md](HERDR.md) for
 paths, installation, checks, context boundary and rollback. New CLI/TUI sessions
 load these components; setup did not start/control any live Herdr session.
 
+## Language servers, 2 November 2026
+
+OpenCode **v2.2.5 does not run language servers**: it accepts and preserves `lsp`
+configuration but starts no servers, exposes no LSP tool and produces no
+diagnostics, per the V2 migration guide. The `lsp` block was therefore removed
+from `~/.config/opencode/opencode.json`; do not reintroduce it expecting
+diagnostics. **Hermes** owns post-write semantic diagnostics for `write_file` and
+`patch`, lazily, inside trusted git worktrees only. Hermes-managed servers live in
+`~/.hermes/lsp/bin` (`gopls`, `pyright`, `typescript-language-server` pinned to
+TypeScript 6.0.3, `yaml-language-server`); `rust-analyzer` (standalone) and
+`bash-language-server` live in `~/.local/bin`, with apt `shellcheck` required for
+non-empty Bash diagnostics. Check with `hermes lsp status`. See [LSP.md](LSP.md).
+
 ## Four-agent standard, 2026-10-22
 
 The owner now requires shared tools, MCP integrations and skills to remain aligned
