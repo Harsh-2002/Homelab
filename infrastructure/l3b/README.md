@@ -85,7 +85,7 @@ are applied and tested; see [DNS policy](DNS-POLICY.md) and
 | RustFS 1.0.4 | Portainer `rustfs`, ID177; [stack](rustfs.compose.yaml) | Restored buckets; `https://s3.l3b.cc.cd` private, console `rustfs` |
 | Cairn v2026.09.13 | Portainer `cairn`, ID176; [stack](cairn.compose.yaml) | Restored bucket/user and Quick Share round trip; `https://cairn-s3.l3b.cc.cd` |
 | Frigate 0.18.2 | Portainer `frigate`, ID137; [stack](frigate.compose.yaml) | Restored data/config; outdoor camera live at 5 fps; `https://frigate.l3b.cc.cd` behind Tinyauth with an HA proxy-auth bypass |
-| Beszel 0.21.1 | Portainer `beszel`, ID181; [stack](beszel.compose.yaml) | Docker hub only; native `beszel-agent.service` on `10.1.3.1:45876` with daily auto-update; private `https://beszel.l3b.cc.cd` behind Tinyauth |
+| Beszel 0.21.1 | Portainer `beszel`, ID181; [stack](beszel.compose.yaml) | Docker hub only; native `beszel-agent.service` on `10.1.1.10:45876` with daily auto-update; monitors `/`, `/data` and the USB backup disk; private `https://beszel.l3b.cc.cd` behind Tinyauth |
 | Mosquitto 2.1.2 | Portainer `mqtt`, ID180; [stack](mqtt.compose.yaml) | Internal `mqtt:1883`; Frigate and Home Assistant authenticated with the existing `frigate` credential |
 | Home Assistant 2026.10.4 | Portainer `homeassistant`, ID179; [stack](homeassistant.compose.yaml) | Restored config/DB/dashboards; internal `homeassistant:8123`; `https://home.l3b.cc.cd` private; MQTT and Frigate camera/sensors working; HAOS add-ons not restored |
 

@@ -2,9 +2,9 @@
 
 > **2026-11-02:** The active deployment is the Docker/Portainer hub `beszel`
 > (ID 181) plus a **native** `beszel-agent.service` on l3b. The agent binary is
-> `/opt/beszel-agent/beszel-agent` (0.21.1), listens on `10.1.3.1:45876`, and has
+> `/opt/beszel-agent/beszel-agent` (0.21.1), listens on `10.1.1.10:45876`, and has
 > the daily `beszel-agent-update.timer` enabled. Hub data is under
-> `/data/apps/beszel`; UI is private at `https://beszel.l3b.cc.cd` behind
+> `/data/apps/beszel`; it monitors `/`, `/data` and the USB backup; UI is private at `https://beszel.l3b.cc.cd` behind
 > Tinyauth. VictoriaMetrics and Grafana are retired. The CT 104 details below
 > are historical.
 
