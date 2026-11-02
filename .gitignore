@@ -39,3 +39,6 @@ docs/architecture/topology-addresses.local.json
 infrastructure/l3b/wireguard/clients/
 infrastructure/l3b/wireguard/wg0.conf
 infrastructure/l3b/wireguard/l3b.json
+
+# cf CLI local cache
+.cloudflare/

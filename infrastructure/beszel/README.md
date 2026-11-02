@@ -1,10 +1,12 @@
 # Beszel monitoring
 
-> **2026-11-02:** The active deployment is the Docker/Portainer stack `beszel`
-> (ID 181) on l3b: hub `beszel:8090` + local agent over a shared Unix socket,
-> private `https://beszel.l3b.cc.cd` behind Tinyauth, data under
-> `/data/apps/beszel`. VictoriaMetrics and Grafana are retired. The CT 104
-> native-binary details below are historical.
+> **2026-11-02:** The active deployment is the Docker/Portainer hub `beszel`
+> (ID 181) plus a **native** `beszel-agent.service` on l3b. The agent binary is
+> `/opt/beszel-agent/beszel-agent` (0.21.1), listens on `10.1.3.1:45876`, and has
+> the daily `beszel-agent-update.timer` enabled. Hub data is under
+> `/data/apps/beszel`; UI is private at `https://beszel.l3b.cc.cd` behind
+> Tinyauth. VictoriaMetrics and Grafana are retired. The CT 104 details below
+> are historical.
 
 Beszel `v0.20.0` provides lightweight host, disk, ZFS, SMART, systemd, and Docker monitoring. The hub and agents use pinned native binaries managed by systemd; automatic application updates are disabled.
 
