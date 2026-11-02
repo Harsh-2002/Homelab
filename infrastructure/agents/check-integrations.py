@@ -75,8 +75,8 @@ def single_node():
         if ov.get('url') != 'https://memory.l3b.cc.cd/mcp' or not (ov.get('headers') or {}).get('Authorization'):
             failures.append('Claude Code: OpenViking MCP missing or incomplete')
         ox = claude.get('olx', {})
-        if '--network' not in ox.get('args', []) or 'ghcr.io/harsh-2002/olx-mcp:latest' not in ox.get('args', []):
-            failures.append('Claude Code: OLX MCP missing or not on the l3b network')
+        if ox.get('type') != 'http' or ox.get('url') != 'http://127.0.0.1:8811/mcp':
+            failures.append('Claude Code: OLX MCP missing or not pointed at the shared gateway')
         print('Claude Code: OpenViking and OLX MCP entries checked')
     if not (home / '.agents/skills/herdr-control/SKILL.md').is_file():
         failures.append('OpenCode: shared Herdr control skill missing')

@@ -19,7 +19,8 @@ credentials and its sidecar listens only on `127.0.0.1:8789`. The OpenViking
 memory provider is installed, enabled and available; its API returned 200.
 `HASS_URL` now points at `https://home.l3b.cc.cd` and the token-authenticated
 Home Assistant API returns 200. Browser and computer-use toolsets are disabled;
-the official `playwright-cli` skill remains available. The **OLX MCP** is enabled with four tools and runs on the `l3b` network.
+the official `playwright-cli` skill remains available. The **OLX MCP** is enabled with four tools through the shared
+`olx-mcp-gateway.service` at `http://127.0.0.1:8811/mcp`.
 There are no cron jobs. Claude Code also has OpenViking and OLX MCPs configured.
 
 The historical sections below describe the earlier cluster/container-era setup;

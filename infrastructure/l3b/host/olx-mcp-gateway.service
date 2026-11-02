@@ -1,0 +1,16 @@
+[Unit]
+Description=Shared OLX MCP gateway
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+User=dev
+SupplementaryGroups=docker
+WorkingDirectory=/home/dev
+ExecStart=/home/dev/.local/bin/mcp-proxy --host 127.0.0.1 --port 8811 --modern --upstreamProtocol modern --stateless -- /usr/bin/docker run --rm -i --network l3b --read-only --tmpfs /tmp:rw,nosuid,size=256m --shm-size=256m --log-opt max-size=10m --log-opt max-file=3 ghcr.io/harsh-2002/olx-mcp:latest
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

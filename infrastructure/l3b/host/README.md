@@ -7,11 +7,20 @@ a Docker outage run outside Docker.
 | --- | --- | --- |
 | WireGuard | `wg-quick@wg0.service` | VPN; no Docker dependency |
 | Beszel agent | `beszel-agent.service` | Native 0.21.1; `10.1.1.10:45876`; daily update timer; monitors `/` (NVMe) and `/data` (SATA) only |
+| OLX MCP gateway | `olx-mcp-gateway.service` | Native `mcp-proxy` on `127.0.0.1:8811`; one shared OLX stdio container on `l3b` for Hermes, OpenCode and Claude Code |
 | SMART monitoring | `smartd.service` | Warnings forwarded to Telegram by `smartd-alert.py` |
 | Security updates | `unattended-upgrades.service` | Debian security updates only; no automatic reboot |
 | Network | `systemd-networkd`, `systemd-resolved` | Sole host network/DNS manager |
 | Remote shell | `ssh.service` | Existing keys only |
 | Coding agents | `opencode.service`, Hermes user gateway | Need host filesystem/tool access |
+
+## OLX MCP gateway
+
+Install `mcp-proxy@6.7.21` into the `dev` npm prefix so
+`/home/dev/.local/bin/mcp-proxy` exists, then enable
+`olx-mcp-gateway.service` (tracked beside this file). It serves `/mcp` on
+loopback and owns one shared OLX stdio container on `l3b`; Hermes, OpenCode and
+Claude Code all use `http://127.0.0.1:8811/mcp`.
 
 ## Beszel sensors
 

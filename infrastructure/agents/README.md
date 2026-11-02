@@ -22,8 +22,9 @@ address annotations and internal diagram exports remain outside public Git.
 Current agent state, 2 November 2026: OpenCode and Hermes both use the
 OpenViking memory provider at `https://memory.l3b.cc.cd` with the same
 account-scoped key. Claude Code has OpenViking and OLX MCPs configured and both
-connect; Codex CLI/config is absent. OLX runs on the `l3b` Docker network because
-the daemon's default bridge is disabled. Browser MCPs remain removed; Playwright
+connect; Codex CLI/config is absent. OLX runs as one shared stdio container behind the native
+`olx-mcp-gateway.service` (`mcp-proxy`, loopback HTTP); all clients use
+`http://127.0.0.1:8811/mcp`. Browser MCPs remain removed; Playwright
 CLI is the only browser interface. The historical all-four sections below are
 retained as migration context.
 
