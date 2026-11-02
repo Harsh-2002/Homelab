@@ -6,7 +6,7 @@ a Docker outage run outside Docker.
 | Component | Unit / path | Notes |
 | --- | --- | --- |
 | WireGuard | `wg-quick@wg0.service` | VPN; no Docker dependency |
-| Beszel agent | `beszel-agent.service` | Native 0.21.1; `10.1.1.10:45876`; daily update timer; monitors `/`, `/data`, USB backup |
+| Beszel agent | `beszel-agent.service` | Native 0.21.1; `10.1.1.10:45876`; daily update timer; monitors `/` (NVMe) and `/data` (SATA) only |
 | SMART monitoring | `smartd.service` | Warnings forwarded to Telegram by `smartd-alert.py` |
 | Security updates | `unattended-upgrades.service` | Debian security updates only; no automatic reboot |
 | Network | `systemd-networkd`, `systemd-resolved` | Sole host network/DNS manager |

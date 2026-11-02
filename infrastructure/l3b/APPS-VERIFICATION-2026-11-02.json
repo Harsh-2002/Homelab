@@ -189,7 +189,7 @@
     "beszel": {
       "stack": 181,
       "image": "henrygd/beszel:0.21.1",
-      "agent": "native beszel-agent 0.21.1 systemd; 10.1.1.10:45876; daily auto-update timer; root, /data and backup disks",
+      "agent": "native beszel-agent 0.21.1 systemd; 10.1.1.10:45876; daily auto-update timer; root NVMe and /data SATA only",
       "data": "/data/apps/beszel",
       "health": "healthy",
       "origin": "https://beszel.l3b.cc.cd",
