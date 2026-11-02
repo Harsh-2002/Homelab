@@ -9,13 +9,22 @@
     "unknownInternalNameStillUsesWildcard": true
   },
   "privateOrigins": [
-    "l3b.cc.cd",
     "auth.l3b.cc.cd",
-    "login.l3b.cc.cd",
-    "portainer.l3b.cc.cd",
+    "beszel.l3b.cc.cd",
+    "cairn.l3b.cc.cd",
     "dns.l3b.cc.cd",
+    "docs.l3b.cc.cd",
+    "frigate.l3b.cc.cd",
+    "git.l3b.cc.cd",
+    "home.l3b.cc.cd",
+    "l3b.cc.cd",
+    "login.l3b.cc.cd",
     "memory.l3b.cc.cd",
-    "oc.l3b.cc.cd"
+    "n8n.l3b.cc.cd",
+    "oc.l3b.cc.cd",
+    "portainer.l3b.cc.cd",
+    "rustfs.l3b.cc.cd",
+    "s3.l3b.cc.cd"
   ],
   "publicDnsNames": [
     "notes.l3b.cc.cd",
@@ -28,6 +37,7 @@
   "limits": [
     "Public DNS records exist for the four owner-approved app origins, historical Orva, and the Cairn S3 API; Orva still has no public Caddy route",
     "Recursive caches may retain former wildcard answers until TTL expiry",
-    "Wildcard TLS certificate and Caddy hostname matcher are not public wildcard DNS"
+    "Wildcard TLS certificate and Caddy hostname matcher are not public wildcard DNS",
+    "Exact DNS-only private A records point at 10.1.1.10; off-LAN clients still need WireGuard, and public-IP requests receive the Caddy 403 page"
   ]
 }
