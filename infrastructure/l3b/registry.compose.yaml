@@ -3,13 +3,17 @@ services:
     image: registry:2
     container_name: registry
     restart: unless-stopped
-    env_file:
-      - /data/apps/registry/runtime.env
     expose:
       - "5000"
     volumes:
       - /data/apps/registry/auth:/auth:ro
       - /data/apps/registry/storage:/var/lib/registry
+      - /data/apps/registry/config.yml:/etc/docker/registry/config.yml:ro
+    healthcheck:
+      test: [CMD-SHELL, "wget -qO- http://127.0.0.1:5000/v2/ 2>&1 | grep -q 401"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
     networks:
       - l3b
 

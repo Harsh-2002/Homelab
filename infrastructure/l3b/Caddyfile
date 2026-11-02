@@ -132,6 +132,11 @@
 			reverse_proxy frigate:8971
 		}
 
+		@homeassistant host home.l3b.cc.cd
+		handle @homeassistant {
+			reverse_proxy homeassistant:8123
+		}
+
 		@rustfs_api host s3.l3b.cc.cd
 		handle @rustfs_api {
 			reverse_proxy rustfs:9000

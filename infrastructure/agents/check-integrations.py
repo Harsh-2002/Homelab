@@ -15,7 +15,7 @@ def single_node():
     """Owner-scoped l3b check; never create excluded Codex/Claude configs."""
     home = Path.home()
     op_path = home / '.config/opencode/opencode.json'
-    hermes_path = Path('/data/apps/hermes/home/config.yaml')
+    hermes_path = home / '.hermes/config.yaml'
     opencode = json.loads(op_path.read_text())
     hermes = yaml.safe_load(hermes_path.read_text())
     clients = {'OpenCode': opencode['mcp']['servers'], 'Hermes': hermes['mcp_servers']}
@@ -46,8 +46,8 @@ def single_node():
     for path in [op_path, hermes_path]:
         if path.stat().st_mode & 0o077:
             failures.append('Credential-bearing agent config is not private')
-    if hermes.get('memory', {}).get('provider') == 'openviking':
-        failures.append('Hermes: unrestored OpenViking provider is active')
+    if hermes.get('memory', {}).get('provider') != 'openviking':
+        failures.append('Hermes: OpenViking memory provider is not active')
     memory_plugins = [item for item in opencode.get('plugins', [])
                       if 'openviking' in (item if isinstance(item, str) else item.get('package', ''))]
     if '--memory' in sys.argv and len(memory_plugins) != 1:
@@ -70,7 +70,7 @@ def single_node():
         print('OpenViking: official plugin, private account config and three bundled skills checked')
     if not (home / '.agents/skills/herdr-control/SKILL.md').is_file():
         failures.append('OpenCode: shared Herdr control skill missing')
-    if not (Path('/data/apps/hermes/home/memories')).is_dir():
+    if not (home / '.hermes/memories').is_dir():
         failures.append('Hermes: local memories missing')
     for failure in failures:
         print('FAIL: ' + failure, file=sys.stderr)

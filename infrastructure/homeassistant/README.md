@@ -1,5 +1,11 @@
 # Home Assistant OS
 
+> **2026-11-02:** The active deployment is the Docker/Portainer stack on l3b:
+> [`infrastructure/l3b/homeassistant.compose.yaml`](../l3b/homeassistant.compose.yaml).
+> Private URL: `https://home.l3b.cc.cd`; data: `/data/apps/homeassistant`.
+> HAOS add-ons Mosquitto and SSH were not restored; the HAOS/Proxmox details
+> below are historical.
+
 Frigate and node monitoring (2026-10-22): **Homelab** sidebar dashboard has
 [Cameras](https://home.l3b.cc.cd/homelab-status/cameras) and
 [Nodes](https://home.l3b.cc.cd/homelab-status/nodes). Authenticated MQTT and RTSP,

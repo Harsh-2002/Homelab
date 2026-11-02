@@ -33,6 +33,11 @@ services:
       - --hide-scrollbars
       - --disable-blink-features=AutomationControlled
       - --window-size=1440,900
+    healthcheck:
+      test: [CMD, wget, -qO-, http://127.0.0.1:9222/json/version]
+      interval: 30s
+      timeout: 5s
+      retries: 3
     networks:
       - l3b
 
@@ -42,6 +47,11 @@ services:
     restart: unless-stopped
     env_file:
       - /data/apps/karakeep/meili.env
+    healthcheck:
+      test: [CMD, wget, -qO-, http://127.0.0.1:7700/health]
+      interval: 30s
+      timeout: 5s
+      retries: 3
     volumes:
       - /data/apps/karakeep/meilisearch:/meili_data
     networks:

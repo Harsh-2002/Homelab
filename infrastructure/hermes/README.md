@@ -1,5 +1,29 @@
 # Hermes Agent on dev
 
+## Current state — native restore, 2 November 2026
+
+Hermes **0.22.5** is installed natively for the `dev` host user under
+`/home/dev/.hermes` (git install, Python 3.14.9). The previous profile's
+`config.yaml`, protected `.env`, `auth.json`, `SOUL.md`, memories, skills,
+sessions and platform state were imported. Config parity was checked by key
+path: the only keys intentionally absent are `mcp_servers.playwright` and
+`mcp_servers.chrome-devtools`, removed under the Playwright-CLI-only policy.
+All 18 previous `.env` keys are present and non-empty; no value is recorded here.
+
+`hermes-gateway.service` is installed as an enabled **user** service with
+`loginctl` linger, so it survives logout and reboot. It reports three connected
+platforms: **API server, Telegram and Photon/iMessage**. Telegram `getMe`
+returns `@heyhermesai_bot`; the allowlist contains only the owner's numeric ID
+and `gateway.allow_all_users` is false. Photon reports stored device/project
+credentials and its sidecar listens only on `127.0.0.1:8789`. The OpenViking
+memory provider is installed, enabled and available; its API returned 200.
+`HASS_URL` now points at `https://home.l3b.cc.cd` and the token-authenticated
+Home Assistant API returns 200. Browser and computer-use toolsets are disabled;
+the official `playwright-cli` skill remains available. There are no cron jobs.
+
+The historical sections below describe the earlier cluster/container-era setup;
+where they conflict with this banner, this banner is current.
+
 REA 6.7.0 is globally configured for Hermes, Codex and Claude Code on `dev`.
 Hermes uses the local stdio entry `mcp_servers.rea` and the bundled skill at
 `~/.hermes/skills/reverse-engineer-anything`. Native connection and 207-tool
@@ -12,7 +36,7 @@ Supabase native HTTP MCP is configured in the protected live config as `mcp_serv
 
 The local `quick-share` skill was installed on 2026-10-09 at `/home/dev/.hermes/skills/productivity/quick-share/SKILL.md`; its reproducible source is [skills/quick-share/SKILL.md](skills/quick-share/SKILL.md). It instructs Hermes to use `/usr/local/bin/qs` to download supplied Quick Share images/files and upload requested deliverables, with default one-hour expiry, a maximum seven-day lifetime, and the installed CLI's 4 MiB upload limit. It covers stdin/MIME options, no-overwrite downloads, sanitization, and uncertain-upload failure handling. No extra keys, MCP server, or gateway configuration is needed. Skill discovery/validation does not prove a live transfer succeeded. If an existing session does not see the new skill, start a new Hermes conversation and list skills; no service restart is required for file-based discovery.
 
-Home Assistant integration is active through `HASS_URL=http://10.1.1.13` and `HASS_TOKEN` in the mode-0600 live `.env`. The owner-provided long-lived token is also stored as a concealed field in the existing `Home Assistant` HomeLab 1Password item. The same token powers Homepage's native Home Assistant widget through a separate Kubernetes Secret. The gateway was restarted and a token-authenticated Home Assistant API state read succeeded. The `homeassistant` toolset is enabled in Hermes; an agent session may need `/reload-mcp` or a new session to see newly available tools. No token is kept in Git.
+Home Assistant integration is active through `HASS_URL=https://home.l3b.cc.cd` and `HASS_TOKEN` in the mode-0600 live `.env`; the token-authenticated API returns 200. The owner-provided long-lived token is also stored as a concealed field in the existing `Home Assistant` HomeLab 1Password item. The same token powers Homepage's native Home Assistant widget through a separate Kubernetes Secret. The gateway was restarted and a token-authenticated Home Assistant API state read succeeded. The `homeassistant` toolset is enabled in Hermes; an agent session may need `/reload-mcp` or a new session to see newly available tools. No token is kept in Git.
 
 Hermes Agent runs under the existing `dev` Linux account on `dev`, not a separate OS user. This deliberately reuses that account's Git, SSH, `gh`, and Codex CLI authentication. It also means Hermes has the same filesystem and command privileges as `dev`; do not grant Telegram access to anyone other than the owner's numeric Telegram user ID. The official installer creates the isolated Python/runtime tree under `/home/dev/.hermes/hermes-agent` and keeps Hermes configuration and sessions under `/home/dev/.hermes`. No browser/computer-use extras are installed. The working installation is v0.21.5 plus upstream main commit `09581caca` (2026-09-29); pinning the v0.21.5 tag failed because that tag lacks `pm/lock.json` and `pm.cli` required by the current installer, so the installer was rerun on main and validated.
 

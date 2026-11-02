@@ -1,0 +1,29 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    container_name: homeassistant
+    restart: unless-stopped
+    init: false
+    stop_grace_period: 30s
+    environment:
+      TZ: Asia/Kolkata
+    expose:
+      - "8123"
+    volumes:
+      - /data/apps/homeassistant:/config
+      - /data/apps/homeassistant/media:/media
+      - /data/apps/homeassistant/ssl:/ssl
+      - /data/apps/homeassistant/share:/share
+    healthcheck:
+      test: [CMD, python3, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8123/', timeout=5).read(1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 300s
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b

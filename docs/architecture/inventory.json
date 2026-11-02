@@ -54,9 +54,9 @@
       },
       {
         "id": "homepage",
-        "label": "Homepage 2.4.0",
+        "label": "Homepage 2.7.0",
         "stack": "dashboard",
-        "state": "healthy; private apex behind Tinyauth; actual desktop/mobile backend browser tests passed"
+        "state": "healthy; private apex behind Tinyauth; service cards current"
       },
       {
         "id": "opencode",
@@ -72,9 +72,9 @@
       },
       {
         "id": "hermes",
-        "label": "Hermes / staged",
+        "label": "Hermes 0.22.5 (native)",
         "stack": "hermes",
-        "state": "stopped; configuration staged; application acceptance deferred"
+        "state": "native /home/dev/.hermes; hermes-gateway.service active and enabled; Telegram, Photon/iMessage and API server connected; OpenViking memory provider active; browser MCPs removed; Playwright CLI only"
       },
       {
         "id": "nivra",
@@ -108,15 +108,15 @@
       },
       {
         "id": "paperless",
-        "label": "Paperless / documents",
+        "label": "Paperless 3.4.1",
         "stack": "paperless",
-        "state": "restored data; private HTTPS"
+        "state": "healthy; 28 documents preserved after SQLite migration; private HTTPS"
       },
       {
         "id": "n8n",
-        "label": "n8n / automation",
+        "label": "n8n 2.45.7 / sandbox 1.4.0",
         "stack": "n8n",
-        "state": "core restored; optional sandbox deferred"
+        "state": "core, web search and sandbox API/runner healthy; private HTTPS"
       },
       {
         "id": "qbittorrent",
@@ -126,27 +126,27 @@
       },
       {
         "id": "motrix",
-        "label": "Motrix / downloads",
+        "label": "Motrix 2.2.0",
         "stack": "motrix",
-        "state": "restored config/media; private MDXP"
+        "state": "stable image; restored config/downloads; private MDXP"
       },
       {
         "id": "jellyfin",
-        "label": "Jellyfin / media",
+        "label": "Jellyfin 12.4",
         "stack": "jellyfin",
-        "state": "restored config/media; private HTTPS"
+        "state": "healthy; restored config/media; private HTTPS"
       },
       {
         "id": "registry",
-        "label": "Registry / images",
+        "label": "Registry 2.8.3",
         "stack": "registry",
-        "state": "restored auth; local filesystem storage"
+        "state": "S3 backend via RustFS docker-registry bucket; authenticated catalog verified; private HTTPS"
       },
       {
         "id": "forgejo",
-        "label": "Forgejo / git",
+        "label": "Forgejo 14 (EOL)",
         "stack": "forgejo",
-        "state": "restored SQLite/repositories; private HTTPS"
+        "state": "containers stopped; stack retained; upgrade/replacement decision pending"
       },
       {
         "id": "theking",
@@ -168,9 +168,15 @@
       },
       {
         "id": "frigate",
-        "label": "Frigate / cameras",
+        "label": "Frigate 0.18.2",
         "stack": "frigate",
-        "state": "restored 156 GB data/config; running; private HTTPS"
+        "state": "healthy; restored data/config; private HTTPS"
+      },
+      {
+        "id": "homeassistant",
+        "label": "Home Assistant 2026.10.4",
+        "stack": "homeassistant",
+        "state": "Docker stack 179; restored config/DB/dashboards; private HTTPS; no Supervisor/add-ons; MQTT, Frigate token and VictoriaMetrics integrations outstanding"
       }
     ],
     "dnsPolicy": {
@@ -309,8 +315,8 @@
         66
       ],
       "body": [
-        "Codex \u00b7 Claude Code \u00b7 Hermes \u00b7 OpenCode",
-        "Herdr \u00b7 shared tools / MCP \u00b7 development workloads"
+        "Codex · Claude Code · Hermes · OpenCode",
+        "Herdr · shared tools / MCP · development workloads"
       ]
     },
     {
@@ -323,8 +329,8 @@
         66
       ],
       "body": [
-        "Beszel \u00b7 Grafana \u00b7 VictoriaMetrics",
-        "Uptime Kuma \u00b7 PVE exporter"
+        "Beszel · Grafana · VictoriaMetrics",
+        "Uptime Kuma · PVE exporter"
       ]
     },
     {
@@ -354,12 +360,12 @@
       ],
       "body": [
         "Application data erased; restore backup before start",
-        "Personal   Immich \u00b7 Karakeep \u00b7 OpenCloud \u00b7 Paperless",
-        "Notes       Nivra \u00b7 separate friend instance",
-        "Build        Forgejo \u00b7 Docker Registry \u00b7 mirror worker",
-        "Automate n8n \u00b7 SearXNG \u00b7 isolated sandbox",
-        "Agents     OpenViking \u00b7 Ollama \u00b7 Omni",
-        "Helpers    PostgreSQL \u00b7 Valkey \u00b7 Meilisearch \u00b7 updater"
+        "Personal   Immich · Karakeep · OpenCloud · Paperless",
+        "Notes       Nivra · separate friend instance",
+        "Build        Forgejo · Docker Registry · mirror worker",
+        "Automate n8n · SearXNG · isolated sandbox",
+        "Agents     OpenViking · Ollama · Omni",
+        "Helpers    PostgreSQL · Valkey · Meilisearch · updater"
       ],
       "statusLabel": "stopped / restore data"
     },
@@ -373,7 +379,7 @@
         95
       ],
       "body": [
-        "Serverless functions \u00b7 Quick Share / offline"
+        "Serverless functions · Quick Share / offline"
       ],
       "state": "stopped",
       "statusLabel": "Stopped / final backup"
@@ -388,7 +394,7 @@
         95
       ],
       "body": [
-        "Caddy \u00b7 HTTPS routing / TLS"
+        "Caddy · HTTPS routing / TLS"
       ]
     },
     {
@@ -401,7 +407,7 @@
         66
       ],
       "body": [
-        "AdGuard Home \u2192 Unbound recursion"
+        "AdGuard Home → Unbound recursion"
       ]
     },
     {
@@ -414,7 +420,7 @@
         66
       ],
       "body": [
-        "Pocket ID / OIDC \u00b7 Tinyauth / forward-auth"
+        "Pocket ID / OIDC · Tinyauth / forward-auth"
       ]
     },
     {
@@ -441,7 +447,7 @@
         95
       ],
       "body": [
-        "Home Assistant \u00b7 Mosquitto \u00b7 local device control / offline"
+        "Home Assistant · Mosquitto · local device control / offline"
       ],
       "state": "stopped",
       "statusLabel": "Stopped / final backup"
@@ -487,17 +493,17 @@
       ],
       "kubernetes": true,
       "body": [
-        "Talos \u00b7 control plane + workloads",
-        "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 500 GiB data"
+        "Talos · control plane + workloads",
+        "4 vCPU · up to 16 GiB RAM · 500 GiB data"
       ],
       "statusLabel": "host unreachable / NotReady"
     }
   ],
   "kubernetes": {
     "network": [
-      "Cilium CNI \u00b7 L2 LoadBalancer services \u00b7 CoreDNS",
-      "Argo CD \u00b7 Headlamp \u00b7 Homepage \u00b7 metrics-server",
-      "vmagent \u00b7 kube-state-metrics \u00b7 node metrics"
+      "Cilium CNI · L2 LoadBalancer services · CoreDNS",
+      "Argo CD · Headlamp · Homepage · metrics-server",
+      "vmagent · kube-state-metrics · node metrics"
     ],
     "storage": [
       "Cluster stopped; px10/px20 data disks erased",
@@ -506,8 +512,8 @@
     ],
     "supabase": [
       "Offline; authoritative SQL and application files saved",
-      "Studio \u00b7 Auth \u00b7 REST \u00b7 Realtime \u00b7 Edge Functions",
-      "Storage / imgproxy \u00b7 Kong \u00b7 pooler \u00b7 logs / analytics"
+      "Studio · Auth · REST · Realtime · Edge Functions",
+      "Storage / imgproxy · Kong · pooler · logs / analytics"
     ]
   },
   "physicalStorage": [

@@ -16,7 +16,7 @@
 <path d="M1770 231.5L1835 969" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1770 231.5L1835 1154" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1770 231.5L1835 1351.5" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M1770 231.5L1835 1524" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1770 231.5L1835 1536.5" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <g data-node="true"><rect x="55" y="620" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="69" y="647" font-size="19" fill="#18252c">Phone / workstation</text>
 <text x="69" y="672" font-size="16" fill="#18252c">Private LAN access</text>
@@ -100,15 +100,16 @@
 </g>
 <g data-node="true"><rect x="1835" y="1280" width="380" height="143" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
 <text x="1849" y="1307" font-size="19" fill="#18252c">apps / Portainer restores</text>
-<text x="1849" y="1332" font-size="16" fill="#18252c">13 app stacks; four public, Orva</text>
-<text x="1849" y="1357" font-size="16" fill="#18252c">private</text>
-<text x="1849" y="1382" font-size="16" fill="#18252c">media, docs, automation, git,</text>
+<text x="1849" y="1332" font-size="16" fill="#18252c">16 running app stacks; Forgejo</text>
+<text x="1849" y="1357" font-size="16" fill="#18252c">retained stopped</text>
+<text x="1849" y="1382" font-size="16" fill="#18252c">media, docs, automation, HA, git,</text>
 <text x="1849" y="1407" font-size="16" fill="#18252c">registry and S3</text>
 </g>
-<g data-node="true"><rect x="1835" y="1465" width="380" height="118" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
-<text x="1849" y="1492" font-size="19" fill="#18252c">Hermes / staged and stopped</text>
-<text x="1849" y="1517" font-size="16" fill="#18252c">Configuration/persona/skills</text>
-<text x="1849" y="1542" font-size="16" fill="#18252c">retained</text>
-<text x="1849" y="1567" font-size="16" fill="#18252c">Deferred until core acceptance</text>
+<g data-node="true"><rect x="1835" y="1465" width="380" height="143" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
+<text x="1849" y="1492" font-size="19" fill="#18252c">Hermes / native</text>
+<text x="1849" y="1517" font-size="16" fill="#18252c">Telegram, Photon/iMessage and API</text>
+<text x="1849" y="1542" font-size="16" fill="#18252c">server connected</text>
+<text x="1849" y="1567" font-size="16" fill="#18252c">OpenViking provider; Playwright CLI</text>
+<text x="1849" y="1592" font-size="16" fill="#18252c">only</text>
 </g>
 <text x="55" y="1730" font-size="20">Existing backups preserved; passkey/OIDC and paid model acceptance require separate tests.</text></g></svg>

@@ -1,6 +1,6 @@
 services:
   motrix:
-    image: motrixapp/motrix-server:2.0.0-beta.40
+    image: motrixapp/motrix-server:2.2.0
     container_name: motrix
     init: true
     restart: unless-stopped

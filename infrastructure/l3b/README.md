@@ -67,24 +67,36 @@ are applied and tested; see [DNS policy](DNS-POLICY.md) and
 | Caddy 2.11.4 + saved custom plugins | Portainer `proxy`, ID171; [stack](proxy.compose.yaml) | Host **443/TCP and 443/UDP only** |
 | Pocket ID 2.16.0 | Portainer `identity`, ID170; [stack](identity.compose.yaml) | Internal `pocketid:1411`; `https://auth.l3b.cc.cd` |
 | Tinyauth 5.2.0 | Same `identity` stack | Internal `tinyauth:3000`; `https://login.l3b.cc.cd` |
-| Homepage 2.4.0 | Portainer `dashboard`, ID172; [stack](dashboard.compose.yaml) | Internal `homepage:3000`; `https://l3b.cc.cd` behind Tinyauth |
+| Homepage 2.7.0 | Portainer `dashboard`, ID172; [stack](dashboard.compose.yaml) | Internal `homepage:3000`; `https://l3b.cc.cd` behind Tinyauth |
 | OpenViking 0.4.22 / Ollama 0.34.4 | Portainer `memory`, ID174; [stack](memory.compose.yaml) | Internal `openviking:1933` / `ollama:11434`; `https://memory.l3b.cc.cd` |
 | Nivra latest | Portainer `nivra`, ID157; [stack](nivra.compose.yaml) | Restored SQLite/notes; internal `nivra:3000`; `https://notes.l3b.cc.cd` |
 | Orva 2026.10.25 | Portainer `orva`, ID175; [stack](orva.compose.yaml) | Restored functions/users; internal `orva:8443`; `https://orva.l3b.cc.cd`; MCP connected |
 | Karakeep 0.34.1 | Portainer `karakeep`, ID80; [stack](karakeep.compose.yaml) | Restored bookmarks/assets; internal `karakeep:3000`; `https://pin.l3b.cc.cd` |
 | Immich 3.3.5 | Portainer `immich`, ID147; [stack](immich.compose.yaml) | Restored 9,383 assets/43 albums; internal `immich:2283`; `https://photos.l3b.cc.cd` |
 | OpenCloud 7.2.4 | Portainer `opencloud`, ID148; [stack](opencloud.compose.yaml) | Restored decomposed storage; internal `opencloud:9200`; `https://drive.l3b.cc.cd` |
-| Paperless 3.2.1 | Portainer `paperless`, ID149; [stack](paperless.compose.yaml) | Restored documents; internal `paperless:8000`; `https://docs.l3b.cc.cd` |
-| n8n latest | Portainer `n8n`, ID85; [stack](n8n.compose.yaml) | Core automation/Postgres/SearXNG restored; sandbox deferred; `https://n8n.l3b.cc.cd` |
+| Paperless 3.4.1 | Portainer `paperless`, ID149; [stack](paperless.compose.yaml) | Restored documents; internal `paperless:8000`; `https://docs.l3b.cc.cd` |
+| n8n 2.45.7 / Sandbox 1.4.0 | Portainer `n8n`, ID85; [stack](n8n.compose.yaml) | Automation/Postgres/SearXNG and sandbox API/runner restored; `https://n8n.l3b.cc.cd` |
 | qBittorrent latest | Portainer `qbittorrent`, ID160; [stack](qbittorrent.compose.yaml) | Restored config/media; `https://downloads.l3b.cc.cd` |
-| Motrix 2.0.0-beta.40 | Portainer `motrix`, ID152; [stack](motrix.compose.yaml) | Restored config/downloads; `/mdxp` through `downloads` |
-| Jellyfin 12.1 | Portainer `jellyfin`, ID94; [stack](jellyfin.compose.yaml) | Restored config/media; `https://media.l3b.cc.cd` |
-| Registry 2 | Portainer `registry`, ID9; [stack](registry.compose.yaml) | Restored auth; local filesystem storage; `https://registry.l3b.cc.cd` |
+| Motrix 2.2.0 | Portainer `motrix`, ID152; [stack](motrix.compose.yaml) | Restored config/downloads; `/mdxp` through `downloads` |
+| Jellyfin 12.4 | Portainer `jellyfin`, ID94; [stack](jellyfin.compose.yaml) | Restored config/media; `https://media.l3b.cc.cd` |
+| Registry 2.8.3 | Portainer `registry`, ID9; [stack](registry.compose.yaml) | Restored htpasswd auth; S3 storage in RustFS `docker-registry`; authenticated catalog verified; `https://registry.l3b.cc.cd` |
 | Forgejo 14 | Portainer `forgejo`, ID135; [stack](forgejo.compose.yaml) | Restored SQLite/repositories; `https://git.l3b.cc.cd` |
 | Nivra The King latest | Portainer `theking`, ID178; [stack](theking.compose.yaml) | Secondary Nivra; `https://theking.l3b.cc.cd` |
 | RustFS 1.0.4 | Portainer `rustfs`, ID177; [stack](rustfs.compose.yaml) | Restored buckets; `https://s3.l3b.cc.cd` private, console `rustfs` |
 | Cairn v2026.09.13 | Portainer `cairn`, ID176; [stack](cairn.compose.yaml) | Restored bucket/user and Quick Share round trip; `https://cairn-s3.l3b.cc.cd` |
-| Frigate 0.18.0 | Portainer `frigate`, ID137; [stack](frigate.compose.yaml) | Restored 156 GB data/config; `https://frigate.l3b.cc.cd`; camera/MQTT config retained |
+| Frigate 0.18.2 | Portainer `frigate`, ID137; [stack](frigate.compose.yaml) | Restored 156 GB data/config; `https://frigate.l3b.cc.cd`; camera/MQTT config retained |
+| Home Assistant 2026.10.4 | Portainer `homeassistant`, ID179; [stack](homeassistant.compose.yaml) | Restored config/DB/dashboards; internal `homeassistant:8123`; `https://home.l3b.cc.cd` private; HAOS Mosquitto/SSH add-ons not restored |
+
+On 2 November the safe in-place upgrades were completed and verified healthy:
+Homepage 2.7.0, Paperless 3.4.1 (28 documents preserved across the SQLite
+migration), Motrix 2.2.0 stable, Jellyfin 12.4 and Frigate 0.18.2. Healthchecks
+were added to AdGuard, Caddy, n8n, Paperless/broker, Registry, OpenCloud, RustFS,
+Karakeep sidecars, Home Assistant and the n8n sandbox. Portainer remains the one
+container without an in-container healthcheck because its image has no shell;
+its API is checked externally. Caddy 2.11.4, Pocket ID 2.16.0, Ollama 0.34.4,
+OpenViking 0.4.22 and Registry 2.8.3 stay pinned pending controlled rebuilds or
+major-version validation. Forgejo 14 is EOL and its containers are stopped;
+the stack is retained for a separate upgrade decision.
 
 The owner approved **Nivra, Karakeep, Immich and OpenCloud** as public app
 origins (`notes`, `pin`, `photos`, `drive`). They have exact DNS-only public A

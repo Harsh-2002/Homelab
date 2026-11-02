@@ -3,13 +3,18 @@ services:
     image: docker.io/valkey/valkey:9-alpine
     container_name: paperless-broker
     restart: unless-stopped
+    healthcheck:
+      test: [CMD-SHELL, "valkey-cli ping | grep -q PONG"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
     volumes:
       - /data/apps/paperless/valkey:/data
     networks:
       - l3b
 
   paperless:
-    image: ghcr.io/paperless-ngx/paperless-ngx:3.2.1
+    image: ghcr.io/paperless-ngx/paperless-ngx:3.4.1
     container_name: paperless
     restart: unless-stopped
     init: false
@@ -24,6 +29,12 @@ services:
       - /data/apps/paperless/media:/usr/src/paperless/media
       - /data/apps/paperless/consume:/usr/src/paperless/consume
       - /data/apps/paperless/export:/usr/src/paperless/export
+    healthcheck:
+      test: [CMD, curl, -fsS, http://127.0.0.1:8000/accounts/login/]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
     networks:
       - l3b
 

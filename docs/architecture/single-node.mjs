@@ -38,8 +38,8 @@ function layout(inv, addresses = {}) {
     ['core-identity','identity / Pocket ID and Tinyauth',['Container: pocketid / tinyauth','Original identity and OIDC clients']],
     ['homepage','dashboard / Homepage',['Private apex; Tinyauth forward-auth','Only current core service cards']],
     ['memory','memory / OpenViking and Ollama',['Restored context; local embeddings','OpenCode plugin and memory skills']],
-    ['apps','apps / Portainer restores',['13 app stacks; four public, Orva private','media, docs, automation, git, registry and S3']],
-    ['hermes','Hermes / staged and stopped',['Configuration/persona/skills retained','Deferred until core acceptance']]
+    ['apps','apps / Portainer restores',['16 running app stacks; Forgejo retained stopped','media, docs, automation, HA, git, registry and S3']],
+    ['hermes','Hermes / native',['Telegram, Photon/iMessage and API server connected','OpenViking provider; Playwright CLI only']]
   ];
   groups.forEach(([id,title,body],i)=>{add(0,id,1835,170+i*185,title,body,'#edf5f1');edge(0,'docker',id);});
 
@@ -134,7 +134,7 @@ export function buildSingleNodeScene(base,inv,internal=false) {
         startBinding:{elementId:e.a,focus:0,gap:0},endBinding:{elementId:e.b,focus:0,gap:0},elbowed:false});
       for(const target of [e.a,e.b]) elements.find(el=>el.id===target).boundElements.push({id,type:'arrow'});
     }
-    text(page.id+'-limits',55,offset+1680,'Hermes stopped; OpenCode and WireGuard intentionally stay native.\nExisting USB backup preserved; new-node backup coverage not established.',18);
+    text(page.id+'-limits',55,offset+1680,'Hermes gateway active; OpenCode and WireGuard intentionally stay native.\nExisting USB backup preserved; new-node backup coverage not established.',18);
   }
   mkdirSync(output,{recursive:true});
   writeFileSync(join(output,'homelab-topology.excalidraw'),JSON.stringify({type:'excalidraw',version:2,

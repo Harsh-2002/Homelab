@@ -3,7 +3,7 @@ services:
   homepage:
     extra_hosts:
       - opencode:10.1.3.1
-    image: ghcr.io/gethomepage/homepage@sha256:643bd0be730d40f69d58028a55d1a896739333e8815786df42bc97f109ecbe61
+    image: ghcr.io/gethomepage/homepage:v2.7.0
     container_name: homepage
     user: 1000:1000
     # Next.js regenerates /app/.next/server/pages for settings/theme changes.

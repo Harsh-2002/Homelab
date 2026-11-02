@@ -58,20 +58,22 @@
     },
     "paperless": {
       "stack": 149,
-      "image": "ghcr.io/paperless-ngx/paperless-ngx:3.2.1",
+      "image": "ghcr.io/paperless-ngx/paperless-ngx:3.4.1",
       "data": "/data/apps/paperless",
       "health": "healthy",
       "origin": "https://docs.l3b.cc.cd",
-      "exposure": "private Caddy source gate"
+      "exposure": "private Caddy source gate",
+      "documents": 28,
+      "migration": "SQLite snapshot backed up; 3.2.1 to 3.4.1 migration healthy"
     },
     "n8n": {
       "stack": 85,
       "image": "n8nio/n8n:latest",
       "data": "/data/apps/n8n",
-      "health": "running; core n8n/Postgres/SearXNG",
+      "health": "healthy; core n8n/Postgres/SearXNG and sandbox API/runner",
       "origin": "https://n8n.l3b.cc.cd",
       "exposure": "private Caddy source gate",
-      "limits": "optional sandbox runner deferred"
+      "sandbox": "1.4.0; create/execute/delete round trip passed"
     },
     "qbittorrent": {
       "stack": 160,
@@ -84,38 +86,41 @@
     },
     "motrix": {
       "stack": 152,
-      "image": "motrixapp/motrix-server:2.0.0-beta.40",
+      "image": "motrixapp/motrix-server:2.2.0",
       "data": "/data/apps/motrix",
-      "health": "healthy",
+      "health": "healthy (stable upgrade from 2.0.0-beta.40)",
       "media": "/data/media",
       "origin": "https://downloads.l3b.cc.cd/mdxp",
       "exposure": "private Caddy source gate"
     },
     "jellyfin": {
       "stack": 94,
-      "image": "jellyfin/jellyfin:12.1",
+      "image": "jellyfin/jellyfin:12.4",
       "data": "/data/apps/jellyfin",
       "health": "healthy",
       "media": "/data/media",
       "origin": "https://media.l3b.cc.cd",
-      "exposure": "private Caddy source gate"
+      "exposure": "private Caddy source gate",
+      "version": "12.4.0"
     },
     "registry": {
       "stack": 9,
-      "image": "registry:2",
+      "image": "registry:2.8.3",
       "data": "/data/apps/registry",
-      "health": "running; htpasswd 401",
+      "health": "healthy; /v2/ 401 and authenticated catalog 200",
       "origin": "https://registry.l3b.cc.cd/v2/",
       "exposure": "private Caddy source gate",
-      "limits": "local filesystem storage; RustFS S3 driver deferred"
+      "limits": "authenticated catalog verified with the existing vault credential; clients not re-pushed",
+      "storage": "S3 via RustFS docker-registry bucket"
     },
     "forgejo": {
       "stack": 135,
       "image": "codeberg.org/forgejo/forgejo:14",
       "data": "/data/apps/forgejo",
-      "health": "healthy",
+      "health": "stopped",
       "origin": "https://git.l3b.cc.cd",
-      "exposure": "private Caddy source gate"
+      "exposure": "private Caddy source gate",
+      "limits": "Forgejo 14 is EOL; containers stopped, stack 135 retained, upgrade/replacement pending"
     },
     "theking": {
       "stack": 178,
@@ -144,12 +149,31 @@
     },
     "frigate": {
       "stack": 137,
-      "image": "ghcr.io/blakeblackshear/frigate:0.18.0",
+      "image": "ghcr.io/blakeblackshear/frigate:0.18.2",
       "data": "/data/apps/frigate",
       "health": "healthy",
       "origin": "https://frigate.l3b.cc.cd",
       "exposure": "private Caddy source gate",
       "camera": "outdoor config restored"
+    },
+    "homeassistant": {
+      "stack": 179,
+      "image": "ghcr.io/home-assistant/home-assistant:stable",
+      "version": "2026.10.4",
+      "data": "/data/apps/homeassistant",
+      "health": "healthy",
+      "origin": "https://home.l3b.cc.cd",
+      "exposure": "private Caddy source gate",
+      "validation": "root 200; unauthenticated API 401; WebSocket auth_required",
+      "limits": "no Supervisor/add-ons; MQTT, Frigate token and VictoriaMetrics integrations outstanding"
+    },
+    "homepage": {
+      "stack": 172,
+      "image": "ghcr.io/gethomepage/homepage:v2.7.0",
+      "data": "/data/apps/homepage",
+      "health": "healthy",
+      "origin": "https://l3b.cc.cd",
+      "exposure": "private apex behind Tinyauth"
     }
   },
   "checks": {
@@ -166,16 +190,27 @@
     "additionalApplicationsRestored": true,
     "rustfsAuthenticatedBucketListing": true,
     "quickShareCairnRoundTrip": true,
-    "registryRunsWithLocalStorage": true,
-    "frigateRestored": true
+    "frigateRestored": true,
+    "registryS3BackendVerified": true,
+    "n8nSandboxDeployed": true,
+    "upgradesVerified": [
+      "paperless 3.4.1",
+      "motrix 2.2.0",
+      "jellyfin 12.4",
+      "frigate 0.18.2",
+      "homepage 2.7.0"
+    ],
+    "hermesNativeGatewayConnected": true
   },
   "limits": [
     "notes, pin, photos, drive and Cairn S3 are public; Orva and core services remain private",
     "Human passkey/OIDC sign-in for each app was not performed",
     "OpenCloud v9 is a rolling release and was not applied; stable 7.2.4 preserves the restored data",
-    "Registry currently uses local filesystem storage; RustFS S3 driver configuration remains deferred",
-    "n8n optional sandbox runner is deferred",
     "Supabase retired; no MCP/skill/deployment remains",
-    "Quick Share Cairn S3 upload/download round trip passed"
+    "Quick Share Cairn S3 upload/download round trip passed",
+    "Forgejo 14 is EOL and its containers are stopped; stack retained pending a separate upgrade decision",
+    "Portainer is the only running container without an in-container healthcheck because its image has no shell",
+    "Caddy 2.11.4, Pocket ID 2.16.0, Ollama 0.34.4 and OpenViking 0.4.22 remain pinned pending controlled upgrades",
+    "Home Assistant has no Supervisor/add-ons; MQTT, Frigate token and VictoriaMetrics integrations remain broken"
   ]
 }

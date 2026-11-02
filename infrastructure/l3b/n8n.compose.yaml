@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     env_file:
       - /data/apps/n8n/runtime.env
+      - /data/apps/n8n-sandbox/n8n.env
     environment:
       N8N_BASIC_AUTH_ACTIVE: "true"
       N8N_HOST: n8n.l3b.cc.cd
@@ -22,6 +23,11 @@ services:
       EXECUTIONS_MODE: regular
       N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
       N8N_RUNNERS_ENABLED: "true"
+      N8N_ENABLED_MODULES: instance-ai
+      N8N_INSTANCE_AI_SANDBOX_ENABLED: "true"
+      N8N_INSTANCE_AI_SANDBOX_PROVIDER: n8n-sandbox
+      N8N_SANDBOX_SERVICE_URL: http://sandbox-api:8080
+      N8N_INSTANCE_AI_SEARXNG_URL: http://searxng:8080
     expose:
       - "5678"
     volumes:
@@ -30,8 +36,16 @@ services:
     depends_on:
       n8n-db:
         condition: service_healthy
+      sandbox-api:
+        condition: service_healthy
       searxng:
         condition: service_healthy
+    healthcheck:
+      test: [CMD, wget, -qO-, http://127.0.0.1:5678/healthz]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     networks:
       - l3b
 
@@ -74,7 +88,109 @@ services:
     networks:
       - l3b
 
+  sandbox-certs:
+    image: ghcr.io/n8n-io/n8n-sandbox-service-api:1.4.0
+    container_name: sandbox-certs
+    restart: "no"
+    user: "0:0"
+    entrypoint: ["sh", "-c"]
+    command:
+      - >
+        bootstrap-mtls.sh --out-dir /tls --api-san sandbox-api
+        --control-san-prefix sandbox-runner --world-readable &&
+        chown -R sandbox-api:sandbox-api /tls/api && chmod -R a+rX /tls
+    environment:
+      NUM_RUNNERS: "1"
+    volumes:
+      - sandbox-tls:/tls
+    security_opt:
+      - no-new-privileges:true
+
+  sandbox-api:
+    image: ghcr.io/n8n-io/n8n-sandbox-service-api:1.4.0
+    container_name: sandbox-api
+    restart: unless-stopped
+    env_file:
+      - /data/apps/n8n-sandbox/api.env
+    environment:
+      SANDBOX_API_DATA_DIR: /var/lib/n8n-sandbox-api
+      SANDBOX_API_DEFAULT_MAX_SANDBOXES: "4"
+      SANDBOX_API_IDLE_STOP_AFTER: 30m
+      SANDBOX_API_IDLE_DELETE_AFTER: 24h
+      SANDBOX_API_GRPC_TLS_CERT_FILE: /tls/api/grpc-server.crt
+      SANDBOX_API_GRPC_TLS_KEY_FILE: /tls/api/grpc-server.key
+      SANDBOX_API_GRPC_TLS_CLIENT_CA_FILE: /tls/api/ca.crt
+      SANDBOX_API_RUNNER_CONTROL_GRPC_TLS_CA_FILE: /tls/api/ca.crt
+      SANDBOX_API_RUNNER_CONTROL_GRPC_TLS_CERT_FILE: /tls/api/control-grpc-api-client.crt
+      SANDBOX_API_RUNNER_CONTROL_GRPC_TLS_KEY_FILE: /tls/api/control-grpc-api-client.key
+      SANDBOX_API_RUNNER_CONTROL_GRPC_TLS_SERVER_NAME: sandbox-runner-1
+    volumes:
+      - /data/apps/n8n-sandbox/api:/var/lib/n8n-sandbox-api
+      - sandbox-tls:/tls:ro
+    networks:
+      - l3b
+      - sandbox-control
+    depends_on:
+      sandbox-certs:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD, wget, -qO-, http://localhost:8080/healthz]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+    mem_limit: 512m
+    cpus: 0.5
+    security_opt:
+      - no-new-privileges:true
+
+  sandbox-runner-1:
+    image: ghcr.io/n8n-io/n8n-sandbox-service-runner-dind:1.4.0
+    container_name: sandbox-runner
+    restart: unless-stopped
+    privileged: true
+    env_file:
+      - /data/apps/n8n-sandbox/runner.env
+    environment:
+      SANDBOX_RUNNER_API_GRPC_ADDR: sandbox-api:9090
+      SANDBOX_RUNNER_HTTP_BASE_URL: https://sandbox-runner-1:8080
+      SANDBOX_RUNNER_CONTROL_GRPC_LISTEN_ADDR: :9091
+      SANDBOX_RUNNER_CONTROL_GRPC_ADVERTISE_ADDR: sandbox-runner-1:9091
+      SANDBOX_RUNNER_ID: runner-1
+      SANDBOX_RUNNER_CAPACITY_TOTAL: "4"
+      SANDBOX_RUNNER_DEFAULT_MEMORY_MB: "512"
+      SANDBOX_RUNNER_DEFAULT_CPU_PERCENT: "100"
+      SANDBOX_RUNNER_DEFAULT_PIDS_MAX: "256"
+      SANDBOX_RUNNER_DOCKER_SANDBOX_IMAGE: ghcr.io/n8n-io/n8n-sandbox-service-sandbox:1.4.0
+      SANDBOX_RUNNER_REGISTRATION_GRPC_CA_FILE: /tls/runner/ca.crt
+      SANDBOX_RUNNER_REGISTRATION_GRPC_CERT_FILE: /tls/runner/grpc-client.crt
+      SANDBOX_RUNNER_REGISTRATION_GRPC_KEY_FILE: /tls/runner/grpc-client.key
+      SANDBOX_RUNNER_REGISTRATION_GRPC_SERVER_NAME: sandbox-api
+      SANDBOX_RUNNER_CONTROL_GRPC_TLS_CERT_FILE: /tls/runner/control-grpc-server.crt
+      SANDBOX_RUNNER_CONTROL_GRPC_TLS_KEY_FILE: /tls/runner/control-grpc-server.key
+      SANDBOX_RUNNER_CONTROL_GRPC_TLS_CLIENT_CA_FILE: /tls/runner/ca.crt
+    volumes:
+      - sandbox-tls:/tls:ro
+    networks:
+      - sandbox-control
+    depends_on:
+      sandbox-api:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, wget, --no-check-certificate, -qO-, https://localhost:8080/healthz]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 40s
+    mem_limit: 3g
+    cpus: 2
+
 networks:
   l3b:
     external: true
     name: l3b
+  sandbox-control:
+    driver: bridge
+
+volumes:
+  sandbox-tls:
