@@ -80,6 +80,14 @@ def single_node():
         print('Claude Code: OpenViking and OLX MCP entries checked')
     if not (home / '.agents/skills/herdr-control/SKILL.md').is_file():
         failures.append('OpenCode: shared Herdr control skill missing')
+    if not (home / '.agents/skills/microsandbox/SKILL.md').is_file():
+        failures.append('Shared microsandbox skill missing')
+    if not Path('/usr/local/bin/msb').exists():
+        failures.append('microsandbox CLI missing from /usr/local/bin')
+    for link in ('.claude/skills/microsandbox', '.hermes/skills/microsandbox'):
+        if not (home / link).exists():
+            failures.append(f'microsandbox skill not visible via {link}')
+    print('microsandbox: global CLI and shared skill checked')
     if not (home / '.hermes/memories').is_dir():
         failures.append('Hermes: local memories missing')
     for failure in failures:

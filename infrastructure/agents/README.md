@@ -34,6 +34,14 @@ settings/MCPs/memory and launch commands preserved. See [HERDR.md](HERDR.md) for
 paths, installation, checks, context boundary and rollback. New CLI/TUI sessions
 load these components; setup did not start/control any live Herdr session.
 
+microsandbox added 2026-11-03 as a global host CLI plus one shared skill.
+`/usr/local/bin/msb` (0.7.13) runs disposable agent microVMs on KVM with
+per-user state in `~/.microsandbox`. The official `microsandbox` skill is
+canonical at `~/.agents/skills/microsandbox`, symlinked into
+`~/.claude/skills` and `~/.hermes/skills`, and read directly by OpenCode
+through its `skills` roots. No MCP server was added. See
+[../microsandbox/README.md](../microsandbox/README.md).
+
 ## Language servers, 2 November 2026
 
 OpenCode **v2.2.5 does not run language servers**: it accepts and preserves `lsp`

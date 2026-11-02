@@ -13,6 +13,7 @@ a Docker outage run outside Docker.
 | Network | `systemd-networkd`, `systemd-resolved` | Sole host network/DNS manager |
 | Remote shell | `ssh.service` | Existing keys only |
 | Coding agents | `opencode.service`, Hermes user gateway | Need host filesystem/tool access |
+| microsandbox | `/opt/microsandbox`, `/usr/local/bin/msb` | Global CLI for disposable agent microVMs (libkrun + KVM); per-user state in `~/.microsandbox`. See [../microsandbox/README.md](../microsandbox/README.md) |
 
 ## OLX MCP gateway
 
