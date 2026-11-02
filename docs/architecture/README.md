@@ -29,7 +29,10 @@ Rendering uses the local Docker browser, not an uploaded/cloud diagram service.
 The historical retirement/recovery notes below are superseded where they conflict.
 Homepage is now a live private-apex Docker stack. Tailscale is retired and absent;
 historical tailnet references in older exports do not describe the current node.
-Current stack labels are generic single words. OpenCode's remote-state label
+Current stack labels are generic single words.
+The current board also identifies the dedicated `l3b` bridge separately from
+LAN and WireGuard; only the Git-ignored internal view labels actual subnets.
+OpenCode's remote-state label
 comes from `currentDeployment.opencodeRemote.state`: the one-shot external
 handover changes it to verified only after native/API/browser acceptance.
 

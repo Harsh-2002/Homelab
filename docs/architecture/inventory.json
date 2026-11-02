@@ -28,6 +28,16 @@
       {"id": "hermes", "label": "Hermes / staged", "stack": "hermes", "state": "stopped; configuration staged; application acceptance deferred"},
       {"id": "playwright", "label": "Playwright / Chrome DevTools", "stack": "tools", "state": "running; container playwright; actual MCP calls verified after explicit authorized Docker-group selection; shared Chromium; no published MCP/CDP ports"}
     ],
+    "networkPlan": {
+      "lan": "dedicated physical LAN subnet; unchanged",
+      "vpn": "dedicated WireGuard peer subnet; unchanged",
+      "docker": "dedicated user-defined l3b bridge; migrated to owner-selected non-overlapping /24",
+      "networkName": "l3b",
+      "gatewayRole": "native-host upstream only; separate from physical LAN",
+      "migration": "verified; ten existing containers reattached with service and proxy aliases retained",
+      "privateAddresses": "Git-ignored internal-addresses.local.json",
+      "evidence": "infrastructure/l3b/NETWORK-VERIFICATION-2026-11-02.json"
+    },
     "opencodeRemote": {
       "state": "pending-handover",
       "firstAttempt": "Rolled back; stale user-manager group list denied Docker access. sg docker fixed both MCPs and is installed for the native unit and detached retry.",

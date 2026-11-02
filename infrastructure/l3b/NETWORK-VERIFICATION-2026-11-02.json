@@ -1,0 +1,20 @@
+{
+  "checkedOn": "2026-11-02",
+  "network": "l3b",
+  "checks": {
+    "ownerRequestedSubnetAndGateway": true,
+    "allTenContainersOnNewBridge": true,
+    "serviceAndIdentityProxyAliasesPreserved": true,
+    "lanAndWireguardRoutesPreserved": true,
+    "adguardAndUnboundAclUpdated": true,
+    "caddyAndTinyauthEffectiveTrustUpdated": true,
+    "nativeUpstreamAliasesUpdated": true,
+    "stoppedHermesTrustUpdated": true,
+    "oldBridgeRouteAbsent": true
+  },
+  "limits": [
+    "Native OpenCode activation is still pending, not implied by bridge migration",
+    "DNS daemon defaults and WireGuard client DNS are separate pending research work",
+    "No reboot, Docker-daemon restart or independent owner VPN client test performed"
+  ]
+}

@@ -75,8 +75,8 @@
 <text x="94" y="1317" font-size="16" fill="#18252c">No automatic legacy-stack restore</text>
 </g>
 <g data-node="true"><rect x="650" y="1240" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
-<text x="664" y="1267" font-size="19" fill="#18252c">Docker</text>
-<text x="664" y="1292" font-size="16" fill="#18252c">Stack lifecycle and networking</text>
+<text x="664" y="1267" font-size="19" fill="#18252c">Docker / l3b bridge</text>
+<text x="664" y="1292" font-size="16" fill="#18252c">Stack lifecycle; dedicated subnet</text>
 </g>
 <g data-node="true"><rect x="1220" y="1240" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="1234" y="1267" font-size="19" fill="#18252c">SATA application data</text>

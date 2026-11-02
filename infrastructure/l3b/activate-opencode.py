@@ -37,7 +37,7 @@ def main():
 
     before = sessions(original)
     assert before, 'Expected the existing native session history'
-    changed = {**original, 'hostname': '172.17.0.1', 'password': fields['password']}
+    changed = {**original, 'hostname': '10.1.3.1', 'password': fields['password']}
 
     def save(config):
         # Preserve the original file and its private mode; no credential backup copy.

@@ -8,6 +8,7 @@ const base = dirname(fileURLToPath(import.meta.url));
 const inv = JSON.parse(readFileSync(join(base, 'inventory.json')));
 const internal = process.argv.includes('--internal');
 if (inv.currentDeployment?.platform === 'single-node-docker') {
+  // Dedicated bridge relationships and private address labels live in this layout.
   const {buildSingleNodeScene} = await import('./single-node.mjs');
   buildSingleNodeScene(base, inv.currentDeployment, internal);
   process.exit(0);

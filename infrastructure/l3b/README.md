@@ -9,6 +9,42 @@ Read the [setup/WireGuard handoff](HANDOFF-2026-11-02.md),
 [restore checkpoint](RESTORE-STATUS.md) and
 [live acceptance record](CORE-VERIFICATION-2026-11-02.json) together.
 
+## Network plan — owner correction, 2 November 2026
+
+- LAN: **10.1.1.0/24**, host unchanged at 10.1.1.10.
+- WireGuard peers: **10.1.2.0/24**, gateway unchanged at 10.1.2.1.
+- Docker custom bridge **`l3b`**: **10.1.3.0/24**, gateway **10.1.3.1**.
+
+The original 172.17.0.0/16 network was recreated in a scoped maintenance window;
+all ten existing containers and service/identity proxy aliases were retained.
+No volumes or identities were replaced. The bridge interface ID changes on
+recreation; scripts must use the network name, not a hard-coded `br-*` name.
+Reproducible creation for a new empty host:
+
+```bash
+docker network create --driver bridge --subnet 10.1.3.0/24 --gateway 10.1.3.1 l3b
+```
+
+All Compose sources continue to reference the external network by name. The
+one-time [`migrate-network.py`](migrate-network.py) is guarded to the original
+subnet and is **not** a recurring/startup job. It stops/reattaches the existing
+containers for network maintenance; subsequent service definition changes use
+Portainer. Identity, proxy and dashboard definitions were redeployed through
+Portainer to update effective trust/host aliases. AdGuard/Unbound ACLs and the
+stopped Hermes trusted-proxy setting use the new subnet. Existing historical
+logs/backups were not rewritten.
+
+[`verify-network.py`](verify-network.py) checks actual endpoints, aliases,
+gateway, live trust settings, upstream host aliases and unchanged LAN/VPN routes;
+see [network evidence](NETWORK-VERIFICATION-2026-11-02.json). Core DNS/TLS/auth,
+memory and both browser MCPs passed after reconnection. No reboot/daemon-restart
+or independent VPN-client test is claimed.
+
+Native OpenCode still listens on loopback pending its separate handover; its
+prepared bridge address is now **10.1.3.1:4096**. This migration does not repair
+the existing HTTPS502 by itself. DNS daemon defaults, WireGuard profile DNS and
+public/private exposure policy remain held for the requested research review.
+
 ## Deployed core
 
 | Service | Placement / definition | Access |

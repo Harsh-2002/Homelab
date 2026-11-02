@@ -6,6 +6,13 @@ Authoritative detail: [core runbook](README.md),
 
 ## Current verified state
 
+Owner network correction applied: `l3b` now uses the dedicated Docker /24 and
+gateway from the [current network plan](README.md#network-plan--owner-correction-2-november-2026).
+Ten existing containers and their aliases are retained; LAN/WireGuard routes
+are unchanged. DNS/proxy ACLs, native-host aliases and stopped Hermes trust were
+updated. Core and memory checks pass. Native remote activation and the wider
+DNS/public-private research remain separate pending work.
+
 - One restored Portainer BE2.45.3, internal-only behind Caddy. Original users and
   30 legacy stack definitions are preserved; actual browser admin login passed.
   The erroneous failed self-stack entry was removed through the native API.

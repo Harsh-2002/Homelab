@@ -38,7 +38,7 @@ because native pairing/authentication can return credentials.
 
 The `opencode.service` user unit runs `opencode serve --service`, with user
 lingering already enabled. It retains the native protected `service.json` and
-listens on **Docker bridge 172.17.0.1:4096**, not on the LAN/wildcard address.
+listens on **Docker bridge 10.1.3.1:4096**, not on the LAN/wildcard address.
 The bridge gateway was checked against the actual external `l3b` network.
 Native CLI discovery uses that saved address; a loopback-only service cannot
 be reached directly by a bridge-network Caddy container.

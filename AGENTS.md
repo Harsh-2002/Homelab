@@ -11,6 +11,9 @@ Current deployment is one Debian Docker host. WireGuard is the chosen VPN;
 the owner retired Tailscale on 2 November 2026. Do not install/re-enroll it or
 restore historical tailnet routing. Docker publishes only 53/UDP and 443/TCP+UDP;
 keep container communication on service names and management ports internal.
+Owner's network plan: LAN 10.1.1.0/24, WireGuard peers 10.1.2.0/24,
+Docker custom bridge `l3b` 10.1.3.0/24 with gateway 10.1.3.1. Do not restore
+the superseded 172.17.0.0/16 bridge or old native-host gateway aliases.
 Use generic single-word stack names and actual single-word service/container
 names. The owner has now authorized OpenViking memory restoration/integration
 for OpenCode and the native OpenCode HTTPS remote UI; keep existing identities

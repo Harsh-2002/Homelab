@@ -24,7 +24,7 @@ function layout(inv, addresses = {}) {
   add(0,'clients',55,620,'Phone / workstation',['Private LAN access']);
   add(0,'lan',500,620,'LAN',['Physical path not re-audited']);
   add(0,'l3b',945,620,inv.host.name+' / '+inv.host.model,[inv.host.cpu,inv.host.ram+' / Debian 13.7']);
-  add(0,'docker',1390,160,'Docker engine',['One bare-metal Debian host']);
+  add(0,'docker',1390,160,'Docker engine / l3b bridge',['One bare-metal Debian host','Dedicated subnet; service-name routing']);
   add(0,'wireguard',1390,620,'WireGuard / native host',['Routed LAN access; no source NAT','iPhone accepted; MacBook not yet tested']);
   add(0,'opencode',1390,800,'OpenCode / native host',['Session history preserved; no duplicate',inv.opencodeRemote?.state==='verified'?'Private HTTPS / browser verified':'Private HTTPS / handover pending']);
   add(0,'nvme',1390,990,'Samsung NVMe / XFS',['Root OS; Docker-managed runtime','Images and named volumes']);
@@ -61,7 +61,7 @@ function layout(inv, addresses = {}) {
   add(1,'flow-pocket',1220,870,'Pocket ID',['OIDC / original passkeys','Human sign-in acceptance pending']);
   for (const [a,b] of [['flow-browser','flow-caddy'],['flow-caddy','flow-apps'],['flow-caddy','flow-tinyauth'],['flow-tinyauth','flow-pocket'],['flow-apps','flow-pocket']]) edge(1,a,b);
   add(1,'flow-portainer',80,1240,'Portainer API',['Reviewed stack definitions','No automatic legacy-stack restore']);
-  add(1,'flow-docker',650,1240,'Docker',['Stack lifecycle and networking']);
+  add(1,'flow-docker',650,1240,'Docker / l3b bridge',['Stack lifecycle; dedicated subnet']);
   add(1,'flow-data',1220,1240,'SATA application data',['Service-specific bind directories']);
   add(1,'flow-runtime',1790,1240,'NVMe Docker state',['Images / runtime / named volumes']);
   for (const [a,b] of [['flow-portainer','flow-docker'],['flow-docker','flow-data'],['flow-docker','flow-runtime']]) edge(1,a,b);

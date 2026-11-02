@@ -61,7 +61,7 @@ def main():
     config.setdefault('terminal', {})['cwd'] = '/workspace/Homelab'
     config.setdefault('cron', {})['catch_up_missed'] = False
     config.setdefault('gateway', {})['allow_all_users'] = False
-    config.setdefault('dashboard', {})['trusted_proxies'] = ['172.17.0.0/16']
+    config.setdefault('dashboard', {})['trusted_proxies'] = ['10.1.3.0/24']
 
     def paths(value):
         if isinstance(value, dict):

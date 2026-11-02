@@ -72,7 +72,7 @@ def main():
     env_write(p / 'runtime.env', {'CF_API_TOKEN': old['CLOUDFLARE_API_TOKEN'],
                                 'LAN_CIDR': args.address.rsplit('.', 1)[0] + '.0/24',
                                 'VPN_CIDR': '10.1.2.0/24',
-                                'DOCKER_CIDR': '172.17.0.0/16'})
+                                'DOCKER_CIDR': '10.1.3.0/24'})
 
     p = dest / 'adguard'
     (p / 'conf').mkdir(exist_ok=args.resume)
@@ -84,7 +84,7 @@ def main():
     # Docker's DNS resolves the Unbound service name; no public DNS fallback.
     conf['dns']['bootstrap_dns'] = ['127.0.0.11']
     conf['dns']['fallback_dns'] = []
-    conf['dns']['allowed_clients'] = ['127.0.0.0/8', '10.1.1.0/24', '10.1.2.0/24', '172.17.0.0/16']
+    conf['dns']['allowed_clients'] = ['127.0.0.0/8', '10.1.1.0/24', '10.1.2.0/24', '10.1.3.0/24']
     conf['filtering']['rewrites'] = [
         {'domain': 'l3b.cc.cd', 'answer': args.address, 'enabled': True},
         {'domain': '*.l3b.cc.cd', 'answer': 'l3b.cc.cd', 'enabled': True}]
@@ -119,7 +119,7 @@ def main():
     old = env_read(identity / 'etc/tinyauth/tinyauth.env')
     old.update(TINYAUTH_DATABASE_PATH='/data/tinyauth.db',
                TINYAUTH_RESOURCES_PATH='/data/resources',
-               TINYAUTH_AUTH_TRUSTEDPROXIES='172.17.0.0/16')
+               TINYAUTH_AUTH_TRUSTEDPROXIES='10.1.3.0/24')
     env_write(p / 'runtime.env', old)
 
     for name in ['pocket-id', 'tinyauth']:

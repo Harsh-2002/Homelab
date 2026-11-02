@@ -31,8 +31,10 @@
 <text x="959" y="697" font-size="16" fill="#18252c">32 GB nominal / Debian 13.7</text>
 </g>
 <g data-node="true"><rect x="1390" y="160" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
-<text x="1404" y="187" font-size="19" fill="#18252c">Docker engine</text>
+<text x="1404" y="187" font-size="19" fill="#18252c">Docker engine / l3b bridge</text>
 <text x="1404" y="212" font-size="16" fill="#18252c">One bare-metal Debian host</text>
+<text x="1404" y="237" font-size="16" fill="#18252c">Dedicated subnet; service-name</text>
+<text x="1404" y="262" font-size="16" fill="#18252c">routing</text>
 </g>
 <g data-node="true"><rect x="1390" y="620" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="1404" y="647" font-size="19" fill="#18252c">WireGuard / native host</text>

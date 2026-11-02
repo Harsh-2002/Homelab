@@ -20,7 +20,7 @@ def main():
     config_path = Path.home() / '.config/opencode/service.json'
     config = json.loads(config_path.read_text())
     assert not config_path.stat().st_mode & 0o077
-    assert config['hostname'] == '172.17.0.1' and config['port'] == 4096
+    assert config['hostname'] == '10.1.3.1' and config['port'] == 4096
     for action in ['is-active', 'is-enabled']:
         subprocess.run(['systemctl', '--user', action, '--quiet', 'opencode.service'], check=True)
     pid = int(subprocess.check_output(['systemctl', '--user', 'show', 'opencode.service',
