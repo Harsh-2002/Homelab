@@ -1,5 +1,25 @@
 # Jellyfin
 
+## 2026-11-02 Pocket ID "Error preparing login" fix
+
+`https://media.l3b.cc.cd/sso/OID/start/pocketid` returned **"Error preparing
+login. Return to login"**. The plugin log showed the pushed authorization
+request failing with `invalid_request - Failed to push authorization parameters`
+and the redirect URI `http://media.l3b.cc.cd/sso/OID/redirect/pocketid`. Pocket
+ID has the client registered as `https://media.l3b.cc.cd/sso/OID/redirect/pocketid`,
+so the scheme mismatch was rejected.
+
+The `http` scheme came from Jellyfin, not the plugin: `network.xml`
+`KnownProxies` still listed `10.1.1.3` and the retired `jellyfin_default` gateway
+`172.20.9.1`, so Caddy's `X-Forwarded-Proto: https` was ignored. The list now
+holds `10.1.1.3` and `10.1.3.0/24`. No plugin, image, client secret, Pocket ID
+client or database was changed, and native password login stayed enabled.
+Verification after restarting Jellyfin: the start endpoint returns `302` to
+`https://auth.l3b.cc.cd/authorize?...request_uri=...`, Pocket ID redirects to its
+`/interaction` page, the callback route answers `400` (route present, missing
+parameters), `/web/` returns `200`, and the container is healthy. A full passkey
+sign-in was not completed.
+
 ## ARR retired, 2026-10-22
 
 All ARR automation was removed at owner request. Jellyfin itself, its config,
@@ -41,7 +61,7 @@ The provider requests `openid`, `profile`, `email`, and `groups`, requires PKCE 
 
 On 2026-09-23, renaming the original Jellyfin user to the full name caused its username to stop matching the OIDC email claim. The first Pocket ID sign-in then created a second administrator under the email; password login by email selected that SSO-managed user and failed. The original password account `0eaa665bec0c4fec87e2e7d9390d75b5` was retained, renamed back to the email, and linked to the Pocket ID subject using the plugin's supported unlink/preprovision APIs. The empty duplicate `dd6a3fda49d3458b838eaccc53cdb5c4` had zero user-data rows and was deleted through Jellyfin's API. After two container restarts, the password login and plugin link roster both resolve to the single original user ID. Do not rename that user to the full name again; Jellyfin cannot keep a separate display name. If a future OIDC login creates another user, stop and inspect the link roster before modifying accounts.
 
-The plugin's hardened outbound transport normally refuses private IPs. Because `auth.l3b.cc.cd` intentionally resolves to the LAN proxy, this provider alone sets `AllowPrivateNetworkAddresses=true`; HTTPS, issuer, signature, and endpoint validation remain enabled. Jellyfin must also trust Caddy's forwarded protocol headers or it will construct an `http://` callback. Its live Network → Known Proxies contains `10.1.1.3` and the current `jellyfin_default` Docker bridge gateway `172.20.9.1`. Re-check that gateway after any network recreation. The old `Jellyfinn` vault item for Prabhat was deleted; it was not a Jellyfin server user.
+The plugin's hardened outbound transport normally refuses private IPs. Because `auth.l3b.cc.cd` intentionally resolves to the LAN proxy, this provider alone sets `AllowPrivateNetworkAddresses=true`; HTTPS, issuer, signature, and endpoint validation remain enabled. Jellyfin must also trust Caddy's forwarded protocol headers or it will construct an `http://` callback. Its live Network → Known Proxies now contains `10.1.1.3` and the whole Docker network `10.1.3.0/24`, which covers Caddy's container address on `l3b` regardless of the address Docker assigns it. Jellyfin 12.x accepts CIDR entries and registers them as `KnownIPNetworks`. Trusting the whole `l3b` subnet means any container on that internal network could spoof forwarded headers; that is acceptable for this single-host, owner-controlled network. Before the 2026-11-02 fix the list held the retired `jellyfin_default` gateway `172.20.9.1`, not the `l3b` network, so Caddy's `X-Forwarded-Proto` was ignored. The old `Jellyfinn` vault item for Prabhat was deleted; it was not a Jellyfin server user.
 
 Intel UHD 630 QSV was verified with a 10-frame H.264 hardware encode using the exact image, non-root UID and render group. Intel Quick Sync is enabled in Jellyfin with `/dev/dri/renderD128`, hardware encoding, and H.264/HEVC/VC-1/VP9 decoding. Verify an actual transcoding session in Jellyfin's playback and FFmpeg logs after media is added; the device test alone does not prove real playback.
 
