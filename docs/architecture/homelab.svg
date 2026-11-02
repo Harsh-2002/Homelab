@@ -15,7 +15,7 @@
 <path d="M1770 231.5L1835 784" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1770 231.5L1835 969" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1770 231.5L1835 1154" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M1770 231.5L1835 1339" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1770 231.5L1835 1351.5" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1770 231.5L1835 1524" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <g data-node="true"><rect x="55" y="620" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="69" y="647" font-size="19" fill="#18252c">Phone / workstation</text>
@@ -98,11 +98,12 @@
 <text x="1849" y="1147" font-size="16" fill="#18252c">Restored context; local embeddings</text>
 <text x="1849" y="1172" font-size="16" fill="#18252c">OpenCode plugin and memory skills</text>
 </g>
-<g data-node="true"><rect x="1835" y="1280" width="380" height="118" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
+<g data-node="true"><rect x="1835" y="1280" width="380" height="143" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
 <text x="1849" y="1307" font-size="19" fill="#18252c">apps / Portainer restores</text>
 <text x="1849" y="1332" font-size="16" fill="#18252c">nivra, orva, karakeep, immich,</text>
 <text x="1849" y="1357" font-size="16" fill="#18252c">opencloud</text>
-<text x="1849" y="1382" font-size="16" fill="#18252c">private Caddy routes; data restored</text>
+<text x="1849" y="1382" font-size="16" fill="#18252c">notes/pin/photos/drive public; Orva</text>
+<text x="1849" y="1407" font-size="16" fill="#18252c">private</text>
 </g>
 <g data-node="true"><rect x="1835" y="1465" width="380" height="118" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
 <text x="1849" y="1492" font-size="19" fill="#18252c">Hermes / staged and stopped</text>

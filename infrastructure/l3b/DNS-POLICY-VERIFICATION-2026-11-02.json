@@ -11,10 +11,26 @@
     "privateWildcardAndPublicRecursion": true,
     "adguardUnboundNoPublicFallback": true,
     "wireguardProfilesInternalDns": true,
-    "sourceDenialBeforeProxyAndAuth": true,
-    "forwardedHeaderCannotBypassSourceGate": true,
+    "privateOriginsDeniedFromUntrustedSource": true,
+    "forwardedHeaderCannotBypassPrivateSourceGate": true,
+    "ownerApprovedPublicOriginsReachable": true,
     "customHtml403NoStore": true
   },
+  "privateHosts": [
+    "oc.l3b.cc.cd",
+    "dns.l3b.cc.cd",
+    "auth.l3b.cc.cd",
+    "portainer.l3b.cc.cd",
+    "memory.l3b.cc.cd",
+    "l3b.cc.cd",
+    "orva.l3b.cc.cd"
+  ],
+  "publicHosts": [
+    "notes.l3b.cc.cd",
+    "pin.l3b.cc.cd",
+    "photos.l3b.cc.cd",
+    "drive.l3b.cc.cd"
+  ],
   "limits": [
     "Synthetic untrusted source, not independent WAN/VPN-device acceptance",
     "Already imported owner VPN profiles require re-import",

@@ -6,10 +6,14 @@
       "image": "ghcr.io/harsh-2002/nivra:latest",
       "data": "/data/apps/nivra",
       "health": "healthy",
-      "content": {"notes": 8, "journals": 1, "total": 9},
+      "content": {
+        "notes": 8,
+        "journals": 1,
+        "total": 9
+      },
       "origin": "https://notes.l3b.cc.cd",
       "mcp": "connected",
-      "exposure": "private Caddy source gate"
+      "exposure": "owner-approved public Caddy handler; native app authentication enforced"
     },
     "orva": {
       "stack": 175,
@@ -30,7 +34,7 @@
       "bookmarks": 169,
       "assetFiles": 855,
       "origin": "https://pin.l3b.cc.cd",
-      "exposure": "private Caddy source gate"
+      "exposure": "owner-approved public Caddy handler; native app authentication enforced"
     },
     "immich": {
       "stack": 147,
@@ -41,7 +45,7 @@
       "albums": 43,
       "users": 2,
       "origin": "https://photos.l3b.cc.cd",
-      "exposure": "private Caddy source gate"
+      "exposure": "owner-approved public Caddy handler; native app authentication enforced"
     },
     "opencloud": {
       "stack": 148,
@@ -50,7 +54,7 @@
       "health": "running; login HTTP 200",
       "storage": "local decomposed",
       "origin": "https://drive.l3b.cc.cd",
-      "exposure": "private Caddy source gate"
+      "exposure": "owner-approved public Caddy handler; native app authentication enforced"
     }
   },
   "checks": {
@@ -58,14 +62,15 @@
     "containersHealthy": true,
     "allOnDedicatedL3bBridge": true,
     "noApplicationHostPorts": true,
-    "privateSourceGateApplies": true,
     "nivraAndOrvaMcpConnected": true,
     "karakeepLocalAssetsUsed": true,
     "immichSamePostgresMajorAndData": true,
-    "opencloudLocalDecomposedStorage": true
+    "opencloudLocalDecomposedStorage": true,
+    "approvedPublicAppsReachableWithAppAuth": true,
+    "orvaRemainsPrivate": true
   },
   "limits": [
-    "Applications are private until the owner explicitly approves public routes; public DNS records alone do not expose them",
+    "notes, pin, photos and drive are public; Orva and core services remain private",
     "Human passkey/OIDC sign-in for each app was not performed",
     "Orva quick-share retains its historical Cairn S3 dependency; that object store is not currently deployed",
     "OpenCloud v9 is a rolling release and was not applied; stable 7.2.4 preserves the restored data",

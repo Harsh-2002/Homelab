@@ -6,7 +6,9 @@ The single-node deployment uses internal AdGuard/Unbound. **Internal wildcard
 is allowed; Cloudflare has no wildcard DNS record.** Each current private HTTPS
 origin has an exact DNS-only A record to the private Caddy address. Only an
 explicitly approved public service uses an exact public-IP record and matching
-Caddy public access policy. The live address inventory below is refreshed in
+Caddy public access policy. Owner-approved public app origins are `notes`,
+`pin`, `photos` and `drive`; `orva` retains a historical public DNS record but
+remains behind the private Caddy gate. The live address inventory below is refreshed in
 `cloudflare-records.tsv`; old exact public/direct-host records are retained for
 separate cleanup, not proof their applications run. See
 [`../l3b/DNS-POLICY.md`](../l3b/DNS-POLICY.md) and

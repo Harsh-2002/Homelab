@@ -3,6 +3,7 @@ A	argocd.l3b.cc.cd	150.129.31.154	false	1
 A	auth.l3b.cc.cd	10.1.1.10	false	300
 A	cairn-s3.l3b.cc.cd	150.129.31.154	false	1
 A	dev.l3b.cc.cd	150.129.31.154	false	1
+A	drive.l3b.cc.cd	150.129.31.154	false	300
 A	dns.l3b.cc.cd	10.1.1.10	false	300
 A	k8s-201.l3b.cc.cd	10.1.1.201	false	300
 A	k8s-202.l3b.cc.cd	10.1.1.202	false	300

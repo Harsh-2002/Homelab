@@ -1279,7 +1279,7 @@
       "x": 1835,
       "y": 1280,
       "width": 380,
-      "height": 118,
+      "height": 143,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -1317,7 +1317,7 @@
       "x": 1849,
       "y": 1294,
       "width": 324.79999999999995,
-      "height": 80,
+      "height": 100,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -1337,8 +1337,8 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "apps / Portainer restores\nnivra, orva, karakeep, immich,\nopencloud\nprivate Caddy routes; data restored",
-      "originalText": "apps / Portainer restores\nnivra, orva, karakeep, immich,\nopencloud\nprivate Caddy routes; data restored",
+      "text": "apps / Portainer restores\nnivra, orva, karakeep, immich,\nopencloud\nnotes/pin/photos/drive public; Orva\nprivate",
+      "originalText": "apps / Portainer restores\nnivra, orva, karakeep, immich,\nopencloud\nnotes/pin/photos/drive public; Orva\nprivate",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "left",
@@ -2141,7 +2141,7 @@
       "x": 1770,
       "y": 231.5,
       "width": 65,
-      "height": 1107.5,
+      "height": 1120,
       "frameId": "tree",
       "angle": 0,
       "strokeColor": "#263848",
@@ -2168,7 +2168,7 @@
         ],
         [
           65,
-          1107.5
+          1120
         ]
       ],
       "lastCommittedPoint": null,

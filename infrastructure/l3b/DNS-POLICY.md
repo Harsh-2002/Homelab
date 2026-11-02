@@ -9,15 +9,19 @@ to the private Caddy address. Only an explicitly approved public service gets an
 exact public-IP record and corresponding public Caddy route/path policy.
 
 Applied: exact `auth`, `login`, `portainer`, `dns`, and `memory` mappings added;
-apex and `oc` were already exact/correct. After verifying all seven mappings,
-the Cloudflare apex wildcard CNAME was removed. All other existing records,
+apex and `oc` were already exact/correct. After verifying all seven core mappings,
+the Cloudflare apex wildcard CNAME was removed. The owner subsequently approved
+public app origins `notes`, `pin`, `photos` and `drive`; each has an exact
+DNS-only WAN A record and a narrow Caddy public handler. `orva` keeps its
+historical WAN record but remains behind the private Caddy gate. All other existing records,
 including `wg`, external monitoring, historical public apps and direct-host
 exceptions, were preserved unchanged. Retired-app WAN records are flagged for
 separate owner-approved cleanup, not treated as current deployment approval.
 
 Both authoritative nameservers must return matching private answers for the
-seven current origins and NXDOMAIN for an unknown public name; AdGuard must
-still resolve an unknown internal name through its private wildcard. See
+core/private origins, public WAN answers for the approved app origins, and
+NXDOMAIN for an unknown public name; AdGuard must still resolve internal names
+through its private wildcard. See
 [`PUBLIC-DNS-VERIFICATION-2026-11-02.json`](PUBLIC-DNS-VERIFICATION-2026-11-02.json).
 Recursive caches may retain old wildcard answers until TTL expiry.
 
@@ -111,14 +115,15 @@ Existing public WAN exceptions/external monitoring records were not
 retargeted, deleted or activated. Stale retired-app/direct-host records need
 separately scoped cleanup; they are not evidence of deployed applications.
 
-All currently restored apps remain private. An explicit Caddy **route** block
-now runs custom403 denial before host routing or forward-auth. Testing found
+The four owner-approved apps are public; Orva and all core services remain
+private. An explicit Caddy **route** block runs approved public app handlers
+first, then custom403 denial for every other host before forward-auth. Testing found
 the previous implicit directive ordering could reach an upstream before denial;
 this was corrected, not just restyled.
 
 The repeatable test temporarily adds a reserved source address, connects directly
 to Caddy's bridge-side TLS listener using real SNI/hostnames, spoofs LAN forwarded
-headers, and verifies403/HTML/no-store for all six current origins. The temporary
+headers, and verifies403/HTML/no-store for the private origins and verifies the approved public origins are reachable. The temporary
 address is always removed. A host-local published-port request can have its
 source rewritten and is not equivalent. This is synthetic source testing, not
 an independent WAN/VPN-device connection or router-firewall audit.

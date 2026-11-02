@@ -5,7 +5,7 @@
 The native OpenCode handover and DNS/private-routing policy are now verified,
 superseding the pending descriptions below. The active native unit serves the
 established private HTTPS origin with previous vault credentials and preserved
-history; real browser pairing passed, all five Homepage cards passed, and the
+history; real browser pairing passed, ten Homepage cards passed, and the
 initial handover failure is resolved. The external one-shot exited successfully.
 See `infrastructure/l3b/NATIVE-HANDOVER-2026-11-02.json`, `REMOTE-ACCESS.md` and
 `DNS-POLICY.md`. Owner devices need fresh pairing and updated VPN profile import.

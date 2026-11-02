@@ -27,7 +27,9 @@ MCP, `agent-browser`, Puppeteer-based agent tools or another browser MCP.
 DNS: internal AdGuard may use wildcard rewrites. Public Cloudflare must have no
 wildcard DNS; add exact DNS-only private mappings for deployed private services.
 Only explicitly approved public services get exact public-IP records and a
-matching public Caddy policy. Wildcard TLS certificates are independent of DNS.
+matching public Caddy policy. Owner-approved public app origins are `notes`,
+`pin`, `photos` and `drive`; Orva and all core services stay private. Wildcard
+TLS certificates are independent of DNS.
 Host networking uses native systemd-networkd only for eno1; keep Docker/WireGuard
 links unmanaged by it. DNS belongs in the same .network file and flows through
 systemd-resolved's generated uplink file, with stub/public fallback disabled.

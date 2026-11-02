@@ -80,31 +80,31 @@
         "id": "nivra",
         "label": "Nivra / notes",
         "stack": "nivra",
-        "state": "restored SQLite/data; private HTTPS; MCP connected"
+        "state": "restored SQLite/data; public HTTPS; MCP connected"
       },
       {
         "id": "orva",
         "label": "Orva / functions",
         "stack": "orva",
-        "state": "latest digest; restored users/functions; MCP connected"
+        "state": "latest digest; restored users/functions; private HTTPS; MCP connected"
       },
       {
         "id": "karakeep",
         "label": "Karakeep / bookmarks",
         "stack": "karakeep",
-        "state": "restored SQLite/assets; local asset store; private HTTPS"
+        "state": "restored SQLite/assets; local asset store; public HTTPS"
       },
       {
         "id": "immich",
         "label": "Immich / photos",
         "stack": "immich",
-        "state": "v3.3.5; restored Postgres/media; healthy; private HTTPS"
+        "state": "v3.3.5; restored Postgres/media; healthy; public HTTPS"
       },
       {
         "id": "opencloud",
         "label": "OpenCloud / files",
         "stack": "opencloud",
-        "state": "7.2.4 stable; restored decomposed storage; private HTTPS"
+        "state": "7.2.4 stable; restored decomposed storage; public HTTPS"
       }
     ],
     "dnsPolicy": {
@@ -112,7 +112,7 @@
       "clients": "host, Docker embedded DNS and generated WireGuard profiles use internal AdGuard only",
       "hostResolverManagement": "native systemd-networkd owns only physical eno1 static IP/gateway/DNS; systemd-resolved generates uplink resolver file with stub/fallback disabled; ifupdown/resolvconf removed, no Netplan",
       "upstream": "AdGuard to Unbound recursive DNSSEC; no public fallback",
-      "exposure": "restored services private; explicit source denial before authentication/proxying; custom no-store HTML403",
+      "exposure": "core/Orva private; owner-approved notes/pin/photos/drive public with native app auth; custom source denial for all other hosts",
       "cloudflare": "no public wildcard DNS; seven exact DNS-only private origins aligned with internal DNS; historical public exceptions preserved, not reactivated",
       "publicDnsEvidence": "infrastructure/l3b/PUBLIC-DNS-VERIFICATION-2026-11-02.json",
       "ownerStep": "re-import updated MacBook/iPhone vault Documents; existing imported tunnels cannot be changed remotely",

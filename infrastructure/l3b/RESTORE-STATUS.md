@@ -45,9 +45,10 @@ Native remote activation remains tracked by its separate handover evidence.
   39 skills and eight configured MCPs (six connected; Olx/Supabase disabled).
   Browser automation is Playwright CLI with its official skill; the former
   `tools` browser stack and Playwright/Chrome DevTools MCPs are removed.
-- Nivra, Orva, Karakeep, Immich and OpenCloud are restored as private Portainer
-  stacks with original application data. All remain behind the private Caddy
-  source gate; public DNS records alone do not expose them.
+- Nivra, Orva, Karakeep, Immich and OpenCloud are restored as Portainer stacks
+  with original application data. Nivra/Karakeep/Immich/OpenCloud are
+  owner-approved public origins with native app authentication; Orva remains
+  behind the private Caddy source gate. Core services remain private.
 - Docker publications are exactly **53/UDP,443/TCP,443/UDP**. Native SSH,
   OpenCode's approved native handover is tracked separately; WireGuard is unchanged.
 - The temporary duplicate OpenCode server, custom Unbound build and unwanted

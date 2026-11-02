@@ -67,11 +67,13 @@ def main():
     addresses = json.loads(run('ip', '-j', 'address'))
     assert not any(a.get('local') == source for device in addresses for a in device['addr_info'])
     run('ip', 'address', 'add', source + '/32', 'dev', 'lo')
-    try:
-        for host in ['oc.l3b.cc.cd', 'dns.l3b.cc.cd', 'auth.l3b.cc.cd',
+    private_hosts = ['oc.l3b.cc.cd', 'dns.l3b.cc.cd', 'auth.l3b.cc.cd',
                      'portainer.l3b.cc.cd', 'memory.l3b.cc.cd', 'l3b.cc.cd',
-                     'notes.l3b.cc.cd', 'pin.l3b.cc.cd', 'photos.l3b.cc.cd',
-                     'drive.l3b.cc.cd', 'orva.l3b.cc.cd']:
+                     'orva.l3b.cc.cd']
+    public_hosts = ['notes.l3b.cc.cd', 'pin.l3b.cc.cd',
+                    'photos.l3b.cc.cd', 'drive.l3b.cc.cd']
+    try:
+        for host in private_hosts + public_hosts:
             connection = socket.create_connection((target, 443), timeout=15, source_address=(source, 0))
             with ssl.create_default_context().wrap_socket(connection, server_hostname=host) as stream:
                 stream.sendall(('GET / HTTP/1.1\r\nHost: ' + host +
@@ -79,10 +81,15 @@ def main():
                 data = b''
                 while chunk := stream.recv(4096):
                     data += chunk
-                assert data.startswith(b'HTTP/1.1 403')
-                assert b"You don't have access." in data
-                assert b'cache-control: no-store' in data.lower()
-                assert b'content-type: text/html' in data.lower()
+                status = data.split(b'\r\n', 1)[0]
+                if host in private_hosts:
+                    assert status.startswith(b'HTTP/1.1 403'), (host, status)
+                    assert b"You don't have access." in data
+                    assert b'cache-control: no-store' in data.lower()
+                    assert b'content-type: text/html' in data.lower()
+                else:
+                    assert not status.startswith(b'HTTP/1.1 403'), (host, status)
+                    assert status.split()[1] in {b'200', b'302', b'307', b'401'}, (host, status)
     finally:
         run('ip', 'address', 'del', source + '/32', 'dev', 'lo')
     print(json.dumps({'checkedOn': '2026-11-02', 'checks': {
@@ -93,8 +100,11 @@ def main():
         'allRunningContainersEmbeddedDnsInternalUpstream': True,
         'privateWildcardAndPublicRecursion': True,
         'adguardUnboundNoPublicFallback': True, 'wireguardProfilesInternalDns': True,
-        'sourceDenialBeforeProxyAndAuth': True, 'forwardedHeaderCannotBypassSourceGate': True,
+        'privateOriginsDeniedFromUntrustedSource': True,
+        'forwardedHeaderCannotBypassPrivateSourceGate': True,
+        'ownerApprovedPublicOriginsReachable': True,
         'customHtml403NoStore': True},
+        'privateHosts': private_hosts, 'publicHosts': public_hosts,
         'limits': ['Synthetic untrusted source, not independent WAN/VPN-device acceptance',
                    'Already imported owner VPN profiles require re-import',
                    'Single internal resolver remains a dependency; no public secondary configured']}, indent=2))

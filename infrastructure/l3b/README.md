@@ -75,11 +75,13 @@ are applied and tested; see [DNS policy](DNS-POLICY.md) and
 | Immich 3.3.5 | Portainer `immich`, ID147; [stack](immich.compose.yaml) | Restored 9,383 assets/43 albums; internal `immich:2283`; `https://photos.l3b.cc.cd` |
 | OpenCloud 7.2.4 | Portainer `opencloud`, ID148; [stack](opencloud.compose.yaml) | Restored decomposed storage; internal `opencloud:9200`; `https://drive.l3b.cc.cd` |
 
-All five application origins currently remain behind the private Caddy source
-gate. Their public Cloudflare records point at the WAN address, but external
-clients receive the custom 403 until the owner explicitly approves a public
-route/path exception. Nivra and Orva MCPs are connected; Olx and Supabase remain
-disabled. Karakeep uses its local asset store (no S3 dependency); OpenCloud uses
+The owner approved **Nivra, Karakeep, Immich and OpenCloud** as public app
+origins (`notes`, `pin`, `photos`, `drive`). They have exact DNS-only public A
+records and narrow public Caddy handlers, while each application still enforces
+its native authentication/OIDC. **Orva** remains behind the private Caddy source
+gate; its historical public DNS record was preserved but does not grant a route.
+Core services remain private. Nivra and Orva MCPs are connected; Olx and Supabase
+remain disabled. Karakeep uses its local asset store (no S3 dependency); OpenCloud uses
 local decomposed storage. Immich keeps the same PostgreSQL 14 image and data
 layout as the backup. Orva's `quick-share` function and data are restored, but
 its configured Cairn S3 endpoint is not currently deployed, so uploads fail
