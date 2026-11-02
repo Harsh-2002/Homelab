@@ -42,9 +42,10 @@ def main():
     except urllib.error.HTTPError as error:
         assert error.code == 401
     assert request('/api/info', auth)[0] == 200
-    with socket.socket() as sock:
-        sock.settimeout(2)
-        assert sock.connect_ex(('10.1.1.10', 4096)) != 0
+    for address in ['10.1.1.10', '127.0.0.1']:
+        with socket.socket() as sock:
+            sock.settimeout(2)
+            assert sock.connect_ex((address, 4096)) != 0
     names = subprocess.check_output(['docker', 'ps', '--format', '{{.Names}}'], text=True).splitlines()
     assert 'opencode' not in names and 'opencode-host-proxy' not in names
     checks = {'nativeUserServiceActiveAndEnabled': True, 'previousVaultCredentialsRestored': True,
