@@ -1,0 +1,1 @@
+DPkg::Post-Invoke { "setcap cap_perfmon,cap_sys_admin+ep /usr/bin/intel_gpu_top 2>/dev/null || true"; "setcap cap_sys_rawio,cap_sys_admin+ep /usr/sbin/smartctl 2>/dev/null || true"; };

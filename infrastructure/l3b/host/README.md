@@ -13,13 +13,19 @@ a Docker outage run outside Docker.
 | Remote shell | `ssh.service` | Existing keys only |
 | Coding agents | `opencode.service`, Hermes user gateway | Need host filesystem/tool access |
 
-## Beszel limits
+## Beszel sensors
 
-The Dell OptiPlex exposes no fan tachometers through `/sys/class/hwmon`, so
-Beszel cannot show fan RPM. The i915 GPU has no compatible hwmon energy counters, and Beszel reports no
-valid Intel GPU data even after installing `intel-gpu-tools`; iGPU utilization
-is therefore not shown in the UI. Temperatures, disk usage/IO, network and
-Docker stats are available.
+The OptiPlex fan tachometer is exposed only when `dell_smm_hwmon` is loaded
+with `force=1`; this is persisted by `dell-smm-hwmon.conf` and the modules-load
+file. Fan RPM then appears in Beszel.
+
+Intel iGPU usage is read via `intel_gpu_top`; the binary and the agent service
+carry `CAP_PERFMON`/`CAP_SYS_ADMIN`, with the APT post-invoke hook reapplying
+the file capabilities after package updates. SMART uses `/dev/nvme0n1:nvme`
+and `/dev/sda:sat`, so the external USB disk is not included.
+
+The forced Dell SMM probe is specific to this OptiPlex 5060 and BIOS; remove the
+module option if a future firmware update makes it unstable.
 
 ## SMART alerts
 

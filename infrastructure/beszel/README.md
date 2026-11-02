@@ -4,7 +4,7 @@
 > (ID 181) plus a **native** `beszel-agent.service` on l3b. The agent binary is
 > `/opt/beszel-agent/beszel-agent` (0.21.1), listens on `10.1.1.10:45876`, and has
 > the daily `beszel-agent-update.timer` enabled. Hub data is under
-> `/data/apps/beszel`; it monitors `/` (NVMe) and `/data` (SATA); the external USB backup is excluded. UI is private at `https://beszel.l3b.cc.cd` behind
+> `/data/apps/beszel`; it monitors `/` (NVMe) and `/data` (SATA), exposes fan RPM, iGPU usage and SMART for both internal disks; the external USB backup is excluded. UI is private at `https://beszel.l3b.cc.cd` behind
 > Tinyauth. VictoriaMetrics and Grafana are retired. The CT 104 details below
 > are historical.
 
