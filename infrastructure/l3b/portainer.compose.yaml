@@ -1,4 +1,4 @@
-name: portainer-bootstrap
+name: portainer
 
 services:
   portainer:

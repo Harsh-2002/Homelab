@@ -14,6 +14,12 @@ native on the host. Other application restorations are deferred; older cluster
 endpoint/deployment tables below are historical, not current live inventory.
 The private [Homepage dashboard](https://l3b.cc.cd) is deployed through Portainer
 with current core cards. WireGuard is the chosen VPN; Tailscale is retired.
+The follow-up restores [OpenViking memory](infrastructure/l3b/MEMORY.md) for native
+OpenCode with the official plugin/skills and owner-selected automatic capture.
+Generic single-word stacks contain actual single-word service names. The
+[native OpenCode HTTPS handover](infrastructure/l3b/REMOTE-ACCESS.md) reuses the
+previous vault login; its completion is tracked separately because restarting
+the server hosting the active conversation must happen after that turn ends.
 
 ## Host WireGuard
 

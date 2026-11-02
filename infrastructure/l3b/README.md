@@ -13,13 +13,14 @@ Read the [setup/WireGuard handoff](HANDOFF-2026-11-02.md),
 
 | Service | Placement / definition | Access |
 | --- | --- | --- |
-| Portainer BE 2.45.3 | `portainer-bootstrap`; [Compose](portainer.compose.yaml) | `https://portainer.l3b.cc.cd`; internal `portainer:9000` |
-| AdGuard Home 0.107.79 | Portainer `core-dns`, ID163; [stack](dns.compose.yaml) | Host **53/UDP only**; UI `adguard:3000` through `https://dns.l3b.cc.cd` |
-| Unbound 1.26.2 | Same `core-dns` stack | Internal `unbound:5335`; no host port |
-| Caddy 2.11.4 + saved custom plugins | Portainer `core-proxy`, ID165; [stack](caddy.compose.yaml) | Host **443/TCP and 443/UDP only** |
-| Pocket ID 2.16.0 | Portainer `core-identity`, ID164; [stack](identity.compose.yaml) | Internal `pocket-id:1411`; `https://auth.l3b.cc.cd` |
-| Tinyauth 5.2.0 | Same `core-identity` stack | Internal `tinyauth:3000`; `https://login.l3b.cc.cd` |
-| Homepage 2.4.0 | Portainer `homepage`, ID168; [stack](homepage.compose.yaml) | Internal `homepage:3000`; `https://l3b.cc.cd` behind Tinyauth |
+| Portainer BE 2.45.3 | `portainer` bootstrap; [Compose](portainer.compose.yaml) | `https://portainer.l3b.cc.cd`; internal `portainer:9000` |
+| AdGuard Home 0.107.79 | Portainer `dns`, ID169; [stack](dns.compose.yaml) | Host **53/UDP only**; UI `adguard:3000` through `https://dns.l3b.cc.cd` |
+| Unbound 1.26.2 | Same `dns` stack | Internal `unbound:5335`; no host port |
+| Caddy 2.11.4 + saved custom plugins | Portainer `proxy`, ID171; [stack](proxy.compose.yaml) | Host **443/TCP and 443/UDP only** |
+| Pocket ID 2.16.0 | Portainer `identity`, ID170; [stack](identity.compose.yaml) | Internal `pocketid:1411`; `https://auth.l3b.cc.cd` |
+| Tinyauth 5.2.0 | Same `identity` stack | Internal `tinyauth:3000`; `https://login.l3b.cc.cd` |
+| Homepage 2.4.0 | Portainer `dashboard`, ID172; [stack](dashboard.compose.yaml) | Internal `homepage:3000`; `https://l3b.cc.cd` behind Tinyauth |
+| OpenViking 0.4.22 / Ollama 0.34.4 | Portainer `memory`, ID174; [stack](memory.compose.yaml) | Internal `openviking:1933` / `ollama:11434`; `https://memory.l3b.cc.cd` |
 
 All application containers use the existing external Docker network `l3b` and
 service-name upstreams. **There are no published Portainer, UI, MCP, CDP, HTTP80
@@ -27,10 +28,13 @@ or TCP53 ports**, including loopback publications. Image `EXPOSE` metadata shown
 by `docker ps` is not a host publication. Only the `PortBindings`/live listeners
 establish exposure.
 
-Host-native SSH22, OpenCode on loopback4096 and WireGuard UDP51820 are separate,
-previously approved services; this restoration did not replace their identities
-or firewall management. `oc` and `hermes` HTTPS routes are deliberately absent:
-the unwanted host proxy was removed rather than retained as a workaround.
+Host-native SSH22, private OpenCode4096 and WireGuard UDP51820 are separate,
+previously approved services. The owner subsequently authorized the native
+`oc` HTTPS route and explicitly chose the prior vault password. Its
+[one-shot service handover](REMOTE-ACCESS.md) preserves history and binds only
+to the Docker bridge; it does not use the removed host proxy or a second server.
+`hermes` HTTPS remains absent. The completion record, not this desired-source
+description, determines whether native remote activation has passed.
 
 The owner retired Tailscale on 2 November. No package, daemon or container is
 installed on this node; no tailnet enrollment, remote-node removal or identity
@@ -42,8 +46,9 @@ instructions are not deployment instructions.
 Homepage runs at the existing apex with the restored exact-owner/group Tinyauth
 policy. The [current configuration](homepage/) preserves the neutral automatic
 light/dark theme. It shows AdGuard Home (live DNS statistics), Portainer and
-Pocket ID, each with a real service-name HTTP monitor. Retired cluster cards,
-Kubernetes metrics, stopped Hermes and a nonexistent OpenCode HTTPS endpoint
+Pocket ID, each with a real service-name HTTP monitor. OpenViking/OpenCode cards
+are prepared for activation with the final native-service handover, for five
+live cards. Retired cluster cards, Kubernetes metrics and stopped Hermes
 are deliberately absent. No Docker socket, privileged widget or host port was
 added. AdGuard credentials stay in the private runtime environment/Portainer
 stack values; the browser receives the widget results, not those credentials.
@@ -61,13 +66,13 @@ through Portainer after replacement of its bind-mounted source inode; future
 edits should preserve that inode and use Caddy reload.
 
 ```bash
-sudo python3 infrastructure/l3b/portainer-api.py deploy --name homepage \
-  --file infrastructure/l3b/homepage.compose.yaml
+sudo python3 infrastructure/l3b/portainer-api.py deploy --name dashboard \
+  --file infrastructure/l3b/dashboard.compose.yaml
 python3 infrastructure/l3b/verify-homepage.py
 ```
 
 [Browser acceptance](HOMEPAGE-VERIFICATION-2026-11-02.json) verifies desktop/light
-and mobile/dark, three current cards, no overflow or console errors, and no
+and mobile/dark, the current card count, no overflow or console errors, and no
 widget error panel. The HTTPS gate rejects anonymous/spoofed requests. Actual
 human passkey/OIDC completion remains separate: UI rendering was tested inside
 the Docker network, not by bypassing or weakening public authentication.
@@ -84,7 +89,7 @@ were verified. No custom application Dockerfile remains.
 
 Portainer is the bootstrap prerequisite, not a stack it should recreate through
 its own running API process. Its single server uses the dedicated
-`portainer-bootstrap` Compose project and existing `/data/apps/portainer` state.
+`portainer` Compose project and existing `/data/apps/portainer` state.
 It has no published API port. This is the only bootstrap/maintenance exception;
 the application stacks above and the browser-tool stack are managed by
 Portainer's API. No second Portainer server is running.
@@ -104,11 +109,11 @@ Normal management from this node:
 
 ```bash
 python3 infrastructure/l3b/portainer-api.py status
-python3 infrastructure/l3b/portainer-api.py deploy --name core-dns \
+python3 infrastructure/l3b/portainer-api.py deploy --name dns \
   --file infrastructure/l3b/dns.compose.yaml --env L3B_BIND_IP=10.1.1.10
-sudo python3 infrastructure/l3b/portainer-api.py deploy --name core-proxy \
-  --file infrastructure/l3b/caddy.compose.yaml --env L3B_BIND_IP=10.1.1.10
-sudo python3 infrastructure/l3b/portainer-api.py deploy --name core-identity \
+sudo python3 infrastructure/l3b/portainer-api.py deploy --name proxy \
+  --file infrastructure/l3b/proxy.compose.yaml --env L3B_BIND_IP=10.1.1.10
+sudo python3 infrastructure/l3b/portainer-api.py deploy --name identity \
   --file infrastructure/l3b/identity.compose.yaml
 ```
 
@@ -197,18 +202,28 @@ OpenCode remains the existing native host process. Its current authentication,
 sessions and Herdr integration were preserved. Skills and selected MCP settings
 were restored; Codex/Claude configuration was excluded explicitly.
 
-The Portainer-managed [agent-tools stack](agent-tools.compose.yaml), ID162,
+The Portainer-managed [tools stack](tools.compose.yaml), ID173,
 provides one shared Chromium process. Host Playwright and Chrome DevTools use
 Docker exec/stdio, without MCP/CDP host publications. Hermes's prepared clients
 use Docker service discovery internally. Context7, shadcn and REA also connect;
 unrestored-service MCPs remain disabled. This is a privileged browser tool, not
 an isolation boundary. No owner profile/session was imported into the browser.
 
+Owner naming standard: generic, single-word stack names; actual, single-word
+service/container names. Containers are `portainer`, `adguard`, `unbound`,
+`caddy`, `pocketid`, `tinyauth`, `homepage`, `playwright`, `openviking`, and
+`ollama`. `hermes` stays
+stopped. Portainer compose stack names cannot be updated in place: the five
+old managed records were replaced through the native API, reusing all bind data
+and the external network. Old IDs162–165/168 are historical. Application data
+directories, domains and container credentials/identities were not renamed or reset.
+
 Hermes configuration/persona/skills were staged but its stack166 is stopped.
 No old conversation DB, cron jobs, process locks or messaging gateway was
 restored into active execution. Complete Hermes/model/messaging acceptance only
-after the owner accepts the core. Telegram/Tavily rotation warnings and
-OpenViking restoration/synchronization remain deferred. The temporary duplicate
+after the owner accepts the core. Telegram/Tavily rotation warnings remain deferred.
+OpenViking has now been restored and verified; see [memory](MEMORY.md) for the
+official plugin, three skills and explicitly chosen automatic capture. The temporary duplicate
 OpenCode Docker server, its unused data/images and the unwanted host proxy were
 removed; none remains in the desired stack files.
 
@@ -217,7 +232,8 @@ removed; none remains in the desired stack files.
 ```bash
 python3 infrastructure/l3b/verify-core.py --browser
 python3 infrastructure/l3b/verify-homepage.py
-python3 infrastructure/agents/check-integrations.py --single-node
+python3 infrastructure/l3b/verify-memory.py
+python3 infrastructure/agents/check-integrations.py --single-node --memory
 ```
 
 The browser option checks an actual signed-in Portainer administrator session
@@ -229,4 +245,4 @@ mount identities, container hardening and preservation of the WireGuard service.
 Human passkey/OIDC completion, remote client application requests, independent
 HTTP3 transport testing, reboot/Docker-daemon restart and new backup/restore
 coverage remain distinct acceptance items. No paid agent model request or
-additional application restore was performed to claim core success.
+unrelated application restore was used to claim the initial core success.

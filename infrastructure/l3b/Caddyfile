@@ -14,7 +14,7 @@
 
     @identity host auth.l3b.cc.cd
     handle @identity {
-        reverse_proxy pocket-id:1411
+        reverse_proxy pocketid:1411
     }
 
     @login host login.l3b.cc.cd
@@ -25,6 +25,24 @@
     @portainer host portainer.l3b.cc.cd
     handle @portainer {
         reverse_proxy portainer:9000
+    }
+
+    @opencode host oc.l3b.cc.cd
+    handle @opencode {
+        reverse_proxy opencode:4096 {
+            flush_interval -1
+            header_down Set-Cookie "(opencode[^=]*=[^;]+)(.*)" "$1$2; Secure"
+        }
+    }
+
+    @memory host memory.l3b.cc.cd
+    handle @memory {
+        @studio path /studio /studio/*
+        forward_auth @studio tinyauth:3000 {
+            uri /api/auth/caddy
+            copy_headers Remote-User Remote-Email Remote-Groups
+        }
+        reverse_proxy openviking:1933
     }
 
     @homepage host l3b.cc.cd

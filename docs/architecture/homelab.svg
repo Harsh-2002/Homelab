@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1820" viewBox="0 0 2400 1820" role="img"><title>l3b / physical → Docker → service tree</title><desc>Single-node Docker restoration verified 2026-11-02; historical cluster not recreated.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#52636d"/></marker></defs><rect width="2400" height="1820" fill="#f8fafb"/><g font-family="Arial, sans-serif">
 <text x="55" y="76" font-size="36">l3b / physical → Docker → service tree</text>
-<text x="55" y="120" font-size="21">2026-11-02 · Single host, no HA claim · OpenViking not restored</text>
+<text x="55" y="120" font-size="21">2026-11-02 · Single host, no HA claim · OpenViking memory restored</text>
 <path d="M435 679L500 679" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M880 679L945 679" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1325 679L1390 219" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
@@ -16,6 +16,7 @@
 <path d="M1770 219L1835 969" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1770 219L1835 1154" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1770 219L1835 1339" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1770 219L1835 1524" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <g data-node="true"><rect x="55" y="620" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="69" y="647" font-size="19" fill="#18252c">Phone / workstation</text>
 <text x="69" y="672" font-size="16" fill="#18252c">Private LAN access</text>
@@ -41,8 +42,9 @@
 </g>
 <g data-node="true"><rect x="1390" y="800" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="1404" y="827" font-size="19" fill="#18252c">OpenCode / native host</text>
-<text x="1404" y="852" font-size="16" fill="#18252c">Existing service and auth preserved</text>
-<text x="1404" y="877" font-size="16" fill="#18252c">Shared browser tools run in Docker</text>
+<text x="1404" y="852" font-size="16" fill="#18252c">Session history preserved; no</text>
+<text x="1404" y="877" font-size="16" fill="#18252c">duplicate</text>
+<text x="1404" y="902" font-size="16" fill="#18252c">Private HTTPS / handover pending</text>
 </g>
 <g data-node="true"><rect x="1390" y="990" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="1404" y="1017" font-size="19" fill="#18252c">Samsung NVMe / XFS</text>
@@ -66,35 +68,41 @@
 <text x="1849" y="272" font-size="16" fill="#18252c">verified</text>
 </g>
 <g data-node="true"><rect x="1835" y="355" width="380" height="118" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
-<text x="1849" y="382" font-size="19" fill="#18252c">core-dns</text>
+<text x="1849" y="382" font-size="19" fill="#18252c">dns / AdGuard and Unbound</text>
 <text x="1849" y="407" font-size="16" fill="#18252c">AdGuard Home → public Unbound image</text>
 <text x="1849" y="432" font-size="16" fill="#18252c">Only UDP DNS published; UI via Caddy</text>
 </g>
 <g data-node="true"><rect x="1835" y="540" width="380" height="118" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
-<text x="1849" y="567" font-size="19" fill="#18252c">core-proxy</text>
+<text x="1849" y="567" font-size="19" fill="#18252c">proxy / Caddy</text>
 <text x="1849" y="592" font-size="16" fill="#18252c">Custom Caddy binary / saved</text>
 <text x="1849" y="617" font-size="16" fill="#18252c">certificates</text>
 <text x="1849" y="642" font-size="16" fill="#18252c">Only HTTPS TCP/UDP published</text>
 </g>
 <g data-node="true"><rect x="1835" y="725" width="380" height="118" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
-<text x="1849" y="752" font-size="19" fill="#18252c">core-identity</text>
-<text x="1849" y="777" font-size="16" fill="#18252c">Pocket ID / Tinyauth</text>
+<text x="1849" y="752" font-size="19" fill="#18252c">identity / Pocket ID and Tinyauth</text>
+<text x="1849" y="777" font-size="16" fill="#18252c">Container: pocketid / tinyauth</text>
 <text x="1849" y="802" font-size="16" fill="#18252c">Original identity and OIDC clients</text>
 </g>
 <g data-node="true"><rect x="1835" y="910" width="380" height="118" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
-<text x="1849" y="937" font-size="19" fill="#18252c">Homepage / dashboard</text>
+<text x="1849" y="937" font-size="19" fill="#18252c">dashboard / Homepage</text>
 <text x="1849" y="962" font-size="16" fill="#18252c">Private apex; Tinyauth forward-auth</text>
 <text x="1849" y="987" font-size="16" fill="#18252c">Only current core service cards</text>
 </g>
 <g data-node="true"><rect x="1835" y="1095" width="380" height="118" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
-<text x="1849" y="1122" font-size="19" fill="#18252c">Hermes / staged and stopped</text>
-<text x="1849" y="1147" font-size="16" fill="#18252c">Configuration/persona/skills</text>
-<text x="1849" y="1172" font-size="16" fill="#18252c">retained</text>
-<text x="1849" y="1197" font-size="16" fill="#18252c">Deferred until core acceptance</text>
+<text x="1849" y="1122" font-size="19" fill="#18252c">memory / OpenViking and Ollama</text>
+<text x="1849" y="1147" font-size="16" fill="#18252c">Restored context; local embeddings</text>
+<text x="1849" y="1172" font-size="16" fill="#18252c">OpenCode plugin and memory skills</text>
 </g>
 <g data-node="true"><rect x="1835" y="1280" width="380" height="118" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
-<text x="1849" y="1307" font-size="19" fill="#18252c">agent-tools</text>
-<text x="1849" y="1332" font-size="16" fill="#18252c">Playwright / Chrome DevTools</text>
-<text x="1849" y="1357" font-size="16" fill="#18252c">One shared Chromium browser</text>
+<text x="1849" y="1307" font-size="19" fill="#18252c">Hermes / staged and stopped</text>
+<text x="1849" y="1332" font-size="16" fill="#18252c">Configuration/persona/skills</text>
+<text x="1849" y="1357" font-size="16" fill="#18252c">retained</text>
+<text x="1849" y="1382" font-size="16" fill="#18252c">Deferred until core acceptance</text>
+</g>
+<g data-node="true"><rect x="1835" y="1465" width="380" height="118" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
+<text x="1849" y="1492" font-size="19" fill="#18252c">tools / Playwright</text>
+<text x="1849" y="1517" font-size="16" fill="#18252c">Playwright / Chrome DevTools</text>
+<text x="1849" y="1542" font-size="16" fill="#18252c">Container: playwright; shared</text>
+<text x="1849" y="1567" font-size="16" fill="#18252c">browser</text>
 </g>
 <text x="55" y="1730" font-size="20">Existing backups preserved; passkey/OIDC and paid model acceptance require separate tests.</text></g></svg>

@@ -29,11 +29,21 @@ def main():
     assert published == {'adguard': ['53/udp'], 'caddy': ['443/tcp', '443/udp']}, 'Unexpected Docker host ports'
     checks['dockerPublishedPortsExact'] = published
     by_name = {item['Name'].lstrip('/'): item for item in containers}
-    for name in ['portainer', 'adguard', 'unbound', 'caddy', 'pocket-id', 'tinyauth', 'homepage']:
+    expected_projects = {'portainer': 'portainer', 'adguard': 'dns',
+                         'unbound': 'dns', 'pocketid': 'identity',
+                         'tinyauth': 'identity', 'caddy': 'proxy',
+                         'homepage': 'dashboard', 'playwright': 'tools',
+                         'openviking': 'memory', 'ollama': 'memory'}
+    for name, project in expected_projects.items():
+        item = by_name[name]
+        assert item['Config']['Labels']['com.docker.compose.project'] == project
+        assert item['Config']['Labels']['com.docker.compose.service'] == name
+    checks['actualServiceNamesAndGenericStackNames'] = expected_projects
+    for name in ['portainer', 'adguard', 'unbound', 'caddy', 'pocketid', 'tinyauth', 'homepage']:
         assert name in by_name and by_name[name]['State']['Running'], name + ' is not running'
-    for name in ['unbound', 'pocket-id', 'tinyauth', 'homepage']:
+    for name in ['unbound', 'pocketid', 'tinyauth', 'homepage']:
         assert by_name[name]['State'].get('Health', {}).get('Status') == 'healthy', name + ' is not healthy'
-    for name in ['adguard', 'unbound', 'caddy', 'pocket-id', 'tinyauth']:
+    for name in ['adguard', 'unbound', 'caddy', 'pocketid', 'tinyauth']:
         assert by_name[name]['HostConfig']['ReadonlyRootfs'], name + ' root filesystem is not read-only'
     assert 'opencode' not in by_name and 'opencode-host-proxy' not in by_name, 'Unwanted agent duplicate/proxy'
     assert 'hermes' not in by_name, 'Hermes must remain stopped until core acceptance'
@@ -58,7 +68,7 @@ def main():
     valid = run('dig', '@10.1.1.10', 'cloudflare.com', '+notcp', '+dnssec', '+noall', '+comments')
     invalid = run('dig', '@10.1.1.10', 'dnssec-failed.org', '+notcp', '+dnssec', '+noall', '+comments')
     assert 'status: NOERROR' in valid and ' ad;' in valid, 'Validated DNSSEC answer missing'
-    assert 'status: SERVFAIL' in invalid, 'Broken DNSSEC domain was accepted'
+    assert 'status: SERVFAIL' in invalid, 'Expected DNSSEC SERVFAIL response was not verified'
     checks['udpDnsPrivateAnswerAndDnssec'] = True
     for port in [53, 80, 9000, 8931, 4098]:
         with socket.socket() as sock:
@@ -100,7 +110,7 @@ def main():
     if args.browser:
         code = r'''const {chromium}=require('/app/node_modules/playwright-core');
 (async()=>{const b=await chromium.connectOverCDP('http://127.0.0.1:9222');const c=b.contexts()[0];const r=await c.request.get('https://portainer.l3b.cc.cd/api/users/me');if(r.status()!==200)throw Error('Not signed in');const u=await r.json();if(u.Role!==1)throw Error('Not administrator');const s=(await c.cookies('https://portainer.l3b.cc.cd')).find(x=>x.name==='portainer_api_key');if(!s||!s.secure||!s.httpOnly||s.sameSite!=='Strict')throw Error('Cookie policy');console.log('PASS');process.exit(0)})().catch(()=>{console.error('Authenticated browser acceptance failed');process.exit(1)});'''
-        assert run('docker', 'exec', 'playwright-mcp', 'node', '-e', code) == 'PASS'
+        assert run('docker', 'exec', 'playwright', 'node', '-e', code) == 'PASS'
         checks['actualPortainerBrowserAdminSessionAndSecureCookie'] = True
     checks['wireguardHostServicePreserved'] = run('systemctl', 'is-active', 'wg-quick@wg0') == 'active'
     assert checks['wireguardHostServicePreserved']

@@ -1,5 +1,21 @@
 # OpenViking shared memory
 
+## Current single-node restoration — 2 November 2026
+
+Current deployment is Portainer stack `memory`174 on Debian `l3b`, with containers
+`openviking` and `ollama`, no host1933 publication, and bot mode disabled. The
+original memory/index/model/account state was restored unchanged from the backup
+before startup. Local embeddings, VLM, queue health and semantic retrieval pass.
+Native OpenCode uses the official V2-compatible plugin2026.11.1, one plugin-owned
+MCP, and all three bundled skills. The owner chose automatic transcript capture
+with tested redaction filters. Codex/Claude clients were not restored.
+
+See [current memory runbook](../l3b/MEMORY.md),
+[current Compose](../l3b/memory.compose.yaml), and
+[verification](../l3b/MEMORY-VERIFICATION-2026-11-02.json).
+Everything below describes the retired deployment unless explicitly confirmed
+by that current runbook; do not apply the historical LAN port or agent setup.
+
 OpenViking v0.4.22 runs as Portainer stack `openviking` on `ctr` (10.1.1.4). Caddy serves `https://memory.l3b.cc.cd` privately; its MCP endpoint is `https://memory.l3b.cc.cd/mcp`. Web Studio uses bot mode for Agent chat and is protected by Pocket ID OIDC through Tinyauth on `/studio` and `/studio/*`. Only OpenViking port 1933 is published to the LAN address. The Ollama embedding service is internal to the Compose network. No separate database is deployed.
 
 ## Configuration and data

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Deploy one reviewed stack through the local Portainer API; never print secrets."""
 import argparse
+import http.client
 import json
 import os
 from pathlib import Path
@@ -53,7 +54,7 @@ def main():
         stacks = request('GET', '/stacks')
         print('Saved stack count:', len(stacks))
         for item in stacks:
-            if item['Name'] in ['portainer', 'agent-tools', 'core-dns', 'core-identity', 'core-proxy', 'homepage', 'hermes', 'opencode']:
+            if item['Name'] in ['portainer', 'tools', 'dns', 'identity', 'proxy', 'dashboard', 'memory', 'hermes']:
                 print('Managed stack:', item['Id'], item['Name'], item['Status'])
     elif args.action == 'rename':
         if not args.name:
@@ -105,9 +106,33 @@ def main():
         existing = [item for item in request('GET', '/stacks')
                     if item['Name'] == args.name and item['EndpointId'] == args.endpoint]
         if existing:
-            item = request('PUT', f'/stacks/{existing[0]["Id"]}?endpointId={args.endpoint}',
-                           {'StackFileContent': content, 'Env': stack_env,
-                            'Prune': args.prune, 'PullImage': False})
+            stack_id = existing[0]['Id']
+            try:
+                item = request('PUT', f'/stacks/{stack_id}?endpointId={args.endpoint}',
+                               {'StackFileContent': content, 'Env': stack_env,
+                                'Prune': args.prune, 'PullImage': False})
+            except (urllib.error.URLError, http.client.RemoteDisconnected, ConnectionError) as error:
+                # Updating Caddy can close the very HTTPS connection carrying
+                # this response. Never repeat the PUT: verify the same native ID
+                # and exact intended definition/env after the proxy returns.
+                if (args.name != 'proxy' or
+                        isinstance(error, urllib.error.HTTPError) and error.code not in [502, 503, 504]):
+                    raise
+                deadline = time.monotonic() + args.timeout
+                while time.monotonic() < deadline:
+                    try:
+                        candidate = request('GET', f'/stacks/{stack_id}')
+                        actual = request('GET', f'/stacks/{stack_id}/file')['StackFileContent']
+                        actual_env = {pair['name']: pair['value'] for pair in candidate['Env']}
+                        if (actual.strip() == content.strip() and
+                                all(actual_env.get(pair['name']) == pair['value'] for pair in stack_env)):
+                            item = candidate
+                            break
+                    except (urllib.error.URLError, http.client.RemoteDisconnected, ConnectionError):
+                        pass
+                    time.sleep(2)
+                else:
+                    raise SystemExit('Proxy response interrupted; exact native deployment could not be verified')
         else:
             item = request('POST', f'/stacks/create/standalone/string?endpointId={args.endpoint}',
                            {'Name': args.name, 'StackFileContent': content, 'Env': stack_env})
@@ -125,5 +150,5 @@ if __name__ == '__main__':
         main()
     except urllib.error.HTTPError as error:
         raise SystemExit(f'Portainer API failed: HTTP {error.code}; response withheld')
-    except (OSError, KeyError, ValueError, subprocess.SubprocessError) as error:
+    except (OSError, KeyError, ValueError, subprocess.SubprocessError, http.client.RemoteDisconnected) as error:
         raise SystemExit(f'Operation failed: {type(error).__name__}; credentials/output withheld')

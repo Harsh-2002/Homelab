@@ -1,3 +1,5 @@
+# Historical ctr reference. Current single-node source: ../l3b/memory.compose.yaml.
+# Do not reintroduce the old LAN port, container prefixes or bot gateway below.
 services:
   openviking:
     image: ghcr.io/volcengine/openviking:v0.4.22

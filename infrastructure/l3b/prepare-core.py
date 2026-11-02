@@ -25,7 +25,7 @@ def main():
             raise SystemExit(f'{name}: destination exists; refusing overwrite')
         if args.resume:
             result = subprocess.run(['docker', 'inspect', '--format', '{{.State.Running}}',
-                                     'adguard' if name == 'adguard' else name],
+                                     'pocketid' if name == 'pocket-id' else name],
                                     capture_output=True, text=True, check=False)
             if result.stdout.strip() == 'true':
                 raise SystemExit('Refusing staging resume while a core service is running')

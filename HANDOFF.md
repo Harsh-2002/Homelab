@@ -1,5 +1,27 @@
 # Homelab agent handoff
 
+## Follow-up — naming, restored memory and native remote access
+
+The owner expanded the scope after the core completion. Current generic stacks
+are `dns`169, `identity`170, `proxy`171, `dashboard`172, `tools`173 and `memory`174;
+`portainer` is the bootstrap project, and `hermes`166 remains stopped. Actual
+container names are single words: portainer, adguard, unbound, pocketid, tinyauth,
+caddy, homepage, playwright, openviking, ollama. Bind paths and domains are unchanged.
+
+[OpenViking memory](infrastructure/l3b/MEMORY.md) is restored and verified, with
+the official native OpenCode plugin/MCP and all three skills. The owner explicitly
+chose automatic transcript capture with redaction filters. Tailscale stays retired.
+
+[Native OpenCode remote access](infrastructure/l3b/REMOTE-ACCESS.md) is authorized
+at the existing `oc` HTTPS origin. The owner chose the previous vault password,
+accepting login invalidation but preserving history. Its final one-shot handover
+must run outside this active OpenCode server. Do not claim completion until
+`infrastructure/l3b/NATIVE-HANDOVER-2026-11-02.json` exists with `state: verified`.
+The one-shot also validates five Homepage cards, refreshes diagrams, records
+Notion/OpenViking and publishes its scoped evidence. No duplicate server or
+custom proxy is introduced. Earlier statements below that memory/remote access
+are deferred describe the previous scope, not the latest authorization.
+
 ## Single-node core restored — 2026-11-02
 
 Read the [core runbook](infrastructure/l3b/README.md),

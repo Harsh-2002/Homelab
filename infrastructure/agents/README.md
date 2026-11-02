@@ -76,6 +76,18 @@ Do not mistake truncated JSON for an underlying service failure.
 
 ## OpenCode remote UI/API
 
+### Current l3b handover — 2 November 2026
+
+The owner requested restoring the established private HTTPS origin on the
+single Debian host, using the previous vault password and preserving history.
+Current source/procedure/evidence: [`../l3b/REMOTE-ACCESS.md`](../l3b/REMOTE-ACCESS.md).
+The old LAN49374/Tailscale placement below is historical, not current exposure.
+The native service handover must run outside its active conversation; completion
+requires `NATIVE-HANDOVER-2026-11-02.json` with `state: verified`.
+The official OpenViking V2 plugin/MCP and three bundled memory skills are now
+verified; see [`../l3b/MEMORY.md`](../l3b/MEMORY.md). Codex/Claude clients remain
+excluded. The older remote setup notes below are retained as migration context.
+
 Upgrade follow-up, 2026-10-25: owner updated the installed binary to **v2.1.4**.
 The existing user service was still running its pre-upgrade process. Restarted
 with `systemctl --user restart opencode.service`; the actual running executable

@@ -33,10 +33,10 @@ const {chromium}=require('/app/node_modules/playwright-core');
     page.on('console',m=>{if(m.type()==='error')errors.push('console-error')});
     const response=await page.goto('http://homepage:3000',{waitUntil:'networkidle'});
     if(response.status()!==200)throw Error('Backend UI response');
-    for(const title of ['AdGuard Home','Portainer','Pocket ID'])await page.getByRole('link',{name:new RegExp('^'+title)}).first().waitFor();
+    for(const title of ['AdGuard Home','Portainer','Pocket ID','OpenViking','OpenCode'])await page.getByRole('link',{name:new RegExp('^'+title)}).first().waitFor();
     if(await page.getByText('API Error',{exact:false}).count())throw Error('Widget API error');
     const details=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,theme:document.documentElement.classList.contains('dark')?'dark':'light',cards:document.querySelectorAll('.service-card').length}));
-    if(details.overflow||details.cards!==3||details.theme!==colorScheme||errors.length){console.error(JSON.stringify({device:name,...details,errors}));throw Error('UI acceptance');}
+    if(details.overflow||details.cards!==5||details.theme!==colorScheme||errors.length){console.error(JSON.stringify({device:name,...details,errors}));throw Error('UI acceptance');}
     await page.screenshot({path:'/tmp/homepage-'+name+'.png',fullPage:true});
     results.push({device:name,...details,consoleErrors:errors.length});
     await context.close();
@@ -44,11 +44,11 @@ const {chromium}=require('/app/node_modules/playwright-core');
   console.log(JSON.stringify(results));process.exit(0);
 })().catch(error=>{console.error(['Backend UI response','Widget API error','UI acceptance'].includes(error.message)?error.message:'Homepage browser validation failed; target content withheld');process.exit(1)});
 '''
-    run = subprocess.run(['docker', 'exec', 'playwright-mcp', 'node', '-e', code],
+    run = subprocess.run(['docker', 'exec', 'playwright', 'node', '-e', code],
                          capture_output=True, text=True, timeout=120)
     if run.returncode:
         raise SystemExit('Homepage browser validation failed: ' + run.stderr.strip())
-    result = {'checkedOn': '2026-11-02', 'stack': 168,
+    result = {'checkedOn': '2026-11-02', 'stack': 172,
               'publicGatewayAndSpoofRejection': True, 'backendBrowser': json.loads(run.stdout),
               'limits': ['Public browser passkey/OIDC sign-in remains a human acceptance test',
                          'Backend browser test uses internal Docker service DNS; it does not claim SSO completion']}

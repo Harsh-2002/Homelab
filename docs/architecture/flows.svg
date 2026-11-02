@@ -1,10 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1820" viewBox="0 0 2400 1820" role="img"><title>l3b / DNS, HTTPS, identity and persistent data</title><desc>Single-node Docker restoration verified 2026-11-02; historical cluster not recreated.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#52636d"/></marker></defs><rect width="2400" height="1820" fill="#f8fafb"/><g font-family="Arial, sans-serif">
 <text x="55" y="76" font-size="36">l3b / DNS, HTTPS, identity and persistent data</text>
-<text x="55" y="120" font-size="21">2026-11-02 · Single host, no HA claim · OpenViking not restored</text>
+<text x="55" y="120" font-size="21">2026-11-02 · Single host, no HA claim · OpenViking memory restored</text>
 <path d="M460 319L650 319" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1030 319L1220 319" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1600 319L1790 319" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M840 738L840 823L1980 823L1980 738" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1980 738L1980 870" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1980 1060L1980 988" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M460 679L650 679" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1030 679L1220 679" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M840 738L840 870" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
@@ -51,6 +53,16 @@
 <text x="1804" y="647" font-size="19" fill="#18252c">Homepage / private apex</text>
 <text x="1804" y="672" font-size="16" fill="#18252c">Current core cards and DNS metrics</text>
 <text x="1804" y="697" font-size="16" fill="#18252c">No host port or Docker socket</text>
+</g>
+<g data-node="true"><rect x="1790" y="870" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
+<text x="1804" y="897" font-size="19" fill="#18252c">OpenViking / Ollama</text>
+<text x="1804" y="922" font-size="16" fill="#18252c">Native OpenCode recall and capture</text>
+<text x="1804" y="947" font-size="16" fill="#18252c">API key; Studio additionally SSO</text>
+</g>
+<g data-node="true"><rect x="1790" y="1060" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
+<text x="1804" y="1087" font-size="19" fill="#18252c">OpenCode / native</text>
+<text x="1804" y="1112" font-size="16" fill="#18252c">Official plugin / automatic memory</text>
+<text x="1804" y="1137" font-size="16" fill="#18252c">Private HTTPS / handover pending</text>
 </g>
 <g data-node="true"><rect x="1220" y="870" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="1234" y="897" font-size="19" fill="#18252c">Pocket ID</text>

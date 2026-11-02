@@ -1,7 +1,7 @@
 services:
   playwright:
     image: mcr.microsoft.com/playwright/mcp@sha256:690763cbb437ee7233f538a953bb5390bf03791eb5c965b471e59d17a6132fcb
-    container_name: playwright-mcp
+    container_name: playwright
     entrypoint: node
     command: [/opt/homelab/browser-tools.cjs]
     volumes:

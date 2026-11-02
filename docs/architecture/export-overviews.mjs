@@ -6,7 +6,7 @@ import {execFileSync} from 'node:child_process';
 
 const base = dirname(fileURLToPath(import.meta.url));
 const dir = process.argv.includes('--internal') ? join(base, 'internal') : base;
-const container = process.env.EXCALIDRAW_BROWSER_CONTAINER || 'playwright-mcp';
+const container = process.env.EXCALIDRAW_BROWSER_CONTAINER || 'playwright';
 const source = ['homelab', 'flows'].map(name => readFileSync(join(dir, name + '.svg'), 'utf8'));
 const code = `
 const fs=require('node:fs');

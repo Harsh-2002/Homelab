@@ -19,4 +19,15 @@
         icon: pocket-id.png
         href: https://auth.l3b.cc.cd
         description: Passkeys and application identity
-        siteMonitor: http://pocket-id:1411/healthz
+        siteMonitor: http://pocketid:1411/healthz
+- Applications:
+    - OpenViking:
+        icon: https://memory.l3b.cc.cd/favicon.ico
+        href: https://memory.l3b.cc.cd/studio
+        description: Persistent shared agent memory
+        siteMonitor: http://openviking:1933/health
+    - OpenCode:
+        icon: https://oc.l3b.cc.cd/favicon.ico
+        href: https://oc.l3b.cc.cd
+        description: Native coding workspace
+        siteMonitor: http://opencode:4096/

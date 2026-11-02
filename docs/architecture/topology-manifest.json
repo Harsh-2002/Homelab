@@ -1,5 +1,5 @@
 {
-  "sourceHash": "bc0b29fa01b67e51d952311c2c08f5ea420f03254480bc186646c02d39fce7f8",
+  "sourceHash": "7c9e91a22cb42493c36a125764592387bf2b6b83c82801b592c1a1a6d2762bd7",
   "frames": [
     "tree",
     "core-flow"
@@ -19,6 +19,7 @@
     "core-proxy",
     "core-identity",
     "homepage",
+    "memory",
     "hermes",
     "playwright",
     "flow-client",
@@ -30,6 +31,8 @@
     "flow-apps",
     "flow-tinyauth",
     "flow-homepage",
+    "flow-memory",
+    "flow-opencode",
     "flow-pocket",
     "flow-portainer",
     "flow-docker",

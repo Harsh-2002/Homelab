@@ -8,7 +8,7 @@ flags = ['-y', 'chrome-devtools-mcp@1.12.0', '--no-usage-statistics']
 path = Path('/home/dev/.config/opencode/opencode.json')
 data = json.loads(path.read_text())
 data['mcp']['servers']['chrome-devtools'] = {
-    'type': 'local', 'command': ['docker', 'exec', '-i', 'playwright-mcp', 'npx'] +
+    'type': 'local', 'command': ['docker', 'exec', '-i', 'playwright', 'npx'] +
         flags + ['--browserUrl=http://127.0.0.1:9222'],
     'disabled': False, 'timeout': {'startup': 90000, 'catalog': 60000}}
 path.write_text(json.dumps(data, indent=2) + '\n')

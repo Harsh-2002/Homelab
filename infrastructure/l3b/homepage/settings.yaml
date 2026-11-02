@@ -9,6 +9,10 @@ layout:
     style: row
     columns: 3
     useEqualHeights: true
+  Applications:
+    style: row
+    columns: 2
+    useEqualHeights: true
 quicklaunch:
   searchDescriptions: true
   hideInternetSearch: true

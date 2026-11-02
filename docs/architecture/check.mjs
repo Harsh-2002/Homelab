@@ -5,6 +5,9 @@ import {dirname, join} from 'node:path';
 const base = dirname(fileURLToPath(import.meta.url));
 const inventory = JSON.parse(readFileSync(join(base, 'inventory.json'), 'utf8'));
 const current = inventory.currentDeployment?.platform === 'single-node-docker';
+if (current) for (const service of inventory.currentDeployment.services) {
+  if (service.stack) assert.match(service.stack, /^[a-z]+$/, 'stack name must be a generic single word');
+}
 assert.match(inventory.verifiedOn, /^\d{4}-\d{2}-\d{2}$/);
 const hosts = new Set(inventory.hosts.map(h => h.name));
 assert.equal(hosts.size, inventory.hosts.length, 'duplicate hosts');

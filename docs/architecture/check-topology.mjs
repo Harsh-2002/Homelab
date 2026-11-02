@@ -34,5 +34,5 @@ assert.match(els.get('lan-text')?.text ?? '',current?/LAN/:/LAN fabric \/ Netgea
 for(const target of current?['l3b']:['px10','px20','px30']) {
  assert(scene.elements.some(e=>e.type==='arrow' && e.startBinding?.elementId==='lan' && e.endBinding?.elementId===target), 'missing LAN connection to '+target);
 }
-for(const label of current?['l3b','Docker engine','WireGuard','Portainer','AdGuard','Unbound','Caddy','Pocket ID','Tinyauth','OpenCode','Hermes','Playwright']:['Home router','Outdoor camera','Wipro bulb','Samsung AC','Docker engine','Kubernetes','Home Assistant','Cairn','RustFS','Supabase']) assert(texts.includes(label),'missing '+label);
+for(const label of current?['l3b','Docker engine','WireGuard','Portainer','AdGuard','Unbound','Caddy','Pocket ID','Tinyauth','OpenCode','Hermes','Playwright','Homepage','OpenViking','Ollama']:['Home router','Outdoor camera','Wipro bulb','Samsung AC','Docker engine','Kubernetes','Home Assistant','Cairn','RustFS','Supabase']) assert(texts.includes(label),'missing '+label);
 console.log(`PASS: ${internal?'internal':'public'} editable scene; ${els.size} unique elements, native arrow/text bindings, required coverage${internal?'':', no IP addresses'}.`);

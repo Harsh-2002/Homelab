@@ -3,7 +3,7 @@
 The primary editable topology and current SVG/PNG/PDF sheets now describe one
 bare-metal Debian `l3b`, its NVMe/SATA/external-backup boundaries, Portainer-managed
 core services, native OpenCode and accepted host WireGuard. Docker publishes only
-UDP DNS and HTTPS TCP/UDP. Hermes is staged/stopped, OpenViking is not restored,
+UDP DNS and HTTPS TCP/UDP. Hermes is staged/stopped, OpenViking memory is restored,
 and no HA/current-node backup guarantee is implied. See the
 [core runbook](../../infrastructure/l3b/README.md) and
 [WireGuard acceptance](../../infrastructure/l3b/wireguard/VERIFICATION-2026-11-02.json).
@@ -20,7 +20,7 @@ node docs/architecture/build.mjs
 node docs/architecture/excalidraw-build.mjs
 node docs/architecture/check.mjs
 node docs/architecture/check-topology.mjs
-EXCALIDRAW_BROWSER_CONTAINER=playwright-mcp node docs/architecture/excalidraw-render.mjs
+EXCALIDRAW_BROWSER_CONTAINER=playwright node docs/architecture/excalidraw-render.mjs
 node docs/architecture/export-overviews.mjs
 ```
 
@@ -29,6 +29,9 @@ Rendering uses the local Docker browser, not an uploaded/cloud diagram service.
 The historical retirement/recovery notes below are superseded where they conflict.
 Homepage is now a live private-apex Docker stack. Tailscale is retired and absent;
 historical tailnet references in older exports do not describe the current node.
+Current stack labels are generic single words. OpenCode's remote-state label
+comes from `currentDeployment.opencodeRemote.state`: the one-shot external
+handover changes it to verified only after native/API/browser acceptance.
 
 ## Data-disk retirement, 31 October (historical)
 

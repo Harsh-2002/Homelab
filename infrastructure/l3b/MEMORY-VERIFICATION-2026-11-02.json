@@ -1,0 +1,22 @@
+{
+  "checkedOn": "2026-11-02",
+  "stack": 174,
+  "checks": {
+    "privateStudioAndApiAuthentication": true,
+    "restoredAccountKeyAndResourcesAccessible": true,
+    "queueObserverHealthy": true,
+    "modelsObserverHealthy": true,
+    "newCurrentStateWriteReadAndSemanticIndex": true,
+    "localEmbeddingAndSavedVlmDoctorProbes": true,
+    "botDisabled": true,
+    "memoryStackHealthyWithoutPublishedPorts": true,
+    "officialPluginMcpAndThreeSkillsAvailable": true,
+    "herdrPreservedAndAutomaticRecallCaptureConfigured": true
+  },
+  "limits": [
+    "Automatic raw conversation/tool capture explicitly chosen by owner",
+    "Redaction filters reduce risk but cannot guarantee arbitrary secret removal",
+    "No old Codex/Claude client config or old automation restored",
+    "Bot gateway is intentionally disabled; doctor bot-client warning is not a VLM failure"
+  ]
+}

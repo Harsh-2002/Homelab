@@ -36,9 +36,26 @@ def single_node():
             failures.append('Credential-bearing agent config is not private')
     if hermes.get('memory', {}).get('provider') == 'openviking':
         failures.append('Hermes: unrestored OpenViking provider is active')
-    if any('openviking' in (item if isinstance(item, str) else item.get('package', ''))
-           for item in opencode.get('plugins', [])):
-        failures.append('OpenCode: unrestored OpenViking plugin is active')
+    memory_plugins = [item for item in opencode.get('plugins', [])
+                      if 'openviking' in (item if isinstance(item, str) else item.get('package', ''))]
+    if '--memory' in sys.argv and len(memory_plugins) != 1:
+        failures.append('OpenCode: expected exactly one official OpenViking plugin')
+    if memory_plugins:
+        memory_path = home / '.openviking/ovcli.conf'
+        memory_config = json.loads(memory_path.read_text())
+        if memory_path.stat().st_mode & 0o077:
+            failures.append('OpenViking client config is not private')
+        if memory_config.get('url') != 'https://memory.l3b.cc.cd' or not memory_config.get('api_key'):
+            failures.append('OpenViking client endpoint/account key is not configured')
+        if 'openviking' in clients['OpenCode']:
+            failures.append('OpenCode: duplicate configured OpenViking MCP; use the plugin-owned server')
+        skill_root = home / '.local/share/openviking-plugin/node_modules/@openviking/opencode-plugin/skills'
+        for name in ['openviking-memory', 'openviking-skills', 'ov-experience-memory']:
+            if not (skill_root / name / 'SKILL.md').is_file():
+                failures.append('OpenCode: bundled memory skill missing: ' + name)
+        if str(skill_root) not in opencode.get('skills', []):
+            failures.append('OpenCode: bundled memory skills directory not configured')
+        print('OpenViking: official plugin, private account config and three bundled skills checked')
     if not (home / '.agents/skills/herdr-control/SKILL.md').is_file():
         failures.append('OpenCode: shared Herdr control skill missing')
     if not (Path('/data/apps/hermes/home/memories')).is_dir():

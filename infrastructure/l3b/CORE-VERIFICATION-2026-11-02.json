@@ -3,13 +3,25 @@
   "node": "l3b",
   "checks": {
     "dockerPublishedPortsExact": {
-      "adguard": [
-        "53/udp"
-      ],
       "caddy": [
         "443/tcp",
         "443/udp"
+      ],
+      "adguard": [
+        "53/udp"
       ]
+    },
+    "actualServiceNamesAndGenericStackNames": {
+      "portainer": "portainer",
+      "adguard": "dns",
+      "unbound": "dns",
+      "pocketid": "identity",
+      "tinyauth": "identity",
+      "caddy": "proxy",
+      "homepage": "dashboard",
+      "playwright": "tools",
+      "openviking": "memory",
+      "ollama": "memory"
     },
     "coreContainersRunningAndHardened": true,
     "duplicateAgentAndProxyAbsent": true,

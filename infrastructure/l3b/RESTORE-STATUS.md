@@ -9,23 +9,23 @@ Authoritative detail: [core runbook](README.md),
 - One restored Portainer BE2.45.3, internal-only behind Caddy. Original users and
   30 legacy stack definitions are preserved; actual browser admin login passed.
   The erroneous failed self-stack entry was removed through the native API.
-- Portainer-managed `core-dns`163: current stable AdGuard0.107.79 plus public
+- Portainer-managed `dns`169: current stable AdGuard0.107.79 plus public
   `klutchell/unbound`1.26.2. Only host **53/UDP**; UI stays internal. Private DNS,
   valid/invalid DNSSEC, cache answers and Unbound health passed.
-- `core-proxy`165: original custom Caddy binary/plugins/certificates in the
+- `proxy`171: original custom Caddy binary/plugins/certificates in the
   official image; only **443/TCP+UDP**. No HTTP80 or management publications.
-- `core-identity`164: Pocket ID and Tinyauth with original data/encryption key.
+- `identity`170: Pocket ID and Tinyauth with original data/encryption key.
   HTTPS discovery/JWKS and DNS UI forward-auth/spoof rejection passed. Human
   passkey and complete OAuth sign-in still require owner acceptance.
-- Homepage stack168 is healthy at the private apex, behind the saved Tinyauth
+- Homepage stack `dashboard`172 is healthy at the private apex, behind the saved Tinyauth
   policy. Current cards and DNS metrics passed desktop/mobile browser tests.
   No new host ports or Docker socket. Tailscale is retired and absent on l3b;
   WireGuard remains the current VPN.
-- OpenCode is **host-native only**. Current auth/sessions/Herdr retained;
-  33 skills and five MCPs available. Playwright/Chrome DevTools share one Docker
-  browser through the `agent-tools`162 stack; no MCP/CDP host ports.
+- OpenCode is **host-native only**. Session history/Herdr retained;
+  36 skills and six MCPs available. Playwright/Chrome DevTools share one Docker
+  browser through the `tools`173 stack; no MCP/CDP host ports.
 - Docker publications are exactly **53/UDP,443/TCP,443/UDP**. Native SSH,
-  loopback OpenCode and the separately approved WireGuard service are unchanged.
+  OpenCode's approved native handover is tracked separately; WireGuard is unchanged.
 - The temporary duplicate OpenCode server, custom Unbound build and unwanted
   host proxy were removed. No substitute proxy/helper service was added.
 
@@ -34,7 +34,10 @@ Authoritative detail: [core runbook](README.md),
 Hermes configuration is staged; stack166 is **stopped**, pending core acceptance.
 No messaging gateway, cron job, old session DB or unrelated application stack
 is running from this restoration. Codex/Claude config was not restored.
-OpenViking is unavailable; its synchronization is still pending.
+The owner subsequently authorized OpenViking: stack `memory`174 is restored and
+healthy, with local embeddings, saved VLM access, semantic retrieval and native
+OpenCode's official plugin/MCP/three bundled skills verified. Automatic capture
+was explicitly chosen with redaction filters; see [memory](MEMORY.md).
 
 The active HomeLab service account and `cf` OAuth were verified without printing
 credentials. Both keys from the owner's SSH ID were already authorized for dev;
@@ -57,5 +60,16 @@ backup warning and remaining identity/client gates.
 Public/internal native diagrams passed the architecture checks and official CLI
 rendering; current PNG/PDF overviews were refreshed and visually inspected.
 Core, agent-scope and Homepage browser acceptance checks passed. The existing
-Notion runbook received an append-only nine-block verified update. OpenViking
-remains unavailable; do not infer its synchronization from Git/Notion updates.
+Notion runbook received an append-only nine-block verified update. OpenViking's
+current-state entry and index were refreshed and semantically retrieved. This
+is not a blanket sync of every old repository/Notion snapshot.
+
+## Native remote handover
+
+The owner also requested native OpenCode HTTPS web/app access and chose the
+previous vault credentials, accepting logout of old logins while retaining all
+session history. The [one-shot handover](REMOTE-ACCESS.md) runs outside the
+active server. It creates `NATIVE-HANDOVER-2026-11-02.json` only after actual
+native/browser and five-card dashboard tests pass, then publishes the evidence
+and refreshes Notion/OpenViking. Until its `state` is verified, this step remains
+pending; no duplicate OpenCode or custom host proxy is a permitted fallback.

@@ -16,17 +16,25 @@
       "backup": "Crucial USB / existing ext4 backup mounted temporarily; source unchanged"
     },
     "services": [
-      {"id": "portainer", "label": "Portainer BE 2.45.3", "stack": "portainer-bootstrap", "state": "internal-only; actual browser login through Caddy verified; failed self-stack entry removed"},
-      {"id": "adguard", "label": "AdGuard Home 0.107.79", "stack": "core-dns", "state": "running; only UDP DNS published; UI through Caddy"},
-      {"id": "unbound", "label": "Unbound", "stack": "core-dns", "state": "running; recursive DNSSEC validation"},
-      {"id": "caddy", "label": "Caddy / custom binary", "stack": "core-proxy", "state": "running; HTTPS TCP/UDP only"},
-      {"id": "pocketid", "label": "Pocket ID", "stack": "core-identity", "state": "healthy; original identity and encryption key retained"},
-      {"id": "tinyauth", "label": "Tinyauth", "stack": "core-identity", "state": "healthy; private forward-auth"},
-      {"id": "homepage", "label": "Homepage 2.4.0", "stack": "homepage", "state": "healthy; private apex behind Tinyauth; actual desktop/mobile backend browser tests passed"},
-      {"id": "opencode", "label": "OpenCode 2.2.5", "placement": "native dev host process", "state": "existing service preserved; tools/config restored; no second instance"},
+      {"id": "portainer", "label": "Portainer BE 2.45.3", "stack": "portainer", "state": "internal-only bootstrap; actual browser login through Caddy verified; failed self-stack entry removed"},
+      {"id": "adguard", "label": "AdGuard Home 0.107.79", "stack": "dns", "state": "running; only UDP DNS published; UI through Caddy"},
+      {"id": "unbound", "label": "Unbound", "stack": "dns", "state": "running; recursive DNSSEC validation"},
+      {"id": "caddy", "label": "Caddy / custom binary", "stack": "proxy", "state": "running; HTTPS TCP/UDP only"},
+      {"id": "pocketid", "label": "Pocket ID", "stack": "identity", "state": "healthy; container pocketid; original identity and encryption key retained"},
+      {"id": "tinyauth", "label": "Tinyauth", "stack": "identity", "state": "healthy; private forward-auth"},
+      {"id": "homepage", "label": "Homepage 2.4.0", "stack": "dashboard", "state": "healthy; private apex behind Tinyauth; actual desktop/mobile backend browser tests passed"},
+      {"id": "opencode", "label": "OpenCode 2.2.5", "placement": "native dev host process", "state": "existing session history preserved; remote user-service handover tracked separately; no second instance"},
+      {"id": "openviking", "label": "OpenViking 0.4.22 / Ollama", "stack": "memory", "state": "healthy; restored memory/index; local embeddings; official OpenCode plugin/MCP/three skills; automatic capture chosen by owner"},
       {"id": "hermes", "label": "Hermes / staged", "stack": "hermes", "state": "stopped; configuration staged; application acceptance deferred"},
-      {"id": "playwright", "label": "Playwright / Chrome DevTools", "stack": "agent-tools", "state": "running; shared Chromium; host stdio via Docker exec; no published MCP/CDP ports"}
+      {"id": "playwright", "label": "Playwright / Chrome DevTools", "stack": "tools", "state": "running; container playwright; shared Chromium; host stdio via Docker exec; no published MCP/CDP ports"}
     ],
+    "opencodeRemote": {
+      "state": "pending-handover",
+      "url": "https://oc.l3b.cc.cd",
+      "placement": "single native opencode.service; Docker-bridge-only bind; direct Caddy upstream by host alias",
+      "authentication": "owner explicitly chose previous vault password; old logins invalidated, history retained",
+      "evidence": "infrastructure/l3b/NATIVE-HANDOVER-2026-11-02.json"
+    },
     "vpn": {
       "placement": "host-native WireGuard / wg0; Tailscale retired by owner",
       "acceptance": "Owner reports working; iPhone handshake and bidirectional traffic recorded",
@@ -36,7 +44,7 @@
     "limits": [
       "Single host: no HA or independent current-node backup established",
       "OpenCode intentionally remains native on the host; duplicate Docker instance removed",
-      "OpenViking and other application stacks not restored",
+      "OpenViking memory restored; unrelated application stacks still not restored",
       "WireGuard is accepted for iPhone; router/client DNS cutover, human passkey/OIDC sign-in and model turns not acceptance-tested",
       "Older inventory fields below are the retired environment snapshot, not live state"
     ]

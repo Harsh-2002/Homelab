@@ -11,6 +11,13 @@ Current deployment is one Debian Docker host. WireGuard is the chosen VPN;
 the owner retired Tailscale on 2 November 2026. Do not install/re-enroll it or
 restore historical tailnet routing. Docker publishes only 53/UDP and 443/TCP+UDP;
 keep container communication on service names and management ports internal.
+Use generic single-word stack names and actual single-word service/container
+names. The owner has now authorized OpenViking memory restoration/integration
+for OpenCode and the native OpenCode HTTPS remote UI; keep existing identities
+and do not restore Codex/Claude client configuration or run a second OpenCode.
+The owner explicitly chose automatic memory transcript capture with redaction
+filters, and the previous OpenCode vault password for remote access (invalidates
+current logins, never session history). Follow the native handover runbook.
 
 Primary artifact is now the owner's internal Excalidraw topology tree/flow board,
 not the rejected presentation sheets. Update `excalidraw-build.mjs`, rebuild and

@@ -1,0 +1,26 @@
+{
+  "url": "https://memory.l3b.cc.cd",
+  "api_key": "{{ op://HomeLab/OpenViking/agent-key }}",
+  "plugin": {
+    "autoRecall": true,
+    "autoCapture": true,
+    "captureAssistantTurns": true,
+    "autoCommitOnCompact": true,
+    "skillCatalog": true,
+    "recallLimit": 6,
+    "recallTokenBudget": 2000,
+    "commitTokenThreshold": 20000,
+    "captureFilters": [
+      "s#-----BEGIN (?:OPENSSH|RSA|EC|PRIVATE)[\\s\\S]*?-----END [^-]+-----#[REDACTED PRIVATE KEY]#g",
+      "s#\\b(?:Bearer|Basic)\\s+[A-Za-z0-9._~+/=-]{12,}#[REDACTED AUTHORIZATION]#gi",
+      "s#\\b(?:ops_|opsa_|ghp_|gho_|github_pat_|sk-)[A-Za-z0-9_-]{16,}#[REDACTED TOKEN]#g",
+      "s#((?:api[_-]?key|secret|token|password|credential|private[_-]?key)[\"']?\\s*[:=]\\s*[\"']?)[^\\s\"',;\\]}]+#$1[REDACTED]#gi",
+      "s#(?<![A-Za-z0-9+/])[A-Za-z0-9+/]{43}=(?![A-Za-z0-9+/])#[REDACTED KEY]#g",
+      "s#(/auth/connect/)[A-Za-z0-9_-]+#$1[REDACTED]#g"
+    ],
+    "opencode": {
+      "timeoutMs": 30000,
+      "repoContext": true
+    }
+  }
+}
