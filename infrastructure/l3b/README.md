@@ -107,9 +107,11 @@ its native authentication/OIDC. Public services are opted in with
 `import public <host> <upstream> <id>` in `Caddyfile`; the default is private.
 **Orva** remains behind the private Caddy source gate; its historical public
 DNS record was preserved but does not grant a route.
-Core services remain private. Nivra and Orva MCPs are connected; Olx remains
-disabled and Supabase is retired. Karakeep uses its local asset store (no S3 dependency); OpenCloud uses
-local decomposed storage. Immich keeps the same PostgreSQL 14 image and data
+Core services remain private. Nivra, Orva and OLX MCPs are connected;
+OpenViking memory is active for OpenCode and Hermes, and Supabase is retired.
+Unmatched subdomains and outside sources receive the same black 403 page;
+configured-service failures are not masked by it. Karakeep uses its local
+asset store (no S3 dependency); OpenCloud uses local decomposed storage. Immich keeps the same PostgreSQL 14 image and data
 layout as the backup. Orva's `quick-share` function is restored; Cairn and RustFS
 are deployed, and an actual Quick Share upload/download round trip passed. The `tools`/browser-MCP stack was removed;
 Playwright CLI is the only agent browser interface. Application evidence:
