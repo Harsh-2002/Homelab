@@ -123,6 +123,10 @@ or TCP53 ports**, including loopback publications. Image `EXPOSE` metadata shown
 by `docker ps` is not a host publication. Only the `PortBindings`/live listeners
 establish exposure.
 
+Host-native baseline is tracked in [host](host/README.md): WireGuard, the
+Beszel agent, smartd alerts to Telegram and security-only unattended
+upgrades. Backup runner and UPS/NUT are deliberately out of scope.
+
 Host-native SSH22, private OpenCode4096 and WireGuard UDP51820 are separate,
 previously approved services. The owner subsequently authorized the native
 `oc` HTTPS route and explicitly chose the prior vault password. Its
