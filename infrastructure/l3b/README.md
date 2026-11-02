@@ -41,11 +41,11 @@ memory and both browser MCPs passed after reconnection. Docker's later daemon
 restart with live-restore passed during DNS setup; no reboot or independent
 VPN-client test is claimed.
 
-Native OpenCode still listens on loopback pending its separate handover; its
-prepared bridge address is now **10.1.3.1:4096**. This migration does not repair
-the existing HTTPS502 by itself. DNS daemon defaults, WireGuard profiles and
-private/public policy are now applied and tested; see [DNS policy](DNS-POLICY.md).
-Native OpenCode activation is tracked by its separate handover evidence.
+Native OpenCode's separate handover is now verified: it listens only on
+**10.1.3.1:4096**, and Caddy serves the working private HTTPS origin. The previous
+HTTPS502 is resolved. DNS defaults, WireGuard profiles and private/public policy
+are applied and tested; see [DNS policy](DNS-POLICY.md) and
+[native handover evidence](NATIVE-HANDOVER-2026-11-02.json).
 
 ## Deployed core
 
@@ -85,8 +85,8 @@ Homepage runs at the existing apex with the restored exact-owner/group Tinyauth
 policy. The [current configuration](homepage/) preserves the neutral automatic
 light/dark theme. It shows AdGuard Home (live DNS statistics), Portainer and
 Pocket ID, each with a real service-name HTTP monitor. OpenViking/OpenCode cards
-are prepared for activation with the final native-service handover, for five
-live cards. Retired cluster cards, Kubernetes metrics and stopped Hermes
+are now active after the verified native-service handover, for five live cards.
+Desktop/light and mobile/dark tests passed. Retired cluster cards, Kubernetes metrics and stopped Hermes
 are deliberately absent. No Docker socket, privileged widget or host port was
 added. AdGuard credentials stay in the private runtime environment/Portainer
 stack values; the browser receives the widget results, not those credentials.

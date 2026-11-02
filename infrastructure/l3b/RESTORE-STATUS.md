@@ -1,5 +1,17 @@
 # Core restoration checkpoint — 2 November 2026
 
+## Final follow-up completion
+
+DNS policy and native OpenCode handover are complete and verified. The native
+unit is active/enabled, previous vault password restored, session history
+preserved, HTTPS browser pairing/cookie/API tests pass, and all five Homepage
+cards pass desktop/mobile checks. Initial handover failure is resolved. The
+one-shot exited; no recurring schedule remains. See
+[completion evidence](NATIVE-HANDOVER-2026-11-02.json) and [DNS policy](DNS-POLICY.md).
+Owner devices still need fresh OpenCode pairing and VPN profile re-import;
+independent device/WAN, human passkey/OAuth, reboot and backup drills remain
+distinct acceptance limits, not unfinished server configuration.
+
 Authoritative detail: [core runbook](README.md),
 [read-only acceptance record](CORE-VERIFICATION-2026-11-02.json), and the separate
 [WireGuard/setup handoff](HANDOFF-2026-11-02.md).

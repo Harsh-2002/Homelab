@@ -1,5 +1,16 @@
 # Native OpenCode remote access
 
+**Completed and verified, 2 November 2026:** the detached handover succeeded.
+The single native unit is active/enabled on the Docker bridge, the chosen
+previous vault password is restored, history is preserved, and actual HTTPS
+browser pairing/cookie authentication passed. Five Homepage cards are live.
+Evidence: [native handover](NATIVE-HANDOVER-2026-11-02.json) and
+[OpenCode verification](OPENCODE-VERIFICATION-2026-11-02.json). The earlier failure
+record is resolved. The one-shot worker exited; no recurring job remains.
+
+Owner action: use a fresh native pairing link for each browser/app. Re-import
+the updated MacBook/iPhone VPN Documents to apply the new DNS on those devices.
+
 The DNS/source-policy review is complete: see [DNS-POLICY.md](DNS-POLICY.md).
 Cloudflare's exact `oc` record already matches the internal proxy address;
 the native bind change, not another DNS/public exception, fixes the upstream502.
