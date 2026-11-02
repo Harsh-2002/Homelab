@@ -19,7 +19,7 @@ No actuator commands or full WAN-outage test performed.
 - Owner-reported firmware lines: `02825A260710`,
   `02812A25111800,FFFFFFFFFFFFFF`, `02813A25101500,FFFFFFFFFFFFFF`,
   `FFFFFFFFFFFFFF,FFFFFFFFFFFFFF`.
-- IP **10.1.1.241**, MAC **34:55:E5:0A:80:D7**, directly correlated in the
+- IP **10.1.1.233** (originally .241; DHCP moved on 2026-11-02), MAC **34:55:E5:0A:80:D7**, directly correlated in the
   dev VM's neighbor table. Ping responded, including one duplicate reply;
   that alone is not evidence of an address conflict.
 - The serial supplied privately by the owner is unnecessary for control and

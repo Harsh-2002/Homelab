@@ -166,7 +166,7 @@
       "origin": "https://home.l3b.cc.cd",
       "exposure": "private Caddy source gate",
       "validation": "root 200; unauthenticated API 401; WebSocket auth_required; 139 entities; dashboards 200",
-      "limits": "no Supervisor/add-ons; Tuya bulb and Localthings AC remain unreachable; monitoring moved to Beszel"
+      "limits": "no Supervisor/add-ons; Tuya bulb and Localthings AC working at their new DHCP addresses; monitoring moved to Beszel"
     },
     "homepage": {
       "stack": 172,

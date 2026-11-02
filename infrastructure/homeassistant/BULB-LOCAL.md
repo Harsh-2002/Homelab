@@ -8,9 +8,14 @@ acceptance test passed or that the stock firmware never contacts its cloud.
 
 ## Current operational access
 
+2026-11-02 DHCP reassignment: the bulb moved from 10.1.1.231 to 10.1.1.241,
+and the Samsung AC moved from 10.1.1.241 to 10.1.1.233. HA config entries were
+updated; both entities are available. Set DHCP reservations for the bulb and AC
+MACs on the router to prevent recurrence.
+
 - Device: **Behind Monitor Bulb** (Smart Life product label Smart Light).
 - Entity: **light.behind_monitor_bulb**.
-- Integration: Tuya Local2026.9.2, loaded, protocol3.3, host10.1.1.231.
+- Integration: Tuya Local2026.9.2, loaded, protocol3.3, current host10.1.1.241 (originally .231).
 - Config entry: `01M5HMSTDVDVH2BWSADBZWER1J`.
 - Profile: **rgbcw_lightbulb**, whose declared product identifier matches the
   observed broadcast product ID and whose datapoint types match the real bulb.

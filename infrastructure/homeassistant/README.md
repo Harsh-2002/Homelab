@@ -4,8 +4,9 @@
 > [`infrastructure/l3b/homeassistant.compose.yaml`](../l3b/homeassistant.compose.yaml).
 > Private URL: `https://home.l3b.cc.cd`; data: `/data/apps/homeassistant`.
 > HAOS add-ons Mosquitto and SSH were not restored. MQTT now runs as the
-> `mqtt` Docker stack and Frigate camera/sensors are working; Tuya, Localthings
-> remains unreachable. VictoriaMetrics/Grafana are retired; Beszel is the
+> `mqtt` Docker stack and Frigate camera/sensors are working; the Tuya bulb
+> (10.1.1.241) and Samsung AC (10.1.1.233) are working after DHCP reassignment.
+> VictoriaMetrics/Grafana are retired; Beszel is the
 > monitoring stack and the Nodes view links to it. The HAOS/Proxmox details
 > below are historical.
 
@@ -25,7 +26,7 @@ and alerts initially disabled. Live reads/rendering and safety rejection tests
 passed; physical write/outage acceptance remains pending. Reproducible source,
 patches and rollback: [SAMSUNG-AC-DASHBOARD.md](SAMSUNG-AC-DASHBOARD.md).
 
-Samsung AC **AR50H18D14HNNA** local integration (2026-10-22): device10.1.1.241,
+Samsung AC **AR50H18D14HNNA** local integration (2026-10-22): device10.1.1.233 (originally .241; DHCP moved),
 MAC34:55:E5:0A:80:D7, authenticated OCF/CoAP over DTLS UDP49154. LocalThings
 releasev0.34.0 installed on Core2026.10.2 after native backup0b406e2d. Native
 **climate.samsung_room_ac** is loaded with live state, fan/modes/presets/swing;
@@ -35,7 +36,7 @@ test yet. Credentials concealed HomeLab/Samsung AC - Room. See
 installation, acceptance boundaries and rollback. Keep SmartThings registration.
 
 Wipro/Smart Life bulb local-control investigation (2026-10-22): verified
-10.1.1.231↔10:5A:17:51:D7:9D, encrypted Tuya3.3 LAN announcements, port6668.
+10.1.1.241↔10:5A:17:51:D7:9D (originally .231), encrypted Tuya3.3 LAN announcements, port6668.
 REA packet evidence and preparation in [BULB-LOCAL.md](BULB-LOCAL.md). Tuya
 Local2026.9.2 installed after native backup a8059954; config check/Core restart
 passed. Owner Smart Life approval completed; **light.behind_monitor_bulb** now
