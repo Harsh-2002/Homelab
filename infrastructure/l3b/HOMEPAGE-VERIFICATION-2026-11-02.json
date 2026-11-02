@@ -7,14 +7,14 @@
       "device": "desktop",
       "overflow": false,
       "theme": "light",
-      "cards": 3,
+      "cards": 5,
       "consoleErrors": 0
     },
     {
       "device": "mobile",
       "overflow": false,
       "theme": "dark",
-      "cards": 3,
+      "cards": 5,
       "consoleErrors": 0
     }
   ],

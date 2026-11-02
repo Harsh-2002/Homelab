@@ -16,17 +16,72 @@
       "backup": "Crucial USB / existing ext4 backup mounted temporarily; source unchanged"
     },
     "services": [
-      {"id": "portainer", "label": "Portainer BE 2.45.3", "stack": "portainer", "state": "internal-only bootstrap; actual browser login through Caddy verified; failed self-stack entry removed"},
-      {"id": "adguard", "label": "AdGuard Home 0.107.79", "stack": "dns", "state": "running; only UDP DNS published; UI through Caddy"},
-      {"id": "unbound", "label": "Unbound", "stack": "dns", "state": "running; recursive DNSSEC validation"},
-      {"id": "caddy", "label": "Caddy / custom binary", "stack": "proxy", "state": "running; HTTPS TCP/UDP only"},
-      {"id": "pocketid", "label": "Pocket ID", "stack": "identity", "state": "healthy; container pocketid; original identity and encryption key retained"},
-      {"id": "tinyauth", "label": "Tinyauth", "stack": "identity", "state": "healthy; private forward-auth"},
-      {"id": "homepage", "label": "Homepage 2.4.0", "stack": "dashboard", "state": "healthy; private apex behind Tinyauth; actual desktop/mobile backend browser tests passed"},
-      {"id": "opencode", "label": "OpenCode 2.2.5", "placement": "native dev host process", "state": "existing session history preserved; remote user-service handover tracked separately; no second instance"},
-      {"id": "openviking", "label": "OpenViking 0.4.22 / Ollama", "stack": "memory", "state": "healthy; restored memory/index; local embeddings; official OpenCode plugin/MCP/three skills; automatic capture chosen by owner"},
-      {"id": "hermes", "label": "Hermes / staged", "stack": "hermes", "state": "stopped; configuration staged; application acceptance deferred"},
-      {"id": "playwright", "label": "Playwright / Chrome DevTools", "stack": "tools", "state": "running; container playwright; actual MCP calls verified after explicit authorized Docker-group selection; shared Chromium; no published MCP/CDP ports"}
+      {
+        "id": "portainer",
+        "label": "Portainer BE 2.45.3",
+        "stack": "portainer",
+        "state": "internal-only bootstrap; actual browser login through Caddy verified; failed self-stack entry removed"
+      },
+      {
+        "id": "adguard",
+        "label": "AdGuard Home 0.107.79",
+        "stack": "dns",
+        "state": "running; only UDP DNS published; UI through Caddy"
+      },
+      {
+        "id": "unbound",
+        "label": "Unbound",
+        "stack": "dns",
+        "state": "running; recursive DNSSEC validation"
+      },
+      {
+        "id": "caddy",
+        "label": "Caddy / custom binary",
+        "stack": "proxy",
+        "state": "running; HTTPS TCP/UDP only"
+      },
+      {
+        "id": "pocketid",
+        "label": "Pocket ID",
+        "stack": "identity",
+        "state": "healthy; container pocketid; original identity and encryption key retained"
+      },
+      {
+        "id": "tinyauth",
+        "label": "Tinyauth",
+        "stack": "identity",
+        "state": "healthy; private forward-auth"
+      },
+      {
+        "id": "homepage",
+        "label": "Homepage 2.4.0",
+        "stack": "dashboard",
+        "state": "healthy; private apex behind Tinyauth; actual desktop/mobile backend browser tests passed"
+      },
+      {
+        "id": "opencode",
+        "label": "OpenCode 2.2.5",
+        "placement": "native dev host process",
+        "state": "existing session history preserved; remote user-service handover tracked separately; no second instance"
+      },
+      {
+        "id": "openviking",
+        "label": "OpenViking 0.4.22 / Ollama",
+        "stack": "memory",
+        "state": "healthy; restored memory/index; local embeddings; official OpenCode plugin/MCP/three skills; automatic capture chosen by owner"
+      },
+      {
+        "id": "hermes",
+        "label": "Hermes / staged",
+        "stack": "hermes",
+        "state": "stopped; configuration staged; application acceptance deferred"
+      },
+      {
+        "id": "playwright",
+        "label": "Playwright / Chrome DevTools",
+        "stack": "tools",
+        "state": "running; container playwright; actual MCP calls verified after explicit authorized Docker-group selection; shared Chromium; no published MCP/CDP ports"
+      }
     ],
     "dnsPolicy": {
       "state": "verified",
@@ -48,8 +103,8 @@
       "evidence": "infrastructure/l3b/NETWORK-VERIFICATION-2026-11-02.json"
     },
     "opencodeRemote": {
-      "state": "pending-handover",
-      "firstAttempt": "Rolled back; stale user-manager group list denied Docker access. sg docker fixed both MCPs and is installed for the native unit and detached retry.",
+      "state": "verified",
+      "firstAttempt": "Initial group-membership failure resolved by verified sg docker handover.",
       "url": "https://oc.l3b.cc.cd",
       "placement": "single native opencode.service; Docker-bridge-only bind; direct Caddy upstream by host alias",
       "authentication": "owner explicitly chose previous vault password; old logins invalidated, history retained",

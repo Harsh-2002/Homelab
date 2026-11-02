@@ -63,7 +63,7 @@
 <g data-node="true"><rect x="1790" y="1060" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="1804" y="1087" font-size="19" fill="#18252c">OpenCode / native</text>
 <text x="1804" y="1112" font-size="16" fill="#18252c">Official plugin / automatic memory</text>
-<text x="1804" y="1137" font-size="16" fill="#18252c">Private HTTPS / handover pending</text>
+<text x="1804" y="1137" font-size="16" fill="#18252c">Private HTTPS / browser verified</text>
 </g>
 <g data-node="true"><rect x="1220" y="870" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="1234" y="897" font-size="19" fill="#18252c">Pocket ID</text>

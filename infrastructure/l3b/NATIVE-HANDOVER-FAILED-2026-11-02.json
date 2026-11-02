@@ -1,9 +1,10 @@
 {
   "checkedOn": "2026-11-02",
-  "state": "incomplete",
+  "state": "resolved",
   "stage": "native-activation",
   "note": "Inspect scoped unit and read-only verifiers without printing secrets. Do not infer success.",
   "diagnosedCause": "The systemd user manager retained groups from before dev joined docker. The restarted native service lacked Docker socket access.",
   "browserRepair": "Both browser MCP launches now select the already-authorized docker group with sg. Actual Playwright tab listing and Chrome DevTools page listing passed against the same existing Chromium.",
-  "handoverRetry": "Pending with the same group selection for the native unit and detached worker; socket permissions unchanged."
+  "handoverRetry": "Verified",
+  "resolution": "Superseded by verified native handover; see NATIVE-HANDOVER-2026-11-02.json"
 }

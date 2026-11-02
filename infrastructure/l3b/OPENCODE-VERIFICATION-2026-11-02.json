@@ -1,0 +1,23 @@
+{
+  "checkedOn": "2026-11-02",
+  "url": "https://oc.l3b.cc.cd",
+  "checks": {
+    "nativeUserServiceActiveAndEnabled": true,
+    "nativeDockerGroupEffective": true,
+    "previousVaultCredentialsRestored": true,
+    "dockerBridgeOnlyBindAndNoLan4096": true,
+    "httpsUiAndAuthenticatedApi": true,
+    "anonymousApiRejected": true,
+    "noDuplicateOrHostProxy": true,
+    "pairedBrowserApi": true,
+    "renderedBrowserUi": true,
+    "secureCookie": true,
+    "httpOnly": true,
+    "pageErrors": 0
+  },
+  "limits": [
+    "Password restoration signs out old browser/app logins, not session history",
+    "Owner devices require their own fresh single-use pairing link",
+    "No public tunnel, reboot or failure-injection test performed"
+  ]
+}

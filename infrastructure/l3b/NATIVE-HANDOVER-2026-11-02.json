@@ -1,0 +1,15 @@
+{
+  "checkedOn": "2026-11-02",
+  "state": "verified",
+  "nativeService": "opencode.service",
+  "url": "https://oc.l3b.cc.cd",
+  "sessionHistoryPreserved": true,
+  "previousVaultPasswordRestored": true,
+  "loopbackReplacedByDockerBridgeOnlyListener": true,
+  "pairedBrowserAndCoreMemoryDashboardChecks": "passed",
+  "internalDnsAndPrivateSourcePolicy": "verified before activation",
+  "limits": [
+    "Owner devices need fresh pairing; prior logins were intentionally invalidated",
+    "No public tunnel, duplicate server, reboot or failure-injection test"
+  ]
+}
