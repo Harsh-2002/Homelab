@@ -1,0 +1,18 @@
+{
+  "checkedOn": "2026-11-02",
+  "rootCause": "The already-running systemd user manager retained a group list without docker, despite dev being a canonical member.",
+  "checks": {
+    "canonicalDockerMembershipPresent": true,
+    "socketPermissionsUnchangedRootDocker0660": true,
+    "nonRootSgDockerAccessPassed": true,
+    "sameSystemdUserManagerGroupCheckPassed": true,
+    "playwrightActualTabListingPassed": true,
+    "chromeDevtoolsActualPageListingPassed": true,
+    "sameExistingChromiumUsed": true,
+    "portainerBrowserAdminSessionRefreshed": true,
+    "coreAndMemoryChecksPassed": true,
+    "agentBrowserNotInstalled": true
+  },
+  "repair": "Explicit sg docker group selection in browser MCP commands, the native unit, and its detached handover launcher. Host process UID remains dev/1000. No user-manager restart, new group grant, socket chmod or new port.",
+  "nativeHandover": "First attempt rolled back; fixed unit installed, remote activation still pending its verified retry."
+}

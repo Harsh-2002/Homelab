@@ -209,6 +209,14 @@ use Docker service discovery internally. Context7, shadcn and REA also connect;
 unrestored-service MCPs remain disabled. This is a privileged browser tool, not
 an isolation boundary. No owner profile/session was imported into the browser.
 
+Browser MCP permission repair: the running user manager predated `dev`'s Docker
+group membership. Both native browser MCP launches now explicitly select that
+already-authorized group with `sg docker -c`, retaining the host dev UID, without socket chmod,
+extra ports or another browser. Actual tool calls pass; see
+[browser verification](BROWSER-VERIFICATION-2026-11-02.json). The native unit and
+detached handover launcher use the same selection and preflight Docker access.
+Agent Browser was researched as an optional CLI/MCP alternative, not installed.
+
 Owner naming standard: generic, single-word stack names; actual, single-word
 service/container names. Containers are `portainer`, `adguard`, `unbound`,
 `caddy`, `pocketid`, `tinyauth`, `homepage`, `playwright`, `openviking`, and

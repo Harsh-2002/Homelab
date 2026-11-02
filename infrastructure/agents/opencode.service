@@ -8,7 +8,7 @@ Type=simple
 WorkingDirectory=/home/dev
 Environment=PATH=/home/dev/.opencode/bin:/home/dev/.local/bin:/usr/local/bin:/usr/bin:/bin
 EnvironmentFile=-/home/dev/.config/opencode/herdr.env
-ExecStart=/home/dev/.opencode/bin/opencode serve --service
+ExecStart=/usr/bin/sg docker -c "exec /home/dev/.opencode/bin/opencode serve --service"
 Restart=on-failure
 RestartSec=5
 TimeoutStopSec=60

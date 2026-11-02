@@ -26,10 +26,11 @@
       {"id": "opencode", "label": "OpenCode 2.2.5", "placement": "native dev host process", "state": "existing session history preserved; remote user-service handover tracked separately; no second instance"},
       {"id": "openviking", "label": "OpenViking 0.4.22 / Ollama", "stack": "memory", "state": "healthy; restored memory/index; local embeddings; official OpenCode plugin/MCP/three skills; automatic capture chosen by owner"},
       {"id": "hermes", "label": "Hermes / staged", "stack": "hermes", "state": "stopped; configuration staged; application acceptance deferred"},
-      {"id": "playwright", "label": "Playwright / Chrome DevTools", "stack": "tools", "state": "running; container playwright; shared Chromium; host stdio via Docker exec; no published MCP/CDP ports"}
+      {"id": "playwright", "label": "Playwright / Chrome DevTools", "stack": "tools", "state": "running; container playwright; actual MCP calls verified after explicit authorized Docker-group selection; shared Chromium; no published MCP/CDP ports"}
     ],
     "opencodeRemote": {
       "state": "pending-handover",
+      "firstAttempt": "Rolled back; stale user-manager group list denied Docker access. sg docker fixed both MCPs and is installed for the native unit and detached retry.",
       "url": "https://oc.l3b.cc.cd",
       "placement": "single native opencode.service; Docker-bridge-only bind; direct Caddy upstream by host alias",
       "authentication": "owner explicitly chose previous vault password; old logins invalidated, history retained",

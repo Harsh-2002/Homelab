@@ -43,6 +43,18 @@ The bridge gateway was checked against the actual external `l3b` network.
 Native CLI discovery uses that saved address; a loopback-only service cannot
 be reached directly by a bridge-network Caddy container.
 
+The first handover rolled back because the already-running systemd user manager
+retained groups from before `dev` joined Docker. The browser container stayed
+healthy, but Docker exec failed with socket permission denied. Do not fix this
+with world-writable socket permissions or by terminating all user services.
+The native unit and detached worker now use the standard `sg docker -c` group
+selection; the two browser MCP commands do the same, so they can reconnect
+without restarting the active server. This selects an existing authorized
+membership, adds no proxy/helper service and changes no socket permissions.
+The retry checks Docker/CDP access before stopping the server and verifies the
+native service's effective Docker group afterward. The original failure record
+is retained and marked resolved only after a fully verified handover.
+
 The existing `HERDR_ENV`, `HERDR_SOCKET_PATH` and `HERDR_PANE_ID` values are
 preserved privately in the optional `~/.config/opencode/herdr.env` unit input,
 because a user service does not automatically inherit the active terminal's

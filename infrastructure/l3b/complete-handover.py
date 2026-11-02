@@ -29,6 +29,10 @@ def main():
     run('git', 'diff', '--quiet')
     run('git', 'diff', '--cached', '--quiet')
     baseline = run('git', 'rev-parse', 'HEAD').strip()
+    # Check the detached worker's credentials before interrupting the server.
+    run('docker', 'version', '--format', '{{.Server.Version}}')
+    run('docker', 'exec', 'playwright', 'node', '-e',
+        'fetch("http://127.0.0.1:9222/json/version").then(r=>{if(!r.ok)process.exit(1)})')
     STAGE = 'native-activation'
     run('python3', 'infrastructure/l3b/activate-opencode.py', timeout=420)
     for name in ['services.yaml', 'settings.yaml']:
@@ -70,6 +74,13 @@ def main():
               'limits': ['Owner devices need fresh pairing; prior logins were intentionally invalidated',
                          'No public tunnel, duplicate server, reboot or failure-injection test']}
     record_path.write_text(json.dumps(record, indent=2) + '\n')
+    failure_path = ROOT / 'infrastructure/l3b/NATIVE-HANDOVER-FAILED-2026-11-02.json'
+    if failure_path.exists():
+        failure = json.loads(failure_path.read_text())
+        failure['state'] = 'resolved'
+        failure['resolution'] = 'Superseded by verified native handover; see NATIVE-HANDOVER-2026-11-02.json'
+        failure['handoverRetry'] = 'Verified'
+        failure_path.write_text(json.dumps(failure, indent=2) + '\n')
     STAGE = 'scoped-git-publication'
     run('git', 'diff', '--check')
     # Refuse to include another user's staged work in this maintenance commit.
@@ -83,7 +94,8 @@ def main():
              'infrastructure/l3b/HOMEPAGE-VERIFICATION-2026-11-02.json',
              'infrastructure/l3b/MEMORY-VERIFICATION-2026-11-02.json',
              'infrastructure/l3b/OPENCODE-VERIFICATION-2026-11-02.json',
-             'infrastructure/l3b/NATIVE-HANDOVER-2026-11-02.json']
+             'infrastructure/l3b/NATIVE-HANDOVER-2026-11-02.json',
+             'infrastructure/l3b/NATIVE-HANDOVER-FAILED-2026-11-02.json']
     run('git', 'add', '--', *paths)
     staged = set(run('git', 'diff', '--cached', '--name-only').splitlines())
     assert staged <= set(paths)
@@ -142,8 +154,9 @@ if __name__ == '__main__':
     try:
         main()
     except Exception:
-        failure = {'checkedOn': '2026-11-02', 'state': 'incomplete', 'stage': STAGE,
+        failure_path = ROOT / 'infrastructure/l3b/NATIVE-HANDOVER-FAILED-2026-11-02.json'
+        previous = json.loads(failure_path.read_text()) if failure_path.exists() else {}
+        failure = {**previous, 'checkedOn': '2026-11-02', 'state': 'incomplete', 'stage': STAGE,
                    'note': 'Inspect scoped unit and read-only verifiers without printing secrets. Do not infer success.'}
-        (ROOT / 'infrastructure/l3b/NATIVE-HANDOVER-FAILED-2026-11-02.json').write_text(
-            json.dumps(failure, indent=2) + '\n')
+        failure_path.write_text(json.dumps(failure, indent=2) + '\n')
         raise SystemExit('Handover finalizer stopped at ' + STAGE + '; private output withheld') from None

@@ -66,6 +66,13 @@ is not a blanket sync of every old repository/Notion snapshot.
 
 ## Native remote handover
 
+The first attempt rolled back. Its user-manager credentials lacked the existing
+Docker group, breaking both browser MCP launches. Those MCPs are now repaired
+and actual calls pass; socket permissions and published ports are unchanged.
+The native unit and detached retry select the authorized group with `sg`, and
+the retry now preflights Docker/CDP before stopping the active server. See
+`BROWSER-VERIFICATION-2026-11-02.json`; the old failure record is retained.
+
 The owner also requested native OpenCode HTTPS web/app access and chose the
 previous vault credentials, accepting logout of old logins while retaining all
 session history. The [one-shot handover](REMOTE-ACCESS.md) runs outside the

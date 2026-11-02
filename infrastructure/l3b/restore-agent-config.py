@@ -55,9 +55,10 @@ def main():
     for name, entry in servers.items():
         entry['disabled'] = name not in ['context7', 'shadcn', 'rea']
     servers['playwright'] = {
-        'type': 'local', 'command': ['docker', 'exec', '-i', 'playwright', 'node',
-            '/app/cli.js', '--cdp-endpoint', 'http://127.0.0.1:9222',
-            '--shared-browser-context', '--caps', 'devtools,pdf,vision'],
+        'type': 'local', 'command': ['sg', 'docker', '-c',
+            'exec docker exec -i playwright node /app/cli.js '
+            '--cdp-endpoint http://127.0.0.1:9222 '
+            '--shared-browser-context --caps devtools,pdf,vision'],
         'disabled': False, 'timeout': {'startup': 60000, 'catalog': 30000}}
     restored = {
         '$schema': 'https://opencode.ai/config.json',

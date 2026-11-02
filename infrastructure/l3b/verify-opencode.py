@@ -2,6 +2,7 @@
 """Check the single native OpenCode service and its private HTTPS/browser access."""
 import argparse
 import base64
+import grp
 import json
 import os
 import socket
@@ -22,6 +23,26 @@ def main():
     assert config['hostname'] == '172.17.0.1' and config['port'] == 4096
     for action in ['is-active', 'is-enabled']:
         subprocess.run(['systemctl', '--user', action, '--quiet', 'opencode.service'], check=True)
+    pid = int(subprocess.check_output(['systemctl', '--user', 'show', 'opencode.service',
+                                      '--property=MainPID', '--value'], text=True))
+    cgroup = subprocess.check_output(['systemctl', '--user', 'show', 'opencode.service',
+                                     '--property=ControlGroup', '--value'], text=True).strip()
+    pids = {pid, *map(int, (Path('/sys/fs/cgroup') / cgroup.lstrip('/') / 'cgroup.procs').read_text().split())}
+    native_pids = []
+    for value in pids:
+        try:
+            if (Path('/proc') / str(value) / 'comm').read_text().strip() == 'opencode':
+                native_pids.append(value)
+        except FileNotFoundError:
+            continue
+    assert native_pids
+    for value in native_pids:
+        status = (Path('/proc') / str(value) / 'status').read_text().splitlines()
+        group_ids = set()
+        for line in status:
+            if line.startswith(('Gid:', 'Groups:')):
+                group_ids.update(int(group) for group in line.split()[1:])
+        assert grp.getgrnam('docker').gr_gid in group_ids
     env = os.environ.copy()
     env['OP_SERVICE_ACCOUNT_TOKEN'] = (Path.home() / '.config/op/service-account-token').read_text().strip()
     item = json.loads(subprocess.run(['op', 'item', 'get', 'OpenCode', '--vault', 'HomeLab', '--format', 'json'],
@@ -48,7 +69,8 @@ def main():
             assert sock.connect_ex((address, 4096)) != 0
     names = subprocess.check_output(['docker', 'ps', '--format', '{{.Names}}'], text=True).splitlines()
     assert 'opencode' not in names and 'opencode-host-proxy' not in names
-    checks = {'nativeUserServiceActiveAndEnabled': True, 'previousVaultCredentialsRestored': True,
+    checks = {'nativeUserServiceActiveAndEnabled': True, 'nativeDockerGroupEffective': True,
+              'previousVaultCredentialsRestored': True,
               'dockerBridgeOnlyBindAndNoLan4096': True, 'httpsUiAndAuthenticatedApi': True,
               'anonymousApiRejected': True, 'noDuplicateOrHostProxy': True}
     if args.browser:
