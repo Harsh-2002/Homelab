@@ -176,13 +176,19 @@
         "id": "homeassistant",
         "label": "Home Assistant 2026.10.4",
         "stack": "homeassistant",
-        "state": "Docker stack 179; restored config/DB/dashboards; private HTTPS; MQTT and Frigate working; Tuya/Localthings/VictoriaMetrics outstanding; no Supervisor/add-ons"
+        "state": "Docker stack 179; restored config/DB/dashboards; private HTTPS; MQTT and Frigate working; Tuya/Localthings outstanding; no Supervisor/add-ons"
       },
       {
         "id": "mqtt",
         "label": "Mosquitto 2.1.2",
         "stack": "mqtt",
         "state": "healthy; internal mqtt:1883; Frigate and Home Assistant authenticated"
+      },
+      {
+        "id": "beszel",
+        "label": "Beszel 0.21.1",
+        "stack": "beszel",
+        "state": "healthy; hub + local agent; private HTTPS behind Tinyauth; host/Docker metrics; VictoriaMetrics/Grafana retired"
       }
     ],
     "dnsPolicy": {

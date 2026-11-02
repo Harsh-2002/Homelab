@@ -181,6 +181,15 @@
 			reverse_proxy homepage:3000
 		}
 
+		@beszel host beszel.l3b.cc.cd
+		handle @beszel {
+			forward_auth tinyauth:3000 {
+				uri /api/auth/caddy
+				copy_headers Remote-User Remote-Email Remote-Groups
+			}
+			reverse_proxy beszel:8090
+		}
+
 		@dns host dns.l3b.cc.cd
 		handle @dns {
 			forward_auth tinyauth:3000 {

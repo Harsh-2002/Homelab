@@ -1,0 +1,43 @@
+services:
+  beszel:
+    image: henrygd/beszel:0.21.1
+    container_name: beszel
+    restart: unless-stopped
+    env_file:
+      - /data/apps/beszel/hub.env
+    expose:
+      - "8090"
+    volumes:
+      - /data/apps/beszel/data:/beszel_data
+      - /data/apps/beszel/socket:/beszel_socket
+    healthcheck:
+      test: [CMD, /beszel, health, --url, http://localhost:8090]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - l3b
+
+  beszel-agent:
+    image: henrygd/beszel-agent:0.21.1
+    container_name: beszel-agent
+    restart: unless-stopped
+    network_mode: host
+    env_file:
+      - /data/apps/beszel/agent.env
+    volumes:
+      - /data/apps/beszel/agent:/var/lib/beszel-agent
+      - /data/apps/beszel/socket:/beszel_socket
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    healthcheck:
+      test: [CMD, /agent, health]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+networks:
+  l3b:
+    external: true
+    name: l3b

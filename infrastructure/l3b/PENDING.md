@@ -29,7 +29,7 @@ Quick Share bucket/user and successful upload/download round trip).
 - Frigate outdoor camera, go2rtc stream, MQTT and HA camera/sensors are verified; recording is active with 114 GB retained. Detection/zone tuning remains optional.
 - Human passkey/OIDC sign-in for the public apps.
 - Portainer is the only running container without an in-container healthcheck (no shell in image); monitor its API externally.
-- Home Assistant Frigate camera and MQTT are working; VictoriaMetrics, the Tuya bulb and the Localthings AC remain unreachable. No Supervisor/add-ons in Container mode.
+- Home Assistant Frigate camera and MQTT are working; the Tuya bulb and Localthings AC remain unreachable. VictoriaMetrics/Grafana are retired in favour of Beszel. No Supervisor/add-ons in Container mode.
 - Independent off-network checks for public routes.
 - WireGuard profile re-import on MacBook/iPhone.
 - Reboot, Docker-daemon restart and current-node backup/restore drills.

@@ -5,7 +5,8 @@
 > Private URL: `https://home.l3b.cc.cd`; data: `/data/apps/homeassistant`.
 > HAOS add-ons Mosquitto and SSH were not restored. MQTT now runs as the
 > `mqtt` Docker stack and Frigate camera/sensors are working; Tuya, Localthings
-> and VictoriaMetrics targets remain unreachable. The HAOS/Proxmox details
+> remains unreachable. VictoriaMetrics/Grafana are retired; Beszel is the
+> monitoring stack and the Nodes view links to it. The HAOS/Proxmox details
 > below are historical.
 
 Frigate and node monitoring (2026-10-22): **Homelab** sidebar dashboard has

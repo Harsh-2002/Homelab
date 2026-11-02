@@ -166,7 +166,7 @@
       "origin": "https://home.l3b.cc.cd",
       "exposure": "private Caddy source gate",
       "validation": "root 200; unauthenticated API 401; WebSocket auth_required; 139 entities; dashboards 200",
-      "limits": "no Supervisor/add-ons; Tuya bulb, Localthings AC and VictoriaMetrics targets remain unreachable"
+      "limits": "no Supervisor/add-ons; Tuya bulb and Localthings AC remain unreachable; monitoring moved to Beszel"
     },
     "homepage": {
       "stack": 172,
@@ -185,6 +185,16 @@
       "origin": "internal mqtt:1883",
       "exposure": "no host port",
       "validation": "authenticated pub/sub passed; Frigate and HA clients connected"
+    },
+    "beszel": {
+      "stack": 181,
+      "image": "henrygd/beszel:0.21.1",
+      "agent": "henrygd/beszel-agent:0.21.1",
+      "data": "/data/apps/beszel",
+      "health": "healthy",
+      "origin": "https://beszel.l3b.cc.cd",
+      "exposure": "private Caddy source gate + Tinyauth",
+      "validation": "hub health ok; local agent system l3b status up; host/Docker metrics collected"
     }
   },
   "checks": {
@@ -213,7 +223,8 @@
     ],
     "hermesNativeGatewayConnected": true,
     "frigateCameraAndHaIntegration": true,
-    "mqttBrokerDeployed": true
+    "mqttBrokerDeployed": true,
+    "beszelDeployed": true
   },
   "limits": [
     "notes, pin, photos, drive and Cairn S3 are public; Orva and core services remain private",
@@ -224,6 +235,6 @@
     "Forgejo 14 is EOL and its containers are stopped; stack retained pending a separate upgrade decision",
     "Portainer is the only running container without an in-container healthcheck because its image has no shell",
     "Caddy 2.11.4, Pocket ID 2.16.0, Ollama 0.34.4 and OpenViking 0.4.22 remain pinned pending controlled upgrades",
-    "Home Assistant Tuya bulb, Localthings AC and VictoriaMetrics targets remain unreachable; MQTT and Frigate camera/sensors work"
+    "VictoriaMetrics and Grafana are retired; Beszel is the monitoring stack"
   ]
 }

@@ -15,6 +15,11 @@
         href: https://portainer.l3b.cc.cd
         description: Docker stacks on l3b
         siteMonitor: http://portainer:9000/api/status
+    - Beszel:
+        icon: beszel.png
+        href: https://beszel.l3b.cc.cd
+        description: Host, Docker and network monitoring
+        siteMonitor: http://beszel:8090/
     - Pocket ID:
         icon: pocket-id.png
         href: https://auth.l3b.cc.cd

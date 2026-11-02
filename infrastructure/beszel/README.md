@@ -1,5 +1,11 @@
 # Beszel monitoring
 
+> **2026-11-02:** The active deployment is the Docker/Portainer stack `beszel`
+> (ID 181) on l3b: hub `beszel:8090` + local agent over a shared Unix socket,
+> private `https://beszel.l3b.cc.cd` behind Tinyauth, data under
+> `/data/apps/beszel`. VictoriaMetrics and Grafana are retired. The CT 104
+> native-binary details below are historical.
+
 Beszel `v0.20.0` provides lightweight host, disk, ZFS, SMART, systemd, and Docker monitoring. The hub and agents use pinned native binaries managed by systemd; automatic application updates are disabled.
 
 CT 104 also hosts the independent native Uptime Kuma service documented under `infrastructure/uptime-kuma/`, plus Grafana and VictoriaMetrics documented under `infrastructure/metrics/`. The services have separate Unix users, data directories, environment files, listeners, and systemd units, but intentionally share the LXC's HA and replication failure domain.
