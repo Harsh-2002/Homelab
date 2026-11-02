@@ -69,7 +69,10 @@ def main():
     run('ip', 'address', 'add', source + '/32', 'dev', 'lo')
     private_hosts = ['oc.l3b.cc.cd', 'dns.l3b.cc.cd', 'auth.l3b.cc.cd',
                      'portainer.l3b.cc.cd', 'memory.l3b.cc.cd', 'l3b.cc.cd',
-                     'orva.l3b.cc.cd']
+                     'orva.l3b.cc.cd', 'docs.l3b.cc.cd', 'n8n.l3b.cc.cd',
+                     'downloads.l3b.cc.cd', 'media.l3b.cc.cd', 'registry.l3b.cc.cd',
+                     'git.l3b.cc.cd', 'theking.l3b.cc.cd', 'frigate.l3b.cc.cd',
+                     's3.l3b.cc.cd', 'rustfs.l3b.cc.cd', 'cairn.l3b.cc.cd']
     public_hosts = ['notes.l3b.cc.cd', 'pin.l3b.cc.cd',
                     'photos.l3b.cc.cd', 'drive.l3b.cc.cd']
     try:

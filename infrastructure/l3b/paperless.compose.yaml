@@ -1,0 +1,33 @@
+services:
+  paperless-broker:
+    image: docker.io/valkey/valkey:9-alpine
+    container_name: paperless-broker
+    restart: unless-stopped
+    volumes:
+      - /data/apps/paperless/valkey:/data
+    networks:
+      - l3b
+
+  paperless:
+    image: ghcr.io/paperless-ngx/paperless-ngx:3.2.1
+    container_name: paperless
+    restart: unless-stopped
+    init: false
+    env_file:
+      - /data/apps/paperless/runtime.env
+    depends_on:
+      - paperless-broker
+    expose:
+      - "8000"
+    volumes:
+      - /data/apps/paperless/data:/usr/src/paperless/data
+      - /data/apps/paperless/media:/usr/src/paperless/media
+      - /data/apps/paperless/consume:/usr/src/paperless/consume
+      - /data/apps/paperless/export:/usr/src/paperless/export
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b

@@ -74,18 +74,28 @@ are applied and tested; see [DNS policy](DNS-POLICY.md) and
 | Karakeep 0.34.1 | Portainer `karakeep`, ID80; [stack](karakeep.compose.yaml) | Restored bookmarks/assets; internal `karakeep:3000`; `https://pin.l3b.cc.cd` |
 | Immich 3.3.5 | Portainer `immich`, ID147; [stack](immich.compose.yaml) | Restored 9,383 assets/43 albums; internal `immich:2283`; `https://photos.l3b.cc.cd` |
 | OpenCloud 7.2.4 | Portainer `opencloud`, ID148; [stack](opencloud.compose.yaml) | Restored decomposed storage; internal `opencloud:9200`; `https://drive.l3b.cc.cd` |
+| Paperless 3.2.1 | Portainer `paperless`, ID149; [stack](paperless.compose.yaml) | Restored documents; internal `paperless:8000`; `https://docs.l3b.cc.cd` |
+| n8n latest | Portainer `n8n`, ID85; [stack](n8n.compose.yaml) | Core automation/Postgres/SearXNG restored; sandbox deferred; `https://n8n.l3b.cc.cd` |
+| qBittorrent latest | Portainer `qbittorrent`, ID160; [stack](qbittorrent.compose.yaml) | Restored config/media; `https://downloads.l3b.cc.cd` |
+| Motrix 2.0.0-beta.40 | Portainer `motrix`, ID152; [stack](motrix.compose.yaml) | Restored config/downloads; `/mdxp` through `downloads` |
+| Jellyfin 12.1 | Portainer `jellyfin`, ID94; [stack](jellyfin.compose.yaml) | Restored config/media; `https://media.l3b.cc.cd` |
+| Registry 2 | Portainer `registry`, ID9; [stack](registry.compose.yaml) | Restored auth; local filesystem storage; `https://registry.l3b.cc.cd` |
+| Forgejo 14 | Portainer `forgejo`, ID135; [stack](forgejo.compose.yaml) | Restored SQLite/repositories; `https://git.l3b.cc.cd` |
+| Nivra The King latest | Portainer `theking`, ID178; [stack](theking.compose.yaml) | Secondary Nivra; `https://theking.l3b.cc.cd` |
+| RustFS 1.0.4 | Portainer `rustfs`, ID177; [stack](rustfs.compose.yaml) | Restored buckets; `https://s3.l3b.cc.cd` private, console `rustfs` |
+| Cairn v2026.09.13 | Portainer `cairn`, ID176; [stack](cairn.compose.yaml) | Restored bucket/user and Quick Share round trip; `https://cairn-s3.l3b.cc.cd` |
+| Frigate 0.18.0 | Portainer `frigate`, ID137; [stack](frigate.compose.yaml) | Restored 156 GB data/config; `https://frigate.l3b.cc.cd`; camera/MQTT config retained |
 
 The owner approved **Nivra, Karakeep, Immich and OpenCloud** as public app
 origins (`notes`, `pin`, `photos`, `drive`). They have exact DNS-only public A
 records and narrow public Caddy handlers, while each application still enforces
 its native authentication/OIDC. **Orva** remains behind the private Caddy source
 gate; its historical public DNS record was preserved but does not grant a route.
-Core services remain private. Nivra and Orva MCPs are connected; Olx and Supabase
-remain disabled. Karakeep uses its local asset store (no S3 dependency); OpenCloud uses
+Core services remain private. Nivra and Orva MCPs are connected; Olx remains
+disabled and Supabase is retired. Karakeep uses its local asset store (no S3 dependency); OpenCloud uses
 local decomposed storage. Immich keeps the same PostgreSQL 14 image and data
-layout as the backup. Orva's `quick-share` function and data are restored, but
-its configured Cairn S3 endpoint is not currently deployed, so uploads fail
-until that object store is restored. The `tools`/browser-MCP stack was removed;
+layout as the backup. Orva's `quick-share` function is restored; Cairn and RustFS
+are deployed, and an actual Quick Share upload/download round trip passed. The `tools`/browser-MCP stack was removed;
 Playwright CLI is the only agent browser interface. Application evidence:
 [apps verification](APPS-VERIFICATION-2026-11-02.json), [browser CLI](BROWSER-CLI-VERIFICATION-2026-11-02.json).
 

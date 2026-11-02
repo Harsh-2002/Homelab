@@ -32,6 +32,11 @@
 			reverse_proxy opencloud:9200
 		}
 
+		@public_cairn host cairn-s3.l3b.cc.cd
+		handle @public_cairn {
+			reverse_proxy cairn:7373
+		}
+
 		# Preserve source denial before host routing and forward-auth.
 		@outside not remote_ip {$LAN_CIDR} {$VPN_CIDR} {$DOCKER_CIDR} 127.0.0.1/8 ::1
 		header @outside {
@@ -79,6 +84,67 @@
 			reverse_proxy orva:8443 {
 				flush_interval -1
 			}
+		}
+
+		@paperless host docs.l3b.cc.cd
+		handle @paperless {
+			reverse_proxy paperless:8000
+		}
+
+		@n8n host n8n.l3b.cc.cd
+		handle @n8n {
+			reverse_proxy n8n:5678
+		}
+
+		@downloads host downloads.l3b.cc.cd
+		handle @downloads {
+			@mdxp path /mdxp /mdxp/*
+			handle @mdxp {
+				reverse_proxy motrix:16801
+			}
+			handle {
+				reverse_proxy qbittorrent:8081
+			}
+		}
+
+		@media host media.l3b.cc.cd
+		handle @media {
+			reverse_proxy jellyfin:8096
+		}
+
+		@registry host registry.l3b.cc.cd
+		handle @registry {
+			reverse_proxy registry:5000
+		}
+
+		@theking host theking.l3b.cc.cd
+		handle @theking {
+			reverse_proxy theking:3000
+		}
+
+		@forgejo host git.l3b.cc.cd
+		handle @forgejo {
+			reverse_proxy forgejo:3000
+		}
+
+		@frigate host frigate.l3b.cc.cd
+		handle @frigate {
+			reverse_proxy frigate:8971
+		}
+
+		@rustfs_api host s3.l3b.cc.cd
+		handle @rustfs_api {
+			reverse_proxy rustfs:9000
+		}
+
+		@rustfs_console host rustfs.l3b.cc.cd
+		handle @rustfs_console {
+			reverse_proxy rustfs:9001
+		}
+
+		@cairn_console host cairn.l3b.cc.cd
+		handle @cairn_console {
+			reverse_proxy cairn:7374
 		}
 
 		@memory host memory.l3b.cc.cd

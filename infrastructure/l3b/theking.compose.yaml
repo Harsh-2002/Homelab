@@ -1,0 +1,35 @@
+services:
+  theking:
+    image: ghcr.io/harsh-2002/nivra:latest
+    container_name: theking
+    restart: unless-stopped
+    init: true
+    environment:
+      NIVRA_DATA_DIR: /data
+      NIVRA_PUBLIC_URL: https://theking.l3b.cc.cd
+    expose:
+      - "3000"
+    volumes:
+      - /data/apps/nivra-theking:/data
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b

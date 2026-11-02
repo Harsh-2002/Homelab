@@ -38,6 +38,7 @@ Use generic single-word stack names and actual single-word service/container
 names. The owner has now authorized OpenViking memory restoration/integration
 for OpenCode and the native OpenCode HTTPS remote UI; keep existing identities
 and do not restore Codex/Claude client configuration or run a second OpenCode.
+Supabase is retired: do not deploy it or restore its MCP/skills.
 The owner explicitly chose automatic memory transcript capture with redaction
 filters, and the previous OpenCode vault password for remote access (invalidates
 current logins, never session history). Follow the native handover runbook.

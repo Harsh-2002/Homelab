@@ -100,10 +100,10 @@
 </g>
 <g data-node="true"><rect x="1835" y="1280" width="380" height="143" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
 <text x="1849" y="1307" font-size="19" fill="#18252c">apps / Portainer restores</text>
-<text x="1849" y="1332" font-size="16" fill="#18252c">nivra, orva, karakeep, immich,</text>
-<text x="1849" y="1357" font-size="16" fill="#18252c">opencloud</text>
-<text x="1849" y="1382" font-size="16" fill="#18252c">notes/pin/photos/drive public; Orva</text>
-<text x="1849" y="1407" font-size="16" fill="#18252c">private</text>
+<text x="1849" y="1332" font-size="16" fill="#18252c">13 app stacks; four public, Orva</text>
+<text x="1849" y="1357" font-size="16" fill="#18252c">private</text>
+<text x="1849" y="1382" font-size="16" fill="#18252c">media, docs, automation, git,</text>
+<text x="1849" y="1407" font-size="16" fill="#18252c">registry and S3</text>
 </g>
 <g data-node="true"><rect x="1835" y="1465" width="380" height="118" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
 <text x="1849" y="1492" font-size="19" fill="#18252c">Hermes / staged and stopped</text>

@@ -1,0 +1,33 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:12.1@sha256:78d3ea1207d1322471fcac39a614f004f2ccf7e878f95ab2977d752f07e4dd7e
+    container_name: jellyfin
+    restart: unless-stopped
+    user: "1000:1000"
+    group_add:
+      - "991"
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    environment:
+      TZ: Asia/Kolkata
+      JELLYFIN_PublishedServerUrl: https://media.l3b.cc.cd
+      JELLYFIN_SSO_CONFIG_FILE: /config/sso.json
+    expose:
+      - "8096"
+    volumes:
+      - /data/apps/jellyfin/config:/config
+      - /data/apps/jellyfin/cache:/cache
+      - /mnt/AV/media:/media
+    healthcheck:
+      test: [CMD, curl, -fsS, http://127.0.0.1:8096/health]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b

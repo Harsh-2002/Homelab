@@ -1,0 +1,35 @@
+services:
+  motrix:
+    image: motrixapp/motrix-server:2.0.0-beta.40
+    container_name: motrix
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 120s
+    user: "1000:1000"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    environment:
+      MOTRIX_PUBLIC_URL: https://downloads.l3b.cc.cd
+      MOTRIX_MDXP_HOST: 0.0.0.0
+      MOTRIX_DATA_DIR: /data
+      MOTRIX_TEMP_DIR: /data/tmp
+      MOTRIX_DEFAULT_SAVE_DIR: /downloads
+      MOTRIX_ALLOWED_SAVE_DIRS: /downloads:/media
+      MOTRIX_ARIA2_RPC_LISTEN_ALL: "false"
+    expose:
+      - "8080"
+      - "16801"
+    volumes:
+      - /data/apps/motrix/motrix-data:/data
+      - /mnt/AV/downloads:/downloads
+      - /mnt/AV/media:/media
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b

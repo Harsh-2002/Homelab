@@ -1,4 +1,8 @@
-# Supabase
+# Supabase — RETIRED
+
+> Supabase is not being imported or deployed on l3b. Its MCP entry and any
+> current client/skill configuration were removed on 2 November 2026. The
+> material below is retained only as historical migration evidence.
 
 ### Cron execution
 

@@ -55,6 +55,101 @@
       "storage": "local decomposed",
       "origin": "https://drive.l3b.cc.cd",
       "exposure": "owner-approved public Caddy handler; native app authentication enforced"
+    },
+    "paperless": {
+      "stack": 149,
+      "image": "ghcr.io/paperless-ngx/paperless-ngx:3.2.1",
+      "data": "/data/apps/paperless",
+      "health": "healthy",
+      "origin": "https://docs.l3b.cc.cd",
+      "exposure": "private Caddy source gate"
+    },
+    "n8n": {
+      "stack": 85,
+      "image": "n8nio/n8n:latest",
+      "data": "/data/apps/n8n",
+      "health": "running; core n8n/Postgres/SearXNG",
+      "origin": "https://n8n.l3b.cc.cd",
+      "exposure": "private Caddy source gate",
+      "limits": "optional sandbox runner deferred"
+    },
+    "qbittorrent": {
+      "stack": 160,
+      "image": "lscr.io/linuxserver/qbittorrent:latest",
+      "data": "/data/apps/qbittorrent",
+      "health": "healthy",
+      "media": "/data/media",
+      "origin": "https://downloads.l3b.cc.cd",
+      "exposure": "private Caddy source gate"
+    },
+    "motrix": {
+      "stack": 152,
+      "image": "motrixapp/motrix-server:2.0.0-beta.40",
+      "data": "/data/apps/motrix",
+      "health": "healthy",
+      "media": "/data/media",
+      "origin": "https://downloads.l3b.cc.cd/mdxp",
+      "exposure": "private Caddy source gate"
+    },
+    "jellyfin": {
+      "stack": 94,
+      "image": "jellyfin/jellyfin:12.1",
+      "data": "/data/apps/jellyfin",
+      "health": "healthy",
+      "media": "/data/media",
+      "origin": "https://media.l3b.cc.cd",
+      "exposure": "private Caddy source gate"
+    },
+    "registry": {
+      "stack": 9,
+      "image": "registry:2",
+      "data": "/data/apps/registry",
+      "health": "running; htpasswd 401",
+      "origin": "https://registry.l3b.cc.cd/v2/",
+      "exposure": "private Caddy source gate",
+      "limits": "local filesystem storage; RustFS S3 driver deferred"
+    },
+    "forgejo": {
+      "stack": 135,
+      "image": "codeberg.org/forgejo/forgejo:14",
+      "data": "/data/apps/forgejo",
+      "health": "healthy",
+      "origin": "https://git.l3b.cc.cd",
+      "exposure": "private Caddy source gate"
+    },
+    "theking": {
+      "stack": 178,
+      "image": "ghcr.io/harsh-2002/nivra:latest",
+      "data": "/data/apps/nivra-theking",
+      "health": "healthy",
+      "origin": "https://theking.l3b.cc.cd",
+      "exposure": "private Caddy source gate"
+    },
+    "rustfs": {
+      "stack": 177,
+      "image": "rustfs/rustfs:1.0.4",
+      "data": "/data/apps/rustfs",
+      "health": "ready",
+      "origin": "https://s3.l3b.cc.cd",
+      "exposure": "private Caddy source gate",
+      "buckets": 9
+    },
+    "cairn": {
+      "stack": 176,
+      "image": "ghcr.io/harsh-2002/cairn:v2026.09.13",
+      "data": "/data/apps/cairn",
+      "health": "ready",
+      "origin": "https://cairn-s3.l3b.cc.cd",
+      "exposure": "public API Caddy handler; S3 auth"
+    },
+    "frigate": {
+      "stack": 137,
+      "image": "ghcr.io/blakeblackshear/frigate:0.18.0",
+      "data": "/data/apps/frigate",
+      "health": "healthy",
+      "origin": "https://frigate.l3b.cc.cd",
+      "exposure": "private Caddy source gate",
+      "camera": "outdoor config restored"
     }
   },
   "checks": {
@@ -67,13 +162,20 @@
     "immichSamePostgresMajorAndData": true,
     "opencloudLocalDecomposedStorage": true,
     "approvedPublicAppsReachableWithAppAuth": true,
-    "orvaRemainsPrivate": true
+    "orvaRemainsPrivate": true,
+    "additionalApplicationsRestored": true,
+    "rustfsAuthenticatedBucketListing": true,
+    "quickShareCairnRoundTrip": true,
+    "registryRunsWithLocalStorage": true,
+    "frigateRestored": true
   },
   "limits": [
-    "notes, pin, photos and drive are public; Orva and core services remain private",
+    "notes, pin, photos, drive and Cairn S3 are public; Orva and core services remain private",
     "Human passkey/OIDC sign-in for each app was not performed",
-    "Orva quick-share retains its historical Cairn S3 dependency; that object store is not currently deployed",
     "OpenCloud v9 is a rolling release and was not applied; stable 7.2.4 preserves the restored data",
-    "Supabase remains deferred and its MCP remains disabled"
+    "Registry currently uses local filesystem storage; RustFS S3 driver configuration remains deferred",
+    "n8n optional sandbox runner is deferred",
+    "Supabase retired; no MCP/skill/deployment remains",
+    "Quick Share Cairn S3 upload/download round trip passed"
   ]
 }

@@ -1,0 +1,19 @@
+services:
+  registry:
+    image: registry:2
+    container_name: registry
+    restart: unless-stopped
+    env_file:
+      - /data/apps/registry/runtime.env
+    expose:
+      - "5000"
+    volumes:
+      - /data/apps/registry/auth:/auth:ro
+      - /data/apps/registry/storage:/var/lib/registry
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b

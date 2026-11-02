@@ -6,7 +6,7 @@ const base = dirname(fileURLToPath(import.meta.url));
 const inventory = JSON.parse(readFileSync(join(base, 'inventory.json'), 'utf8'));
 const current = inventory.currentDeployment?.platform === 'single-node-docker';
 if (current) for (const service of inventory.currentDeployment.services) {
-  if (service.stack) assert.match(service.stack, /^[a-z]+$/, 'stack name must be a generic single word');
+  if (service.stack) assert.match(service.stack, /^[a-z0-9]+$/, 'stack name must be a generic single word');
 }
 assert.match(inventory.verifiedOn, /^\d{4}-\d{2}-\d{2}$/);
 const hosts = new Set(inventory.hosts.map(h => h.name));

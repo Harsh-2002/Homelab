@@ -13,7 +13,7 @@ import urllib.request
 PRIVATE_NAMES = ['l3b.cc.cd', 'auth.l3b.cc.cd', 'login.l3b.cc.cd',
                  'portainer.l3b.cc.cd', 'dns.l3b.cc.cd', 'memory.l3b.cc.cd', 'oc.l3b.cc.cd']
 PUBLIC_NAMES = ['notes.l3b.cc.cd', 'pin.l3b.cc.cd', 'photos.l3b.cc.cd',
-                'drive.l3b.cc.cd', 'orva.l3b.cc.cd']
+                'drive.l3b.cc.cd', 'orva.l3b.cc.cd', 'cairn-s3.l3b.cc.cd']
 PUBLIC_WAN = '150.129.31.154'
 
 

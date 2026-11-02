@@ -38,7 +38,7 @@ function layout(inv, addresses = {}) {
     ['core-identity','identity / Pocket ID and Tinyauth',['Container: pocketid / tinyauth','Original identity and OIDC clients']],
     ['homepage','dashboard / Homepage',['Private apex; Tinyauth forward-auth','Only current core service cards']],
     ['memory','memory / OpenViking and Ollama',['Restored context; local embeddings','OpenCode plugin and memory skills']],
-    ['apps','apps / Portainer restores',['nivra, orva, karakeep, immich, opencloud','notes/pin/photos/drive public; Orva private']],
+    ['apps','apps / Portainer restores',['13 app stacks; four public, Orva private','media, docs, automation, git, registry and S3']],
     ['hermes','Hermes / staged and stopped',['Configuration/persona/skills retained','Deferred until core acceptance']]
   ];
   groups.forEach(([id,title,body],i)=>{add(0,id,1835,170+i*185,title,body,'#edf5f1');edge(0,'docker',id);});

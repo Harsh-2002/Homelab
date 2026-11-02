@@ -1,0 +1,20 @@
+services:
+  cairn:
+    image: ghcr.io/harsh-2002/cairn:v2026.09.13
+    container_name: cairn
+    restart: unless-stopped
+    user: "1000:1000"
+    env_file:
+      - /data/apps/cairn/runtime.env
+    volumes:
+      - /data/apps/cairn:/data/cairn
+    expose:
+      - "7373"
+      - "7374"
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b

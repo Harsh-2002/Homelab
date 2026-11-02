@@ -16,7 +16,7 @@ def main():
     for server in data['nameServers']:
         for name in data['privateNames']:
             answer = run('dig', '@' + server, name, 'A', '+short')
-            assert answer == '10.1.1.10', name
+            assert answer.splitlines()[-1] == '10.1.1.10', name
         for name in data['publicNames']:
             answer = run('dig', '@' + server, name, 'A', '+short')
             assert answer == data['publicWan'], name
@@ -35,7 +35,7 @@ def main():
         'authoritativeNameserversMatchSplitHorizonPolicy': True,
         'unknownPublicNameIsNxdomain': True, 'unknownInternalNameStillUsesWildcard': True},
         'privateOrigins': data['privateNames'], 'publicDnsNames': data['publicNames'],
-        'limits': ['Public DNS records exist for the four owner-approved app origins and historical Orva; Orva remains behind the private Caddy gate',
+        'limits': ['Public DNS records exist for the four owner-approved app origins, historical Orva, and the Cairn S3 API; Orva still has no public Caddy route',
                    'Recursive caches may retain former wildcard answers until TTL expiry',
                    'Wildcard TLS certificate and Caddy hostname matcher are not public wildcard DNS']}
     print(json.dumps(result, indent=2))

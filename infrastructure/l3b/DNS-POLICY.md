@@ -11,9 +11,10 @@ exact public-IP record and corresponding public Caddy route/path policy.
 Applied: exact `auth`, `login`, `portainer`, `dns`, and `memory` mappings added;
 apex and `oc` were already exact/correct. After verifying all seven core mappings,
 the Cloudflare apex wildcard CNAME was removed. The owner subsequently approved
-public app origins `notes`, `pin`, `photos` and `drive`; each has an exact
-DNS-only WAN A record and a narrow Caddy public handler. `orva` keeps its
-historical WAN record but remains behind the private Caddy gate. All other existing records,
+public app origins `notes`, `pin`, `photos` and `drive`, plus the Cairn S3 API
+`cairn-s3`; each has an exact DNS-only WAN A record and a narrow Caddy public
+handler. `orva` keeps its historical WAN record but remains behind the private
+Caddy gate. All other existing records,
 including `wg`, external monitoring, historical public apps and direct-host
 exceptions, were preserved unchanged. Retired-app WAN records are flagged for
 separate owner-approved cleanup, not treated as current deployment approval.

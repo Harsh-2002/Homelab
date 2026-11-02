@@ -1,0 +1,20 @@
+services:
+  rustfs:
+    image: rustfs/rustfs:1.0.4
+    container_name: rustfs
+    restart: unless-stopped
+    env_file:
+      - /data/apps/rustfs/runtime.env
+    volumes:
+      - /data/apps/rustfs/data:/data
+      - /data/apps/rustfs/logs:/logs
+    expose:
+      - "9000"
+      - "9001"
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b

@@ -22,10 +22,11 @@
     "pin.l3b.cc.cd",
     "photos.l3b.cc.cd",
     "drive.l3b.cc.cd",
-    "orva.l3b.cc.cd"
+    "orva.l3b.cc.cd",
+    "cairn-s3.l3b.cc.cd"
   ],
   "limits": [
-    "Public DNS records exist for the four owner-approved app origins and historical Orva; Orva remains behind the private Caddy gate",
+    "Public DNS records exist for the four owner-approved app origins, historical Orva, and the Cairn S3 API; Orva still has no public Caddy route",
     "Recursive caches may retain former wildcard answers until TTL expiry",
     "Wildcard TLS certificate and Caddy hostname matcher are not public wildcard DNS"
   ]

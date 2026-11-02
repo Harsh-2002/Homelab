@@ -23,7 +23,18 @@
     "portainer.l3b.cc.cd",
     "memory.l3b.cc.cd",
     "l3b.cc.cd",
-    "orva.l3b.cc.cd"
+    "orva.l3b.cc.cd",
+    "docs.l3b.cc.cd",
+    "n8n.l3b.cc.cd",
+    "downloads.l3b.cc.cd",
+    "media.l3b.cc.cd",
+    "registry.l3b.cc.cd",
+    "git.l3b.cc.cd",
+    "theking.l3b.cc.cd",
+    "frigate.l3b.cc.cd",
+    "s3.l3b.cc.cd",
+    "rustfs.l3b.cc.cd",
+    "cairn.l3b.cc.cd"
   ],
   "publicHosts": [
     "notes.l3b.cc.cd",

@@ -105,6 +105,72 @@
         "label": "OpenCloud / files",
         "stack": "opencloud",
         "state": "7.2.4 stable; restored decomposed storage; public HTTPS"
+      },
+      {
+        "id": "paperless",
+        "label": "Paperless / documents",
+        "stack": "paperless",
+        "state": "restored data; private HTTPS"
+      },
+      {
+        "id": "n8n",
+        "label": "n8n / automation",
+        "stack": "n8n",
+        "state": "core restored; optional sandbox deferred"
+      },
+      {
+        "id": "qbittorrent",
+        "label": "qBittorrent / downloads",
+        "stack": "qbittorrent",
+        "state": "restored config/media; private WebUI"
+      },
+      {
+        "id": "motrix",
+        "label": "Motrix / downloads",
+        "stack": "motrix",
+        "state": "restored config/media; private MDXP"
+      },
+      {
+        "id": "jellyfin",
+        "label": "Jellyfin / media",
+        "stack": "jellyfin",
+        "state": "restored config/media; private HTTPS"
+      },
+      {
+        "id": "registry",
+        "label": "Registry / images",
+        "stack": "registry",
+        "state": "restored auth; local filesystem storage"
+      },
+      {
+        "id": "forgejo",
+        "label": "Forgejo / git",
+        "stack": "forgejo",
+        "state": "restored SQLite/repositories; private HTTPS"
+      },
+      {
+        "id": "theking",
+        "label": "Nivra The King",
+        "stack": "theking",
+        "state": "secondary Nivra; restored data; private"
+      },
+      {
+        "id": "rustfs",
+        "label": "RustFS / S3",
+        "stack": "rustfs",
+        "state": "restored buckets/data; authenticated S3 listing passed"
+      },
+      {
+        "id": "cairn",
+        "label": "Cairn / S3",
+        "stack": "cairn",
+        "state": "restored bucket/user/data; Quick Share round trip passed"
+      },
+      {
+        "id": "frigate",
+        "label": "Frigate / cameras",
+        "stack": "frigate",
+        "state": "restored 156 GB data/config; running; private HTTPS"
       }
     ],
     "dnsPolicy": {

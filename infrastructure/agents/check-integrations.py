@@ -113,7 +113,7 @@ def normalized(entry, client):
 
 def main():
     clients, opencode = load()
-    required = {'context7', 'shadcn', 'orva', 'supabase', 'nivra', 'rea', 'olx'}
+    required = {'context7', 'shadcn', 'orva', 'nivra', 'rea', 'olx'}
     # Browser automation is Playwright CLI + its official skill only; no browser MCPs.
     names = required | set().union(*(set(items) for items in clients.values()))
     names.discard('openviking')
