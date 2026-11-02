@@ -84,8 +84,9 @@ are applied and tested; see [DNS policy](DNS-POLICY.md) and
 | Nivra The King latest | Portainer `theking`, ID178; [stack](theking.compose.yaml) | Secondary Nivra; `https://theking.l3b.cc.cd` |
 | RustFS 1.0.4 | Portainer `rustfs`, ID177; [stack](rustfs.compose.yaml) | Restored buckets; `https://s3.l3b.cc.cd` private, console `rustfs` |
 | Cairn v2026.09.13 | Portainer `cairn`, ID176; [stack](cairn.compose.yaml) | Restored bucket/user and Quick Share round trip; `https://cairn-s3.l3b.cc.cd` |
-| Frigate 0.18.2 | Portainer `frigate`, ID137; [stack](frigate.compose.yaml) | Restored 156 GB data/config; `https://frigate.l3b.cc.cd`; camera/MQTT config retained |
-| Home Assistant 2026.10.4 | Portainer `homeassistant`, ID179; [stack](homeassistant.compose.yaml) | Restored config/DB/dashboards; internal `homeassistant:8123`; `https://home.l3b.cc.cd` private; HAOS Mosquitto/SSH add-ons not restored |
+| Frigate 0.18.2 | Portainer `frigate`, ID137; [stack](frigate.compose.yaml) | Restored data/config; outdoor camera live at 5 fps; `https://frigate.l3b.cc.cd` behind Tinyauth with an HA proxy-auth bypass |
+| Mosquitto 2.1.2 | Portainer `mqtt`, ID180; [stack](mqtt.compose.yaml) | Internal `mqtt:1883`; Frigate and Home Assistant authenticated with the existing `frigate` credential |
+| Home Assistant 2026.10.4 | Portainer `homeassistant`, ID179; [stack](homeassistant.compose.yaml) | Restored config/DB/dashboards; internal `homeassistant:8123`; `https://home.l3b.cc.cd` private; MQTT and Frigate camera/sensors working; HAOS add-ons not restored |
 
 On 2 November the safe in-place upgrades were completed and verified healthy:
 Homepage 2.7.0, Paperless 3.4.1 (28 documents preserved across the SQLite

@@ -119,7 +119,27 @@
 
 		@frigate host frigate.l3b.cc.cd
 		handle @frigate {
-			reverse_proxy frigate:8971
+			# HA and other containers use the proxy-auth header directly.
+			@frigate_internal remote_ip 10.1.3.0/24
+			handle @frigate_internal {
+				reverse_proxy frigate:8971 {
+					header_up X-Proxy-Secret {env.FRIGATE_PROXY_AUTH_SECRET}
+					header_up Remote-User homeassistant
+					header_up Remote-Groups infrastructure-admins
+				}
+			}
+			# Browser access still goes through Tinyauth first.
+			handle {
+				forward_auth tinyauth:3000 {
+					uri /api/auth/caddy
+					copy_headers Remote-User Remote-Email Remote-Groups
+				}
+				reverse_proxy frigate:8971 {
+					header_up X-Proxy-Secret {env.FRIGATE_PROXY_AUTH_SECRET}
+					header_up Remote-User {http.request.header.Remote-User}
+					header_up Remote-Groups infrastructure-admins
+				}
+			}
 		}
 
 		@homeassistant host home.l3b.cc.cd

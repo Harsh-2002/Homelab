@@ -170,13 +170,19 @@
         "id": "frigate",
         "label": "Frigate 0.18.2",
         "stack": "frigate",
-        "state": "healthy; restored data/config; private HTTPS"
+        "state": "healthy; outdoor camera live; HA camera/sensors working through MQTT and proxy auth; private HTTPS"
       },
       {
         "id": "homeassistant",
         "label": "Home Assistant 2026.10.4",
         "stack": "homeassistant",
-        "state": "Docker stack 179; restored config/DB/dashboards; private HTTPS; no Supervisor/add-ons; MQTT, Frigate token and VictoriaMetrics integrations outstanding"
+        "state": "Docker stack 179; restored config/DB/dashboards; private HTTPS; MQTT and Frigate working; Tuya/Localthings/VictoriaMetrics outstanding; no Supervisor/add-ons"
+      },
+      {
+        "id": "mqtt",
+        "label": "Mosquitto 2.1.2",
+        "stack": "mqtt",
+        "state": "healthy; internal mqtt:1883; Frigate and Home Assistant authenticated"
       }
     ],
     "dnsPolicy": {

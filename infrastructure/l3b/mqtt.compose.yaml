@@ -1,0 +1,26 @@
+services:
+  mqtt:
+    image: eclipse-mosquitto:2
+    container_name: mqtt
+    restart: unless-stopped
+    user: "1883:1883"
+    env_file:
+      - /data/apps/mqtt/runtime.env
+    expose:
+      - "1883"
+    volumes:
+      - /data/apps/mqtt/config:/mosquitto/config:ro
+      - /data/apps/mqtt/data:/mosquitto/data
+      - /data/apps/mqtt/log:/mosquitto/log
+    healthcheck:
+      test: [CMD-SHELL, "mosquitto_sub -h 127.0.0.1 -p 1883 -u frigate -P \"$$FRIGATE_MQTT_PASSWORD\" -t '$$SYS/broker/version' -C 1 -W 3 >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b

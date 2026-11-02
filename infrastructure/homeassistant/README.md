@@ -3,7 +3,9 @@
 > **2026-11-02:** The active deployment is the Docker/Portainer stack on l3b:
 > [`infrastructure/l3b/homeassistant.compose.yaml`](../l3b/homeassistant.compose.yaml).
 > Private URL: `https://home.l3b.cc.cd`; data: `/data/apps/homeassistant`.
-> HAOS add-ons Mosquitto and SSH were not restored; the HAOS/Proxmox details
+> HAOS add-ons Mosquitto and SSH were not restored. MQTT now runs as the
+> `mqtt` Docker stack and Frigate camera/sensors are working; Tuya, Localthings
+> and VictoriaMetrics targets remain unreachable. The HAOS/Proxmox details
 > below are historical.
 
 Frigate and node monitoring (2026-10-22): **Homelab** sidebar dashboard has

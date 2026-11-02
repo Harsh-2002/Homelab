@@ -154,7 +154,8 @@
       "health": "healthy",
       "origin": "https://frigate.l3b.cc.cd",
       "exposure": "private Caddy source gate",
-      "camera": "outdoor config restored"
+      "camera": "outdoor live at ~5 fps, detection ~5 fps, 0 stalls/reconnects; go2rtc outdoor stream active",
+      "homeAssistant": "camera.outdoor recording, snapshot 200 image/jpeg; object/motion sensors available via MQTT"
     },
     "homeassistant": {
       "stack": 179,
@@ -164,8 +165,8 @@
       "health": "healthy",
       "origin": "https://home.l3b.cc.cd",
       "exposure": "private Caddy source gate",
-      "validation": "root 200; unauthenticated API 401; WebSocket auth_required",
-      "limits": "no Supervisor/add-ons; MQTT, Frigate token and VictoriaMetrics integrations outstanding"
+      "validation": "root 200; unauthenticated API 401; WebSocket auth_required; 139 entities; dashboards 200",
+      "limits": "no Supervisor/add-ons; Tuya bulb, Localthings AC and VictoriaMetrics targets remain unreachable"
     },
     "homepage": {
       "stack": 172,
@@ -174,6 +175,16 @@
       "health": "healthy",
       "origin": "https://l3b.cc.cd",
       "exposure": "private apex behind Tinyauth"
+    },
+    "mqtt": {
+      "stack": 180,
+      "image": "eclipse-mosquitto:2",
+      "version": "2.1.2",
+      "data": "/data/apps/mqtt",
+      "health": "healthy",
+      "origin": "internal mqtt:1883",
+      "exposure": "no host port",
+      "validation": "authenticated pub/sub passed; Frigate and HA clients connected"
     }
   },
   "checks": {
@@ -200,7 +211,9 @@
       "frigate 0.18.2",
       "homepage 2.7.0"
     ],
-    "hermesNativeGatewayConnected": true
+    "hermesNativeGatewayConnected": true,
+    "frigateCameraAndHaIntegration": true,
+    "mqttBrokerDeployed": true
   },
   "limits": [
     "notes, pin, photos, drive and Cairn S3 are public; Orva and core services remain private",
@@ -211,6 +224,6 @@
     "Forgejo 14 is EOL and its containers are stopped; stack retained pending a separate upgrade decision",
     "Portainer is the only running container without an in-container healthcheck because its image has no shell",
     "Caddy 2.11.4, Pocket ID 2.16.0, Ollama 0.34.4 and OpenViking 0.4.22 remain pinned pending controlled upgrades",
-    "Home Assistant has no Supervisor/add-ons; MQTT, Frigate token and VictoriaMetrics integrations remain broken"
+    "Home Assistant Tuya bulb, Localthings AC and VictoriaMetrics targets remain unreachable; MQTT and Frigate camera/sensors work"
   ]
 }
