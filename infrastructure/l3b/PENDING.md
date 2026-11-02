@@ -10,8 +10,9 @@ OpenViking/Ollama, native OpenCode with Playwright CLI only.
 
 Applications: Nivra, Orva, Karakeep, Immich, OpenCloud, Paperless, n8n
 (including SearXNG and the isolated sandbox API/runner), qBittorrent, Motrix,
-Jellyfin, Registry, Frigate, Home Assistant and Nivra The King.
-Forgejo containers are stopped; its stack is retained pending an upgrade decision.
+Jellyfin, Registry, Frigate, Home Assistant, Nivra The King, MQTT and Beszel.
+Forgejo and its mirror containers are stopped; the stacks are retained pending
+an upgrade decision. Hermes is native and active.
 
 Object storage: RustFS (including existing buckets) and Cairn (including the
 Quick Share bucket/user and successful upload/download round trip).
@@ -21,7 +22,6 @@ Quick Share bucket/user and successful upload/download round trip).
 | Item | State |
 | --- | --- |
 | Forgejo | Containers stopped; stack 135 retained. Forgejo 14 is EOL; upgrade/replacement is a separate decision. |
-| Hermes | Restored natively at `/home/dev/.hermes`; `hermes-gateway.service` is active/enabled with Telegram, Photon/iMessage and API server connected. No cron jobs. |
 | Watchtower | Optional updater; deliberately inactive. |
 
 ## Outstanding acceptance
