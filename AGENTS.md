@@ -51,8 +51,12 @@ Keep IP-bearing native scenes, address sources and exports Git-ignored.
 Material changes to hosts, VM/LXC placement, services, network access, storage,
 identity, HA or integrations must update `docs/architecture/inventory.json` and
 the affected relationships in `docs/architecture/build.mjs`, alongside service
-runbooks. Rebuild with `node docs/architecture/build.mjs`, validate with
-`node docs/architecture/check.mjs`, and visually inspect the changed diagrams.
+runbooks. Rebuild with `node docs/architecture/build.mjs` **and**
+`node docs/architecture/excalidraw-build.mjs`; the second one refreshes
+`topology-manifest.json` and is required after any inventory or layout change,
+or CI fails with `stale topology: source changed`. Validate with
+`node docs/architecture/check.mjs` and `node docs/architecture/check-topology.mjs`,
+and visually inspect the changed diagrams.
 Refresh exported PNG/PDF files when publishing a new architecture snapshot.
 
 Keep the public SVGs and inventory share-safe. The optional private address
