@@ -118,6 +118,26 @@ lists `microsandbox` in its available skills.
 4. Refresh the shared skill from the upstream repo if `SKILL.md` changed.
 5. Update this runbook, the host table, Notion and OpenViking; commit and push.
 
+## Agent test policy
+
+All agents are told to use `msb` for tests that would otherwise mutate the host,
+with a fixed default shape:
+
+```sh
+msb create --name <task>-test --cpus 2 --memory 4G --root-disk 20G <image>
+msb exec <task>-test -- <command>
+msb rm <task>-test
+```
+
+- Size to the test; 2 vCPU / 4 GB / 20 GB is the default, raise only when needed.
+- Install test dependencies inside the sandbox, never on the host.
+- Delete the sandbox when the work is finished; idle boxes are not acceptable.
+- `--no-net` when the test does not need the network.
+- Sandboxes are disposable and are never used for production services.
+
+This policy is in `~/.config/opencode/AGENTS.md` and `~/.claude/CLAUDE.md`, so it
+applies to new turns without repeating it per session.
+
 ## Limits
 
 - Requires KVM; unusable inside a container without nested virtualisation.
