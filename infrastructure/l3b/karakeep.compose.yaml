@@ -2,6 +2,8 @@ services:
   karakeep:
     image: ghcr.io/karakeep-app/karakeep:0.34.1
     container_name: karakeep
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     init: false
     env_file:
@@ -25,6 +27,8 @@ services:
   karakeep-chrome:
     image: ghcr.io/karakeep-app/karakeep-chrome:release
     container_name: karakeep-chrome
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     init: true
     command:
@@ -44,6 +48,8 @@ services:
   karakeep-meilisearch:
     image: getmeili/meilisearch:v1.41.0
     container_name: karakeep-meilisearch
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     env_file:
       - /data/apps/karakeep/meili.env

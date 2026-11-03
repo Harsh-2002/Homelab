@@ -2,6 +2,8 @@ services:
   hermes:
     image: nousresearch/hermes-agent@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
     container_name: hermes
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     init: false
     environment:
       HERMES_UID: "1000"

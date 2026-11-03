@@ -2,6 +2,8 @@ services:
   unbound:
     image: klutchell/unbound@sha256:50cbeb32b5838a829a7226b19cb151f9535bd7f9f3190f950780f452fe807478
     container_name: unbound
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     user: 1000:1000
     command: [-d, -c, /etc/unbound/unbound.conf]
     read_only: true
@@ -20,6 +22,8 @@ services:
   adguard:
     image: adguard/adguardhome@sha256:aba9e3bf0613be3ba3755e1fc311b126e2c24bec25e18b6483894a88283074f0
     container_name: adguard
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     ports:
       - ${L3B_BIND_IP}:53:53/udp
     read_only: true

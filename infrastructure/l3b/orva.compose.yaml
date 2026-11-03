@@ -2,6 +2,8 @@ services:
   orva:
     image: ghcr.io/harsh-2002/orva@sha256:9000820d4ea43d0f3ab9d2bc12434d62cb2bf292910139ac3dd71aae8bdb37fa
     container_name: orva
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     cgroup: host
     pid: host

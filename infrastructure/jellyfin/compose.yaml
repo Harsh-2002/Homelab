@@ -2,6 +2,8 @@ services:
   jellyfin:
     image: jellyfin/jellyfin:12.1@sha256:78d3ea1207d1322471fcac39a614f004f2ccf7e878f95ab2977d752f07e4dd7e
     container_name: jellyfin
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     user: "1000:1000"
     group_add:
       - "991"

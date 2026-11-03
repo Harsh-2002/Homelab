@@ -2,6 +2,8 @@ services:
   motrix:
     image: motrixapp/motrix-server:2.2.0
     container_name: motrix
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     init: true
     restart: unless-stopped
     stop_grace_period: 120s

@@ -3,6 +3,8 @@ services:
   beszel:
     image: henrygd/beszel:0.21.1
     container_name: beszel
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     env_file:
       - /data/apps/beszel/hub.env

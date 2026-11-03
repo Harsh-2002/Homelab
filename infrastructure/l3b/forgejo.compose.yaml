@@ -2,6 +2,8 @@ services:
   forgejo:
     image: codeberg.org/forgejo/forgejo:14
     container_name: forgejo
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     environment:
       USER_UID: "1000"
@@ -25,6 +27,8 @@ services:
   forgejo-mirror:
     image: ghcr.io/raylabshq/gitea-mirror:latest
     container_name: forgejo-mirror
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     expose:
       - "3000"

@@ -52,3 +52,26 @@ Immich uses native Pocket ID OIDC. The dedicated confidential `immich` client is
 The mobile callback is required for the official iOS and Android applications. Pocket ID's backchannel-logout callback is `https://photos.l3b.cc.cd/api/oauth/backchannel-logout`.
 
 The existing Immich account was explicitly linked through **User Settings → OAuth** before normal OIDC use. It matches Pocket ID's verified email `iam.anuragvishwakarma@gmail.com`, so the library remains under the same user rather than a new account. Auto-registration and auto-launch are both disabled. Native password login remains enabled as a deliberate break-glass path. The current OIDC client ID and secret are fields in the existing `HomeLab` → `Immich Photos` 1Password item; no separate or duplicate vault item exists.
+
+## 2026-11-03 backups marker
+
+Redeploying the stack (to add Watchtower labels) recreated `immich` and exposed
+a latent gap: `/data/apps/immich/media/backups` did not exist, so the server's
+system-integrity check failed with
+
+```text
+Failed to read (/data/backups/.immich): ENOENT
+microservices worker exited with code 1
+```
+
+and the container entered a restart loop while `photos.l3b.cc.cd` returned 502.
+Immich requires a `.immich` marker file in every media subfolder. The five other
+folders already had one; `backups` had never been created. Fixed with:
+
+```sh
+sudo install -d -o 1000 -g 1000 -m 755 /data/apps/immich/media/backups
+sudo install -o 1000 -g 1000 -m 644 /dev/null /data/apps/immich/media/backups/.immich
+```
+
+The container then started healthy and the site returned 200. Keep the folder in
+any future restore; it is not created automatically on an existing media tree.

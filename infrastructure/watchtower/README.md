@@ -26,6 +26,12 @@ container is monitored **except** those carrying
 `com.centurylinklabs.watchtower.enable="false"`, which are skipped. Containers
 without any label are updated.
 
+Since 3 November 2026 every service in every live stack carries an explicit
+label: `true` for application containers, `false` for databases. Two containers
+remain unlabeled on purpose: `portainer` (bootstrap stack, cannot redeploy
+itself through the API) and the OLX MCP helper created by `docker run` rather
+than Compose. Both are still updated by default.
+
 ## Excluded from automatic updates
 
 | Container | Image | Reason |

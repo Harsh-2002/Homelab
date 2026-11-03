@@ -2,6 +2,8 @@ services:
   pocketid:
     image: ghcr.io/pocket-id/pocket-id@sha256:9366436f3fd21619ed7e5709fa0acac88130f73414ec8ee1caf768fc487111ea
     container_name: pocketid
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     user: 1000:1000
     read_only: true
     cap_drop: [ALL]
@@ -22,6 +24,8 @@ services:
   tinyauth:
     image: ghcr.io/tinyauthapp/tinyauth@sha256:220aa235c76393a73fece831d7ba967b8698d3907fd8e3c4c952f699c7b142a5
     container_name: tinyauth
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     user: 1000:1000
     read_only: true
     cap_drop: [ALL]

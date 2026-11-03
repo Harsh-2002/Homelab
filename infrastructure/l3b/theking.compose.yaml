@@ -2,6 +2,8 @@ services:
   theking:
     image: ghcr.io/harsh-2002/nivra:latest
     container_name: theking
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     init: true
     environment:

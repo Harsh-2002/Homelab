@@ -2,6 +2,8 @@ services:
   rustfs:
     image: rustfs/rustfs:1.0.4
     container_name: rustfs
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     env_file:
       - /data/apps/rustfs/runtime.env

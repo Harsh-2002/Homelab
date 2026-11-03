@@ -2,6 +2,8 @@ services:
   broker:
     image: docker.io/valkey/valkey:9-alpine
     container_name: paperless-valkey
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     volumes:
       - /data/apps/paperless/valkey:/data
@@ -9,6 +11,8 @@ services:
   paperless:
     image: ghcr.io/paperless-ngx/paperless-ngx:3.2.1
     container_name: paperless
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     depends_on:
       - broker

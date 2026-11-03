@@ -2,6 +2,8 @@ services:
   frigate:
     image: ghcr.io/blakeblackshear/frigate:0.18.2
     container_name: frigate
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     init: false
     shm_size: 512mb

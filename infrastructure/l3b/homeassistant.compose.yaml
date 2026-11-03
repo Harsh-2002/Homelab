@@ -2,6 +2,8 @@ services:
   homeassistant:
     image: ghcr.io/home-assistant/home-assistant:stable
     container_name: homeassistant
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     init: false
     stop_grace_period: 30s

@@ -4,6 +4,8 @@ services:
   registry:
     image: registry:2
     container_name: registry
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     ports:
       - 10.1.1.4:5000:5000

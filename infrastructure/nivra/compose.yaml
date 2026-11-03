@@ -2,6 +2,8 @@ services:
   nivra:
     image: ghcr.io/harsh-2002/nivra:latest
     container_name: nivra
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     init: true
     ports:

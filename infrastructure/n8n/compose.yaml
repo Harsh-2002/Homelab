@@ -2,6 +2,8 @@ services:
   n8n:
     image: n8nio/n8n:latest
     container_name: n8n
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: always
     user: root
     depends_on:
@@ -67,6 +69,8 @@ services:
   searxng:
     image: ghcr.io/searxng/searxng:latest
     container_name: searxng
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     environment:
       SEARXNG_SECRET: ${SEARXNG_SECRET}
@@ -88,6 +92,8 @@ services:
   sandbox-certs:
     image: ghcr.io/n8n-io/n8n-sandbox-service-api:${N8N_SANDBOX_VERSION}
     container_name: sandbox-certs
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     user: "0:0"
     entrypoint: ["sh", "-c"]
     command:
@@ -105,6 +111,8 @@ services:
   sandbox-api:
     image: ghcr.io/n8n-io/n8n-sandbox-service-api:${N8N_SANDBOX_VERSION}
     container_name: sandbox-api
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     depends_on:
       sandbox-certs:
@@ -143,6 +151,8 @@ services:
   sandbox-runner-1:
     image: ghcr.io/n8n-io/n8n-sandbox-service-runner-dind:${N8N_SANDBOX_VERSION}
     container_name: sandbox-runner
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     privileged: true
     depends_on:

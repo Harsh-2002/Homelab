@@ -2,6 +2,8 @@ services:
   openviking:
     image: ghcr.io/volcengine/openviking@sha256:f52ab2c309e46e47a746ffc5715bb280111588ff27bc7c9ae62ef5b915df9de1
     container_name: openviking
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     environment:
       OPENVIKING_WITH_BOT: "0"
@@ -23,6 +25,8 @@ services:
   ollama:
     image: ollama/ollama@sha256:8262851b2846b87c649eddf3e76beb270c52f4d1bc94559f47efde16b0841551
     container_name: ollama
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     environment:
       OLLAMA_HOST: 0.0.0.0:11434

@@ -3,6 +3,8 @@ name: portainer
 services:
   portainer:
     container_name: portainer
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     image: ${PORTAINER_IMAGE}
     command:
       - --http-enabled

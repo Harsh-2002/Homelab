@@ -11,6 +11,8 @@ x-immich-env: &immich-env
 services:
   immich-server:
     container_name: immich-server
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION}
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
@@ -34,6 +36,8 @@ services:
 
   immich-machine-learning:
     container_name: immich-machine-learning
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION}
     environment:
       <<: *immich-env
@@ -47,6 +51,8 @@ services:
 
   immich-redis:
     container_name: immich-redis
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
     image: docker.io/valkey/valkey:9@sha256:70739f85ad2ee01a726a965584a0f94895f01b0c60b3cc8b0aeef11eaa6888cf
     healthcheck:
       test: redis-cli ping | grep -q PONG || exit 1
