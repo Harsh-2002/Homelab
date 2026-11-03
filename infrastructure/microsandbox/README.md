@@ -115,8 +115,24 @@ lists `microsandbox` in its available skills.
    ```
 
 3. Run `msb doctor` and one ephemeral sandbox as `dev`.
-4. Refresh the shared skill from the upstream repo if `SKILL.md` changed.
+4. Regenerate the shared skill if `SKILL.md` changed, and the Bash completion
+   (`msb completion bash > ~/.local/share/bash-completion/completions/msb`).
 5. Update this runbook, the host table, Notion and OpenViking; commit and push.
+
+## Shell completion
+
+Bash completion is installed per user and loaded lazily by `bash-completion`,
+so it costs nothing at shell start:
+
+```sh
+mkdir -p ~/.local/share/bash-completion/completions
+msb completion bash > ~/.local/share/bash-completion/completions/msb
+```
+
+Take a new login shell, then `msb cr<TAB>` completes `create` and
+`msb run --mem<TAB>` completes `--memory`. Regenerate the file after every
+upgrade, because the completion is generated from the installed binary's
+command tree.
 
 ## Agent test policy
 
