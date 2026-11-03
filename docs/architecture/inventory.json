@@ -215,7 +215,7 @@
     "opencodeRemote": {
       "state": "verified",
       "firstAttempt": "Initial group-membership failure resolved by verified sg docker handover.",
-      "url": "https://oc.l3b.cc.cd",
+      "url": "https://oc.l3b.cc.cd", "exposure": "public since 2026-11-03 via exact DNS-only A record to 150.129.31.154 and a named source-gate exemption; pairing-link/vault password enforced by OpenCode; Tinyauth deliberately omitted to keep native app pairing working",
       "placement": "single native opencode.service; Docker-bridge-only bind; direct Caddy upstream by host alias",
       "authentication": "owner explicitly chose previous vault password; old logins invalidated, history retained",
       "evidence": "infrastructure/l3b/NATIVE-HANDOVER-2026-11-02.json"

@@ -28,7 +28,13 @@
 		import public cairn-s3.l3b.cc.cd cairn:7373 cairn
 
 		# Preserve source denial before host routing and forward-auth.
-		@outside not remote_ip {$LAN_CIDR} {$VPN_CIDR} {$DOCKER_CIDR} 127.0.0.1/8 ::1
+		# oc.l3b.cc.cd is public but keeps its dedicated streaming handler
+		# below, so it is exempt from the source gate rather than imported
+		# through the generic public snippet.
+		@outside {
+			not remote_ip {$LAN_CIDR} {$VPN_CIDR} {$DOCKER_CIDR} 127.0.0.1/8 ::1
+			not host oc.l3b.cc.cd
+		}
 		header @outside {
 			Content-Type "text/html; charset=utf-8"
 			Cache-Control "no-store"

@@ -115,6 +115,17 @@ its native authentication/OIDC. Public services are opted in with
 `import public <host> <upstream> <id>` in `Caddyfile`; the default is private.
 **Orva** remains behind the private Caddy source gate; its historical public
 DNS record was preserved but does not grant a route.
+
+**OpenCode** (`oc.l3b.cc.cd`) became a public origin on 3 November 2026 at the
+owner's request. It is the one public host that is not wired through the generic
+`import public` snippet, because it needs its own streaming handler
+(`flush_interval -1` and the Secure cookie rewrite). Instead the source gate
+excludes that one host by name. Access is still gated by OpenCode's own pairing
+link/vault password: the web UI asks for a pairing link or manual connection
+details, and API calls without it return 401. The public A record is DNS-only to
+`150.129.31.154`; the 2 November DNS snapshot predates this change.
+Tinyauth was deliberately not placed in front of it, because that would break
+the native mobile app's pairing flow.
 Core services remain private. Nivra, Orva and OLX MCPs are connected;
 OpenViking memory is active for OpenCode and Hermes, and Supabase is retired.
 Unmatched subdomains and outside sources receive the same black 403 page;

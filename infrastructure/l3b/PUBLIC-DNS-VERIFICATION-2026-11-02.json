@@ -22,7 +22,6 @@
     "media.l3b.cc.cd",
     "memory.l3b.cc.cd",
     "n8n.l3b.cc.cd",
-    "oc.l3b.cc.cd",
     "orva.l3b.cc.cd",
     "portainer.l3b.cc.cd",
     "registry.l3b.cc.cd",
@@ -35,11 +34,14 @@
     "pin.l3b.cc.cd",
     "photos.l3b.cc.cd",
     "drive.l3b.cc.cd",
-    "cairn-s3.l3b.cc.cd"
+    "cairn-s3.l3b.cc.cd",
+    "oc.l3b.cc.cd"
   ],
   "limits": [
-    "Public records are reserved for notes, pin, photos, drive and cairn-s3; every current private origin has an exact DNS-only 10.1.1.10 record",
+    "Public records are reserved for notes, pin, photos, drive, cairn-s3 and oc; every current private origin has an exact DNS-only 10.1.1.10 record",
     "Internal AdGuard keeps the apex and wildcard rewrites; Cloudflare has no wildcard records",
     "Off-LAN clients still require WireGuard for private origins; a public-IP request receives the Caddy 403 page"
-  ]
+  ],
+  "amendedOn": "2026-11-03",
+  "amendment": "OpenCode (oc.l3b.cc.cd) moved from a private internal A record to an exact DNS-only public A record (150.129.31.154) at the owner request, with a named exemption from the Caddy source gate. Application pairing-link/vault password still required. The 2 November checks above were not re-run for this name."
 }
