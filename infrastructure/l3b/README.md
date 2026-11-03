@@ -62,6 +62,7 @@ are applied and tested; see [DNS policy](DNS-POLICY.md) and
 | Service | Placement / definition | Access |
 | --- | --- | --- |
 | Portainer BE 2.45.3 | `portainer` bootstrap; [Compose](portainer.compose.yaml) | `https://portainer.l3b.cc.cd`; internal `portainer:9000` |
+| Watchtower 1.23.2 | Portainer `watchtower`, ID62; `nickfedor/watchtower:latest` | No published port; mounts the Docker socket, updates every running container daily at **04:00 IST** and prunes replaced images. See [../watchtower/README.md](../watchtower/README.md) |
 | AdGuard Home 0.107.79 | Portainer `dns`, ID169; [stack](dns.compose.yaml) | Host **53/UDP only**; UI `adguard:3000` through `https://dns.l3b.cc.cd` |
 | Unbound 1.26.2 | Same `dns` stack | Internal `unbound:5335`; no host port |
 | Caddy 2.11.4 + saved custom plugins | Portainer `proxy`, ID171; [stack](proxy.compose.yaml) | Host **443/TCP and 443/UDP only** |

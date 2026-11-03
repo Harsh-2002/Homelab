@@ -22,7 +22,7 @@ Quick Share bucket/user and successful upload/download round trip).
 | Item | State |
 | --- | --- |
 | Forgejo | Stack 135 retained; containers/images removed by prune. Forgejo 14 is EOL; upgrade/replacement is a separate decision. |
-| Watchtower | Optional updater; deliberately inactive. |
+| Watchtower | Active since 3 November 2026: `nickfedor/watchtower` stack 62, daily 04:00 IST, old images pruned. See [../watchtower/README.md](../watchtower/README.md). |
 
 ## Outstanding acceptance
 
