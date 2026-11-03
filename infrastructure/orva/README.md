@@ -52,3 +52,37 @@ ssh px20 'pve-firewall status; cat /etc/pve/firewall/106.fw'
 ```
 
 Do not add a blanket outbound exception for a future function. Allow only the exact internal destination and port it requires, above the matching deny rule, and document why it is necessary.
+
+## 2026-11-03 upgrade to v2026.11.03 (Docker, l3b)
+
+The lab instance now runs as Portainer stack **175** `orva` on the `l3b` Docker
+network, not the retired `px20` VM described above. Data stays in
+`/data/apps/orva`, mounted at `/var/lib/orva`.
+
+| | Before | After |
+| --- | --- | --- |
+| Version | `v2026.10.25` | **`v2026.11.03`** |
+| Commit | `86d5b95` | **`159aa62`** |
+| Image digest | `sha256:9000820d…` | **`sha256:e23501ae…`** |
+| Node runtime | 24.22.1 | **26.13.0** |
+| Python runtime | 3.14.9 | **3.15.2** |
+
+Docker upgrade, as documented: pin the new digest in both `image:` and
+`ORVA_IMAGE`, recreate the container, and the entrypoint replaces the runtime
+rootfs under `/var/lib/orva/rootfs`. No `install.sh` or `orva upgrade` was run.
+
+Preserved and verified after the restart: 3 functions (`quick-share`,
+`form-backend`, `image-resizer`), 1 user, 1 session, 2 function secrets,
+1 cron schedule, 283 KV entries, 92 OAuth tokens, 42 deployments and 10,225
+execution records.
+
+Function compatibility: none of the three functions has a compiled dependency —
+zero `*.node` files, and all three `package-lock.json` files report
+`hasInstallScript=0` / `node-gyp=0`. `quick-share` uses only
+`@aws-sdk/client-s3`, which is pure JavaScript. No redeploy was required; all
+three still respond `200`, and `form-backend` returns its preserved counter
+(`{"ok":true,"count":94}`).
+
+Dashboard: `https://orva.l3b.cc.cd/` returns `302` to `/web/`, which returns
+`200`; `/api/v1/system/health` returns `200` with `status=healthy` and
+`runtime=ok`.
