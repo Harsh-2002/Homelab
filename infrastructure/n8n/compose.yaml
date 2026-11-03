@@ -36,6 +36,8 @@ services:
       N8N_SANDBOX_SERVICE_URL: http://sandbox-api:8080
       N8N_SANDBOX_SERVICE_API_KEY: ${SANDBOX_API_KEY}
       N8N_INSTANCE_AI_SEARXNG_URL: http://searxng:8080
+    networks:
+      - l3b
     volumes:
       - /data/apps/n8n/data:/home/node/.n8n
       - /data/apps/n8n/files:/files
@@ -52,6 +54,8 @@ services:
       POSTGRES_DB: n8n
       POSTGRES_USER: n8n
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - l3b
     volumes:
       - /data/apps/n8n/db:/var/lib/postgresql
     healthcheck:
@@ -68,6 +72,8 @@ services:
     restart: unless-stopped
     environment:
       SEARXNG_SECRET: ${SEARXNG_SECRET}
+    networks:
+      - l3b
     volumes:
       - /data/apps/n8n/searxng-settings.yml:/etc/searxng/settings.yml:ro
     security_opt:
@@ -95,6 +101,7 @@ services:
       NUM_RUNNERS: "1"
     volumes:
       - sandbox-tls:/tls
+    network_mode: "none"
     restart: "no"
 
   sandbox-api:
@@ -123,8 +130,7 @@ services:
       - /data/apps/n8n-sandbox/api:/var/lib/n8n-sandbox-api
       - sandbox-tls:/tls:ro
     networks:
-      - default
-      - sandbox-control
+      - l3b
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/healthz"]
       interval: 5s
@@ -167,7 +173,7 @@ services:
     volumes:
       - sandbox-tls:/tls:ro
     networks:
-      - sandbox-control
+      - l3b
     mem_limit: 3g
     cpus: 2
 
@@ -177,5 +183,6 @@ volumes:
     name: n8n-sandbox_sandbox-tls
 
 networks:
-  sandbox-control:
-    driver: bridge
+  l3b:
+    external: true
+    name: l3b

@@ -9,9 +9,9 @@ Portainer Stack 85 `n8n` on `ctr` owns the entire n8n application group: n8n, Po
 | Browser through Caddy | `https://n8n.l3b.cc.cd` |
 | n8n to SearXNG | `http://searxng:8080` |
 | n8n to Sandbox API | `http://sandbox-api:8080` |
-| Sandbox API to runner control | `sandbox-runner-1:9091` (mTLS, `sandbox-control` network) |
+| Sandbox API to runner control | `sandbox-runner-1:9091` (mTLS, `l3b` network) |
 
-SearXNG and both long-running sandbox services publish no host ports. Their visible Docker container names are `searxng`, `sandbox-api`, `sandbox-runner`, and the one-shot `sandbox-certs`; numeric Compose suffixes are not used. The runner's internal Compose service name remains `sandbox-runner-1` because that identity is part of the official mTLS certificate layout. SearXNG serves JSON because `searxng-settings.yml` adds `json` to its response formats, as required by n8n Assistant. The sandbox runner remains isolated on the stack-local `sandbox-control` network; only the API also joins `l3b`.
+SearXNG and both long-running sandbox services publish no host ports. Their visible Docker container names are `searxng`, `sandbox-api`, `sandbox-runner`, and the one-shot `sandbox-certs`; numeric Compose suffixes are not used. The runner's internal Compose service name remains `sandbox-runner-1` because that identity is part of the official mTLS certificate layout. SearXNG serves JSON because `searxng-settings.yml` adds `json` to its response formats, as required by n8n Assistant. All stack services share the single external `l3b` network; the former stack-local `sandbox-control` bridge (172.18.0.0/16) was removed on 3 November 2026 at the owner's request. `sandbox-certs` runs with `network_mode: none` so a redeploy never recreates a default bridge. Note that the privileged DinD runner is therefore reachable from other `l3b` containers, where it was previously isolated.
 
 The sandbox secrets live in protected root-owned files under `/data/apps/n8n-sandbox`: `api.env`, `runner.env`, and `n8n.env`. They are mode `0600`, sourced from the concealed fields of the existing `HomeLab` item `n8n Sandbox`, and expanded by `infrastructure/l3b/portainer-api.py` into the Stack environment on deploy. Never commit their values.
 
