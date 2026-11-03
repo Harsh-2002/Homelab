@@ -22,9 +22,32 @@ is the maintained replacement and is the image pinned in the stack.
 | `WATCHTOWER_RETRY_COUNT` | `3` | retry failed updates |
 
 Label filtering is **off** (no `WATCHTOWER_LABEL_ENABLE`), so every running
-container is monitored, including containers created by other Portainer stacks.
-The `com.centurylinklabs.watchtower.enable` labels in service Compose files have
-no effect while filtering is off.
+container is monitored **except** those carrying
+`com.centurylinklabs.watchtower.enable="false"`, which are skipped. Containers
+without any label are updated.
+
+## Excluded from automatic updates
+
+| Container | Image | Reason |
+| --- | --- | --- |
+| `n8n-db` | `postgres:18-alpine` | database; restarts mid-write are not worth an unattended patch |
+| `immich-postgres` | `immich-app/postgres:14-vectorchord…` | database, pinned digest |
+
+Everything else updates automatically. Adding another exclusion is one label on
+that service:
+
+```yaml
+    labels:
+      com.centurylinklabs.watchtower.enable: "false"
+```
+
+Docker cannot add a label to a live container, so the stack must be redeployed
+for the change to take effect. `WATCHTOWER_DISABLE_CONTAINERS` is the
+no-redeploy alternative, but it lives in the Watchtower stack instead of next to
+the service it protects.
+
+Caches such as `immich-redis` and `paperless-broker` are **not** excluded: they
+hold no durable state and restart cheaply.
 
 ## Verification
 

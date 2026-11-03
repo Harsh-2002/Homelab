@@ -66,4 +66,6 @@ services:
     shm_size: 128mb
     healthcheck:
       disable: false
+    labels:
+      com.centurylinklabs.watchtower.enable: "false"
     restart: unless-stopped
