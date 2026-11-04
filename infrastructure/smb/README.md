@@ -45,6 +45,38 @@ only the libraries point at the shared tree.
 - macOS AppleDouble files (`._*`) and `.DS_Store` are vetoed and removed with the
   parent directory.
 
+## Discovery (Bonjour / mDNS)
+
+`avahi-daemon` is installed and restricted to `eno1`
+(`allow-interfaces=eno1` in `/etc/avahi/avahi-daemon.conf`) so it does not
+advertise on Docker bridges. Samba registers with it automatically
+(`multicast dns register = yes`, the default).
+
+What macOS and Windows see:
+
+| Record | Meaning |
+| --- | --- |
+| `_smb._tcp` on `l3b.local:445` | the server appears in Finder/Explorer network browse |
+| `_adisk._tcp` with `dk0=adVN=BACKUP` | **BACKUP** is offered to Time Machine as a destination |
+
+Only `BACKUP` carries `fruit:time machine = yes`, so Time Machine lists one
+choice, not both. `MEDIA` is never offered as a backup target.
+
+Consequences for clients:
+
+- Finder → **Connect to Server** → `smb://10.1.1.10` or `smb://l3b.local`,
+  authenticate once, then pick `MEDIA` or `BACKUP` from the list.
+- Time Machine → **Add Backup Disk** shows `BACKUP` automatically; no manual
+  `tmutil` command is needed while Avahi is running.
+- Windows → `\\10.1.1.10` lists both shares after one login.
+
+Verify with:
+
+```sh
+avahi-browse -rt _smb._tcp
+avahi-browse -rt _adisk._tcp
+```
+
 ## Connection details
 
 | Field | Value |
