@@ -123,11 +123,13 @@ USB enclosure.
 | Connection | Rear USB-A, 5000 Mbps |
 | Filesystem | ext4, label `BACKUP`, UUID `ade7d423-6a2d-4f5b-800d-cba5c027d770` |
 | Mount | `/BACKUP` (fstab, `nofail`) |
-| Share | `BACKUP`, `fruit:time machine = yes`, cap 1500G |
+| Share | `BACKUP`, `fruit:time machine = yes`, no size cap |
 | Owner | `dev:dev`, mode `2775` on the mount root |
 
 This disk is deliberately **not** under `/mnt`. It is the Time Machine and
-homelab-backup target; `L3B` stays media-only.
+homelab-backup target; `L3B` stays media-only. Time Machine has no size cap, so
+it can consume the whole 1.8 TB; delete old snapshots in System Settings if
+space runs low.
 
 ### USB link findings
 
