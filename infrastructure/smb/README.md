@@ -50,8 +50,8 @@ only the libraries point at the shared tree.
 | Field | Value |
 | --- | --- |
 | Server | `10.1.1.10` (or `l3b.l3b.cc.cd` from the LAN) |
-| Share | `L3B` |
-| User | `l3b` |
+| Shares | `L3B` (media) and `BACKUP` (backups) |
+| User | `l3b`, the same account and password for **both** shares |
 | Password | 1Password → `SMB L3B` |
 | Protocol | SMB2 minimum, SMB3 negotiated |
 
@@ -112,7 +112,7 @@ Windows: Explorer → `\\10.1.1.10\L3B`.
 `nmbd` is disabled because NetBIOS is off; only **TCP 445** is used. `smbd` is
 enabled at boot.
 
-## Second share: `Backup`
+## Second share: `BACKUP`
 
 Added 2026-11-04 on a separate 1.92 TB Seagate Nytro XF1230 SSD in a VIA VL817
 USB enclosure.
@@ -123,7 +123,7 @@ USB enclosure.
 | Connection | Rear USB-A, 5000 Mbps |
 | Filesystem | ext4, label `BACKUP`, UUID `ade7d423-6a2d-4f5b-800d-cba5c027d770` |
 | Mount | `/BACKUP` (fstab, `nofail`) |
-| Share | `Backup`, `fruit:time machine = yes`, cap 1500G |
+| Share | `BACKUP`, `fruit:time machine = yes`, cap 1500G |
 | Owner | `dev:dev`, mode `2775` on the mount root |
 
 This disk is deliberately **not** under `/mnt`. It is the Time Machine and
@@ -230,3 +230,22 @@ Real-world copies are limited by the **1 GbE** link (`eno1` reports 1000 Mb/s),
 i.e. roughly 110–118 MB/s per client. Ten-gigabit or 2.5 GbE is the only way to
 go faster; no Samba setting will change that. Jumbo frames are not enabled
 because the switch and client support is not guaranteed.
+
+## Changing the password
+
+Both shares authenticate as the single Samba user `l3b`, so one command changes
+the password everywhere:
+
+```sh
+sudo smbpasswd l3b
+```
+
+It prompts twice for the new password, writes the tdbsam entry and takes effect
+immediately — no restart. Devices with the share already mounted keep their
+session until they disconnect; remount or reboot them to force re-authentication.
+
+Then update the `password` field of the 1Password item `SMB L3B` so the record
+matches.
+
+`pdbedit -L` lists the Samba accounts; `sudo smbpasswd -a l3b` adds the account
+if it is ever missing.

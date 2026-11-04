@@ -114,9 +114,9 @@
 <text x="1849" y="1592" font-size="16" fill="#18252c">only</text>
 </g>
 <g data-node="true"><rect x="1835" y="1650" width="380" height="118" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
-<text x="1849" y="1677" font-size="19" fill="#18252c">smb / Samba L3B share</text>
+<text x="1849" y="1677" font-size="19" fill="#18252c">smb / Samba shares</text>
 <text x="1849" y="1702" font-size="16" fill="#18252c">Host-native smbd; TCP 445, LAN only</text>
-<text x="1849" y="1727" font-size="16" fill="#18252c">/data/apps/smb shared by Jellyfin,</text>
-<text x="1849" y="1752" font-size="16" fill="#18252c">Motrix, qBittorrent</text>
+<text x="1849" y="1727" font-size="16" fill="#18252c">L3B media + Backup (USB SSD, Time</text>
+<text x="1849" y="1752" font-size="16" fill="#18252c">Machine)</text>
 </g>
 <text x="55" y="1730" font-size="20">Existing backups preserved; passkey/OIDC and paid model acceptance require separate tests.</text></g></svg>
