@@ -333,7 +333,6 @@ subfolders under `downloads/` were removed on 4 November 2026 at the owner's
 request. `downloads/` is intentionally flat: Motrix saves directly to
 `/downloads`, and qBittorrent's default save path is `/data/downloads`.
 
-Jellyfin's empty **Music** library still points at the removed `/media/music`
-and logs `Library folder /media/music is inaccessible or empty, skipping` on
-each scan. It is harmless; delete the Music library in Jellyfin's dashboard to
-silence it.
+Jellyfin's **Music** library was removed on 4 November 2026 together with the
+`music/` folder, so no scan warns about `/media/music` any more. Only the
+**Movies** and **TV Shows** libraries remain.

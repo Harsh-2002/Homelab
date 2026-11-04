@@ -84,3 +84,13 @@ check alone does not prove user-visible indexing. Use the supported MediaBrowser
 Authorization header for API verification; a standalone legacy X-Emby-Token
 header returned 401 on this deployment. The short-lived maintenance session
 was logged out after verification. No library, mount or container was recreated.
+
+## 2026-11-04 Music library removed
+
+The media tree now lives at `/data/apps/smb` with only `movies`, `shows` and a
+flat `downloads`. The Music library pointed at `/media/music`, which no longer
+exists, and each scan logged `Library folder /media/music is inaccessible or
+empty, skipping`. Its definition directory
+`/data/apps/jellyfin/config/root/default/Music` was removed while Jellyfin was
+stopped, and only `Movies` and `TV Shows` remain. No other library, metadata or
+playback data was touched.
