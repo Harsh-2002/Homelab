@@ -251,3 +251,22 @@ matches.
 
 `pdbedit -L` lists the Samba accounts; `sudo smbpasswd -a l3b` adds the account
 if it is ever missing.
+
+## Internal SATA vs this USB disk
+
+Both disks are the same model, Seagate Nytro XF1230 1.92 TB, so only the bus
+differs: internal SATA 6.0 Gb/s against USB 5 Gbps with UAS.
+
+| Test | SATA `/data` | USB `/BACKUP` | USB vs SATA |
+| --- | --- | --- | --- |
+| Raw 10 GiB read, `O_DIRECT` | 472 MiB/s | 387 MiB/s | **−18%** |
+| 1 GiB file write + `fdatasync` | 425 MiB/s | 389 MiB/s | −8% |
+| 1 GiB file read, `O_DIRECT` | 443 MiB/s | 350 MiB/s | −21% |
+
+The USB path is roughly 80% of direct SATA and tops out near 390 MiB/s, which is
+the 5 Gbps link, not the SSD. A 10 Gbps enclosure would not help much either:
+this SATA SSD peaks around 480 MiB/s.
+
+Neither number matters for SMB clients — the 1 GbE LAN caps them at ~110 MiB/s.
+The difference is only visible for local work such as writing a backup directly
+to `/BACKUP`.

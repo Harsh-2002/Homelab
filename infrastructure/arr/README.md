@@ -7,7 +7,9 @@ new backups. Portainer stack153 and all11 automation containers were removed:
 Sonarr, Radarr, Prowlarr, Bazarr, Seerr, Lidarr, Readarr, Cleanuparr, Unpackerr,
 Soularr and slskd. Their bind/config directories and the emptied /data/apps/arr
 root were deleted, along with unused images and the ARR network/Portainer files.
-Media and downloads on /mnt/AV were not touched.
+Media and downloads on /mnt/AV were not touched. That tree was later
+consolidated into `/data/apps/smb` (4 November 2026); the paths in the table
+below are historical and no longer exist.
 
 qBittorrent was preserved and moved to independent stack160; its stopped config
 was moved intact to /data/apps/qbittorrent. Same image and all two torrent hashes
