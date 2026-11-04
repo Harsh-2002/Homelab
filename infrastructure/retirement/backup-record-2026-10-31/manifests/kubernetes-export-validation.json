@@ -1,0 +1,13 @@
+{
+  "postgres_completion_marker": true,
+  "tar_structure": [
+    {
+      "archive": "functions-and-snippets.tar",
+      "entries": 8
+    },
+    {
+      "archive": "storage-objects.tar",
+      "entries": 3
+    }
+  ]
+}

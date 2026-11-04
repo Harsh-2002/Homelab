@@ -1,0 +1,11 @@
+{
+  "complete": true,
+  "files": 325721,
+  "reused_hardlink_checksums": 313345,
+  "new_bytes_read": 2620096609,
+  "bytes_read": 2620096609,
+  "logical_bytes": 329601441411,
+  "sqlite_checked": 20,
+  "elapsed_seconds": 96,
+  "method": "Unchanged files share verified base inodes; all other regular-file bytes read and checksummed"
+}

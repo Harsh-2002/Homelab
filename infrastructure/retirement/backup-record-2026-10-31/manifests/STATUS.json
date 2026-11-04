@@ -1,0 +1,68 @@
+{
+  "px10_phase": "complete; files read and checksummed",
+  "dev": {
+    "sqlite_integrity_checked": 14,
+    "manifest": "manifests/dev-files.jsonl"
+  },
+  "containers_cold_copied": [
+    101,
+    102,
+    103,
+    104,
+    105,
+    109
+  ],
+  "px10_host": "configuration, packages, cluster state, journals and scripts captured",
+  "kubernetes": "113 resource types, Talos configurations, etcd state, SQL and application PVC files captured",
+  "media": "copied and compared with preserved staging",
+  "checked_files_and_links": 1616613,
+  "bytes_read_for_checksums": 550160880153,
+  "ctr": "cold files, bind data, named volumes, image metadata and fresh logical SQL exports complete",
+  "orva": "cold application files complete; database integrity passed",
+  "home_assistant": "application data archive and plain extracted configuration/addon files complete",
+  "px30": "unreachable; local-only files not captured",
+  "restore_test_limit": "File readback, transfer completion and database integrity verified; full new-host application startup not yet tested",
+  "accessible_data_backup": "copy and readback checks complete; px30 local-only files still missing",
+  "phase2_sqlite_integrity_checked": 22,
+  "container_mount_sources_checked": 52,
+  "container_mount_sources_missing": 0,
+  "all_internal_source_disks": "not formatted or erased",
+  "updated_utc": "2026-10-31T14:25:21Z",
+  "manifests": [
+    {
+      "manifest": "dev-files.jsonl",
+      "complete": true,
+      "files": 1067884,
+      "bytes_read": 91923045470,
+      "elapsed_seconds": 741
+    },
+    {
+      "manifest": "px10-service-files.jsonl",
+      "complete": true,
+      "files": 215865,
+      "bytes_read": 174488761515,
+      "elapsed_seconds": 888
+    },
+    {
+      "manifest": "px20-service-files.jsonl",
+      "complete": true,
+      "files": 93372,
+      "bytes_read": 11170373612,
+      "elapsed_seconds": 111
+    },
+    {
+      "manifest": "ctr-data-files.jsonl",
+      "complete": true,
+      "files": 239492,
+      "bytes_read": 272578699556,
+      "logical_bytes": 272578699556,
+      "elapsed_seconds": 1317,
+      "verification": "All final paths checked after rsync completion; changed file identities rehashed"
+    }
+  ],
+  "final_unmount": "Final docs saved; normal unmount and read-only filesystem check follows. Result recorded in Notion and final handoff.",
+  "px20_filesystem_check": "clean after normal unmount; e2fsck -n; remounted for final documentation",
+  "latest_repository_commit": "9ab62615f83316d72097d992c4acc63081d402b4",
+  "current_repository_copy": "current-docs/Homelab",
+  "px30_registered_guests": "Only VM203 (third Talos node) remains assigned; no LXC configs remain. Other registered service guests are on px10/px20 and backed up."
+}

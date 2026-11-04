@@ -1,0 +1,40 @@
+{
+  "sqlite_checked": 22,
+  "sqlite_paths": [
+    "ctr/data/apps/n8n-sandbox/api/api.db",
+    "ctr/data/apps/motrix/motrix-data/aria2.db",
+    "ctr/data/apps/motrix/motrix-data/motrix.db",
+    "ctr/data/apps/karakeep/data/queue.db",
+    "ctr/data/apps/karakeep/data/db.db",
+    "ctr/data/apps/nivra/nivra.sqlite",
+    "ctr/data/apps/openviking/state/data/bot/studio.sqlite3",
+    "ctr/data/apps/openviking/state/data/_system/usage_audit/usage_audit.sqlite3",
+    "ctr/data/apps/openviking/state/data/_system/queue/queue.db",
+    "ctr/data/apps/openviking/recovery-before-queue-read-guard/state/data/bot/studio.sqlite3",
+    "ctr/data/apps/openviking/recovery-before-queue-read-guard/state/data/_system/usage_audit/usage_audit.sqlite3",
+    "ctr/data/apps/openviking/recovery-before-queue-read-guard/state/data/_system/queue/queue.db",
+    "ctr/data/apps/frigate/config/backup.db",
+    "ctr/data/apps/frigate/config/frigate.db",
+    "ctr/data/apps/frigate/backups/2026-09-22-pre-0.18/frigate.db",
+    "ctr/data/apps/omni/state/sqlite/omni.db",
+    "ctr/data/apps/paperless/data/celerybeat-schedule.db",
+    "ctr/data/apps/paperless/data/db.sqlite3",
+    "ctr/data/apps/jellyfin/config/data/jellyfin.db",
+    "ctr/rootfs/opt/SRVR/Git/forgejo/gitea/gitea.db",
+    "orva/rootfs/var/lib/orva/orva.db",
+    "home-assistant/files/homeassistant/data/home-assistant_v2.db"
+  ],
+  "postgres_exports": [
+    {
+      "file": "ctr/rootfs/root/retirement-20261031/database-exports/immich-postgres-all.sql.gz",
+      "uncompressed_bytes": 182173669
+    },
+    {
+      "file": "ctr/rootfs/root/retirement-20261031/database-exports/n8n-db-all.sql.gz",
+      "uncompressed_bytes": 738116
+    }
+  ],
+  "container_count": 30,
+  "mounts_checked": 52,
+  "missing_mounts": []
+}

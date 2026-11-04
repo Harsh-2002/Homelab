@@ -1,0 +1,7 @@
+{
+  "disk_serial": "2338E8C83CF2",
+  "filesystem": "ext4",
+  "uuid": "c05e9f2d-a64e-4012-9407-a3dc94475dbb",
+  "partition": "GPT single Linux filesystem partition",
+  "data_only": true
+}
