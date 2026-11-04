@@ -97,6 +97,16 @@ Windows: Explorer → `\\10.1.1.10\L3B`.
    directory mask = 2775
    veto files = /._*/.DS_Store/
    delete veto files = yes
+   vfs objects = fruit streams_xattr
+   fruit:metadata = stream
+   fruit:model = MacSamba
+   fruit:posix_rename = yes
+   fruit:veto_appledouble = yes
+   fruit:copyfile = yes
+   fruit:nfs_aces = no
+   use sendfile = yes
+   aio read size = 1
+   aio write size = 1
 ```
 
 `nmbd` is disabled because NetBIOS is off; only **TCP 445** is used. `smbd` is
@@ -146,3 +156,31 @@ sudo systemctl disable --now nmbd
 - No quotas are configured; the share is limited only by `/data`.
 - The share grants whatever `dev` can do inside `/data/apps/smb`. Keep only media
   and downloads there.
+
+
+## macOS compatibility (vfs_fruit)
+
+`vfs objects = fruit streams_xattr` stores Finder metadata in xattrs instead of
+`._*` sidecar files, gives Finder a proper icon, enables server-side copy and
+uses POSIX renames. It requires xattr support, which XFS has — verified with a
+`user.test` xattr round trip on `/data`.
+
+## Performance
+
+Measured 2026-11-04 with a 1 GiB file over loopback:
+
+| Path | Before tuning | After |
+| --- | --- | --- |
+| SMB write | 450 MB/s | **467 MB/s** |
+| SMB read | 1245 MB/s | **1381 MB/s** |
+| Raw XFS write (`dd` + fsync) | — | 443 MB/s |
+| Raw XFS read (`dd` iflag=direct) | — | 481 MB/s |
+
+Samba already reaches the SSD's own write speed, so the share is not the
+bottleneck. `use sendfile`, `aio read size = 1` and `aio write size = 1` are set
+for asynchronous I/O on every request size.
+
+Real-world copies are limited by the **1 GbE** link (`eno1` reports 1000 Mb/s),
+i.e. roughly 110–118 MB/s per client. Ten-gigabit or 2.5 GbE is the only way to
+go faster; no Samba setting will change that. Jumbo frames are not enabled
+because the switch and client support is not guaranteed.
