@@ -75,3 +75,30 @@ sudo install -o 1000 -g 1000 -m 644 /dev/null /data/apps/immich/media/backups/.i
 
 The container then started healthy and the site returned 200. Keep the folder in
 any future restore; it is not created automatically on an existing media tree.
+
+## 2026-11-04 ONNX Runtime telemetry disabled
+
+Immich Machine Learning runs ONNX Runtime, whose **telemetry is on by default**
+in the upstream Docker build and reports to
+`mobile.events.data.microsoft.com`. AdGuard's query log proved it here: 46
+resolutions of that host from `10.1.3.1` (the Docker gateway) in one day, plus
+older entries for `v10.events.data.microsoft.com`.
+
+Two independent controls were applied:
+
+1. `ORT_DISABLE_TELEMETRY: "1"` in the `immich-ml` service environment
+   (Portainer stack 147 and the tracked Compose file).
+2. AdGuard user rules, so the endpoint fails even if a future image forgets the
+   variable:
+
+   ```text
+   ||mobile.events.data.microsoft.com^
+   ||v10.events.data.microsoft.com^
+   ||self.events.data.microsoft.com^
+   ```
+
+Verified after the change: `dig mobile.events.data.microsoft.com @10.1.1.10`
+returns `0.0.0.0`, a container resolves it to `::`, and the container reports
+`ORT_DISABLE_TELEMETRY=1`. Note that `10.1.1.1` is the **router**, not AdGuard —
+testing against it bypasses the homelab filters entirely; the resolver is
+`10.1.1.10`.

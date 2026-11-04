@@ -43,6 +43,7 @@ services:
       <<: *immich-env
       MACHINE_LEARNING_DEVICE: CPU
       MACHINE_LEARNING_PROVIDER: openvino
+      ORT_DISABLE_TELEMETRY: "1"
     volumes:
       - /data/immich/model:/cache
     restart: unless-stopped
