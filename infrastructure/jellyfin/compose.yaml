@@ -27,7 +27,7 @@ services:
         bind:
           create_host_path: false
       - type: bind
-        source: /mnt/AV/media
+        source: /data/apps/smb
         target: /media
         bind:
           create_host_path: false

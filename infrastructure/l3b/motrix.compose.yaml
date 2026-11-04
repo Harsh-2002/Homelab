@@ -26,8 +26,8 @@ services:
       - "16801"
     volumes:
       - /data/apps/motrix/motrix-data:/data
-      - /mnt/AV/downloads:/downloads
-      - /mnt/AV/media:/media
+      - /data/apps/smb/downloads:/downloads
+      - /data/apps/smb:/media
     networks:
       - l3b
 

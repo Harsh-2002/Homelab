@@ -189,6 +189,12 @@
         "label": "Beszel 0.21.1",
         "stack": "beszel",
         "state": "healthy; Docker hub + native systemd agent on 10.1.1.10:45876 with daily auto-update; monitors root NVMe and /data SATA; fan RPM, iGPU usage and SMART available; private HTTPS behind Tinyauth; VictoriaMetrics/Grafana retired"
+      },
+      {
+        "id": "samba",
+        "label": "Samba (smbd)",
+        "stack": "smb",
+        "state": "share L3B on TCP 445, LAN only; /data/apps/smb shared by Jellyfin, Motrix and qBittorrent"
       }
     ],
     "dnsPolicy": {

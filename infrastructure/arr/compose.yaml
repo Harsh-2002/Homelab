@@ -28,7 +28,7 @@ services:
       SLSKD_INCOMPLETE_DIR: /data/downloads/soulseek/incomplete
     volumes:
       - /data/apps/arr/slskd:/app
-      - /mnt/AV/downloads/soulseek:/data/downloads/soulseek
+      - /data/apps/smb/downloads/soulseek:/data/downloads/soulseek
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:5030/health"]
       interval: 30s
@@ -66,7 +66,7 @@ services:
     volumes:
       - /data/apps/arr/soularr:/data
       - /data/apps/arr/soularr/template.ini:/etc/soularr.ini:ro
-      - /mnt/AV/downloads/soulseek:/data/downloads/soulseek
+      - /data/apps/smb/downloads/soulseek:/data/downloads/soulseek
 
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
@@ -93,7 +93,7 @@ services:
       retries: 3
     volumes:
       - /data/apps/arr/lidarr:/config
-      - /mnt/AV:/data
+      - /data/apps/smb:/data
 
   readarr:
     image: ghcr.io/faustvii/readarr:0.10.0
@@ -121,7 +121,7 @@ services:
       retries: 3
     volumes:
       - /data/apps/arr/readarr:/config
-      - /mnt/AV:/data
+      - /data/apps/smb:/data
 
   cleanuparr:
     image: ghcr.io/cleanuparr/cleanuparr:2.10.8
@@ -184,7 +184,7 @@ services:
       UN_DIR_MODE: "0770"
     volumes:
       - /data/apps/arr/unpackerr:/config
-      - /mnt/AV/downloads:/data/downloads
+      - /data/apps/smb/downloads:/data/downloads
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -208,7 +208,7 @@ services:
       retries: 3
     volumes:
       - /data/apps/arr/sonarr:/config
-      - /mnt/AV:/data
+      - /data/apps/smb:/data
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -232,7 +232,7 @@ services:
       retries: 3
     volumes:
       - /data/apps/arr/radarr:/config
-      - /mnt/AV:/data
+      - /data/apps/smb:/data
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
@@ -279,7 +279,7 @@ services:
       retries: 3
     volumes:
       - /data/apps/arr/bazarr:/config
-      - /mnt/AV/media:/data/media
+      - /data/apps/smb:/data/media
 
   seerr:
     image: ghcr.io/seerr-team/seerr:latest
@@ -332,4 +332,4 @@ services:
       retries: 3
     volumes:
       - /data/apps/arr/qbittorrent:/config
-      - /mnt/AV:/data
+      - /data/apps/smb:/data

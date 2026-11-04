@@ -62,6 +62,7 @@ are applied and tested; see [DNS policy](DNS-POLICY.md) and
 | Service | Placement / definition | Access |
 | --- | --- | --- |
 | Portainer BE 2.45.3 | `portainer` bootstrap; [Compose](portainer.compose.yaml) | `https://portainer.l3b.cc.cd`; internal `portainer:9000` |
+| Samba | Host-native `smbd.service` | Share **`L3B`** on TCP **445** (LAN), path `/data/apps/smb`; Jellyfin, Motrix and qBittorrent mount the same tree. See [../smb/README.md](../smb/README.md) |
 | Watchtower 1.23.2 | Portainer `watchtower`, ID62; `nickfedor/watchtower:latest` | No published port; mounts the Docker socket, updates every running container daily at **04:00 IST** and prunes replaced images. See [../watchtower/README.md](../watchtower/README.md) |
 | AdGuard Home 0.107.79 | Portainer `dns`, ID169; [stack](dns.compose.yaml) | Host **53/UDP only**; UI `adguard:3000` through `https://dns.l3b.cc.cd` |
 | Unbound 1.26.2 | Same `dns` stack | Internal `unbound:5335`; no host port |
@@ -142,6 +143,10 @@ service-name upstreams. **There are no published Portainer, UI, MCP, CDP, HTTP80
 or TCP53 ports**, including loopback publications. Image `EXPOSE` metadata shown
 by `docker ps` is not a host publication. Only the `PortBindings`/live listeners
 establish exposure.
+
+One host-native listener sits outside that rule: **Samba `smbd` on TCP 445**
+(4 November 2026) for the LAN-only `L3B` share. It is not a Docker publication and
+must never be port-forwarded. NetBIOS/139 is disabled.
 
 Host-native baseline is tracked in [host](host/README.md): WireGuard, the
 Beszel agent, smartd alerts to Telegram and security-only unattended

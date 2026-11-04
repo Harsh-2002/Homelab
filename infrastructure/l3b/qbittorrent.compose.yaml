@@ -25,7 +25,7 @@ services:
       retries: 3
     volumes:
       - /data/apps/qbittorrent:/config
-      - /mnt/AV:/data
+      - /data/apps/smb:/data
     networks:
       - l3b
 

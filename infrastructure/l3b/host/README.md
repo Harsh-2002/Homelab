@@ -12,6 +12,7 @@ a Docker outage run outside Docker.
 | Security updates | `unattended-upgrades.service` | Debian security updates only; no automatic reboot |
 | Network | `systemd-networkd`, `systemd-resolved` | Sole host network/DNS manager |
 | Remote shell | `ssh.service` | Existing keys only |
+| SMB share | `smbd.service` | Native Samba; share `L3B` on TCP **445** only, backed by `/data/apps/smb`; see [../smb/README.md](../smb/README.md) |
 | Coding agents | `opencode.service`, Hermes user gateway | Need host filesystem/tool access |
 | microsandbox | `/opt/microsandbox`, `/usr/local/bin/msb` | Global CLI for disposable agent microVMs (libkrun + KVM); per-user state in `~/.microsandbox`. See [../microsandbox/README.md](../microsandbox/README.md) |
 
