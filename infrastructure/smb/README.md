@@ -112,6 +112,52 @@ Windows: Explorer → `\\10.1.1.10\L3B`.
 `nmbd` is disabled because NetBIOS is off; only **TCP 445** is used. `smbd` is
 enabled at boot.
 
+## Second share: `Backup`
+
+Added 2026-11-04 on a separate 1.92 TB Seagate Nytro XF1230 SSD in a VIA VL817
+USB enclosure.
+
+| Item | Value |
+| --- | --- |
+| Disk | Seagate Nytro XF1230 1.92 TB, serial `7CX01767` |
+| Connection | Rear USB-A, 5000 Mbps |
+| Filesystem | ext4, label `BACKUP`, UUID `ade7d423-6a2d-4f5b-800d-cba5c027d770` |
+| Mount | `/BACKUP` (fstab, `nofail`) |
+| Share | `Backup`, `fruit:time machine = yes`, cap 1500G |
+| Owner | `dev:dev`, mode `2775` on the mount root |
+
+This disk is deliberately **not** under `/mnt`. It is the Time Machine and
+homelab-backup target; `L3B` stays media-only.
+
+### USB link findings
+
+| Port | Negotiated | Driver | 10 GiB read |
+| --- | --- | --- | --- |
+| Front USB-A | 5000 Mbps | `usb-storage` | 373 MiB/s |
+| Front USB-A | 5000 Mbps | `uas` | **392 MiB/s** |
+| Rear USB-A | 5000 Mbps | `uas` | **392 MiB/s** |
+| Front USB-C | **480 Mbps** | `usb-storage` | 41 MiB/s |
+
+The Type-C port fell back to USB 2.0 with the cable used; it is unusable for
+backups. The rear USB-A port matches the front and is the permanent connection.
+
+The VL817 bridge is blacklisted from UAS by the kernel
+(`UAS is ignored for this device`). `usb-uas-rebind.sh` plus a udev rule forces
+the faster driver on every attach:
+
+```text
+/usr/local/sbin/usb-uas-rebind.sh
+/etc/systemd/system/usb-uas-rebind.service
+/etc/udev/rules.d/90-vl817-uas.rules
+```
+
+The script resolves the interface symlink before reading `idVendor`, unbinds
+`usb-storage`, binds `uas`, and falls back to `usb-storage` if that fails.
+Verified by forcing `usb-storage` and re-running the script.
+
+Write cache is reported disabled by the bridge, so write throughput is lower
+than read. Local `dd` to `/BACKUP` measured 387 MB/s.
+
 ## Verification
 
 ```sh

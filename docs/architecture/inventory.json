@@ -194,7 +194,7 @@
         "id": "samba",
         "label": "Samba (smbd)",
         "stack": "smb",
-        "state": "share L3B on TCP 445, LAN only; /data/apps/smb shared by Jellyfin, Motrix and qBittorrent"
+        "state": "shares L3B (/data/apps/smb, media) and Backup (/BACKUP, ext4 USB SSD, Time Machine) on TCP 445, LAN only"
       }
     ],
     "dnsPolicy": {
