@@ -1,96 +1,96 @@
 # Jellyfin
 
-## 2026-11-02 Pocket ID "Error preparing login" fix
+Portainer stack **94** `jellyfin`, running as a container on the `l3b` Docker
+network on the single Debian host. The image is the official
+`jellyfin/jellyfin:12.4` pinned by digest in [compose.yaml](compose.yaml).
 
-`https://media.l3b.cc.cd/sso/OID/start/pocketid` returned **"Error preparing
-login. Return to login"**. The plugin log showed the pushed authorization
-request failing with `invalid_request - Failed to push authorization parameters`
-and the redirect URI `http://media.l3b.cc.cd/sso/OID/redirect/pocketid`. Pocket
-ID has the client registered as `https://media.l3b.cc.cd/sso/OID/redirect/pocketid`,
-so the scheme mismatch was rejected.
+There is no host port: Jellyfin listens on `8096` inside `l3b` and Caddy
+reverse-proxies `https://media.l3b.cc.cd` to it. Caddy's source gate keeps the
+service LAN/WireGuard-only; Jellyfin's own login stays enabled as a break-glass
+path.
 
-The `http` scheme came from Jellyfin, not the plugin: `network.xml`
-`KnownProxies` still listed `10.1.1.3` and the retired `jellyfin_default` gateway
-`172.20.9.1`, so Caddy's `X-Forwarded-Proto: https` was ignored. The list now
-holds `10.1.1.3` and `10.1.3.0/24`. No plugin, image, client secret, Pocket ID
-client or database was changed, and native password login stayed enabled.
-Verification after restarting Jellyfin: the start endpoint returns `302` to
-`https://auth.l3b.cc.cd/authorize?...request_uri=...`, Pocket ID redirects to its
-`/interaction` page, the callback route answers `400` (route present, missing
-parameters), `/web/` returns `200`, and the container is healthy. A full passkey
-sign-in was not completed.
+## Runtime
 
-## ARR retired, 2026-10-22
-
-All ARR automation was removed at owner request. Jellyfin itself, its config,
-library paths, media files, native/OIDC credentials and scheduled scanning were
-preserved. Motrix and standalone qBittorrent remain. Historical ARR notifications
-and import workflows described below are no longer deployed. Do not redeploy ARR
-merely to restore a historical integration. Service-specific Seerr/Lidarr API-key
-registrations require separate native administrator access to revoke; a live
-credential check returned401, and no account reset or database edit was attempted.
-
-## 2026-10-05 mount startup recovery
-
-The public URL returned502 because Jellyfin was stopped with Docker exit128 and an OCI mount error opening `/mnt/AV/media` (`no such device`). Docker reported no OOM kill. The AV CIFS share and render device were accessible at diagnosis, so starting the existing container restored `/health` to Healthy. No image, database, media or Portainer Compose was replaced.
-
-The existing Docker drop-in waits for the automount unit, not successful SMB access. A targeted `jellyfin-mount-recovery.timer` now checks each minute after boot. Its script retries only an exited Jellyfin container with exit128, `unless-stopped`, and the matching AV media mount-startup error, after checking real CIFS mount and media directory availability. Running containers, normal application exits and manually stopped containers are left alone. It does not restart Docker, remount active media consumers, or block unrelated applications on NAS availability. Files and installation details are in `../ctr/`.
-
-Music correction on 2026-09-30: the existing Music library now has the verified `/media/music` location. The earlier creation request incorrectly supplied top-level `Paths`, which the Jellyfin 12.1 API did not use; `MediaPathDto` at `/Library/VirtualFolders/Paths` correctly added the location. Lidarr's legacy Emby notification also failed on real import at `/mediabrowser/Library/MediaFolders`. Its existing `Jellyfin` notification is now a direct authenticated Webhook to POST `/Items/<Music-library-ID>/Refresh?Recursive=true`, refreshing Music after imports/upgrades/renames. No custom Jellyfin code or proxy compatibility route was added. The actual requested `Angels for Each Other` FLAC downloaded through Soularr/slskd, imported automatically, appeared on the Jellyfin homepage, and played in a real browser with advancing audio and no player/page errors. Full-track FFmpeg decode also passed. Runtime details and limitations are in `infrastructure/arr/README.md`.
-
-Portainer stack 94 on `ctr` is the fresh Jellyfin instance. The old stack definition used LinuxServer.io, ran as root with `privileged: true`, referenced the erased `/EX` tree and an old domain, and was not running. The replacement uses the official Jellyfin 12.1 image pinned by digest, UID/GID 1000 with only the render GID 991 and `/dev/dri/renderD128`. No whole-GPU device, privileged mode, host networking, or automatic image updater is used.
-
-| Purpose | Path |
+| Item | Value |
 | --- | --- |
-| SMB library root | `/mnt/AV/media` on `ctr`, mounted read-write as `/media` |
-| Movies | `/mnt/AV/media/movies` → `/media/movies` |
-| TV Shows | `/mnt/AV/media/shows` → `/media/shows` |
-| Unused staging folder | `/mnt/AV/media/source` → `/media/source` |
-| Local app state | `/data/apps/jellyfin/config` → `/config` |
-| Local cache and transcodes | `/data/apps/jellyfin/cache` → `/cache` |
+| Image | `jellyfin/jellyfin:12.4` |
+| User | `1000:1000`, plus render GID `991` |
+| Device | `/dev/dri/renderD128` (Intel iGPU, VAAPI transcoding) |
+| Published port | none — `expose: 8096` only |
+| Health | `curl -fsS http://127.0.0.1:8096/health` every 30 s |
+| Updates | Watchtower, daily at 04:00 IST |
 
-Only the media subtree is presented to Jellyfin; `/mnt/AV/downloads` is not mounted into it. The two libraries are **Movies** (`/media/movies`) and **TV Shows** (`/media/shows`). `source` is not a library. The media bind is writable so a Jellyfin administrator can delete media from the UI. Deleting a hardlinked library file does not remove its qBittorrent download; Radarr/Sonarr may also re-import a monitored title, so remove unwanted titles from the library manager as well. App state and transcoding cache stay on `ctr`'s local 500 GB ext4 `/data` disk, not the external SMB volume. The share itself is a single physical USB SSD and is not replicated.
+## Mounts
 
-On 2026-09-29, a completed Radarr import was not immediately visible because Jellyfin had not scanned the SMB library. The default **Scan Media Library** task ran every 12 hours, and network-share changes are not reliably delivered through Linux filesystem watching. A manual refresh indexed the movie; the owner's user-scoped API confirmed that the Movies library and item were visible. The built-in scan trigger was changed through Jellyfin's API to an interval of five minutes (`3000000000` ticks) and verified in both the task API and persistent `/config/config/ScheduledTasks/7738148f-fcd0-7979-c7ce-b148e06b3aed.js`. This uses no extra service or script. If a future title is absent, first verify the AV mount, then the scan task's last result, then the user's Movies view. Avoid scanning while the share is unavailable because network-storage outages can temporarily remove library items.
+| Container | Host | Size | Purpose |
+| --- | --- | --- | --- |
+| `/config` | `/data/apps/jellyfin/config` | 158 MB | database, metadata, images, plugins, `sso.json` |
+| `/cache` | `/data/apps/jellyfin/cache` | 762 MB | transcode scratch and image cache |
+| `/media` | `/data/apps/smb` | 70 GB | `movies/`, `shows/`, `downloads/` |
 
-The service listens on `10.1.1.4:8096` and Caddy exposes `https://media.l3b.cc.cd` publicly through an explicit DNS-only Cloudflare A record. Jellyfin retains its own application login; Caddy auth is not inserted in front of streaming clients. The administrator uses `iam.anuragvishwakarma@gmail.com`; its strong password is saved in the existing HomeLab 1Password `Jellyfin` item, scoped to this URL. No duplicate vault item was created.
+All three host paths are on the internal 1.92 TB SATA SSD (`/data`, XFS). The
+USB backup disk at `/BACKUP` is never mounted into Jellyfin.
 
-Pocket ID OIDC uses the stable **Community SSO for Jellyfin** plugin 5.0.0.0 from Flowfin's release repository, configured by the tracked [`sso.json`](sso.json) copied to `/data/apps/jellyfin/config/sso.json`. The client ID is `jellyfin`, the callback is `https://media.l3b.cc.cd/sso/OID/redirect/pocketid`, and Pocket ID restricts access to `infrastructure-admins`. The confidential client secret is in the existing `Jellyfin` vault item's `oidc-client-secret` field and in `/data/apps/jellyfin/config/oidc-client-secret` on `ctr` (mode 0400, UID 1000); it is not in Git. The plugin reads the file through `OidSecretFile`. Its managed login-page button is enabled in the live plugin configuration and labelled **Sign in with Pocket ID**. Password login remains enabled as break-glass. Pocket ID itself is still private to LAN/Tailscale, so OIDC cannot finish from the open internet without Tailscale; the public Jellyfin password login can. Publishing Pocket ID would be a separate security decision.
+The media bind is read-write so an administrator can delete media from the UI.
+The share is the same tree served by Samba; see
+[../smb/README.md](../smb/README.md) for the folder policy and permissions.
 
-The provider requests `openid`, `profile`, `email`, and `groups`, requires PKCE and a verified email for login, and maps `infrastructure-admins` to Jellyfin access and administrator rights. `DefaultUsernameClaim=email` matches the email-named administrator. The Pocket ID stable subject is explicitly linked to that existing Jellyfin user ID; automatic existing-account adoption is disabled afterward. A fresh passkey sign-in should still be checked by the owner before calling the browser flow proven. Do not remove the local password until that has passed. Jellyfin has one `Name` field for both sign-in and display, so the app keeps the email as requested; the full name **Anurag Vishwakarma** is in Pocket ID and the existing vault item.
+## Libraries
 
-On 2026-09-23, renaming the original Jellyfin user to the full name caused its username to stop matching the OIDC email claim. The first Pocket ID sign-in then created a second administrator under the email; password login by email selected that SSO-managed user and failed. The original password account `0eaa665bec0c4fec87e2e7d9390d75b5` was retained, renamed back to the email, and linked to the Pocket ID subject using the plugin's supported unlink/preprovision APIs. The empty duplicate `dd6a3fda49d3458b838eaccc53cdb5c4` had zero user-data rows and was deleted through Jellyfin's API. After two container restarts, the password login and plugin link roster both resolve to the single original user ID. Do not rename that user to the full name again; Jellyfin cannot keep a separate display name. If a future OIDC login creates another user, stop and inspect the link roster before modifying accounts.
+| Library | Path | Notes |
+| --- | --- | --- |
+| Movies | `/media/movies` | |
+| TV Shows | `/media/shows` | |
 
-The plugin's hardened outbound transport normally refuses private IPs. Because `auth.l3b.cc.cd` intentionally resolves to the LAN proxy, this provider alone sets `AllowPrivateNetworkAddresses=true`; HTTPS, issuer, signature, and endpoint validation remain enabled. Jellyfin must also trust Caddy's forwarded protocol headers or it will construct an `http://` callback. Its live Network → Known Proxies now contains `10.1.1.3` and the whole Docker network `10.1.3.0/24`, which covers Caddy's container address on `l3b` regardless of the address Docker assigns it. Jellyfin 12.x accepts CIDR entries and registers them as `KnownIPNetworks`. Trusting the whole `l3b` subnet means any container on that internal network could spoof forwarded headers; that is acceptable for this single-host, owner-controlled network. Before the 2026-11-02 fix the list held the retired `jellyfin_default` gateway `172.20.9.1`, not the `l3b` network, so Caddy's `X-Forwarded-Proto` was ignored. The old `Jellyfinn` vault item for Prabhat was deleted; it was not a Jellyfin server user.
+The **Music** library was removed on 4 November 2026 together with its
+`/media/music` folder; the media share intentionally has no music directory.
+`downloads/` is not a library.
 
-Intel UHD 630 QSV was verified with a 10-frame H.264 hardware encode using the exact image, non-root UID and render group. Intel Quick Sync is enabled in Jellyfin with `/dev/dri/renderD128`, hardware encoding, and H.264/HEVC/VC-1/VP9 decoding. Verify an actual transcoding session in Jellyfin's playback and FFmpeg logs after media is added; the device test alone does not prove real playback.
+## Transcoding
 
-On 2026-09-29, actual playback exposed a CIFS hardlink/lease failure: listing the movie worked, but both `head` and FFmpeg could not open its library path (`Invalid argument`, FFmpeg exit 234). The file itself was intact. Persisting `nolease` on `ctr`'s AV mount and remounting with the consuming containers stopped fixed file reads. After refreshing the failed probe metadata, the real Jellyfin web player played the HEVC/E-AC-3 movie through Caddy with Intel VA-API decoding and `h264_qsv` encoding. Playback, a seek to 120 seconds, and subsequent playback passed with `readyState=4`, no player error and zero dropped frames. This supersedes the earlier device-only test. See [the RCA](../arr/RCA-2026-09-29.md).
+Hardware transcoding uses the Intel iGPU through `/dev/dri/renderD128`, with
+`group_add: 991` so the non-root container user can open the render node. No
+`privileged`, host networking, or whole-GPU device passthrough is used.
 
-Radarr and Sonarr now have native **Emby / Jellyfin** connections named `Jellyfin`, with `Update Library` enabled for import/upgrade/rename/delete, `Send Notifications` disabled, and `/data/media` mapped to `/media`. They connect internally to `10.1.1.4:8096`; the API key stays in their persisted configuration. Jellyfin's five-minute scan remains a fallback. Renaming the current movie through Radarr automatically updated Jellyfin and Bazarr, including the Hindi sidecar subtitle. Browser playback passed again after the rename. Seerr's Movies/TV Shows scans are enabled and its external Jellyfin URL is `https://media.l3b.cc.cd`.
+## Pocket ID SSO
 
-The tracked `compose.yaml` is Portainer stack 94's source of truth. Update that stack in Portainer rather than starting a second Compose project. Before redeploying, confirm `findmnt -t cifs /mnt/AV` and its `seal` option. Verify the container is healthy and the Caddy URL loads after updating.
+`JELLYFIN_SSO_CONFIG_FILE` points at `/config/sso.json` and the SSO plugin
+redirects to `https://auth.l3b.cc.cd`. The redirect URI registered in Pocket ID
+must stay `https://media.l3b.cc.cd/sso/OID/redirect/pocketid`.
 
-## TV folder and scan verification, 2026-10-25
+Jellyfin only honours `X-Forwarded-Proto` from known proxies. `network.xml` must
+list Caddy's sources:
 
-At the owner's request, the eight The Terminal List episodes were moved directly
-into their series directory, retaining the year and S02E01–S02E08 filenames;
-the empty season directory was removed. Same-filesystem rename preserved file
-identity and sizes. Jellyfin had already indexed all eight under Season 2 before
-the move, so the previous season-directory layout was not preventing detection.
-An authenticated library refresh returned 204 and the owner's user-scoped item
-query confirmed all eight episodes at the new flat paths. A filesystem folder
-check alone does not prove user-visible indexing. Use the supported MediaBrowser
-Authorization header for API verification; a standalone legacy X-Emby-Token
-header returned 401 on this deployment. The short-lived maintenance session
-was logged out after verification. No library, mount or container was recreated.
+```xml
+<KnownProxies>
+  <string>10.1.1.3</string>
+  <string>10.1.3.0/24</string>
+</KnownProxies>
+```
 
-## 2026-11-04 Music library removed
+Without `10.1.3.0/24` the plugin builds an `http://` callback, Pocket ID rejects
+the pushed authorization request, and the start endpoint shows
+**"Error preparing login. Return to login."** That exact failure was fixed on
+2 November 2026 this way. Native password login was never disabled.
 
-The media tree now lives at `/data/apps/smb` with only `movies`, `shows` and a
-flat `downloads`. The Music library pointed at `/media/music`, which no longer
-exists, and each scan logged `Library folder /media/music is inaccessible or
-empty, skipping`. Its definition directory
-`/data/apps/jellyfin/config/root/default/Music` was removed while Jellyfin was
-stopped, and only `Movies` and `TV Shows` remain. No other library, metadata or
-playback data was touched.
+## Operations
+
+```sh
+sudo docker logs jellyfin --tail 50
+sudo docker inspect jellyfin --format '{{.State.Health.Status}}'
+curl -fsS http://127.0.0.1:8096/health
+```
+
+Restart with `docker restart jellyfin`, or redeploy Portainer stack 94. The
+health check needs `start_period: 60s`; Jellyfin is slow to open the port after
+a restart.
+
+## History
+
+- 2026-10-05 — the container failed to start because the old SMB media mount
+  (`/mnt/AV/media`) was unavailable (`no such device`). Media now lives on the
+  local `/data` disk, so startup no longer depends on a network mount.
+- 2026-10-22 — the ARR automation stack (Radarr, Sonarr, Prowlarr, Bazarr and
+  others) was retired. Jellyfin's library is no longer driven by those tools.
+- 2026-11-02 — Pocket ID SSO redirect fix, described above.
+- 2026-11-04 — media consolidated to `/data/apps/smb`; Music library removed.

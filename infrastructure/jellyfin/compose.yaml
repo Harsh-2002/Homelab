@@ -1,9 +1,12 @@
 services:
   jellyfin:
-    image: jellyfin/jellyfin:12.1@sha256:78d3ea1207d1322471fcac39a614f004f2ccf7e878f95ab2977d752f07e4dd7e
+    # Tag, not digest: Watchtower needs a moving tag to update this container.
+    # Current digest: sha256:fea863d0cd9ec445985d9c75fc6ed64e38a1d2766cf0c250a33d553f4fc1b771
+    image: jellyfin/jellyfin:12.4
     container_name: jellyfin
     labels:
       com.centurylinklabs.watchtower.enable: "true"
+    restart: unless-stopped
     user: "1000:1000"
     group_add:
       - "991"
@@ -13,28 +16,22 @@ services:
       TZ: Asia/Kolkata
       JELLYFIN_PublishedServerUrl: https://media.l3b.cc.cd
       JELLYFIN_SSO_CONFIG_FILE: /config/sso.json
-    ports:
-      - 10.1.1.4:8096:8096
+    expose:
+      - "8096"
     volumes:
-      - type: bind
-        source: /data/apps/jellyfin/config
-        target: /config
-        bind:
-          create_host_path: false
-      - type: bind
-        source: /data/apps/jellyfin/cache
-        target: /cache
-        bind:
-          create_host_path: false
-      - type: bind
-        source: /data/apps/smb
-        target: /media
-        bind:
-          create_host_path: false
+      - /data/apps/jellyfin/config:/config
+      - /data/apps/jellyfin/cache:/cache
+      - /data/apps/smb:/media
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8096/health"]
+      test: [CMD, curl, -fsS, http://127.0.0.1:8096/health]
       interval: 30s
       timeout: 5s
       start_period: 60s
       retries: 3
-    restart: unless-stopped
+    networks:
+      - l3b
+
+networks:
+  l3b:
+    external: true
+    name: l3b
