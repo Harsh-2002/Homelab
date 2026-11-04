@@ -64,11 +64,11 @@ choice, not both. `MEDIA` is never offered as a backup target.
 
 Consequences for clients:
 
-- Finder → **Connect to Server** → `smb://10.1.1.10` or `smb://l3b.local`,
+- Finder → **Connect to Server** → `smb://smb.l3b.cc.cd`, `smb://10.1.1.10` or `smb://l3b.local`,
   authenticate once, then pick `MEDIA` or `BACKUP` from the list.
 - Time Machine → **Add Backup Disk** shows `BACKUP` automatically; no manual
   `tmutil` command is needed while Avahi is running.
-- Windows → `\\10.1.1.10` lists both shares after one login.
+- Windows → `\\smb.l3b.cc.cd` lists both shares after one login.
 
 Verify with:
 
@@ -81,14 +81,14 @@ avahi-browse -rt _adisk._tcp
 
 | Field | Value |
 | --- | --- |
-| Server | `10.1.1.10` (or `l3b.l3b.cc.cd` from the LAN) |
+| Server | **`smb.l3b.cc.cd`** (or `10.1.1.10`, or `l3b.local` via mDNS) |
 | Shares | `MEDIA` (media) and `BACKUP` (backups) |
 | User | `l3b`, the same account and password for **both** shares |
 | Password | 1Password → `SMB L3B` |
 | Protocol | SMB2 minimum, SMB3 negotiated |
 
-macOS: Finder → Go → Connect to Server → `smb://10.1.1.10/MEDIA`.
-Windows: Explorer → `\\10.1.1.10\MEDIA`.
+macOS: Finder → Go → Connect to Server → `smb://smb.l3b.cc.cd/MEDIA`.
+Windows: Explorer → `\\smb.l3b.cc.cd\MEDIA`.
 
 ## Configuration
 
@@ -265,6 +265,16 @@ i.e. roughly 110–118 MB/s per client. Ten-gigabit or 2.5 GbE is the only way t
 go faster; no Samba setting will change that. Jumbo frames are not enabled
 because the switch and client support is not guaranteed.
 
+## DNS name
+
+`smb.l3b.cc.cd` is an exact **DNS-only A record to 10.1.1.10**, in Cloudflare and
+resolvable from the LAN. It replaces the old stale record that pointed at the
+retired `10.1.1.12`. Port 445 is not forwarded, so the name resolves publicly to a
+private address and the service stays LAN-only.
+
+Clients may use any of: `smb.l3b.cc.cd`, `10.1.1.10`, or `l3b.local` (mDNS).
+Prefer the DNS name — it survives an address change.
+
 ## Changing the password
 
 Both shares authenticate as the single Samba user `l3b`, so one command changes
@@ -302,3 +312,18 @@ this SATA SSD peaks around 480 MiB/s.
 Neither number matters for SMB clients — the 1 GbE LAN caps them at ~110 MiB/s.
 The difference is only visible for local work such as writing a backup directly
 to `/BACKUP`.
+
+## If a client suddenly gets LOGON_FAILURE
+
+Samba can keep a password hash that no longer matches the 1Password item, and
+the server then logs `NT_STATUS_WRONG_PASSWORD` in `/var/log/samba/log.<client>`
+even though `pdbedit -L` shows the account fine. Re-apply the stored value:
+
+```sh
+export OP_SERVICE_ACCOUNT_TOKEN=$(cat ~/.config/op/service-account-token)
+PW=$(op item get "SMB L3B" --vault HomeLab --fields password --reveal)
+printf '%s\n%s\n' "$PW" "$PW" | sudo smbpasswd -a -s l3b
+```
+
+Confirmed to survive `systemctl restart smbd` and `reload`. Raising
+`log level = 3` shows the exact failure reason in the per-client log.

@@ -27,7 +27,8 @@
     "registry.l3b.cc.cd",
     "rustfs.l3b.cc.cd",
     "s3.l3b.cc.cd",
-    "theking.l3b.cc.cd"
+    "theking.l3b.cc.cd",
+    "smb.l3b.cc.cd"
   ],
   "publicDnsNames": [
     "notes.l3b.cc.cd",
@@ -42,6 +43,6 @@
     "Internal AdGuard keeps the apex and wildcard rewrites; Cloudflare has no wildcard records",
     "Off-LAN clients still require WireGuard for private origins; a public-IP request receives the Caddy 403 page"
   ],
-  "amendedOn": "2026-11-03",
+  "amendedOn": "2026-11-04",
   "amendment": "OpenCode (oc.l3b.cc.cd) moved from a private internal A record to an exact DNS-only public A record (150.129.31.154) at the owner request, with a named exemption from the Caddy source gate. Application pairing-link/vault password still required. The 2 November checks above were not re-run for this name."
 }

@@ -194,7 +194,7 @@
         "id": "samba",
         "label": "Samba (smbd)",
         "stack": "smb",
-        "state": "shares MEDIA (/data/apps/smb) and BACKUP (/BACKUP, ext4 USB SSD, Time Machine) on TCP 445, LAN only"
+        "state": "shares MEDIA (/data/apps/smb) and BACKUP (/BACKUP, ext4 USB SSD, Time Machine) on TCP 445, LAN only, via smb.l3b.cc.cd"
       }
     ],
     "dnsPolicy": {
