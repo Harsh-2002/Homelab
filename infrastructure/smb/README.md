@@ -1,6 +1,6 @@
 # SMB share (Samba)
 
-One authenticated SMB share, **`L3B`**, backed by `/data/apps/smb`. It is the
+Two authenticated SMB shares, **`MEDIA`** and **`BACKUP`**. `MEDIA` is backed by `/data/apps/smb` and is the
 single media tree for the host: the share, Jellyfin, Motrix and qBittorrent all
 read and write the same directories.
 
@@ -24,7 +24,7 @@ media container runs as `1000:1000`. Directory mode `2775`, files `0664`.
 
 | Consumer | Host path | Container path |
 | --- | --- | --- |
-| SMB share `L3B` | `/data/apps/smb` | — |
+| SMB share `MEDIA` | `/data/apps/smb` | — |
 | Jellyfin | `/data/apps/smb` | `/media` |
 | Motrix | `/data/apps/smb/downloads` | `/downloads` |
 | Motrix (media) | `/data/apps/smb` | `/media` |
@@ -50,13 +50,13 @@ only the libraries point at the shared tree.
 | Field | Value |
 | --- | --- |
 | Server | `10.1.1.10` (or `l3b.l3b.cc.cd` from the LAN) |
-| Shares | `L3B` (media) and `BACKUP` (backups) |
+| Shares | `MEDIA` (media) and `BACKUP` (backups) |
 | User | `l3b`, the same account and password for **both** shares |
 | Password | 1Password → `SMB L3B` |
 | Protocol | SMB2 minimum, SMB3 negotiated |
 
-macOS: Finder → Go → Connect to Server → `smb://10.1.1.10/L3B`.
-Windows: Explorer → `\\10.1.1.10\L3B`.
+macOS: Finder → Go → Connect to Server → `smb://10.1.1.10/MEDIA`.
+Windows: Explorer → `\\10.1.1.10\MEDIA`.
 
 ## Configuration
 
@@ -84,8 +84,8 @@ Windows: Explorer → `\\10.1.1.10\L3B`.
    printcap name = /dev/null
    disable spoolss = yes
 
-[L3B]
-   comment = L3B shared media
+[MEDIA]
+   comment = L3B media library
    path = /data/apps/smb
    browseable = yes
    read only = no
@@ -127,7 +127,7 @@ USB enclosure.
 | Owner | `dev:dev`, mode `2775` on the mount root |
 
 This disk is deliberately **not** under `/mnt`. It is the Time Machine and
-homelab-backup target; `L3B` stays media-only. Time Machine has no size cap, so
+homelab-backup target; `MEDIA` stays media-only. Time Machine has no size cap, so
 it can consume the whole 1.8 TB; delete old snapshots in System Settings if
 space runs low.
 
@@ -174,12 +174,12 @@ into a file):
 ```sh
 export OP_SERVICE_ACCOUNT_TOKEN=$(cat ~/.config/op/service-account-token)
 PW=$(op item get "SMB L3B" --vault HomeLab --fields password --reveal)
-smbclient //127.0.0.1/L3B -U "l3b%$PW" \
+smbclient //127.0.0.1/MEDIA -U "l3b%$PW" \
   -c 'mkdir .t; put /etc/hostname .t/h; ls .t; del .t/h; rmdir .t'
 unset PW
 ```
 
-Expected: share list shows `L3B`, and the create/upload/list/delete cycle
+Expected: share list shows `MEDIA` and `BACKUP`, and the create/upload/list/delete cycle
 returns no errors.
 
 ## Recreating this setup

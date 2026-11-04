@@ -145,7 +145,7 @@ by `docker ps` is not a host publication. Only the `PortBindings`/live listeners
 establish exposure.
 
 One host-native listener sits outside that rule: **Samba `smbd` on TCP 445**
-(4 November 2026) for the LAN-only `L3B` share. It is not a Docker publication and
+(4 November 2026) for the LAN-only `MEDIA` and `BACKUP` shares. It is not a Docker publication and
 must never be port-forwarded. NetBIOS/139 is disabled.
 
 Host-native baseline is tracked in [host](host/README.md): WireGuard, the
