@@ -13,10 +13,7 @@ publication is involved and the daemon owns `/etc/samba` directly.
 /data/apps/smb/
 ├── movies/       Jellyfin "Movies" library   (/media/movies)
 ├── shows/        Jellyfin "TV Shows" library (/media/shows)
-├── downloads/    Motrix /downloads and qBittorrent /data/downloads
-├── books/        empty, kept for the Jellyfin library
-├── music/        empty, kept for the Jellyfin library
-└── source/       empty scratch directory
+└── downloads/    flat download target for Motrix and qBittorrent
 ```
 
 Ownership is `dev:dev` (uid/gid 1000, setgid on the share root) because every
@@ -327,3 +324,16 @@ printf '%s\n%s\n' "$PW" "$PW" | sudo smbpasswd -a -s l3b
 
 Confirmed to survive `systemctl restart smbd` and `reload`. Raising
 `log level = 3` shows the exact failure reason in the per-client log.
+
+## Folder policy
+
+Only three directories exist at the share root: `movies`, `shows`, `downloads`.
+The earlier `books/`, `music/` and `source/` folders and the per-category
+subfolders under `downloads/` were removed on 4 November 2026 at the owner's
+request. `downloads/` is intentionally flat: Motrix saves directly to
+`/downloads`, and qBittorrent's default save path is `/data/downloads`.
+
+Jellyfin's empty **Music** library still points at the removed `/media/music`
+and logs `Library folder /media/music is inaccessible or empty, skipping` on
+each scan. It is harmless; delete the Music library in Jellyfin's dashboard to
+silence it.
