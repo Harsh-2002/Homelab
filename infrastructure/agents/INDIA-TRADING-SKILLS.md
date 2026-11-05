@@ -7,6 +7,9 @@ the owner's request.
 - Commit: `ef36e75` (2 November 2026), MIT, at install time 41 stars
 - 29 skills, 16 stdlib-only Python calculators, no runtime dependencies
 - Optional `yfinance` only for live prices; every calculator works offline from CSV
+- `yfinance 1.8.0` is installed into the `dev` user site (`python3 -m pip install
+  --user --break-system-packages yfinance`) so `python3` inside the skill scripts
+  can fetch NSE/BSE data; `python3-pip` is the only new system package
 
 ## Install layout
 
