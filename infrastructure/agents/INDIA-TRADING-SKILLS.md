@@ -68,6 +68,35 @@ URL for the owner to complete, and the session then holds the credentials.
 No credentials are stored on this host: `oauth` is off, there are no headers, and
 nothing is saved to Git.
 
+### Daily authentication (cannot be persisted)
+
+There is no persistent login. Kite access tokens expire at the start of the next
+trading day (around 06:00 IST), SEBI requires fresh authentication for API
+access, and automating the TOTP step breaks Zerodha's terms. This applies to the
+hosted MCP and to the paid Kite Connect API alike — paying ₹2,000/month buys
+features, not a longer session.
+
+Each morning that account data is needed:
+
+1. Call the `login` tool.
+2. Open the returned `mcp.kite.trade/authorize?...` URL in a browser.
+3. Enter Kite user ID, password and TOTP, then approve.
+
+The link is bound to the MCP session that requested it, so OpenCode, Hermes and
+Claude each need their own `login` call in their own session.
+
+No login is needed for offline work. Only these need Kite:
+
+| Needs Kite | Does not need Kite |
+| --- | --- |
+| holdings, positions, margins, order history | chart and indicator analysis |
+| placing, modifying, cancelling orders, GTT | breakouts, RSI divergence, Fibonacci |
+| live quotes and historical candles from Kite | market regime, breadth, sector rotation, FII/DII |
+| | charges, tax, position sizing, backtests |
+
+A reminder in Hermes can nudge the owner, but it cannot perform the login or keep
+a session alive.
+
 ### Risk note
 
 Once logged in, any agent with this MCP can place real orders on the owner's
