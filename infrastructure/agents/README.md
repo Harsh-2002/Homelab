@@ -34,6 +34,14 @@ settings/MCPs/memory and launch commands preserved. See [HERDR.md](HERDR.md) for
 paths, installation, checks, context boundary and rollback. New CLI/TUI sessions
 load these components; setup did not start/control any live Herdr session.
 
+India trading skills added 2026-11-05: the 29-skill MIT pack
+`Shubhamkumartrichy/claude-trading-skills-india` is cloned to
+`~/.local/share/india-trading-skills` and symlinked into the shared
+`~/.agents/skills` root, Hermes and Claude Code. The hosted Zerodha Kite MCP
+(`https://mcp.kite.trade/mcp`, 22 tools) is configured in OpenCode, Hermes and
+Claude Code; it needs a per-session `login` tool call before data access. See
+[INDIA-TRADING-SKILLS.md](INDIA-TRADING-SKILLS.md).
+
 microsandbox added 2026-11-03 as a global host CLI plus one shared skill.
 `/usr/local/bin/msb` (0.7.13) runs disposable agent microVMs on KVM with
 per-user state in `~/.microsandbox`. The official `microsandbox` skill is

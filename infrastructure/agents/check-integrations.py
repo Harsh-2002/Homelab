@@ -19,7 +19,7 @@ def single_node():
     opencode = json.loads(op_path.read_text())
     hermes = yaml.safe_load(hermes_path.read_text())
     clients = {'OpenCode': opencode['mcp']['servers'], 'Hermes': hermes['mcp_servers']}
-    expected = {'context7', 'shadcn', 'rea', 'nivra', 'orva', 'olx'}
+    expected = {'context7', 'shadcn', 'rea', 'nivra', 'orva', 'olx', 'kite'}
     browser_mcps = {'playwright', 'chrome-devtools'}
     failures = []
     names = set().union(*(set(servers) for servers in clients.values()))
@@ -77,7 +77,10 @@ def single_node():
         ox = claude.get('olx', {})
         if ox.get('type') != 'http' or ox.get('url') != 'http://127.0.0.1:8811/mcp':
             failures.append('Claude Code: OLX MCP missing or not pointed at the shared gateway')
-        print('Claude Code: OpenViking and OLX MCP entries checked')
+        kt = claude.get('kite', {})
+        if kt.get('type') != 'http' or kt.get('url') != 'https://mcp.kite.trade/mcp':
+            failures.append('Claude Code: hosted Kite MCP missing or misconfigured')
+        print('Claude Code: OpenViking, OLX and Kite MCP entries checked')
     if not (home / '.agents/skills/herdr-control/SKILL.md').is_file():
         failures.append('OpenCode: shared Herdr control skill missing')
     if not (home / '.agents/skills/microsandbox/SKILL.md').is_file():
