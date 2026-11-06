@@ -88,19 +88,22 @@ theme; dark appearance continues to be owned by Home Assistant.
 
 Proxmox is retired, so Nodes describes the single `l3b` host. Native Sections
 cards only, no custom card, CSS, theme or helper text. Verified by screenshot at
-1920, 1100 and 390 px wide.
+1920, 1100 and 390 px wide. Heading badges were dropped because they were hard
+to find; every value is now a readable tile.
 
-- **Strip (section `column_span: 3`):** heading `l3b` with Running, Unhealthy,
-  Load and Uptime badges, then six `tile` cards with the native `bar-gauge`
-  feature: CPU, Memory, Temperature, Root, Data, Backup. Tiles use
-  `grid_options.columns: 6`: six across on desktop, two across on a phone.
-- **Last 6 hours (section `column_span: 3`):** three `history-graph` cards (CPU
-  and memory, temperature, load), `columns: 12`: three across on desktop,
-  stacked on a phone.
+`max_columns: 4`, three sections each with `column_span: 4` (48 grid columns on
+desktop, 12 on a phone), so `grid_options.columns: 6` gives eight across on
+desktop and two across on a phone:
 
-A spanning section gets 12 grid columns per spanned column (36 for span 3), so
-the same `columns` value scales from phone to desktop. All values are
-`sensor.host_*` REST sensors polling `homelab-stats`. No synthetic health score.
-Tile bar colours are static; threshold colouring would need a conditional card.
-The graphs only fill as far back as the sensors have recorded. Tracked copy:
-`config/homelab.yaml`.
+- **l3b:** eight `tile` cards with the native `bar-gauge` feature: CPU, Memory,
+  Swap, Temperature, Root, Data, Backup, Load (bar maximum 6, the CPU count).
+- **Docker and system:** eight plain tiles: Running, Total containers, Stopped,
+  Unhealthy, Failed services, Images, Network down, Uptime.
+- **Last 6 hours:** four `history-graph` cards (`columns: 12`): CPU and memory,
+  temperature, load, network down and up.
+
+Values are `sensor.host_*` REST sensors polling `homelab-stats`, which now also
+reports container totals, stopped, image count, failed systemd units and `eno1`
+throughput (5 s background sampler). No synthetic health score. Tile bar colours
+are static. The graphs only reach back as far as the sensors have recorded.
+Tracked copies: `config/homelab.yaml`, `config/homelab_metrics.yaml`.

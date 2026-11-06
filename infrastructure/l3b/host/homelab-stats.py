@@ -73,15 +73,66 @@ def disk_pct(path):
 def containers():
     try:
         out = subprocess.run(
-            ["docker", "ps", "--format", "{{.Names}}\t{{.Status}}"],
+            ["docker", "ps", "-a", "--format", "{{.Status}}"],
             capture_output=True, text=True, timeout=8, check=False,
         ).stdout
     except Exception:
         return None
-    lines = [line for line in out.splitlines() if line.strip()]
-    unhealthy = sum(1 for line in lines if "unhealthy" in line.lower())
-    restarting = sum(1 for line in lines if "restarting" in line.lower())
-    return {"running": len(lines), "unhealthy": unhealthy, "restarting": restarting}
+    lines = [line.lower() for line in out.splitlines() if line.strip()]
+    running = sum(1 for line in lines if line.startswith("up"))
+    result = {
+        "running": running,
+        "total": len(lines),
+        "stopped": len(lines) - running,
+        "unhealthy": sum(1 for line in lines if "unhealthy" in line),
+        "restarting": sum(1 for line in lines if "restarting" in line),
+    }
+    try:
+        images = subprocess.run(
+            ["docker", "images", "-q"],
+            capture_output=True, text=True, timeout=8, check=False,
+        ).stdout
+        result["images"] = len({line for line in images.splitlines() if line.strip()})
+    except Exception:
+        result["images"] = None
+    return result
+
+
+def failed_units():
+    try:
+        out = subprocess.run(
+            ["systemctl", "--failed", "--no-legend", "--plain"],
+            capture_output=True, text=True, timeout=8, check=False,
+        ).stdout
+    except Exception:
+        return None
+    return len([line for line in out.splitlines() if line.strip()])
+
+
+NET_IFACE = "eno1"
+_net_rate = {"rx_mbs": None, "tx_mbs": None}
+
+
+def _net_bytes():
+    with open("/proc/net/dev") as fh:
+        for line in fh:
+            name, _, rest = line.partition(":")
+            if name.strip() == NET_IFACE:
+                cols = rest.split()
+                return int(cols[0]), int(cols[8])
+    return None
+
+
+def _net_sampler():
+    last, last_t = _net_bytes(), time.monotonic()
+    while True:
+        time.sleep(5)
+        now, now_t = _net_bytes(), time.monotonic()
+        if last and now and now_t > last_t:
+            dt = now_t - last_t
+            _net_rate["rx_mbs"] = round((now[0] - last[0]) / dt / 1e6, 2)
+            _net_rate["tx_mbs"] = round((now[1] - last[1]) / dt / 1e6, 2)
+        last, last_t = now, now_t
 
 
 def _read_temp(path):
@@ -125,9 +176,14 @@ def payload():
         "disk_data_pct": disk_pct("/data"),
         "disk_backup_pct": disk_pct("/BACKUP"),
         "temp_c": temperatures(),
+        "cpus": os.cpu_count(),
+        "failed_units": failed_units(),
+        "net_down_mbs": _net_rate["rx_mbs"],
+        "net_up_mbs": _net_rate["tx_mbs"],
     }
     data.update(meminfo())
-    data.update(containers() or {"running": None, "unhealthy": None, "restarting": None})
+    data.update(containers() or {"running": None, "total": None, "stopped": None,
+                                 "unhealthy": None, "restarting": None, "images": None})
     return data
 
 
@@ -153,4 +209,5 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     cpu_sample()
+    threading.Thread(target=_net_sampler, daemon=True).start()
     ThreadingHTTPServer(LISTEN, Handler).serve_forever()

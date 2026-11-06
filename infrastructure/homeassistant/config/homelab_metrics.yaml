@@ -65,3 +65,36 @@ rest:
         unit_of_measurement: "%"
         state_class: measurement
         icon: mdi:backup-restore
+      - name: host_containers_total
+        value_template: "{{ value_json.total }}"
+        state_class: measurement
+        icon: mdi:docker
+      - name: host_containers_stopped
+        value_template: "{{ value_json.stopped }}"
+        state_class: measurement
+        icon: mdi:stop-circle-outline
+      - name: host_images
+        value_template: "{{ value_json.images }}"
+        state_class: measurement
+        icon: mdi:layers-outline
+      - name: host_failed_units
+        value_template: "{{ value_json.failed_units }}"
+        state_class: measurement
+        icon: mdi:alert-octagon-outline
+      - name: host_swap
+        value_template: "{{ value_json.swap_pct }}"
+        unit_of_measurement: "%"
+        state_class: measurement
+        icon: mdi:swap-horizontal
+      - name: host_net_down
+        value_template: "{{ value_json.net_down_mbs }}"
+        unit_of_measurement: MB/s
+        device_class: data_rate
+        state_class: measurement
+        icon: mdi:download-network-outline
+      - name: host_net_up
+        value_template: "{{ value_json.net_up_mbs }}"
+        unit_of_measurement: MB/s
+        device_class: data_rate
+        state_class: measurement
+        icon: mdi:upload-network-outline

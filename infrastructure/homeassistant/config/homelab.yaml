@@ -65,27 +65,14 @@ views:
   - title: Nodes
     path: nodes
     type: sections
-    max_columns: 3
+    max_columns: 4
     sections:
     - type: grid
-      column_span: 3
+      column_span: 4
       cards:
       - type: heading
         heading: l3b
         icon: mdi:server
-        badges:
-        - type: entity
-          entity: sensor.host_containers
-          name: Running
-        - type: entity
-          entity: sensor.host_unhealthy
-          name: Unhealthy
-        - type: entity
-          entity: sensor.host_load
-          name: Load
-        - type: entity
-          entity: sensor.host_uptime_hours
-          name: Uptime
       - type: tile
         entity: sensor.host_cpu
         name: CPU
@@ -102,6 +89,17 @@ views:
         name: Memory
         icon: mdi:memory
         color: purple
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+      - type: tile
+        entity: sensor.host_swap
+        name: Swap
+        icon: mdi:swap-horizontal
+        color: pink
         grid_options:
           columns: 6
         features:
@@ -152,8 +150,81 @@ views:
         - type: bar-gauge
           min: 0
           max: 100
+      - type: tile
+        entity: sensor.host_load
+        name: Load, 1 min
+        icon: mdi:speedometer
+        color: indigo
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 6
     - type: grid
-      column_span: 3
+      column_span: 4
+      cards:
+      - type: heading
+        heading: Docker and system
+        icon: mdi:docker
+      - type: tile
+        entity: sensor.host_containers
+        name: Running
+        icon: mdi:docker
+        color: blue
+        grid_options:
+          columns: 6
+      - type: tile
+        entity: sensor.host_containers_total
+        name: Total containers
+        icon: mdi:view-list
+        color: cyan
+        grid_options:
+          columns: 6
+      - type: tile
+        entity: sensor.host_containers_stopped
+        name: Stopped
+        icon: mdi:stop-circle-outline
+        color: amber
+        grid_options:
+          columns: 6
+      - type: tile
+        entity: sensor.host_unhealthy
+        name: Unhealthy
+        icon: mdi:alert-circle-outline
+        color: red
+        grid_options:
+          columns: 6
+      - type: tile
+        entity: sensor.host_failed_units
+        name: Failed services
+        icon: mdi:alert-octagon-outline
+        color: red
+        grid_options:
+          columns: 6
+      - type: tile
+        entity: sensor.host_images
+        name: Images
+        icon: mdi:layers-outline
+        color: purple
+        grid_options:
+          columns: 6
+      - type: tile
+        entity: sensor.host_net_down
+        name: Network down
+        icon: mdi:download-network-outline
+        color: green
+        grid_options:
+          columns: 6
+      - type: tile
+        entity: sensor.host_uptime_hours
+        name: Uptime
+        icon: mdi:clock-outline
+        color: grey
+        grid_options:
+          columns: 6
+    - type: grid
+      column_span: 4
       cards:
       - type: heading
         heading: Last 6 hours
@@ -184,3 +255,13 @@ views:
         entities:
         - entity: sensor.host_load
           name: Load, 1 min
+      - type: history-graph
+        hours_to_show: 6
+        show_names: true
+        grid_options:
+          columns: 12
+        entities:
+        - entity: sensor.host_net_down
+          name: Down
+        - entity: sensor.host_net_up
+          name: Up
