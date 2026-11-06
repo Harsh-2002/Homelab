@@ -8,8 +8,8 @@ views:
   - type: grid
     cards:
     - type: heading
-      heading: Controls
-      icon: mdi:tune
+      heading: Room
+      icon: mdi:sofa
     - type: tile
       entity: light.behind_monitor_bulb
       grid_options:
@@ -31,22 +31,10 @@ views:
         - dry
         - fan_only
       - type: target-temperature
-    - type: tile
-      entity: input_boolean.samsung_ac_daily_schedule
-      grid_options:
-        columns: 6
-      name: AC daily schedule
-      icon: mdi:calendar-clock
-    - type: tile
-      entity: input_boolean.samsung_ac_local_alerts
-      grid_options:
-        columns: 6
-      name: AC alerts
-      icon: mdi:bell-outline
   - type: grid
     cards:
     - type: heading
-      heading: Outdoor camera
+      heading: Outdoor
       icon: mdi:cctv
     - type: picture-entity
       entity: camera.outdoor
@@ -55,6 +43,11 @@ views:
       show_state: false
       grid_options:
         columns: 12
+  - type: grid
+    cards:
+    - type: heading
+      heading: Switches
+      icon: mdi:toggle-switch-outline
     - type: tile
       entity: switch.outdoor_detect
       grid_options:
@@ -74,82 +67,526 @@ views:
       entity: switch.outdoor_review_alerts
       grid_options:
         columns: 6
-      name: Alerts
+      name: Camera alerts
+    - type: tile
+      entity: input_boolean.samsung_ac_daily_schedule
+      grid_options:
+        columns: 6
+      name: AC schedule
+      icon: mdi:calendar-clock
+    - type: tile
+      entity: input_boolean.samsung_ac_local_alerts
+      grid_options:
+        columns: 6
+      name: AC alerts
+      icon: mdi:bell-outline
   - type: grid
+    column_span: 3
     cards:
     - type: heading
       heading: Homelab
       icon: mdi:server
+    - type: tile
+      entity: sensor.host_cpu
+      name: CPU
+      icon: mdi:cpu-64-bit
+      color: green
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_cpu
+        below: 70
       tap_action:
         action: navigate
         navigation_path: /homelab-status/nodes
     - type: tile
       entity: sensor.host_cpu
-      grid_options:
-        columns: 6
       name: CPU
       icon: mdi:cpu-64-bit
-      tap_action:
-        action: navigate
-        navigation_path: /homelab-status/nodes
+      color: orange
+      grid_options:
+        columns: 6
       features:
       - type: bar-gauge
         min: 0
         max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_cpu
+        above: 69.9999
+        below: 90
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_cpu
+      name: CPU
+      icon: mdi:cpu-64-bit
+      color: red
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_cpu
+        above: 89.9999
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_cpu
+      name: CPU
+      icon: mdi:cpu-64-bit
+      color: grey
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: state
+        entity: sensor.host_cpu
+        state:
+        - unavailable
+        - unknown
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
     - type: tile
       entity: sensor.host_memory
-      grid_options:
-        columns: 6
       name: Memory
       icon: mdi:memory
-      tap_action:
-        action: navigate
-        navigation_path: /homelab-status/nodes
-      features:
-      - type: bar-gauge
-        min: 0
-        max: 100
-    - type: tile
-      entity: sensor.host_disk_root
+      color: green
       grid_options:
         columns: 6
-      name: Root disk
-      icon: mdi:harddisk
-      tap_action:
-        action: navigate
-        navigation_path: /homelab-status/nodes
       features:
       - type: bar-gauge
         min: 0
         max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_memory
+        below: 80
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_memory
+      name: Memory
+      icon: mdi:memory
+      color: orange
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_memory
+        above: 79.9999
+        below: 92
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_memory
+      name: Memory
+      icon: mdi:memory
+      color: red
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_memory
+        above: 91.9999
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_memory
+      name: Memory
+      icon: mdi:memory
+      color: grey
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: state
+        entity: sensor.host_memory
+        state:
+        - unavailable
+        - unknown
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
     - type: tile
       entity: sensor.host_temperature
-      grid_options:
-        columns: 6
       name: Temperature
       icon: mdi:thermometer
-      tap_action:
-        action: navigate
-        navigation_path: /homelab-status/nodes
+      color: green
+      grid_options:
+        columns: 6
       features:
       - type: bar-gauge
         min: 20
         max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_temperature
+        below: 75
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
     - type: tile
-      entity: sensor.host_containers
+      entity: sensor.host_temperature
+      name: Temperature
+      icon: mdi:thermometer
+      color: orange
       grid_options:
         columns: 6
-      name: Containers
+      features:
+      - type: bar-gauge
+        min: 20
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_temperature
+        above: 74.9999
+        below: 90
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_temperature
+      name: Temperature
+      icon: mdi:thermometer
+      color: red
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 20
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_temperature
+        above: 89.9999
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_temperature
+      name: Temperature
+      icon: mdi:thermometer
+      color: grey
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 20
+        max: 100
+      visibility:
+      - condition: state
+        entity: sensor.host_temperature
+        state:
+        - unavailable
+        - unknown
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_disk_root
+      name: Root, NVMe
+      icon: mdi:harddisk
+      color: green
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_disk_root
+        below: 75
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_disk_root
+      name: Root, NVMe
+      icon: mdi:harddisk
+      color: orange
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_disk_root
+        above: 74.9999
+        below: 90
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_disk_root
+      name: Root, NVMe
+      icon: mdi:harddisk
+      color: red
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_disk_root
+        above: 89.9999
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_disk_root
+      name: Root, NVMe
+      icon: mdi:harddisk
+      color: grey
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: state
+        entity: sensor.host_disk_root
+        state:
+        - unavailable
+        - unknown
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_disk_data
+      name: Data, SATA
+      icon: mdi:database
+      color: green
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_disk_data
+        below: 80
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_disk_data
+      name: Data, SATA
+      icon: mdi:database
+      color: orange
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_disk_data
+        above: 79.9999
+        below: 92
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_disk_data
+      name: Data, SATA
+      icon: mdi:database
+      color: red
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_disk_data
+        above: 91.9999
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_disk_data
+      name: Data, SATA
+      icon: mdi:database
+      color: grey
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: state
+        entity: sensor.host_disk_data
+        state:
+        - unavailable
+        - unknown
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_disk_backup
+      name: Backup, USB
+      icon: mdi:backup-restore
+      color: green
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_disk_backup
+        below: 80
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_disk_backup
+      name: Backup, USB
+      icon: mdi:backup-restore
+      color: orange
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_disk_backup
+        above: 79.9999
+        below: 92
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_disk_backup
+      name: Backup, USB
+      icon: mdi:backup-restore
+      color: red
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_disk_backup
+        above: 91.9999
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_disk_backup
+      name: Backup, USB
+      icon: mdi:backup-restore
+      color: grey
+      grid_options:
+        columns: 6
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+      visibility:
+      - condition: state
+        entity: sensor.host_disk_backup
+        state:
+        - unavailable
+        - unknown
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_containers
+      name: Containers running
       icon: mdi:docker
+      color: blue
+      grid_options:
+        columns: 18
       tap_action:
         action: navigate
         navigation_path: /homelab-status/nodes
     - type: tile
       entity: sensor.host_unhealthy
-      grid_options:
-        columns: 6
-      name: Unhealthy
+      name: Unhealthy containers
       icon: mdi:alert-circle-outline
+      color: green
+      grid_options:
+        columns: 18
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_unhealthy
+        below: 0.5
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_unhealthy
+      name: Unhealthy containers
+      icon: mdi:alert-circle-outline
+      color: red
+      grid_options:
+        columns: 18
+      visibility:
+      - condition: numeric_state
+        entity: sensor.host_unhealthy
+        above: 0.4999
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_unhealthy
+      name: Unhealthy containers
+      icon: mdi:alert-circle-outline
+      color: grey
+      grid_options:
+        columns: 18
+      visibility:
+      - condition: state
+        entity: sensor.host_unhealthy
+        state:
+        - unavailable
+        - unknown
       tap_action:
         action: navigate
         navigation_path: /homelab-status/nodes

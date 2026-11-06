@@ -148,18 +148,24 @@ saved through the `lovelace/config/save` WebSocket call from `config/overview.ya
 `frontend/set_system_data` (key `core`, other keys preserved). The Overview now
 opens at `/lovelace/default_view` and is first in the sidebar.
 
-Native Sections cards, verified at 1920 and 390 px:
+The layout is generated: `python3 infrastructure/homeassistant/generate-overview.py /tmp/overview.json`,
+then send it with the `lovelace/config/save` WebSocket call. Native Sections
+cards only, verified at 1920 and 390 px. Controls first, status last:
 
-- **Controls:** bulb tile with brightness slider; Room AC tile with the five HVAC
-  modes and target temperature; AC daily schedule and AC alerts toggles.
-- **Outdoor camera:** snapshot picture (`camera_view: auto`; tap for the live
-  stream; `live` rendered blank in headless Chromium) with Detection, Recording,
-  Snapshots and Alerts switches.
-- **Homelab:** CPU, Memory, Root disk and Temperature bars plus Containers and
-  Unhealthy, all linking to the Nodes view.
+- **Room:** bulb tile with brightness slider; Room AC tile with the five HVAC
+  modes and target temperature.
+- **Outdoor:** snapshot picture (`camera_view: auto`; tap for the live stream;
+  `live` rendered blank in headless Chromium).
+- **Switches:** two-across tiles for Detection, Recording, Snapshots, Camera
+  alerts, AC schedule and AC alerts.
+- **Homelab (`column_span: 3`):** the same threshold-coloured bar tiles as Nodes
+  (CPU, Memory, Temperature, Root, Data, Backup) plus Containers running and
+  Unhealthy containers, all tapping through to the Nodes view.
 
-Only `climate.samsung_room_ac` is shown; `climate.bedroom_1_ac` is a duplicate
-cloud entity.
+The first version had three columns of uneven height, a flat blue status block
+and one tall switch list; this one matches the Nodes view and is shorter on a
+phone. Only `climate.samsung_room_ac` is shown; `climate.bedroom_1_ac` is a
+duplicate cloud entity.
 
 To revert to the generated Home page: send `lovelace/config/delete` and set
 `default_panel` back to `home`.
