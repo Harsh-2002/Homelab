@@ -1,0 +1,67 @@
+lovelace:
+  dashboards:
+    homelab-status:
+      mode: yaml
+      title: Homelab
+      icon: mdi:server-network
+      show_in_sidebar: true
+      require_admin: false
+      filename: dashboards/homelab.yaml
+
+rest:
+  - resource: http://10.1.3.1:8099/stats
+    scan_interval: 15
+    timeout: 10
+    sensor:
+      - name: host_cpu
+        value_template: "{{ value_json.cpu_pct }}"
+        unit_of_measurement: "%"
+        state_class: measurement
+        icon: mdi:cpu-64-bit
+      - name: host_memory
+        value_template: "{{ value_json.mem_pct }}"
+        unit_of_measurement: "%"
+        state_class: measurement
+        icon: mdi:memory
+      - name: host_memory_used
+        value_template: "{{ value_json.mem_used_gb }}"
+        unit_of_measurement: GB
+        state_class: measurement
+        icon: mdi:memory
+      - name: host_temperature
+        value_template: "{{ value_json.temp_c }}"
+        unit_of_measurement: "\u00b0C"
+        state_class: measurement
+        icon: mdi:thermometer
+      - name: host_containers
+        value_template: "{{ value_json.running }}"
+        state_class: measurement
+        icon: mdi:docker
+      - name: host_unhealthy
+        value_template: "{{ value_json.unhealthy }}"
+        state_class: measurement
+        icon: mdi:alert-circle-outline
+      - name: host_load
+        value_template: "{{ value_json.load1 }}"
+        state_class: measurement
+        icon: mdi:speedometer
+      - name: host_uptime_hours
+        value_template: "{{ value_json.uptime_hours }}"
+        unit_of_measurement: h
+        state_class: measurement
+        icon: mdi:clock-outline
+      - name: host_disk_root
+        value_template: "{{ value_json.disk_root_pct }}"
+        unit_of_measurement: "%"
+        state_class: measurement
+        icon: mdi:harddisk
+      - name: host_disk_data
+        value_template: "{{ value_json.disk_data_pct }}"
+        unit_of_measurement: "%"
+        state_class: measurement
+        icon: mdi:harddisk
+      - name: host_disk_backup
+        value_template: "{{ value_json.disk_backup_pct }}"
+        unit_of_measurement: "%"
+        state_class: measurement
+        icon: mdi:backup-restore

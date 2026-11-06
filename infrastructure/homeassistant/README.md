@@ -190,3 +190,30 @@ light.behind_monitor_bulb  on
 No `device unreachable` or Tuya `error 901` entries after that point. The router
 now guarantees those two addresses, so this failure mode is closed unless a
 device is replaced.
+
+## 2026-11-08 Nodes dashboard replaced Proxmox with host sensors
+
+The `homelab-status` dashboard's **Nodes** view previously just linked to Beszel
+because the Proxmox sources were retired. It now shows live host data from the
+`homelab-stats.service` endpoint (`10.1.3.1:8099`, see
+[../l3b/host/README.md](../l3b/host/README.md)).
+
+`packages/homelab_metrics.yaml` defines a REST integration polling that endpoint
+every 15 seconds and exposing:
+
+```text
+sensor.host_cpu            sensor.host_containers      sensor.host_disk_root
+sensor.host_memory         sensor.host_unhealthy       sensor.host_disk_data
+sensor.host_memory_used    sensor.host_load            sensor.host_disk_backup
+sensor.host_temperature    sensor.host_uptime_hours
+```
+
+`dashboards/homelab.yaml` renders them as three sections: host gauges (CPU, RAM,
+temperature), disk gauges (root, data, backup) and a Docker entities card with a
+link to Beszel for history and per-container detail.
+
+Both files are tracked under `config/` for reproducibility; the live copies are
+`/data/apps/homeassistant/packages/homelab_metrics.yaml` and
+`/data/apps/homeassistant/dashboards/homelab.yaml`. Verified after restart: all
+ten sensors report values (CPU 12.6 %, RAM 47.3 %, 61 °C, 39 containers, 0
+unhealthy, root 73.7 %, data 19.6 %, backup 16.1 %).

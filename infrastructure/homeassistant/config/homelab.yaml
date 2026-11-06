@@ -1,0 +1,159 @@
+title: Homelab
+views:
+  - title: Cameras
+    path: cameras
+    type: sections
+    max_columns: 2
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Outdoor
+            heading_style: title
+            icon: mdi:cctv
+          - type: picture-entity
+            entity: camera.outdoor
+            name: Outdoor
+            camera_view: live
+            show_state: false
+            show_name: false
+            aspect_ratio: "16:9"
+            grid_options:
+              columns: full
+          - type: tile
+            entity: binary_sensor.outdoor_motion
+            name: Motion
+          - type: tile
+            entity: binary_sensor.outdoor_person_occupancy
+            name: Person
+          - type: tile
+            entity: binary_sensor.outdoor_dog_occupancy
+            name: Dog
+          - type: tile
+            entity: sensor.outdoor_all_count
+            name: Objects
+      - type: grid
+        cards:
+          - type: heading
+            heading: Camera controls
+            heading_style: title
+            icon: mdi:record-rec
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: switch.outdoor_detect
+                name: Object detection
+              - entity: switch.outdoor_motion
+                name: Motion detection
+              - entity: switch.outdoor_recordings
+                name: Recordings
+              - entity: switch.outdoor_snapshots
+                name: Snapshots
+          - type: tile
+            entity: camera.outdoor
+            name: Open Frigate
+            icon: mdi:cctv
+            hide_state: true
+            tap_action:
+              action: url
+              url_path: https://frigate.l3b.cc.cd
+            icon_tap_action:
+              action: url
+              url_path: https://frigate.l3b.cc.cd
+            grid_options:
+              columns: full
+  - title: Nodes
+    path: nodes
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: l3b / host
+            icon: mdi:server
+          - type: gauge
+            entity: sensor.host_cpu
+            name: CPU
+            min: 0
+            max: 100
+            needle: true
+            severity:
+              green: 0
+              yellow: 70
+              red: 90
+          - type: gauge
+            entity: sensor.host_memory
+            name: RAM
+            min: 0
+            max: 100
+            needle: true
+            severity:
+              green: 0
+              yellow: 75
+              red: 90
+          - type: gauge
+            entity: sensor.host_temperature
+            name: Temp
+            min: 20
+            max: 100
+            needle: true
+            severity:
+              green: 0
+              yellow: 75
+              red: 90
+      - type: grid
+        cards:
+          - type: heading
+            heading: Disks
+            icon: mdi:harddisk
+          - type: gauge
+            entity: sensor.host_disk_root
+            name: Root (NVMe)
+            min: 0
+            max: 100
+            needle: true
+            severity:
+              green: 0
+              yellow: 75
+              red: 88
+          - type: gauge
+            entity: sensor.host_disk_data
+            name: Data (SATA)
+            min: 0
+            max: 100
+            needle: true
+            severity:
+              green: 0
+              yellow: 75
+              red: 88
+          - type: gauge
+            entity: sensor.host_disk_backup
+            name: Backup (USB)
+            min: 0
+            max: 100
+            needle: true
+            severity:
+              green: 0
+              yellow: 80
+              red: 92
+      - type: grid
+        cards:
+          - type: heading
+            heading: Docker
+            icon: mdi:docker
+          - type: entities
+            entities:
+              - entity: sensor.host_containers
+                name: Running
+              - entity: sensor.host_unhealthy
+                name: Unhealthy
+              - entity: sensor.host_memory_used
+                name: RAM used
+              - entity: sensor.host_uptime_hours
+                name: Uptime
+              - entity: sensor.host_load
+                name: Load (1m)
+          - type: markdown
+            content: |
+              Full history and per-container detail: [Beszel](https://beszel.l3b.cc.cd)
