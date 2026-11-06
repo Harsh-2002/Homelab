@@ -1,7 +1,7 @@
-title: Home
+title: Quick
 views:
-- title: Overview
-  path: default_view
+- title: Quick
+  path: quick
   type: sections
   max_columns: 3
   sections:

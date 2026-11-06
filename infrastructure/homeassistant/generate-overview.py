@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write the Overview (classic `lovelace` storage dashboard) config as JSON.
+"""Write the Quick dashboard (storage dashboard `quick-actions`) config as JSON.
 
 Usage: generate-overview.py OUTPUT.json
 
@@ -87,9 +87,9 @@ def build():
     sections = [{"type": "grid", "cards": cards} for cards in (room, outdoor, switches)]
     sections.append({"type": "grid", "column_span": 3, "cards": status})
     return {
-        "title": "Home",
+        "title": "Quick",
         "views": [
-            {"title": "Overview", "path": "default_view", "type": "sections", "max_columns": 3, "sections": sections}
+            {"title": "Quick", "path": "quick", "type": "sections", "max_columns": 3, "sections": sections}
         ],
     }
 

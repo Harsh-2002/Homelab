@@ -135,41 +135,34 @@ keeps the Cameras view and rewrites Nodes. Long-term `statistics-graph` cards
 were tried and left out: the new sensors have no compiled statistics yet, so they
 showed "No statistics found". Add them once a week of data exists.
 
-## Overview as the quick-use page, 8 November 2026
+## Overview stays built in; Quick is its own tab, 8 November 2026
 
-The owner wanted the **Overview** itself to be the quick-use page, not a separate
-dashboard, so the earlier extra "Quick" dashboard was removed.
+The owner wants Home Assistant's generated **Overview** (`/home/overview`) to stay
+the default, with the quick-use layout as a separate sidebar tab. The earlier
+classic-Overview takeover was undone: `lovelace/config/delete`, and the `core`
+system-data key `default_panel` removed (the original state had none).
 
-In this Home Assistant version the system default dashboard is the generated Home
-page (`/home/overview`, system data `default_panel` = `home`). The classic
-Overview (panel `lovelace`) is storage mode, so it was taken over and its config
-saved through the `lovelace/config/save` WebSocket call from `config/overview.yaml`
-(converted to JSON), and `default_panel` was set to `lovelace` with
-`frontend/set_system_data` (key `core`, other keys preserved). The Overview now
-opens at `/lovelace/default_view` and is first in the sidebar.
+The layout is a storage dashboard **Quick** (`/quick-actions/quick`, bolt icon),
+created without a restart through `lovelace/dashboards/create` and filled with
+`lovelace/config/save` (`url_path: quick-actions`). It is generated:
+`python3 infrastructure/homeassistant/generate-overview.py /tmp/quick.json`
+(tracked copy `config/quick.yaml`). Native Sections cards, verified at 1920 and
+390 px:
 
-The layout is generated: `python3 infrastructure/homeassistant/generate-overview.py /tmp/overview.json`,
-then send it with the `lovelace/config/save` WebSocket call. Native Sections
-cards only, verified at 1920 and 390 px. Controls first, status last:
+- **Room:** bulb with brightness slider; Room AC modes and target temperature.
+- **Outdoor:** snapshot picture (`camera_view: auto`; `live` is blank in headless
+  Chromium).
+- **Switches:** Detection, Recording, Snapshots, Camera alerts, AC schedule, AC alerts.
+- **Homelab (`column_span: 3`):** threshold-coloured bars as on Nodes, plus
+  Containers running and Unhealthy, linking to Nodes.
 
-- **Room:** bulb tile with brightness slider; Room AC tile with the five HVAC
-  modes and target temperature.
-- **Outdoor:** snapshot picture (`camera_view: auto`; tap for the live stream;
-  `live` rendered blank in headless Chromium).
-- **Switches:** two-across tiles for Detection, Recording, Snapshots, Camera
-  alerts, AC schedule and AC alerts.
-- **Homelab (`column_span: 3`):** the same threshold-coloured bar tiles as Nodes
-  (CPU, Memory, Temperature, Root, Data, Backup) plus Containers running and
-  Unhealthy containers, all tapping through to the Nodes view.
+Only `climate.samsung_room_ac` is shown; `climate.bedroom_1_ac` is a duplicate.
 
-The first version had three columns of uneven height, a flat blue status block
-and one tall switch list; this one matches the Nodes view and is shorter on a
-phone. Only `climate.samsung_room_ac` is shown; `climate.bedroom_1_ac` is a
-duplicate cloud entity.
+### Sidebar
 
-To revert to the generated Home page: send `lovelace/config/delete` and set
-`default_panel` back to `home`.
-
-The Samsung AC dashboard is now titled **AC** in the sidebar and in
-`dashboard-samsung-ac.yaml`. Its URL stays `/samsung-ac/...` so existing links
-keep working. A dashboard title change in a package needs a Home Assistant restart.
+The classic `lovelace` panel stays registered even with no config, so it showed a
+second, empty "Overview" entry; the built-in Energy panel was also unwanted. Both
+are hidden in the owner's account with `frontend/set_user_data` key `sidebar`:
+`{"panelOrder": [], "hiddenPanels": ["lovelace", "energy"]}`. This is per user and
+follows the account across devices; remove entries from `hiddenPanels` to show
+them again. The Samsung AC dashboard is titled **AC** (URL still `/samsung-ac/`).
