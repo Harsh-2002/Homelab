@@ -147,7 +147,7 @@ HA was stopped, `.storage/core.config_entries` edited, then started. It came bac
 healthy. The Tuya `local_key` and the Localthings certificates/`device_key` were
 not touched — only the `host` fields changed.
 
-**Expected until the devices renew:** both entities show `unavailable`.
+**Temporarily, until the devices renewed:** both entities showed `unavailable`.
 
 ```text
 climate.samsung_room_ac    unavailable
@@ -169,3 +169,24 @@ curl -s -H "Authorization: Bearer $HASS_TOKEN" \
 
 A step-by-step revert, if ever needed, is the same edit in reverse: stop HA, set
 the two `host` values back, start HA.
+
+### Recovered
+
+Both devices were power-cycled and renewed onto their reservations:
+
+```text
+10.1.1.238  lladdr 34:55:e5:0a:80:d7  REACHABLE   Samsung AC
+10.1.1.239  lladdr 10:5a:17:51:d7:9d  REACHABLE   Tuya bulb
+```
+
+The AC answered the DTLS probe on UDP 49154 at its new address, and Home
+Assistant came back with live state at 23:46 IST:
+
+```text
+climate.samsung_room_ac    dry   28.0 °C
+light.behind_monitor_bulb  on
+```
+
+No `device unreachable` or Tuya `error 901` entries after that point. The router
+now guarantees those two addresses, so this failure mode is closed unless a
+device is replaced.
