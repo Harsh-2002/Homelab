@@ -77,35 +77,206 @@ views:
         entity: sensor.host_cpu
         name: CPU
         icon: mdi:cpu-64-bit
-        color: blue
+        color: green
         grid_options:
           columns: 6
         features:
         - type: bar-gauge
           min: 0
           max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_cpu
+          below: 70
+      - type: tile
+        entity: sensor.host_cpu
+        name: CPU
+        icon: mdi:cpu-64-bit
+        color: orange
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_cpu
+          above: 69.9999
+          below: 90
+      - type: tile
+        entity: sensor.host_cpu
+        name: CPU
+        icon: mdi:cpu-64-bit
+        color: red
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_cpu
+          above: 89.9999
+      - type: tile
+        entity: sensor.host_cpu
+        name: CPU
+        icon: mdi:cpu-64-bit
+        color: grey
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: state
+          entity: sensor.host_cpu
+          state:
+          - unavailable
+          - unknown
       - type: tile
         entity: sensor.host_memory
         name: Memory
         icon: mdi:memory
-        color: purple
+        color: green
         grid_options:
           columns: 6
         features:
         - type: bar-gauge
           min: 0
           max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_memory
+          below: 80
+      - type: tile
+        entity: sensor.host_memory
+        name: Memory
+        icon: mdi:memory
+        color: orange
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_memory
+          above: 79.9999
+          below: 92
+      - type: tile
+        entity: sensor.host_memory
+        name: Memory
+        icon: mdi:memory
+        color: red
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_memory
+          above: 91.9999
+      - type: tile
+        entity: sensor.host_memory
+        name: Memory
+        icon: mdi:memory
+        color: grey
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: state
+          entity: sensor.host_memory
+          state:
+          - unavailable
+          - unknown
       - type: tile
         entity: sensor.host_swap
         name: Swap
         icon: mdi:swap-horizontal
-        color: pink
+        color: green
         grid_options:
           columns: 6
         features:
         - type: bar-gauge
           min: 0
           max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_swap
+          below: 60
+      - type: tile
+        entity: sensor.host_swap
+        name: Swap
+        icon: mdi:swap-horizontal
+        color: orange
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_swap
+          above: 59.9999
+          below: 85
+      - type: tile
+        entity: sensor.host_swap
+        name: Swap
+        icon: mdi:swap-horizontal
+        color: red
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_swap
+          above: 84.9999
+      - type: tile
+        entity: sensor.host_swap
+        name: Swap
+        icon: mdi:swap-horizontal
+        color: grey
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: state
+          entity: sensor.host_swap
+          state:
+          - unavailable
+          - unknown
+      - type: tile
+        entity: sensor.host_temperature
+        name: Temperature
+        icon: mdi:thermometer
+        color: green
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 20
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_temperature
+          below: 75
       - type: tile
         entity: sensor.host_temperature
         name: Temperature
@@ -117,6 +288,74 @@ views:
         - type: bar-gauge
           min: 20
           max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_temperature
+          above: 74.9999
+          below: 90
+      - type: tile
+        entity: sensor.host_temperature
+        name: Temperature
+        icon: mdi:thermometer
+        color: red
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 20
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_temperature
+          above: 89.9999
+      - type: tile
+        entity: sensor.host_temperature
+        name: Temperature
+        icon: mdi:thermometer
+        color: grey
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 20
+          max: 100
+        visibility:
+        - condition: state
+          entity: sensor.host_temperature
+          state:
+          - unavailable
+          - unknown
+      - type: tile
+        entity: sensor.host_disk_root
+        name: Root, NVMe
+        icon: mdi:harddisk
+        color: green
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_disk_root
+          below: 75
+      - type: tile
+        entity: sensor.host_disk_root
+        name: Root, NVMe
+        icon: mdi:harddisk
+        color: orange
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_disk_root
+          above: 74.9999
+          below: 90
       - type: tile
         entity: sensor.host_disk_root
         name: Root, NVMe
@@ -128,6 +367,27 @@ views:
         - type: bar-gauge
           min: 0
           max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_disk_root
+          above: 89.9999
+      - type: tile
+        entity: sensor.host_disk_root
+        name: Root, NVMe
+        icon: mdi:harddisk
+        color: grey
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: state
+          entity: sensor.host_disk_root
+          state:
+          - unavailable
+          - unknown
       - type: tile
         entity: sensor.host_disk_data
         name: Data, SATA
@@ -139,28 +399,184 @@ views:
         - type: bar-gauge
           min: 0
           max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_disk_data
+          below: 80
       - type: tile
-        entity: sensor.host_disk_backup
-        name: Backup, USB
-        icon: mdi:backup-restore
-        color: teal
+        entity: sensor.host_disk_data
+        name: Data, SATA
+        icon: mdi:database
+        color: orange
         grid_options:
           columns: 6
         features:
         - type: bar-gauge
           min: 0
           max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_disk_data
+          above: 79.9999
+          below: 92
       - type: tile
-        entity: sensor.host_load
-        name: Load, 1 min
-        icon: mdi:speedometer
-        color: indigo
+        entity: sensor.host_disk_data
+        name: Data, SATA
+        icon: mdi:database
+        color: red
         grid_options:
           columns: 6
         features:
         - type: bar-gauge
           min: 0
-          max: 6
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_disk_data
+          above: 91.9999
+      - type: tile
+        entity: sensor.host_disk_data
+        name: Data, SATA
+        icon: mdi:database
+        color: grey
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: state
+          entity: sensor.host_disk_data
+          state:
+          - unavailable
+          - unknown
+      - type: tile
+        entity: sensor.host_disk_backup
+        name: Backup, USB
+        icon: mdi:backup-restore
+        color: green
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_disk_backup
+          below: 80
+      - type: tile
+        entity: sensor.host_disk_backup
+        name: Backup, USB
+        icon: mdi:backup-restore
+        color: orange
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_disk_backup
+          above: 79.9999
+          below: 92
+      - type: tile
+        entity: sensor.host_disk_backup
+        name: Backup, USB
+        icon: mdi:backup-restore
+        color: red
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_disk_backup
+          above: 91.9999
+      - type: tile
+        entity: sensor.host_disk_backup
+        name: Backup, USB
+        icon: mdi:backup-restore
+        color: grey
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+        visibility:
+        - condition: state
+          entity: sensor.host_disk_backup
+          state:
+          - unavailable
+          - unknown
+      - type: tile
+        entity: sensor.host_load
+        name: Load, 1 min
+        icon: mdi:speedometer
+        color: green
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 9
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_load
+          below: 6
+      - type: tile
+        entity: sensor.host_load
+        name: Load, 1 min
+        icon: mdi:speedometer
+        color: orange
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 9
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_load
+          above: 5.9999
+          below: 9
+      - type: tile
+        entity: sensor.host_load
+        name: Load, 1 min
+        icon: mdi:speedometer
+        color: red
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 9
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_load
+          above: 8.9999
+      - type: tile
+        entity: sensor.host_load
+        name: Load, 1 min
+        icon: mdi:speedometer
+        color: grey
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 9
+        visibility:
+        - condition: state
+          entity: sensor.host_load
+          state:
+          - unavailable
+          - unknown
     - type: grid
       column_span: 4
       cards:
@@ -185,9 +601,20 @@ views:
         entity: sensor.host_containers_stopped
         name: Stopped
         icon: mdi:stop-circle-outline
-        color: amber
+        color: grey
         grid_options:
           columns: 6
+      - type: tile
+        entity: sensor.host_unhealthy
+        name: Unhealthy
+        icon: mdi:alert-circle-outline
+        color: green
+        grid_options:
+          columns: 6
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_unhealthy
+          below: 0.5
       - type: tile
         entity: sensor.host_unhealthy
         name: Unhealthy
@@ -195,6 +622,34 @@ views:
         color: red
         grid_options:
           columns: 6
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_unhealthy
+          above: 0.4999
+      - type: tile
+        entity: sensor.host_unhealthy
+        name: Unhealthy
+        icon: mdi:alert-circle-outline
+        color: grey
+        grid_options:
+          columns: 6
+        visibility:
+        - condition: state
+          entity: sensor.host_unhealthy
+          state:
+          - unavailable
+          - unknown
+      - type: tile
+        entity: sensor.host_failed_units
+        name: Failed services
+        icon: mdi:alert-octagon-outline
+        color: green
+        grid_options:
+          columns: 6
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_failed_units
+          below: 0.5
       - type: tile
         entity: sensor.host_failed_units
         name: Failed services
@@ -202,18 +657,35 @@ views:
         color: red
         grid_options:
           columns: 6
+        visibility:
+        - condition: numeric_state
+          entity: sensor.host_failed_units
+          above: 0.4999
       - type: tile
-        entity: sensor.host_images
-        name: Images
-        icon: mdi:layers-outline
-        color: purple
+        entity: sensor.host_failed_units
+        name: Failed services
+        icon: mdi:alert-octagon-outline
+        color: grey
         grid_options:
           columns: 6
+        visibility:
+        - condition: state
+          entity: sensor.host_failed_units
+          state:
+          - unavailable
+          - unknown
       - type: tile
         entity: sensor.host_net_down
         name: Network down
         icon: mdi:download-network-outline
         color: green
+        grid_options:
+          columns: 6
+      - type: tile
+        entity: sensor.host_net_up
+        name: Network up
+        icon: mdi:upload-network-outline
+        color: teal
         grid_options:
           columns: 6
       - type: tile

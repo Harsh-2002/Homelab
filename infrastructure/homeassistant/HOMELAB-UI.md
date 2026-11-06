@@ -107,3 +107,30 @@ reports container totals, stopped, image count, failed systemd units and `eno1`
 throughput (5 s background sampler). No synthetic health score. Tile bar colours
 are static. The graphs only reach back as far as the sensors have recorded.
 Tracked copies: `config/homelab.yaml`, `config/homelab_metrics.yaml`.
+
+### Threshold colours, 8 November 2026
+
+Tile bar colours now follow the value using native card `visibility`
+`numeric_state` conditions: one tile variant per state (green, orange, red, and
+grey while the sensor is unavailable), and Home Assistant renders exactly one.
+No custom card or CSS. Thresholds (warn / critical):
+
+| Tile | Orange above | Red above |
+|---|---|---|
+| CPU | 70 % | 90 % |
+| Memory | 80 % | 92 % |
+| Swap | 60 % | 85 % |
+| Temperature | 75 C | 90 C |
+| Root | 75 % | 90 % |
+| Data, Backup | 80 % | 92 % |
+| Load (1 min, 6 cores) | 6 | 9 |
+
+Unhealthy and Failed services are green at zero and red above. Stopped stays
+grey: `sandbox-certs` is a one-shot job that exits 0, so 1 is the normal value.
+Network up now has its own tile; Images was dropped.
+
+The Nodes view is generated, not hand-edited:
+`python3 infrastructure/homeassistant/generate-nodes.py /data/apps/homeassistant/dashboards/homelab.yaml`
+keeps the Cameras view and rewrites Nodes. Long-term `statistics-graph` cards
+were tried and left out: the new sensors have no compiled statistics yet, so they
+showed "No statistics found". Add them once a week of data exists.
