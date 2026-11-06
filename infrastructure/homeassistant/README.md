@@ -102,3 +102,32 @@ Use the UDP/DTLS probe, never a TCP scan, to decide whether the device is alive.
 
 A DHCP reservation for `34:55:E5:0A:80:D7` is still outstanding; it needs the
 TP-Link admin login at `10.1.1.1`.
+
+## 2026-11-07 router reservations and DHCP DNS
+
+Set on the TP-Link XC220-G3v (`10.1.1.1`) through the LAN Settings page, with
+Playwright driving the UI because the login form is JS-encrypted:
+
+| Device | MAC | Reserved |
+| --- | --- | --- |
+| Samsung AC | `34:55:E5:0A:80:D7` | `10.1.1.238` |
+| Tuya bulb | `10:5A:17:51:D7:9D` | `10.1.1.239` |
+
+DHCP server settings changed at the same time:
+
+```text
+Pool          10.1.1.230 - 10.1.1.249   (unchanged)
+Lease         120 minutes                (unchanged)
+Domain        l3b.cc.cd                  (unchanged)
+Primary DNS   10.1.1.10  (AdGuard)       was 1.1.1.1
+Secondary DNS 1.1.1.1    (Cloudflare)    was 1.1.1.2
+```
+
+Before this, DHCP handed every client Cloudflare directly, so LAN devices
+bypassed AdGuard entirely. Now they use the internal resolver first and fall
+back to Cloudflare only if AdGuard is down. The change applies at each client's
+next lease renewal, not immediately.
+
+Reservations take effect at the same renewal. The devices are still on `.236`
+and `.241` until then, so the Home Assistant entries must not be changed until
+the leases move.
