@@ -135,25 +135,35 @@ keeps the Cameras view and rewrites Nodes. Long-term `statistics-graph` cards
 were tried and left out: the new sensors have no compiled statistics yet, so they
 showed "No statistics found". Add them once a week of data exists.
 
-## Quick dashboard, 8 November 2026
+## Overview as the quick-use page, 8 November 2026
 
-Home Assistant's built-in **Overview** is now the generated Home page at
-`/home/overview`; it cannot hold custom cards, and the classic `/lovelace`
-redirects to it. The owner asked for a quick-use page without clutter, so a
-native YAML dashboard **Quick** (`/quick-actions/quick`, sidebar bolt icon) holds
-the real controls. Dashboard url paths need a hyphen, hence `quick-actions`.
+The owner wanted the **Overview** itself to be the quick-use page, not a separate
+dashboard, so the earlier extra "Quick" dashboard was removed.
 
-Three native Sections cards groups, verified at 1920 and 390 px:
+In this Home Assistant version the system default dashboard is the generated Home
+page (`/home/overview`, system data `default_panel` = `home`). The classic
+Overview (panel `lovelace`) is storage mode, so it was taken over and its config
+saved through the `lovelace/config/save` WebSocket call from `config/overview.yaml`
+(converted to JSON), and `default_panel` was set to `lovelace` with
+`frontend/set_system_data` (key `core`, other keys preserved). The Overview now
+opens at `/lovelace/default_view` and is first in the sidebar.
+
+Native Sections cards, verified at 1920 and 390 px:
 
 - **Controls:** bulb tile with brightness slider; Room AC tile with the five HVAC
   modes and target temperature; AC daily schedule and AC alerts toggles.
 - **Outdoor camera:** snapshot picture (`camera_view: auto`; tap for the live
-  stream) with Detection, Recording, Snapshots and Alerts switches. `live` view
-  rendered blank in headless Chromium, so it is not used.
+  stream; `live` rendered blank in headless Chromium) with Detection, Recording,
+  Snapshots and Alerts switches.
 - **Homelab:** CPU, Memory, Root disk and Temperature bars plus Containers and
   Unhealthy, all linking to the Nodes view.
 
 Only `climate.samsung_room_ac` is shown; `climate.bedroom_1_ac` is a duplicate
-cloud entity. Files: `config/quick.yaml`, registration in
-`config/homelab_metrics.yaml`. Home Assistant needs a restart when a dashboard is
-added to a package. The Overview/Home page itself is untouched.
+cloud entity.
+
+To revert to the generated Home page: send `lovelace/config/delete` and set
+`default_panel` back to `home`.
+
+The Samsung AC dashboard is now titled **AC** in the sidebar and in
+`dashboard-samsung-ac.yaml`. Its URL stays `/samsung-ac/...` so existing links
+keep working. A dashboard title change in a package needs a Home Assistant restart.

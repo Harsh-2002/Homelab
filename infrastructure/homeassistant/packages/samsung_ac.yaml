@@ -2,7 +2,7 @@ lovelace:
   dashboards:
     samsung-ac:
       mode: yaml
-      title: Samsung AC
+      title: AC
       icon: mdi:air-conditioner
       show_in_sidebar: true
       require_admin: false
