@@ -1,0 +1,155 @@
+title: Quick
+views:
+- title: Quick
+  path: quick
+  type: sections
+  max_columns: 3
+  sections:
+  - type: grid
+    cards:
+    - type: heading
+      heading: Controls
+      icon: mdi:tune
+    - type: tile
+      entity: light.behind_monitor_bulb
+      grid_options:
+        columns: 12
+      name: Bulb
+      features:
+      - type: light-brightness
+    - type: tile
+      entity: climate.samsung_room_ac
+      grid_options:
+        columns: 12
+      name: Room AC
+      features:
+      - type: climate-hvac-modes
+        hvac_modes:
+        - 'off'
+        - auto
+        - cool
+        - dry
+        - fan_only
+      - type: target-temperature
+    - type: tile
+      entity: input_boolean.samsung_ac_daily_schedule
+      grid_options:
+        columns: 6
+      name: AC daily schedule
+      icon: mdi:calendar-clock
+    - type: tile
+      entity: input_boolean.samsung_ac_local_alerts
+      grid_options:
+        columns: 6
+      name: AC alerts
+      icon: mdi:bell-outline
+  - type: grid
+    cards:
+    - type: heading
+      heading: Outdoor camera
+      icon: mdi:cctv
+    - type: picture-entity
+      entity: camera.outdoor
+      name: Outdoor
+      camera_view: auto
+      show_state: false
+      grid_options:
+        columns: 12
+    - type: tile
+      entity: switch.outdoor_detect
+      grid_options:
+        columns: 6
+      name: Detection
+    - type: tile
+      entity: switch.outdoor_recordings
+      grid_options:
+        columns: 6
+      name: Recording
+    - type: tile
+      entity: switch.outdoor_snapshots
+      grid_options:
+        columns: 6
+      name: Snapshots
+    - type: tile
+      entity: switch.outdoor_review_alerts
+      grid_options:
+        columns: 6
+      name: Alerts
+  - type: grid
+    cards:
+    - type: heading
+      heading: Homelab
+      icon: mdi:server
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_cpu
+      grid_options:
+        columns: 6
+      name: CPU
+      icon: mdi:cpu-64-bit
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+    - type: tile
+      entity: sensor.host_memory
+      grid_options:
+        columns: 6
+      name: Memory
+      icon: mdi:memory
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+    - type: tile
+      entity: sensor.host_disk_root
+      grid_options:
+        columns: 6
+      name: Root disk
+      icon: mdi:harddisk
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+    - type: tile
+      entity: sensor.host_temperature
+      grid_options:
+        columns: 6
+      name: Temperature
+      icon: mdi:thermometer
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+      features:
+      - type: bar-gauge
+        min: 20
+        max: 100
+    - type: tile
+      entity: sensor.host_containers
+      grid_options:
+        columns: 6
+      name: Containers
+      icon: mdi:docker
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes
+    - type: tile
+      entity: sensor.host_unhealthy
+      grid_options:
+        columns: 6
+      name: Unhealthy
+      icon: mdi:alert-circle-outline
+      tap_action:
+        action: navigate
+        navigation_path: /homelab-status/nodes

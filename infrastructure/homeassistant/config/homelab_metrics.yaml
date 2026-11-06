@@ -1,5 +1,12 @@
 lovelace:
   dashboards:
+    quick-actions:
+      mode: yaml
+      title: Quick
+      icon: mdi:lightning-bolt
+      show_in_sidebar: true
+      require_admin: false
+      filename: dashboards/quick.yaml
     homelab-status:
       mode: yaml
       title: Homelab

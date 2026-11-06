@@ -134,3 +134,26 @@ The Nodes view is generated, not hand-edited:
 keeps the Cameras view and rewrites Nodes. Long-term `statistics-graph` cards
 were tried and left out: the new sensors have no compiled statistics yet, so they
 showed "No statistics found". Add them once a week of data exists.
+
+## Quick dashboard, 8 November 2026
+
+Home Assistant's built-in **Overview** is now the generated Home page at
+`/home/overview`; it cannot hold custom cards, and the classic `/lovelace`
+redirects to it. The owner asked for a quick-use page without clutter, so a
+native YAML dashboard **Quick** (`/quick-actions/quick`, sidebar bolt icon) holds
+the real controls. Dashboard url paths need a hyphen, hence `quick-actions`.
+
+Three native Sections cards groups, verified at 1920 and 390 px:
+
+- **Controls:** bulb tile with brightness slider; Room AC tile with the five HVAC
+  modes and target temperature; AC daily schedule and AC alerts toggles.
+- **Outdoor camera:** snapshot picture (`camera_view: auto`; tap for the live
+  stream) with Detection, Recording, Snapshots and Alerts switches. `live` view
+  rendered blank in headless Chromium, so it is not used.
+- **Homelab:** CPU, Memory, Root disk and Temperature bars plus Containers and
+  Unhealthy, all linking to the Nodes view.
+
+Only `climate.samsung_room_ac` is shown; `climate.bedroom_1_ac` is a duplicate
+cloud entity. Files: `config/quick.yaml`, registration in
+`config/homelab_metrics.yaml`. Home Assistant needs a restart when a dashboard is
+added to a package. The Overview/Home page itself is untouched.
