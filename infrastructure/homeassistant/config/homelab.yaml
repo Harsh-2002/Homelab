@@ -67,154 +67,120 @@ views:
     type: sections
     max_columns: 3
     sections:
-      - type: grid
-        cards:
-          - type: heading
-            heading: l3b
-            icon: mdi:server
-            badges:
-              - type: entity
-                entity: sensor.host_containers
-                name: Running
-              - type: entity
-                entity: sensor.host_unhealthy
-                name: Unhealthy
-              - type: entity
-                entity: sensor.host_uptime_hours
-                name: Uptime
-          - type: tile
-            entity: sensor.host_cpu
-            name: CPU
-            icon: mdi:cpu-64-bit
-            color: blue
-            grid_options:
-              columns: 12
-            features:
-              - type: bar-gauge
-                min: 0
-                max: 100
-          - type: tile
-            entity: sensor.host_memory
-            name: Memory
-            icon: mdi:memory
-            color: purple
-            grid_options:
-              columns: 12
-            features:
-              - type: bar-gauge
-                min: 0
-                max: 100
-          - type: tile
-            entity: sensor.host_temperature
-            name: CPU temperature
-            icon: mdi:thermometer
-            color: orange
-            grid_options:
-              columns: 12
-            features:
-              - type: bar-gauge
-                min: 20
-                max: 100
-      - type: grid
-        cards:
-          - type: heading
-            heading: Last 6 hours
-            icon: mdi:chart-line
-          - type: history-graph
-            title: CPU and memory
-            hours_to_show: 6
-            show_names: true
-            grid_options:
-              columns: 12
-            entities:
-              - entity: sensor.host_cpu
-                name: CPU
-              - entity: sensor.host_memory
-                name: Memory
-          - type: history-graph
-            title: Temperature
-            hours_to_show: 6
-            show_names: false
-            grid_options:
-              columns: 12
-            entities:
-              - entity: sensor.host_temperature
-                name: CPU
-          - type: history-graph
-            title: Load
-            hours_to_show: 6
-            show_names: false
-            grid_options:
-              columns: 12
-            entities:
-              - entity: sensor.host_load
-                name: 1 min
-      - type: grid
-        cards:
-          - type: heading
-            heading: Storage
-            icon: mdi:harddisk
-          - type: tile
-            entity: sensor.host_disk_root
-            name: Root, NVMe
-            icon: mdi:harddisk
-            color: red
-            grid_options:
-              columns: 12
-            features:
-              - type: bar-gauge
-                min: 0
-                max: 100
-          - type: tile
-            entity: sensor.host_disk_data
-            name: Data, SATA
-            icon: mdi:database
-            color: green
-            grid_options:
-              columns: 12
-            features:
-              - type: bar-gauge
-                min: 0
-                max: 100
-          - type: tile
-            entity: sensor.host_disk_backup
-            name: Backup, USB
-            icon: mdi:backup-restore
-            color: teal
-            grid_options:
-              columns: 12
-            features:
-              - type: bar-gauge
-                min: 0
-                max: 100
-          - type: heading
-            heading: Docker
-            icon: mdi:docker
-          - type: tile
-            entity: sensor.host_containers
-            name: Containers running
-            icon: mdi:docker
-            color: blue
-            grid_options:
-              columns: 6
-          - type: tile
-            entity: sensor.host_unhealthy
-            name: Unhealthy
-            icon: mdi:alert-circle-outline
-            color: red
-            grid_options:
-              columns: 6
-          - type: tile
-            entity: sensor.host_memory_used
-            name: Memory used
-            icon: mdi:memory
-            color: purple
-            grid_options:
-              columns: 6
-          - type: tile
-            entity: sensor.host_uptime_hours
-            name: Uptime
-            icon: mdi:clock-outline
-            color: grey
-            grid_options:
-              columns: 6
+    - type: grid
+      column_span: 3
+      cards:
+      - type: heading
+        heading: l3b
+        icon: mdi:server
+        badges:
+        - type: entity
+          entity: sensor.host_containers
+          name: Running
+        - type: entity
+          entity: sensor.host_unhealthy
+          name: Unhealthy
+        - type: entity
+          entity: sensor.host_load
+          name: Load
+        - type: entity
+          entity: sensor.host_uptime_hours
+          name: Uptime
+      - type: tile
+        entity: sensor.host_cpu
+        name: CPU
+        icon: mdi:cpu-64-bit
+        color: blue
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+      - type: tile
+        entity: sensor.host_memory
+        name: Memory
+        icon: mdi:memory
+        color: purple
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+      - type: tile
+        entity: sensor.host_temperature
+        name: Temperature
+        icon: mdi:thermometer
+        color: orange
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 20
+          max: 100
+      - type: tile
+        entity: sensor.host_disk_root
+        name: Root, NVMe
+        icon: mdi:harddisk
+        color: red
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+      - type: tile
+        entity: sensor.host_disk_data
+        name: Data, SATA
+        icon: mdi:database
+        color: green
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+      - type: tile
+        entity: sensor.host_disk_backup
+        name: Backup, USB
+        icon: mdi:backup-restore
+        color: teal
+        grid_options:
+          columns: 6
+        features:
+        - type: bar-gauge
+          min: 0
+          max: 100
+    - type: grid
+      column_span: 3
+      cards:
+      - type: heading
+        heading: Last 6 hours
+        icon: mdi:chart-line
+      - type: history-graph
+        hours_to_show: 6
+        show_names: true
+        grid_options:
+          columns: 12
+        entities:
+        - entity: sensor.host_cpu
+          name: CPU
+        - entity: sensor.host_memory
+          name: Memory
+      - type: history-graph
+        hours_to_show: 6
+        show_names: true
+        grid_options:
+          columns: 12
+        entities:
+        - entity: sensor.host_temperature
+          name: Temperature
+      - type: history-graph
+        hours_to_show: 6
+        show_names: true
+        grid_options:
+          columns: 12
+        entities:
+        - entity: sensor.host_load
+          name: Load, 1 min

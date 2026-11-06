@@ -86,15 +86,21 @@ theme; dark appearance continues to be owned by Home Assistant.
 
 ## Nodes redesign, 8 November 2026
 
-Proxmox is retired, so Nodes describes the single `l3b` host. Owner asked for a
-better native layout than the earlier gauge rows. Still native Sections cards
-only, no custom card, CSS, theme or helper text:
+Proxmox is retired, so Nodes describes the single `l3b` host. Native Sections
+cards only, no custom card, CSS, theme or helper text. Verified by screenshot at
+1920, 1100 and 390 px wide.
 
-- **l3b:** heading with Running, Unhealthy and Uptime badges, then CPU, Memory
-  and CPU temperature as `tile` cards with the native `bar-gauge` feature.
-- **Last 6 hours:** `history-graph` cards for CPU and memory, temperature, load.
-- **Storage and Docker:** root, data and backup `tile` bars, then container,
-  unhealthy, memory-used and uptime tiles.
+- **Strip (section `column_span: 3`):** heading `l3b` with Running, Unhealthy,
+  Load and Uptime badges, then six `tile` cards with the native `bar-gauge`
+  feature: CPU, Memory, Temperature, Root, Data, Backup. Tiles use
+  `grid_options.columns: 6`: six across on desktop, two across on a phone.
+- **Last 6 hours (section `column_span: 3`):** three `history-graph` cards (CPU
+  and memory, temperature, load), `columns: 12`: three across on desktop,
+  stacked on a phone.
 
-All values come from `sensor.host_*` (REST sensors polling `homelab-stats`).
-No synthetic health score. Tracked copy: `config/homelab.yaml`.
+A spanning section gets 12 grid columns per spanned column (36 for span 3), so
+the same `columns` value scales from phone to desktop. All values are
+`sensor.host_*` REST sensors polling `homelab-stats`. No synthetic health score.
+Tile bar colours are static; threshold colouring would need a conditional card.
+The graphs only fill as far back as the sensors have recorded. Tracked copy:
+`config/homelab.yaml`.
