@@ -190,3 +190,20 @@ Sources: [Frigate HA integration](https://docs.frigate.video/integrations/home-a
 [RTSP/restream authentication](https://docs.frigate.video/configuration/restream/),
 [integration v5.15.6](https://github.com/blakeblackshear/frigate-hass-integration/releases/tag/v5.15.6),
 [HA REST integration](https://www.home-assistant.io/integrations/rest/).
+
+## Nodes view after Proxmox retirement, 8 November 2026
+
+The px10/px20/px30 REST sensors and VictoriaMetrics sources behind the original
+Nodes view no longer exist. The view had been reduced to a single Beszel link.
+It now reads the current single host through `homelab-stats.service`
+(`10.1.3.1:8099`) using a native REST integration in
+`packages/homelab_metrics.yaml`, rendered with native `heading`, `gauge` and
+`entities` cards only — no descriptive paragraphs, matching the original design
+request.
+
+Live sensors: `sensor.host_cpu`, `host_memory`, `host_memory_used`,
+`host_temperature`, `host_containers`, `host_unhealthy`, `host_load`,
+`host_uptime_hours`, `host_disk_root`, `host_disk_data`, `host_disk_backup`.
+
+Historical Proxmox notes above are retained as context; they do not describe the
+current configuration.
