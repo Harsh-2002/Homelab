@@ -131,3 +131,41 @@ next lease renewal, not immediately.
 Reservations take effect at the same renewal. The devices are still on `.236`
 and `.241` until then, so the Home Assistant entries must not be changed until
 the leases move.
+
+## 2026-11-07 Home Assistant entries moved ahead of the leases
+
+Because the reservations were already saved on the router, the Home Assistant
+config entries were updated to the new addresses rather than left pointing at
+the old ones:
+
+| Entry | Before | After |
+| --- | --- | --- |
+| `localthings` (Samsung AC) | `10.1.1.236` | `10.1.1.238` |
+| `tuya_local` (bulb) | `10.1.1.241` | `10.1.1.239` |
+
+HA was stopped, `.storage/core.config_entries` edited, then started. It came back
+healthy. The Tuya `local_key` and the Localthings certificates/`device_key` were
+not touched — only the `host` fields changed.
+
+**Expected until the devices renew:** both entities show `unavailable`.
+
+```text
+climate.samsung_room_ac    unavailable
+light.behind_monitor_bulb  unavailable
+```
+
+The device side is still on the old leases, so HA correctly cannot reach them.
+This is expected, not a fault. The entries recover when the bulb is power-cycled
+at the switch and the AC at the breaker, or when the 120-minute lease expires and
+each device renews onto its reservation.
+
+Verify after the devices move:
+
+```sh
+ip neigh show | grep -iE '34:55:e5|10:5a:17'      # expect .238 and .239
+curl -s -H "Authorization: Bearer $HASS_TOKEN" \
+  "$HASS_URL/api/states/climate.samsung_room_ac"   # expect a real state
+```
+
+A step-by-step revert, if ever needed, is the same edit in reverse: stop HA, set
+the two `host` values back, start HA.
