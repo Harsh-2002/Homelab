@@ -71,3 +71,34 @@ VM 107 was rebooted after setup. SSH returned with the app in `started`/`auto` s
 - Test HA relocation to px20 during a planned maintenance window; do not force a host failure merely to validate it.
 
 References: [Home Assistant Linux installation](https://www.home-assistant.io/installation/linux/), [Home Assistant authentication providers](https://www.home-assistant.io/docs/authentication/providers/), [Community OIDC integration and Pocket ID guide](https://github.com/christiaangoossens/hass-oidc-auth/blob/main/docs/provider-configurations/pocket-id.md), [Proxmox VM disk import](https://pve.proxmox.com/pve-docs/qm.html).
+
+## 2026-11-06 Samsung AC unreachable after DHCP move
+
+`climate.samsung_room_ac` went unavailable while the unit still worked in the
+SmartThings app. Root cause: the router leased the AC a new address and the
+Localthings config entry still pointed at the old one, which had been reassigned
+to a phone.
+
+```
+device MAC   34:55:E5:0A:80:D7
+old host     10.1.1.233   (now another device)
+new host     10.1.1.236
+port         49154
+```
+
+The entry host was changed to `10.1.1.236` with Home Assistant stopped (so
+`.storage/core.config_entries` would not be overwritten on shutdown), then HA was
+started. The entity returned with live data: state `off`, current 30 °C,
+target 26 °C, modes off/auto/cool/dry/fan_only.
+
+### Diagnostic trap worth remembering
+
+A TCP port scan of the AC finds **nothing open**, and this is expected. Samsung
+appliance local control is **DTLS over UDP** on 49154, not TCP. A plain CoAP GET
+to that UDP port returns a 15-byte fatal DTLS alert
+(`15 02 00 00 ... 02 02 28`), and an `openssl s_client -dtls1_2 -connect
+<ip>:49154` completes far enough to present the Samsung OCF device certificate.
+Use the UDP/DTLS probe, never a TCP scan, to decide whether the device is alive.
+
+A DHCP reservation for `34:55:E5:0A:80:D7` is still outstanding; it needs the
+TP-Link admin login at `10.1.1.1`.
