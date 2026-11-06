@@ -83,3 +83,18 @@ remain confirmation-protected on both card and icon taps. These records are
 runtime evidence; this document pass reviewed the source, review records, and
 captures and did not repeat browser or device actions. Captures show the light
 theme; dark appearance continues to be owned by Home Assistant.
+
+## Nodes redesign, 8 November 2026
+
+Proxmox is retired, so Nodes describes the single `l3b` host. Owner asked for a
+better native layout than the earlier gauge rows. Still native Sections cards
+only, no custom card, CSS, theme or helper text:
+
+- **l3b:** heading with Running, Unhealthy and Uptime badges, then CPU, Memory
+  and CPU temperature as `tile` cards with the native `bar-gauge` feature.
+- **Last 6 hours:** `history-graph` cards for CPU and memory, temperature, load.
+- **Storage and Docker:** root, data and backup `tile` bars, then container,
+  unhealthy, memory-used and uptime tiles.
+
+All values come from `sensor.host_*` (REST sensors polling `homelab-stats`).
+No synthetic health score. Tracked copy: `config/homelab.yaml`.
