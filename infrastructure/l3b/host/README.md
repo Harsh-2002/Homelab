@@ -13,6 +13,7 @@ a Docker outage run outside Docker.
 | Network | `systemd-networkd`, `systemd-resolved` | Sole host network/DNS manager |
 | Remote shell | `ssh.service` | Existing keys only |
 | mDNS | `avahi-daemon.service` | Advertises SMB and the Time Machine destination on `eno1` only |
+| Homepage stats | `homelab-stats.service` | Read-only JSON on `10.1.3.1:8099` with CPU, RAM, temp, disk and container counts for the Homepage `customapi` widget; unit and script tracked here |
 | SMB share | `smbd.service` | Native Samba; shares `MEDIA` (`/data/apps/smb`) and `BACKUP` (`/BACKUP`) on TCP **445** only; see [../smb/README.md](../smb/README.md) |
 | Coding agents | `opencode.service`, Hermes user gateway | Need host filesystem/tool access |
 | microsandbox | `/opt/microsandbox`, `/usr/local/bin/msb` | Global CLI for disposable agent microVMs (libkrun + KVM); per-user state in `~/.microsandbox`. See [../microsandbox/README.md](../microsandbox/README.md) |

@@ -1,0 +1,18 @@
+[Unit]
+Description=Homepage host stats endpoint
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+User=dev
+Group=docker
+ExecStart=/usr/bin/python3 /usr/local/sbin/homelab-stats.py
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
