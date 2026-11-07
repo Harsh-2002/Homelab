@@ -50,20 +50,22 @@ canonical at `~/.agents/skills/microsandbox`, symlinked into
 through its `skills` roots. No MCP server was added. See
 [../microsandbox/README.md](../microsandbox/README.md).
 
-## OpenTunnel skill, 8 November 2026
+## OpenTunnel, 8 November 2026
 
-`opentunnel` 0.6.2 (npm global, `~/.local/bin/opentunnel`) gives a local dev
-server an instant public HTTPS URL: `opentunnel route add 127.0.0.1:<port>`
-prints `https://<route>.<id>.opentunnel.xyz`. TLS terminates locally, so the
-relay never sees plaintext, but the URL is unguessable rather than private and
-the app sees the visitor as loopback.
+`opentunnel` 0.6.2 (npm global, `~/.local/bin/opentunnel`) publishes a loopback
+dev server at `https://<route>.<id>.opentunnel.xyz`. TLS terminates locally so the
+relay never sees plaintext; the URL is unguessable rather than private.
 
-No official skill shipped with the CLI, so one was written: canonical
-`~/.agents/skills/opentunnel`, symlinked into `~/.hermes/skills` and
-`~/.claude/skills`, with OpenCode reading the shared root. It encodes the
-homelab rule that only loopback dev servers are tunneled, never a production
-service, and that `route remove` plus `opentunnel down` (which disables the
-autostart unit) end every session.
+The skill is canonical at `~/.agents/skills/opentunnel` (OpenCode reads that root
+directly), symlinked into Hermes and Claude Code, and installed in OpenViking. It
+ships a stdlib helper for the lifecycle the CLI lacks: `preview` (create, verify,
+register purpose and TTL), `list`, `doctor`, `cleanup` and `destroy`, backed by
+`~/.local/state/opentunnel-skill/registry.json`. Every destroy ends with
+`opentunnel down`, which removes the autostart unit.
+
+Policy: loopback dev servers only, never a homelab service, test credentials only,
+destroy at the end of the task. Full runbook:
+[OPENTUNNEL.md](OPENTUNNEL.md).
 
 ## Language servers, 2 November 2026
 
