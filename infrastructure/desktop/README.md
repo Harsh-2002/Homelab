@@ -86,3 +86,21 @@ instructions.
 - No audio, no GPU acceleration; Chromium uses software rendering.
 - Not hardened for untrusted code: the container shares the host kernel. Use a
   microsandbox for that.
+
+## Access control
+
+Tinyauth denies by default, so the app must exist in its configuration or every
+login ends at "not authorized to access resource os". The `identity` stack
+(ID 170) declares it like the other private apps:
+
+```
+TINYAUTH_APPS_OS_CONFIG_DOMAIN=os.l3b.cc.cd
+TINYAUTH_APPS_OS_OAUTH_WHITELIST=iam.anuragvishwakarma@gmail.com
+TINYAUTH_APPS_OS_OAUTH_GROUPS=infrastructure-admins
+```
+
+Both the whitelist and the group must pass: whitelist first, then the group
+claim from Pocket ID. Adding another user means adding their email to the
+whitelist and the account to `infrastructure-admins`. After changing these,
+redeploy stack 170; an existing browser session keeps working, but signing out
+and in is the reliable way to refresh a stale denial.
