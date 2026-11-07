@@ -179,3 +179,35 @@ catalog at every session start and skill files appeared in recall as noise.
 - `ovcli.conf` `plugin.opencode.skillCatalog = false` (no duplicate catalog) and
   `plugin.recallExcludeUris` lists `viking://agent/skills` and the user's
   `skills` and `resources` directories (never returned by auto-recall).
+
+## Storage cleanup, 8 November 2026
+
+The store had grown to 1.6 GB, almost all of it archived conversations from the
+retired multi-node cluster, restored with the OpenViking state backup (all
+directories carry the 8 Nov 00:17 restore timestamp; their real dates are
+29 Sep - 31 Oct).
+
+Deleted through the session API (indexes cleaned, 0 failures, 185 sessions):
+
+| Source | Sessions | Freed | Notes |
+|---|---|---|---|
+| Codex (`cx-`) | 10 | 1.41 GB | retired agent; 326 memories already extracted |
+| Claude Code (`cc-`) | 23 | 13 MB | MCP-only on this host; 31 memories extracted |
+| Empty shells | 152 | 1.5 MB | 0 messages |
+
+Kept: 106 OpenCode sessions (124 MB), all 345 memory files, the 4 compile
+skills, and every resource. Verified after: health OK, recall unchanged,
+OpenCode and Hermes services active.
+
+Host caches cleared the same night (all regenerable): Go build cache 3.7 GB,
+npm cache 113 MB (verify), OpenCode npm cache 182 MB, Jellyfin DLL/web cache
+`~/.cache/jfdll` 235 MB with no references (Jellyfin runs in Docker). Docker
+prune reclaimed nothing. Disk went from 144 GB to 140 GB used, plus 1.43 GB
+from the session archives.
+
+Codex CLI is **not installed** on this host; Claude Code is (`/usr/bin/claude`
+2.1.319) and OpenCode stores a "Claude Agent" auth entry, so the CLI stays.
+
+Note: a mistaken delete removed the generated `sessions/.overview.md` sidecar
+during testing; it is a derived file and is rebuilt on the next semantic
+refresh.
