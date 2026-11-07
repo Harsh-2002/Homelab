@@ -118,3 +118,47 @@ and a 30 s device timeout in `/etc/fstab`. Previously the mount and the rebind
 started from the same USB event, and the device disappeared mid-mount, leaving
 the filesystem shut down and Time Machine paused. Previous fstab kept at
 `/etc/fstab.bak-2026-11-07`.
+
+## Second package pass, 8 November 2026
+
+| Layer | Before | After |
+| --- | --- | --- |
+| apt `zlib1g`, `zlib1g-dev` (stable-security) | `1.3.1-1+b1` | `1.3.1-1+deb13u1` |
+| Hermes Agent (stable channel) | v0.22.5 | v0.23.0 |
+| rustup | 1.29.2 | 1.29.3 (rustc 1.99.1 already current) |
+
+Already current and unchanged: Node 26.13.0, npm 12.2.1, Go 1.27.3, gopls 0.24.0,
+all npm globals, Docker 29.9.3, kernel 7.2.11, Intel microcode `0xfa`,
+Home Assistant 2026.11.0, Jellyfin 12.4, Frigate 0.18.2, n8n 2.46.6.
+
+Deliberately not changed:
+
+- **System Python libraries** (anyio, cryptography, click and so on) are Debian
+  packages in `/usr/lib/python3/dist-packages`. `pip` would break apt ownership
+  (PEP 668); they move with Debian security updates.
+- **OpenCode 2.2.5** must not be upgraded from inside its own serving process;
+  see the native handover runbook.
+- **zlib in running processes:** 37 host processes (systemd, sshd, Samba,
+  journald and others) still map the old library. The fix reaches them at the
+  next planned reboot or service restart; `homelab-stats` and `powerkey-watch`
+  were restarted now. No reboot flag is set.
+
+Hermes was updated with `hermes update --yes`; the gateway restarted with a drain
+and reported v0.23.0 up to date. Shared skills (`opentunnel`, `microsandbox`,
+`playwright-cli`, `herdr-control`, `excalidraw-local`) and the 0600 config files
+were intact, and `check-integrations.py --single-node` passed.
+
+### Container images behind upstream (not changed)
+
+| Container | Running | Upstream | Pinning | Note |
+| --- | --- | --- | --- | --- |
+| Caddy | 2.11.4 | 2.11.9 | digest | security fixes in 2.11.6 and 2.11.8/2.11.9 |
+| Pocket ID | 2.16.0 | 2.19.2 | digest | security fixes in 2.18.0 and 2.19.2 |
+| AdGuard Home | 0.107.79 | 0.107.80 | digest | patch |
+| Immich | 3.3.5 | 3.3.6 | `IMMICH_VERSION` | patch; telemetry already disabled by env |
+| Paperless-ngx | 3.4.1 | 3.4.2 | tag | repo compose still says 3.2.1 (stale) |
+| Meilisearch | 1.41.0 | 1.56.1 | tag | large jump; needs a dump/reindex plan |
+| OpenCloud | 7.2.4 | 9.0.0 | tag | major; LDAP credential rotation still open |
+
+Digest-pinned images are skipped by Watchtower by design. Container updates are
+Portainer stack changes and need the owner's go-ahead per service.
