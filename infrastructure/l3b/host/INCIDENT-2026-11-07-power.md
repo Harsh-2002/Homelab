@@ -83,15 +83,13 @@ There is no evidence of data loss. `e2fsck -fn` on `/BACKUP` was clean, and the
 - Physically inspect and reseat the front-panel power-button connector; replace
   the switch or front panel if events recur. Consider leaving the button
   disconnected and using Wake-on-LAN.
-- **BIOS 1.32.0 is excluded.** The owner previously ran it on this OptiPlex 5060
-  and found it unstable enough to roll back to 1.31.0, which is retained
-  deliberately (recorded in
-  [../HANDOFF-2026-11-01.md](../HANDOFF-2026-11-01.md): "The owner reports BIOS
-  1.32.0 was unstable and explicitly retained 1.31.0"). No specific symptom was
-  recorded, and Dell publishes no known-issues list for 1.32.0. Do not recommend
-  or apply that update; keep 1.31.0 unless the owner decides otherwise. Note the
-  trade-off: 1.32.0 carries Dell security advisory DSA-2024-030 fixes, so 1.31.0
-  stays exposed at the firmware level.
+- **BIOS 1.32.0 is excluded.** On it, this OptiPlex 5060 repeatedly powered
+  itself on and off, so the server could not stay running; the owner rolled back
+  to 1.31.0 and it became stable. Do not recommend or apply 1.32.0. The full
+  version history, downgrade candidates (1.30.0, then 1.29.0, floor 1.28.0) and
+  the flash procedure are in [BIOS-VERSIONS.md](BIOS-VERSIONS.md). 1.32.0 is also
+  the only release carrying Dell advisory DSA-2024-243, so every usable version
+  lacks that fix.
 - Instead of a BIOS change, check "Restore on AC Power Loss" and Wake-on-LAN in
   the existing 1.31.0 setup so the host returns after a real outage.
 - A UPS would cover short mains events, though this incident was not a mains
