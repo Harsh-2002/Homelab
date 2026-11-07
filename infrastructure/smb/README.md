@@ -336,3 +336,11 @@ request. `downloads/` is intentionally flat: Motrix saves directly to
 Jellyfin's **Music** library was removed on 4 November 2026 together with the
 `music/` folder, so no scan warns about `/media/music` any more. Only the
 **Movies** and **TV Shows** libraries remain.
+
+### Mount ordering fix, 7 November 2026
+
+The UAS rebind and the `/BACKUP` mount were triggered by the same USB-add event,
+so on two boots the mount ran while the bridge switched drivers; ext4 aborted
+with `device offline`/`JBD2 I/O error` and the mount unit failed. `/etc/fstab`
+now orders the mount after `usb-uas-rebind.service` (plus a 30 s device timeout).
+See [../l3b/host/INCIDENT-2026-11-07-power.md](../l3b/host/INCIDENT-2026-11-07-power.md).

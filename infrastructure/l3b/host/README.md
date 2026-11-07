@@ -101,3 +101,19 @@ post-install scripts were skipped. Both were checked rather than blindly allowed
 needed for the Cloudflare Workers runtime, not the DNS/API commands used here. If
 a Workers command is ever needed, reinstall with
 `npm install -g cf --allow-scripts=workerd,tldjs`.
+
+## Power-button and backup-mount hardening, 7 November 2026
+
+Two unexplained shutdowns on 7 November were ACPI power-button events, not
+crashes; see [INCIDENT-2026-11-07-power.md](INCIDENT-2026-11-07-power.md). Short
+presses are now ignored by logind
+(`/etc/systemd/logind.conf.d/10-ignore-powerkey.conf`, `HandlePowerKey=ignore`),
+so a bouncing switch cannot power the host off; intentional stops use
+`sudo poweroff`.
+
+`/BACKUP` now mounts only after the VL817 UAS rebind has finished, via
+`x-systemd.requires=usb-uas-rebind.service,x-systemd.after=usb-uas-rebind.service`
+and a 30 s device timeout in `/etc/fstab`. Previously the mount and the rebind
+started from the same USB event, and the device disappeared mid-mount, leaving
+the filesystem shut down and Time Machine paused. Previous fstab kept at
+`/etc/fstab.bak-2026-11-07`.
