@@ -83,9 +83,17 @@ There is no evidence of data loss. `e2fsck -fn` on `/BACKUP` was clean, and the
 - Physically inspect and reseat the front-panel power-button connector; replace
   the switch or front panel if events recur. Consider leaving the button
   disconnected and using Wake-on-LAN.
-- BIOS is 1.31.0 (2024-07-31); the other OptiPlex 5060 units were brought to
-  1.32.0. Update during a maintenance window and check "Restore on AC Power Loss"
-  and Wake-on-LAN so the host returns after an outage.
+- **BIOS 1.32.0 is excluded.** The owner previously ran it on this OptiPlex 5060
+  and found it unstable enough to roll back to 1.31.0, which is retained
+  deliberately (recorded in
+  [../HANDOFF-2026-11-01.md](../HANDOFF-2026-11-01.md): "The owner reports BIOS
+  1.32.0 was unstable and explicitly retained 1.31.0"). No specific symptom was
+  recorded, and Dell publishes no known-issues list for 1.32.0. Do not recommend
+  or apply that update; keep 1.31.0 unless the owner decides otherwise. Note the
+  trade-off: 1.32.0 carries Dell security advisory DSA-2024-030 fixes, so 1.31.0
+  stays exposed at the firmware level.
+- Instead of a BIOS change, check "Restore on AC Power Loss" and Wake-on-LAN in
+  the existing 1.31.0 setup so the host returns after a real outage.
 - A UPS would cover short mains events, though this incident was not a mains
   loss: the shutdowns were orderly.
 - Optional: alert on `Power key pressed` in the journal so the next event has a
