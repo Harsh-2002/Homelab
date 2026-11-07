@@ -67,3 +67,35 @@ only in 1.32.0, so every usable version lacks it.
 Because `HandlePowerKey=ignore` already prevents short presses from shutting the
 host down, a downgrade is a hypothesis test: if power events continue at the same
 rate on 1.30.0, the switch is the likelier cause; if they stop, firmware is.
+
+## Observation window, 7–14 November 2026
+
+Decision: **stay on 1.31.0 and watch for one week.** The host had been running
+continuously for more than five days before the 7 November power-key events, so
+one occurrence is not enough evidence to blame firmware. If a power-key event or
+an unexpected power-off recurs during the window, downgrade to **1.30.0** (then
+1.29.0; floor 1.28.0), following the procedure above.
+
+Monitoring in place:
+
+- `powerkey-watch.service` follows the journal and records every
+  `Power key pressed` line with a timestamp in `/var/log/powerkey-events.log`,
+  plus a persistent count in `/var/lib/powerkey-watch/state.json` (survives
+  reboot).
+- `homelab-stats` exposes `powerkey_events` and `powerkey_last`;
+  Home Assistant has `sensor.host_powerkey_events` and
+  `sensor.host_powerkey_last`.
+- Automation `l3b power-button event` sends an iPhone notification and a
+  persistent notification whenever the count rises, so a press that the logind
+  guard absorbs is still visible.
+- The path was tested on 7 November with one synthetic event (count reached 1,
+  iPhone notification fired); the counter and log were then reset to zero.
+
+Review date: **14 November 2026**. A clean week means keep 1.31.0; any recurrence
+means flash 1.30.0.
+
+## Security note
+
+The usable versions (1.28.0–1.31.0) carry DSA-2024-036. DSA-2024-243 is fixed
+only in 1.32.0, which is excluded for the power-cycling defect, so that advisory
+stays unfixed on this host for now.
