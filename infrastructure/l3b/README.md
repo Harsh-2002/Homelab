@@ -66,8 +66,8 @@ are applied and tested; see [DNS policy](DNS-POLICY.md) and
 | Watchtower 1.23.2 | Portainer `watchtower`, ID62; `nickfedor/watchtower:latest` | No published port; mounts the Docker socket, updates every running container daily at **04:00 IST** and prunes replaced images. See [../watchtower/README.md](../watchtower/README.md) |
 | AdGuard Home 0.107.79 | Portainer `dns`, ID169; [stack](dns.compose.yaml) | Host **53/UDP only**; UI `adguard:3000` through `https://dns.l3b.cc.cd` |
 | Unbound 1.26.2 | Same `dns` stack | Internal `unbound:5335`; no host port |
-| Caddy 2.11.4 + saved custom plugins | Portainer `proxy`, ID171; [stack](proxy.compose.yaml) | Host **443/TCP and 443/UDP only** |
-| Pocket ID 2.16.0 | Portainer `identity`, ID170; [stack](identity.compose.yaml) | Internal `pocketid:1411`; `https://auth.l3b.cc.cd` |
+| Caddy 2.11.9 + saved custom plugins | Portainer `proxy`, ID171; [stack](proxy.compose.yaml) | Host **443/TCP and 443/UDP only** |
+| Pocket ID 2.19.2 | Portainer `identity`, ID170; [stack](identity.compose.yaml) | Internal `pocketid:1411`; `https://auth.l3b.cc.cd` |
 | Tinyauth 5.2.0 | Same `identity` stack | Internal `tinyauth:3000`; `https://login.l3b.cc.cd` |
 | Homepage 2.7.0 | Portainer `dashboard`, ID172; [stack](dashboard.compose.yaml) | Internal `homepage:3000`; `https://l3b.cc.cd` behind Tinyauth |
 | OpenViking 0.4.22 / Ollama 0.34.4 | Portainer `memory`, ID174; [stack](memory.compose.yaml) | Internal `openviking:1933` / `ollama:11434`; `https://memory.l3b.cc.cd` |

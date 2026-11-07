@@ -211,3 +211,47 @@ Codex CLI is **not installed** on this host; Claude Code is (`/usr/bin/claude`
 Note: a mistaken delete removed the generated `sessions/.overview.md` sidecar
 during testing; it is a derived file and is rebuilt on the next semantic
 refresh.
+
+## Operator wiki from the current runbooks, 8 November 2026
+
+`viking://resources/homelab-wiki` is a compiled LLM Wiki of the current
+single-node runbooks: 16 pages (index, 12 service/host entities, DNS concept,
+storage-and-backup method), 16 internal links, 0 warnings, built in 160 s.
+
+Why not the older `viking://resources/homelab` import: it mixes current
+single-node docs with retired old-cluster material (Talos/K8s, Proxmox, Omni,
+Supabase), so a compile would have described things that no longer exist.
+
+Source (`viking://resources/homelab-current`, 37 files, 329 KB) is an upload of
+the current repo docs only: `docs/architecture/*` plus `infrastructure/<service>/README.md`
+for the services that actually run, and the l3b core docs. Retired components
+(`supabase`, `proxmox`, `omni`, `tailscale`, `ctr`, `arr`, `zima`, …) are excluded.
+
+To refresh after runbook changes, re-upload the same list and recompile:
+
+```python
+# same file list as /tmp copy is not kept; rebuild it from the repo:
+#   docs/architecture/{README,DESIGN,BRIEF}.md
+#   infrastructure/{l3b,agents,openviking,hermes,proxy,portainer,pocket-id,dns,
+#     docker,metrics,microsandbox,onepassword,store,dev,homeassistant,frigate,
+#     immich,jellyfin,karakeep,n8n,nivra,orva,opencloud,paperless,qbittorrent,
+#     registry,rustfs,beszel,cairn,motrix}/README.md
+#   infrastructure/l3b/{DNS-POLICY,REMOTE-ACCESS,MEMORY,PENDING}.md
+POST /api/v1/content/write   {"uri":"viking://resources/homelab-current/<path>","content":...,"mode":"replace"}
+POST /api/v1/compile         {"from":["viking://resources/homelab-current"],
+                              "to":"viking://resources/homelab-wiki",
+                              "skill":"viking://agent/skills/llm-wiki",
+                              "instruction":"<current-state operator wiki>"}
+```
+
+Post-compile corrections applied by hand (the compiler copied stale text from
+`infrastructure/l3b/README.md`): the entity index link to `identity.md` was
+missing, so that page was written from the running containers; Caddy 2.11.4 →
+**2.11.9**; Forgejo is EOL with stopped containers, so it is no longer described
+as active. The same Caddy and Pocket ID versions in `infrastructure/l3b/README.md`
+were corrected at source (2.11.9, 2.19.2).
+
+Known limitation: the older `viking://resources/homelab` tree (including
+`homelab/repo` and `homelab/config` from the retired cluster) still outranks the
+wiki in unscoped search. Scope a search to `viking://resources/homelab-wiki`, or
+delete the stale tree, until it is pruned.
