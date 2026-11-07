@@ -137,3 +137,28 @@ Open items:
   cutoffs do not help.
 - Not upgrading to 0.5.x until a release after 0.5.3 contains #6977 and a fix
   for #7099 (extraction deleting root memory files).
+
+## Experience memory, compile and log import, 8 November 2026
+
+Asked to set up three unused features. Outcome on v0.4.22:
+
+| Feature | Result |
+|---|---|
+| Experience memory | **Enabled.** `server.agent_evolution.enabled = true` in `ov.conf` (top-level `agent_evolution` is ignored; the server reads it from the `server` section). Commit results now report `agent_evolution_enabled: true` and effective types include `cases`, `trajectories` and `experiences`. A deliberately small synthetic session produced no experience (the model extracts a "case" only from substantial tool-using work), so the first real files under `memories/experiences/` still need confirming after real OpenCode sessions. |
+| Context compile (`ov compile`) | **Enabled.** Stack env `OPENVIKING_WITH_BOT` is now `"1"` (VikingBot runs inside the openviking container and inherits the root `vlm`, including the Codex login). `GET /api/v1/compile/capabilities` reports `configured: true, can_create: true`. Shared skills `llm-wiki`, `knowledge-graph`, `knowledge-distillation`, `daily-report` are installed under `viking://agent/skills` from the OpenViking v0.4.22 tag. A test compile of the Nivra project record finished in 72 s with 2 pages, no warnings; the test output was deleted. |
+| Log import (`openviking-server ingest`) | **Not enabled: nothing to import.** Hermes keeps no per-session log files (its `sessions/` directory holds only an index and the importer reads JSONL). OpenCode v2's database has no `session`/`message`/`part` tables, which the importer's adapter expects, and it only goes back to 1 Nov, already captured live. No Claude Code or Codex logs exist on this host. |
+
+Caveats:
+
+- VikingBot runs its agent loop with the sandbox disabled, **inside the
+  OpenViking container** (see the bot-mode note above). Compile jobs run only
+  when someone submits one with a valid key; the Caddy route stays private.
+  Revert with `OPENVIKING_WITH_BOT: "0"` through Portainer if this is unwanted.
+- Compile and experience extraction add model calls on the Codex login. The
+  test compile used about 83 k input tokens for a 56 KB source.
+- During the change memory was unavailable for about a minute while stack 174
+  redeployed. Previous compose text is in the Portainer backup made by
+  `portainer/stack-update.py`.
+- A test commit added one accurate line to `homelab_deployment.md` ("resend the
+  existing Env when updating a Portainer stack through the API"); it was kept.
+  All other test data was deleted.

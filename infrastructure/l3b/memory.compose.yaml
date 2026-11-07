@@ -6,7 +6,7 @@ services:
       com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
     environment:
-      OPENVIKING_WITH_BOT: "0"
+      OPENVIKING_WITH_BOT: "1"
       OPENVIKING_PUBLIC_BASE_URL: https://memory.l3b.cc.cd
     env_file:
       - /data/apps/openviking/runtime.env
