@@ -162,3 +162,24 @@ were intact, and `check-integrations.py --single-node` passed.
 
 Digest-pinned images are skipped by Watchtower by design. Container updates are
 Portainer stack changes and need the owner's go-ahead per service.
+
+## Shell startup error fixed, 7 November 2026
+
+SSH logins printed `-bash: /tmp/uv/env: No such file or directory` twice, once from
+the login shell (`~/.profile`) and once from the interactive shell (`~/.bashrc`).
+`~/.zshrc` carried the same line.
+
+Cause: a uv installer run on 5 November at 12:54 used `/tmp/uv` as its install
+directory, and the installer appends `. "<dir>/env"` to the shell startup files.
+`/tmp` does not survive a reboot, so the directory vanished while the lines stayed,
+and every new shell then sourced a file that no longer existed. uv is not installed
+on this host, so nothing depended on it.
+
+Fix: removed the single `. "/tmp/uv/env"` line (and its blank line) from
+`~/.bashrc`, `~/.profile` and `~/.zshrc`; originals are in
+`~/.cache/rc-backup-20261107/`. Verified with fresh login and interactive shells
+and a real SSH session with a TTY.
+
+Rule: never install tooling into `/tmp` with an installer that edits dotfiles. If
+uv is wanted later, install it to `~/.local/bin` (`UV_INSTALL_DIR`) so the sourced
+path survives reboots.
