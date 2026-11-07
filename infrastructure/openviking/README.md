@@ -85,3 +85,55 @@ v0.5.x. Details, evidence and the pre-retry test are in
 Health check for extraction after any change: commit a short note and confirm
 `GET /api/v1/sessions/<id>` shows `memories_extracted` with at least one write or
 edit and a `completion_tokens` value well above single digits.
+
+## Recall tuning for OpenCode and Hermes, 8 November 2026
+
+Why: agents seemed to ignore memory. Measured on this host, OpenCode injected
+recall 377 times since 1 Nov (about 5 entries, 970 tokens each), mostly as
+abstracts, and often off-topic. Probing the live search with ten realistic
+prompts showed scores of 0.6-0.83 and the correct top hit for 7 of 10, so the
+default relevance cutoffs (OpenCode 0.35, Hermes 0.15) filtered nothing.
+Retrieval itself is acceptable with `all-minilm`; the cutoffs were the problem.
+The server, embedder and extraction model are unchanged (v0.4.22 + hotfix).
+
+Changes (client side only, no server restart):
+
+| Where | Setting | Old | New |
+|---|---|---|---|
+| `~/.openviking/ovcli.conf` `plugin` (OpenCode) | `scoreThreshold` | 0.35 default | 0.62 |
+| | `recallLimit` | 6 | 5 |
+| | `recallPreferAbstract` | true default | false (top hits injected as text) |
+| | `recallMaxContentChars` | 500 default | 900 |
+| | `recallDedupTurns` | 5 default | 8 |
+| `~/.hermes/config.yaml` `memory.openviking` | `recall_score_threshold` | 0.15 default | 0.62 |
+| | `recall_limit` | 6 default | 5 |
+| | `recall_full_read_limit` | 2 default | 3 |
+| | `recall_max_injected_chars` | 4000 default | 5000 |
+
+`captureFilters` (secret redaction) are unchanged. Settings load when an agent
+starts, so running sessions keep the old values until restarted. To revert,
+delete these keys; defaults return.
+
+Findings that are not faults:
+
+- `flushAll` commits are by design: the v2 plugin force-commits every tracked
+  session whenever its instance is disposed. Sessions with nothing pending do
+  not create server tasks (about 60 real commit tasks in two days).
+- Claude Code is connected by MCP only; this is intentional because OpenCode and
+  Hermes are the main agents.
+- Hermes recall runs before each model call under a 4 s budget; live search
+  answers in tens of milliseconds.
+
+Open items:
+
+- The OpenCode session-state file shows 83 ENOENT rename errors (2-7 Nov) even
+  though the installed code serializes saves; likely several OpenCode
+  processes sharing one state file. Harmless so far (state is rebuilt).
+- Weak spot: infrastructure facts that live only in repo runbooks (for example
+  the Caddy build) are not in memory, so recall cannot find them. Search the
+  repo for those.
+- Embedder swap (for example nomic-embed-text or bge-m3) needs an
+  `admin_reindex`; only worth trying on an isolated copy if the tightened
+  cutoffs do not help.
+- Not upgrading to 0.5.x until a release after 0.5.3 contains #6977 and a fix
+  for #7099 (extraction deleting root memory files).
