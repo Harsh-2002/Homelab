@@ -1,6 +1,6 @@
 services:
   immich:
-    image: ghcr.io/immich-app/immich-server:v3.3.5
+    image: ghcr.io/immich-app/immich-server:v3.3.6
     container_name: immich
     labels:
       com.centurylinklabs.watchtower.enable: "true"
@@ -23,7 +23,7 @@ services:
       - l3b
 
   immich-ml:
-    image: ghcr.io/immich-app/immich-machine-learning:v3.3.5
+    image: ghcr.io/immich-app/immich-machine-learning:v3.3.6
     container_name: immich-ml
     labels:
       com.centurylinklabs.watchtower.enable: "true"

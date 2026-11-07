@@ -23,7 +23,7 @@ services:
       start_period: 120s
       retries: 3
   ollama:
-    image: ollama/ollama@sha256:8262851b2846b87c649eddf3e76beb270c52f4d1bc94559f47efde16b0841551
+    image: ollama/ollama@sha256:0e59999e0e8f9fd4e704bd788a89b7e4cad399367fb1365f8c102ac662288761
     container_name: ollama
     labels:
       com.centurylinklabs.watchtower.enable: "true"

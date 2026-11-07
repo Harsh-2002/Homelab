@@ -46,7 +46,7 @@ services:
       - l3b
 
   karakeep-meilisearch:
-    image: getmeili/meilisearch:v1.41.0
+    image: getmeili/meilisearch:v1.56.1
     container_name: karakeep-meilisearch
     labels:
       com.centurylinklabs.watchtower.enable: "true"

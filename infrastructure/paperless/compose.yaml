@@ -9,7 +9,7 @@ services:
       - /data/apps/paperless/valkey:/data
 
   paperless:
-    image: ghcr.io/paperless-ngx/paperless-ngx:3.2.1
+    image: ghcr.io/paperless-ngx/paperless-ngx:3.4.2
     container_name: paperless
     labels:
       com.centurylinklabs.watchtower.enable: "true"

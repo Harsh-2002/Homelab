@@ -24,7 +24,7 @@
       },
       {
         "id": "adguard",
-        "label": "AdGuard Home 0.107.79",
+        "label": "AdGuard Home 0.107.80",
         "stack": "dns",
         "state": "running; only UDP DNS published; UI through Caddy"
       },
@@ -108,7 +108,7 @@
       },
       {
         "id": "paperless",
-        "label": "Paperless 3.4.1",
+        "label": "Paperless 3.4.2",
         "stack": "paperless",
         "state": "healthy; 28 documents preserved after SQLite migration; private HTTPS"
       },

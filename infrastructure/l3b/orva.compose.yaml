@@ -1,6 +1,6 @@
 services:
   orva:
-    image: ghcr.io/harsh-2002/orva@sha256:e23501aedfae388261bffb91bdc2621eb5c4ec8ccf43437e4ce94204aef1f7be
+    image: ghcr.io/harsh-2002/orva@sha256:2e47e895982096292c25a132dbc262b993828947efb182decceccde4939aeb5c
     container_name: orva
     labels:
       com.centurylinklabs.watchtower.enable: "true"
@@ -25,7 +25,7 @@ services:
       ORVA_WRITE_TIMEOUT_SEC: "90"
       ORVA_SESSION_DAYS: "30"
       ORVA_TRUSTED_PROXY: "true"
-      ORVA_IMAGE: ghcr.io/harsh-2002/orva@sha256:e23501aedfae388261bffb91bdc2621eb5c4ec8ccf43437e4ce94204aef1f7be
+      ORVA_IMAGE: ghcr.io/harsh-2002/orva@sha256:2e47e895982096292c25a132dbc262b993828947efb182decceccde4939aeb5c
     expose:
       - "8443"
     mem_limit: 4g
