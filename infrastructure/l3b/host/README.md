@@ -72,3 +72,32 @@ sudo unattended-upgrade --dry-run --debug
 Backup runner and UPS/NUT are out of scope per the owner. Application services,
 databases, Caddy, DNS and Beszel hub stay in Docker for isolation and easy
 rollback.
+
+## Package updates, 8 November 2026
+
+Routine global upgrade on Debian 13 (trixie), kernel 7.2.11, uptime 5 days.
+
+| Source | Before | After |
+| --- | --- | --- |
+| docker-ce, cli, rootless-extras | 29.9.2 | 29.9.3 |
+| docker-compose-plugin | 5.6.1 | 5.7.0 |
+| claude-code (Anthropic apt) | 2.1.316-1 | 2.1.319-1 |
+| npm `@excalidraw/cli` | 0.2.0 | 0.3.0 |
+| npm `cf` | 1.0.0-beta.26 | 1.0.0-beta.28 |
+| npm `mcp-proxy` | 6.7.21 | 6.9.1 |
+
+`opentunnel` 0.6.2, `@playwright/cli` 0.1.23, `bash-language-server` 5.8.1 and
+`typescript` 7.0.2 were already current. No kernel, libc or systemd change, so no
+reboot was required; `apt-get autoremove` had nothing to remove.
+
+The Docker upgrade restarted `dockerd`. All 40 containers stayed up with none
+unhealthy, and reachability was verified afterwards: `l3b.cc.cd` returned 401
+from the auth gate as designed, `home.l3b.cc.cd` and `notes.l3b.cc.cd` returned
+200, and the Portainer API returned 200.
+
+npm 12 blocks dependency install scripts by default, so `workerd` and `tldjs`
+post-install scripts were skipped. Both were checked rather than blindly allowed:
+`tldjs` resolves public suffixes correctly (`example.co.uk`), and `workerd` is only
+needed for the Cloudflare Workers runtime, not the DNS/API commands used here. If
+a Workers command is ever needed, reinstall with
+`npm install -g cf --allow-scripts=workerd,tldjs`.
