@@ -162,3 +162,20 @@ Caveats:
 - A test commit added one accurate line to `homelab_deployment.md` ("resend the
   existing Env when updating a Portainer stack through the API"); it was kept.
   All other test data was deleted.
+
+## Skills: one source of truth, 8 November 2026
+
+OpenCode and Hermes load skills from `~/.agents/skills`. OpenViking also had
+copies of `microsandbox`, `opentunnel`, `rust-best-practices`, `rust-port` and
+`rust-review` under `viking://agent/skills` (bodies and reference folders
+identical to local). They were redundant: the plugin injected a second skill
+catalog at every session start and skill files appeared in recall as noise.
+
+- The five duplicates were removed from OpenViking; the local copies are the
+  source of truth. To share one again, `add_skill` it from its local path.
+- Kept in OpenViking: `llm-wiki`, `knowledge-graph`, `knowledge-distillation`,
+  `daily-report`, because `ov compile` needs a `viking://` skill URI and they
+  have no local copy.
+- `ovcli.conf` `plugin.opencode.skillCatalog = false` (no duplicate catalog) and
+  `plugin.recallExcludeUris` lists `viking://agent/skills` and the user's
+  `skills` and `resources` directories (never returned by auto-recall).
