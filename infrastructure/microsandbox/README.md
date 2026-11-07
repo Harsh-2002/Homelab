@@ -163,3 +163,34 @@ applies to new turns without repeating it per session.
 - Per-user state is not backed up; sandboxes are treated as disposable.
 - Not used by any production service; it exists for agent and untrusted-code
   workloads only.
+
+## Skill guidance for agent workloads, 8 November 2026
+
+The shared skill described what `msb` can do but not when an agent should reach
+for it, so agents kept installing test dependencies on the host. The skill now
+leads with that decision:
+
+- **When to use**: dependency and toolchain installs, build/test runs, destructive
+  tests (migrations, `rm -rf`, partition work), service integration tests,
+  installer and upgrade QA on a clean OS, distro/version matrices, bug
+  reproduction on a clean machine, untrusted code, network/TLS experiments.
+- **When not to**: host Docker socket, systemd, GPU/USB, LAN or loopback services
+  (egress blocks them), long-lived services, datasets larger than the root disk,
+  trivial read-only commands, bare-metal performance numbers.
+- **Autonomy**: agents create and destroy sandboxes for tests, builds, dependency
+  installs, bug reproduction and installer QA without asking. They ask first for
+  images over ~2 GB, more than 4 vCPU / 8 GB / 40 GB disk, host mounts, published
+  ports, private egress, or keeping a sandbox for reuse. They refuse mounting
+  credentials into untrusted code, LAN egress for attacks, or using the sandbox to
+  evade host controls.
+- **Recipes**: one-off checks, repo build/test with a read-only source mount,
+  installer QA, distro matrix, snapshot baseline, services plus tests in one VM,
+  and untrusted code. Every command was exercised on 0.7.13 during the update.
+- **Lifecycle**: `<task>-test` names, `--label task=...`, `--max-duration` and
+  `--idle-timeout` bounds, results copied out, then `remove --force`; finish with
+  `msb list` empty and `msb volume list` / `msb snapshot list` clean.
+
+Canonical skill: `~/.agents/skills/microsandbox`, symlinked into Hermes and Claude
+Code. A point-in-time copy is also installed in OpenViking as
+`viking://agent/skills/microsandbox`; the local copy stays authoritative and is
+updated alongside `msb` upgrades.
