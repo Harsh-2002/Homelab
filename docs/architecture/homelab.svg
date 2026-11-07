@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1820" viewBox="0 0 2400 1820" role="img"><title>l3b / physical → Docker → service tree</title><desc>Single-node Docker restoration verified 2026-11-02; historical cluster not recreated.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#52636d"/></marker></defs><rect width="2400" height="1820" fill="#f8fafb"/><g font-family="Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1820" viewBox="0 0 2400 1820" role="img"><title>l3b / physical → Docker → service tree</title><desc>Single-node Docker restoration verified 2026-11-08; historical cluster not recreated.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#52636d"/></marker></defs><rect width="2400" height="1820" fill="#f8fafb"/><g font-family="Arial, sans-serif">
 <text x="55" y="76" font-size="36">l3b / physical → Docker → service tree</text>
-<text x="55" y="120" font-size="21">2026-11-02 · Single host, no HA claim · OpenViking memory restored</text>
+<text x="55" y="120" font-size="21">2026-11-08 · Single host, no HA claim · OpenViking memory restored</text>
 <path d="M435 679L500 679" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M880 679L945 691.5" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1325 691.5L1390 231.5" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>

@@ -1,7 +1,7 @@
 {
   "verifiedOn": "2026-10-31",
   "currentDeployment": {
-    "verifiedOn": "2026-11-02",
+    "verifiedOn": "2026-11-08",
     "platform": "single-node-docker",
     "host": {
       "name": "l3b",
@@ -195,6 +195,12 @@
         "label": "Samba (smbd)",
         "stack": "smb",
         "state": "shares MEDIA (/data/apps/smb) and BACKUP (/BACKUP, ext4 USB SSD, Time Machine) on TCP 445, LAN only, via smb.l3b.cc.cd"
+      },
+      {
+        "id": "desktop",
+        "label": "XFCE desktop (localdesk:1)",
+        "stack": "desktop",
+        "state": "healthy; TigerVNC + noVNC in container, no published ports; private HTTPS os.l3b.cc.cd behind Tinyauth; state /data/apps/desktop/home"
       }
     ],
     "dnsPolicy": {
@@ -221,7 +227,8 @@
     "opencodeRemote": {
       "state": "verified",
       "firstAttempt": "Initial group-membership failure resolved by verified sg docker handover.",
-      "url": "https://oc.l3b.cc.cd", "exposure": "public since 2026-11-03 via an exact DNS-only public A record and a named source-gate exemption; pairing-link/vault password enforced by OpenCode; Tinyauth deliberately omitted to keep native app pairing working",
+      "url": "https://oc.l3b.cc.cd",
+      "exposure": "public since 2026-11-03 via an exact DNS-only public A record and a named source-gate exemption; pairing-link/vault password enforced by OpenCode; Tinyauth deliberately omitted to keep native app pairing working",
       "placement": "single native opencode.service; Docker-bridge-only bind; direct Caddy upstream by host alias",
       "authentication": "owner explicitly chose previous vault password; old logins invalidated, history retained",
       "evidence": "infrastructure/l3b/NATIVE-HANDOVER-2026-11-02.json"
@@ -333,8 +340,8 @@
         66
       ],
       "body": [
-        "Codex · Claude Code · Hermes · OpenCode",
-        "Herdr · shared tools / MCP · development workloads"
+        "Codex \u00b7 Claude Code \u00b7 Hermes \u00b7 OpenCode",
+        "Herdr \u00b7 shared tools / MCP \u00b7 development workloads"
       ]
     },
     {
@@ -347,8 +354,8 @@
         66
       ],
       "body": [
-        "Beszel · Grafana · VictoriaMetrics",
-        "Uptime Kuma · PVE exporter"
+        "Beszel \u00b7 Grafana \u00b7 VictoriaMetrics",
+        "Uptime Kuma \u00b7 PVE exporter"
       ]
     },
     {
@@ -378,12 +385,12 @@
       ],
       "body": [
         "Application data erased; restore backup before start",
-        "Personal   Immich · Karakeep · OpenCloud · Paperless",
-        "Notes       Nivra · separate friend instance",
-        "Build        Forgejo · Docker Registry · mirror worker",
-        "Automate n8n · SearXNG · isolated sandbox",
-        "Agents     OpenViking · Ollama · Omni",
-        "Helpers    PostgreSQL · Valkey · Meilisearch · updater"
+        "Personal   Immich \u00b7 Karakeep \u00b7 OpenCloud \u00b7 Paperless",
+        "Notes       Nivra \u00b7 separate friend instance",
+        "Build        Forgejo \u00b7 Docker Registry \u00b7 mirror worker",
+        "Automate n8n \u00b7 SearXNG \u00b7 isolated sandbox",
+        "Agents     OpenViking \u00b7 Ollama \u00b7 Omni",
+        "Helpers    PostgreSQL \u00b7 Valkey \u00b7 Meilisearch \u00b7 updater"
       ],
       "statusLabel": "stopped / restore data"
     },
@@ -397,7 +404,7 @@
         95
       ],
       "body": [
-        "Serverless functions · Quick Share / offline"
+        "Serverless functions \u00b7 Quick Share / offline"
       ],
       "state": "stopped",
       "statusLabel": "Stopped / final backup"
@@ -412,7 +419,7 @@
         95
       ],
       "body": [
-        "Caddy · HTTPS routing / TLS"
+        "Caddy \u00b7 HTTPS routing / TLS"
       ]
     },
     {
@@ -425,7 +432,7 @@
         66
       ],
       "body": [
-        "AdGuard Home → Unbound recursion"
+        "AdGuard Home \u2192 Unbound recursion"
       ]
     },
     {
@@ -438,7 +445,7 @@
         66
       ],
       "body": [
-        "Pocket ID / OIDC · Tinyauth / forward-auth"
+        "Pocket ID / OIDC \u00b7 Tinyauth / forward-auth"
       ]
     },
     {
@@ -465,7 +472,7 @@
         95
       ],
       "body": [
-        "Home Assistant · Mosquitto · local device control / offline"
+        "Home Assistant \u00b7 Mosquitto \u00b7 local device control / offline"
       ],
       "state": "stopped",
       "statusLabel": "Stopped / final backup"
@@ -511,17 +518,17 @@
       ],
       "kubernetes": true,
       "body": [
-        "Talos · control plane + workloads",
-        "4 vCPU · up to 16 GiB RAM · 500 GiB data"
+        "Talos \u00b7 control plane + workloads",
+        "4 vCPU \u00b7 up to 16 GiB RAM \u00b7 500 GiB data"
       ],
       "statusLabel": "host unreachable / NotReady"
     }
   ],
   "kubernetes": {
     "network": [
-      "Cilium CNI · L2 LoadBalancer services · CoreDNS",
-      "Argo CD · Headlamp · Homepage · metrics-server",
-      "vmagent · kube-state-metrics · node metrics"
+      "Cilium CNI \u00b7 L2 LoadBalancer services \u00b7 CoreDNS",
+      "Argo CD \u00b7 Headlamp \u00b7 Homepage \u00b7 metrics-server",
+      "vmagent \u00b7 kube-state-metrics \u00b7 node metrics"
     ],
     "storage": [
       "Cluster stopped; px10/px20 data disks erased",
@@ -530,8 +537,8 @@
     ],
     "supabase": [
       "Offline; authoritative SQL and application files saved",
-      "Studio · Auth · REST · Realtime · Edge Functions",
-      "Storage / imgproxy · Kong · pooler · logs / analytics"
+      "Studio \u00b7 Auth \u00b7 REST \u00b7 Realtime \u00b7 Edge Functions",
+      "Storage / imgproxy \u00b7 Kong \u00b7 pooler \u00b7 logs / analytics"
     ]
   },
   "physicalStorage": [
