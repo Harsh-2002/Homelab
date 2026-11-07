@@ -87,9 +87,13 @@ Monitoring in place:
   `sensor.host_powerkey_last`.
 - Automation `l3b power-button event` sends an iPhone notification and a
   persistent notification whenever the count rises, so a press that the logind
-  guard absorbs is still visible.
-- The path was tested on 7 November with one synthetic event (count reached 1,
-  iPhone notification fired); the counter and log were then reset to zero.
+  guard absorbs is still visible. The count sensor carries the last timestamp as
+  a `powerkey_last` attribute, so the alert renders the real time atomically
+  instead of reading a second sensor that may still be `unknown`; the condition
+  also guards against `trigger.from_state` being `None` right after a reload.
+- The path was tested on 7 November with synthetic events (count rose, iPhone
+  notification fired, message showed e.g. `07 Nov 2026 22:59:29`); the counter
+  and log were then reset to zero.
 
 Review date: **14 November 2026**. A clean week means keep 1.31.0; any recurrence
 means flash 1.30.0.
