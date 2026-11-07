@@ -393,3 +393,23 @@ service's process group, because the active conversation is served by
 restarted gracefully the same night (v0.23.0, service definition refreshed).
 First recall after restart injected 0 entries, matching the 0.62 cutoff.
 Rollback: `opencode upgrade 2.2.5` then `systemctl --user restart opencode`.
+
+## Agent memory plugin updates, 8 November 2026
+
+- **OpenCode plugin** `@openviking/opencode-plugin` 2026.11.1 -> 2026.11.5-1,
+  pinned exactly in `~/.local/share/openviking-plugin/package.json` (a caret
+  range would not select a pre-release). Diff before install: additive only
+  (`magpie` harness, `captureWithoutSession`/`nativeAgents`, URI-guard example
+  hint, new `openviking-rule-search` skill). Settings still resolve: cutoff
+  0.62, 5 items, full-text hits, skill catalog off, 3 excluded paths.
+- **Hermes plugin** `openviking` 2.1.1 -> 2.1.2 via
+  `hermes plugins install openviking --force --enable --yes-deps`
+  (`plugins update` refuses catalog installs without a git dir). Gateway
+  restarted gracefully; memory settings unchanged.
+- Restarts verified: OpenCode v2.2.6 on the new plugin, HTTPS 200, 0 restarts,
+  0 journal errors, about 1 GB RSS (from 15 GB), plugin healthy 165 registrations.
+- Known upstream noise, unchanged by the updates: `Failed to save session state`
+  ENOENT renames (273 in the log, clustered in busy restart windows). The
+  in-process save chain cannot serialize across OpenCode's per-project plugin
+  instances sharing one state file. Session state is rebuilt, memory commits are
+  unaffected. Do not patch `node_modules`; re-check after the next plugin release.
