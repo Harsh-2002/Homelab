@@ -70,3 +70,18 @@ The imported Notion pages are dated history, not a claim that every old instruct
 The [official Codex integration guide](https://docs.openviking.ai/en/agent-integrations/04-codex) describes the installed plugin's session/prompt/stop hooks. All six hooks were reviewed and trusted in Codex on 2026-09-29. A fresh `codex exec` visibly ran SessionStart, UserPromptSubmit, and Stop hooks; `ov-memory-doctor.mjs` then reported committed captured turns, valid trust records, endpoint authentication, MCP tools, and server readiness. Their automatic transcript capture is privacy-sensitive. Do not trust a changed hook definition without reviewing it.
 
 The dated [current-state and open-issues note](CURRENT-STATE.md) records live verification separately from the historical import. Read it after `START-HERE.md`, then recheck the relevant hosts before acting. Its 2026-09-28 ISO/backup findings are historical; see its 2026-09-29 follow-up for the verified recovery and remaining backup limitations.
+
+## v0.5.3 attempt and rollback, 8 November 2026
+
+v0.5.3 was deployed and rolled back the same night. On it, memory extraction
+returned an empty result (7-token model reply, zero memories) even though search,
+reads, MCP and the model credential all worked, so v0.4.22 with the
+`session_commit_processor.py` hotfix remains the production version. The hotfix
+mount must stay while on v0.4.22 and must be dropped, not carried over, on any
+v0.5.x. Details, evidence and the pre-retry test are in
+[../l3b/UPGRADE-2026-11-07.md](../l3b/UPGRADE-2026-11-07.md). Ollama is now
+0.40.15; the `all-minilm` embeddings are unchanged.
+
+Health check for extraction after any change: commit a short note and confirm
+`GET /api/v1/sessions/<id>` shows `memories_extracted` with at least one write or
+edit and a `completion_tokens` value well above single digits.
