@@ -176,9 +176,9 @@ and every new shell then sourced a file that no longer existed. uv is not instal
 on this host, so nothing depended on it.
 
 Fix: removed the single `. "/tmp/uv/env"` line (and its blank line) from
-`~/.bashrc`, `~/.profile` and `~/.zshrc`; originals are in
-`~/.cache/rc-backup-20261107/`. Verified with fresh login and interactive shells
-and a real SSH session with a TTY.
+`~/.bashrc`, `~/.profile` and `~/.zshrc`. Verified with fresh login and interactive
+shells and a real SSH session with a TTY; the temporary backup copies were deleted
+once the fix was confirmed.
 
 Rule: never install tooling into `/tmp` with an installer that edits dotfiles. If
 uv is wanted later, install it to `~/.local/bin` (`UV_INSTALL_DIR`) so the sourced
