@@ -11,7 +11,7 @@ services:
       - /data/apps/desktop/home:/root
     networks:
       - l3b
-    mem_limit: 4g
+    mem_limit: 6g
     cpus: 2.0
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://127.0.0.1:6080/"]
