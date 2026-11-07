@@ -380,3 +380,16 @@ resume passed, all10 MCPs connected, shared four-agent checks passed and HTTPS
 returned200. No global model default was forced. Removed343MiB of legacy plugin
 cache after verifying no process references it. See the current section of
 [OPENCODE-CLAUDE.md](OPENCODE-CLAUDE.md); older pending-migration notes are history.
+
+## OpenCode 2.2.6 upgrade, 8 November 2026
+
+Upgraded with `opencode upgrade 2.2.6` (2.2.5 -> 2.2.6; minor release, no
+plugin or remote-service changes). The running service needed a separate
+restart; it was done by a transient `systemd-run --user` timer outside the
+service's process group, because the active conversation is served by
+`opencode.service`. Verified after restart: new PID, v2.2.6, HTTPS 200,
+0 restarts, 0 journal errors, OpenViking plugin healthy, memory about 2.5 GB
+(was 15 GB before, with many duplicate MCP processes). The Hermes gateway was
+restarted gracefully the same night (v0.23.0, service definition refreshed).
+First recall after restart injected 0 entries, matching the 0.62 cutoff.
+Rollback: `opencode upgrade 2.2.5` then `systemctl --user restart opencode`.
