@@ -18,5 +18,8 @@ COPY chromium-wrapper.sh /usr/local/bin/chromium-wrapper.sh
 COPY start-desktop.sh /usr/local/bin/start-desktop
 RUN chmod 755 /usr/local/bin/start-desktop /usr/local/bin/chromium-wrapper.sh \
  && ln -sf /usr/local/bin/chromium-wrapper.sh /usr/local/bin/browser
+RUN apt-get update && apt-get install -y --no-install-recommends bash-completion \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 STOPSIGNAL SIGTERM
 CMD ["/usr/local/bin/start-desktop"]

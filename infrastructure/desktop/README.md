@@ -11,6 +11,8 @@ drive a browser or app alongside a human.
 | Stack | Portainer `desktop` (ID 182) |
 | Image | `registry.l3b.cc.cd/os:2026.11.08` (from the private registry; `pull_policy: always`) |
 | Base | Debian 13 slim |
+| Hostname | `os` |
+| Shell | bash 5.2 with bash-completion, `SHELL=/bin/bash` |
 | Desktop | KDE Plasma 6 with Breeze Dark, compositing off, Baloo indexing off |
 | Remote display | TigerVNC `:1` on 5901, no VNC password: Caddy + Tinyauth is the gate |
 | Browser client | noVNC + websockify on 6080, LAN profile: quality 9, compression 0 |

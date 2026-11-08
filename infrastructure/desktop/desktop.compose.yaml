@@ -2,11 +2,13 @@ services:
   desktop:
     image: registry.l3b.cc.cd/os:2026.11.08
     container_name: desktop
+    hostname: os
     restart: unless-stopped
     pull_policy: always
     shm_size: "1g"
     environment:
       TZ: Asia/Kolkata
+      SHELL: /bin/bash
     volumes:
       - /data/apps/desktop/home:/root
     networks:
