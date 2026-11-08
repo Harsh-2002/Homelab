@@ -6,13 +6,16 @@ services:
     restart: unless-stopped
     pull_policy: always
     shm_size: "1g"
+    security_opt:
+      - seccomp=unconfined
     environment:
       TZ: Asia/Kolkata
       SHELL: /bin/bash
     devices:
       - /dev/dri:/dev/dri
     volumes:
-      - /data/apps/desktop/home:/root
+      - /data/apps/desktop/home:/home/os
+      - /data/apps/desktop/opt:/opt
     networks:
       - l3b
     mem_limit: 6g

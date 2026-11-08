@@ -129,6 +129,27 @@ which aborts without `--no-sandbox`. The image now ships its own desktop entry
 that calls `/usr/local/bin/chromium-wrapper.sh`, and the session seeds
 `~/.config/mimeapps.list` so http/https links also use it.
 
+## User model and sandboxes
+
+The Plasma session runs as the unprivileged user `os` (uid 1000), not root. This
+is what makes modern apps work: Electron and Chromium refuse to run as root and
+refuse to start their sandbox without user namespaces. The stack therefore sets
+`security_opt: [seccomp=unconfined]`, which lets `unshare -U` succeed; the
+container still has no added capabilities and is not privileged, but it loses
+Docker's syscall filter. That is the deliberate trade for a desktop that behaves
+like an operating system.
+
+Admin tools still work: `os` has passwordless sudo (sudoers drop-in) and a polkit
+rule that answers yes for user `os`, so Synaptic and other `pkexec` apps open
+without a prompt. Chromium runs with its sandbox enabled; no `--no-sandbox` flag
+is shipped.
+
+Persistence: `/home/os` and `/opt` are bind mounts under
+`/data/apps/desktop/`. Electron apps installed under `/opt` survive container
+recreation. Packages installed by apt into `/usr` live in the container layer:
+they survive stop/start but are lost when the stack is recreated from the image.
+Bake anything permanent into the Dockerfile, or reinstall after a recreate.
+
 ## Installing and launching software
 
 Synaptic (menu: System > Synaptic Package Manager) is the store. Search, mark,
