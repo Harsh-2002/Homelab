@@ -1,6 +1,10 @@
 #!/bin/sh
 set -eu
 export XDG_RUNTIME_DIR=/run/user/0
+# expose the accessibility tree so agents can inspect apps without pixel guessing
+export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1
+export GTK_MODULES=gail:atk-bridge
+export NO_AT_BRIDGE=0
 mkdir -p "$XDG_RUNTIME_DIR"; chmod 700 "$XDG_RUNTIME_DIR"
 trap 'kill 0 2>/dev/null || true' TERM INT
 # no lock screen and no display blanking: access is already gated by Caddy/Tinyauth
