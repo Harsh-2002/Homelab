@@ -7,6 +7,11 @@ export GTK_MODULES=gail:atk-bridge
 export NO_AT_BRIDGE=0
 mkdir -p "$XDG_RUNTIME_DIR"; chmod 700 "$XDG_RUNTIME_DIR"
 trap 'kill 0 2>/dev/null || true' TERM INT
+# make the wrapped Chromium the default handler so menu and links both work as root
+if [ ! -f /root/.config/mimeapps.list ]; then
+  mkdir -p /root/.config
+  printf '[Default Applications]\nx-scheme-handler/http=chromium.desktop\nx-scheme-handler/https=chromium.desktop\ntext/html=chromium.desktop\n' > /root/.config/mimeapps.list
+fi
 # no lock screen and no display blanking: access is already gated by Caddy/Tinyauth
 mkdir -p /root/.config
 printf '[Daemon]\nAutolock=false\nLockOnResume=false\n' > /root/.config/kscreenlockerrc
