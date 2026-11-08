@@ -2,7 +2,7 @@ services:
   desktop:
     image: registry.l3b.cc.cd/os:selkies
     container_name: desktop
-    hostname: os
+    hostname: ubuntu-desktop
     restart: unless-stopped
     pull_policy: always
     shm_size: "2g"
@@ -14,13 +14,18 @@ services:
       DISPLAY_SIZEH: "900"
       SELKIES_AUDIO_ENABLED: "true"
       SELKIES_ENABLE_RESIZE: "true"
-      SELKIES_SCALING_DPI: "96"
+      SELKIES_SCALING_DPI: "168"
       SELKIES_ENCODER: "h264enc"
       SELKIES_RATE_CONTROL_MODE: "cbr"
       SELKIES_VIDEO_BITRATE: "60000"
       SELKIES_FRAMERATE: "60"
       SELKIES_ENABLE_HTTPS: "false"
       SELKIES_ENABLE_BASIC_AUTH: "false"
+      SELKIES_UI_TITLE: "Ubuntu Desktop"
+      SELKIES_UI_SHOW_LOGO: "false"
+      SELKIES_UI_SHOW_CORE_BUTTONS: "false"
+      SELKIES_UI_SHOW_SIDEBAR: "false"
+      SELKIES_AUDIO_ON_START: "true"
       SELKIES_MICROPHONE_ENABLED: "true"
     devices:
       - /dev/dri:/dev/dri

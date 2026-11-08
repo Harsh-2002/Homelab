@@ -258,6 +258,13 @@ Stack:
   are required: without the prefix KService looks for a missing
   `applications.menu`, and without the rebuild every app icon and pinned
   launcher is a generic placeholder and does nothing.
+- Name: container hostname `ubuntu-desktop`, os-release `Ubuntu Desktop 26.04 LTS`.
+- Scaling: 175% (`SELKIES_SCALING_DPI=168`), so UI text and icons are comfortable on
+  a MacBook; the logical workspace is correspondingly smaller. Drop to 144 for
+  more room.
+- UI: the Selkies toolbar is hidden (`SELKIES_UI_SHOW_CORE_BUTTONS=false`,
+  `SELKIES_UI_SHOW_SIDEBAR=false`, logo off, title "Ubuntu Desktop"). Use the
+  browser's own fullscreen for a 1:1 view; there is no in-page button.
 - Panel: Application Launcher plus Dolphin, Konsole and Google Chrome, then
   clock and tray. Seeded from `selkies/panel-appletsrc` on first start.
 - Look: Ubuntu's base ships its own theme (Ubuntu icons, orange accents, green

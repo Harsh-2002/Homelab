@@ -34,7 +34,14 @@ RUN find /etc/service -name run -exec chmod -f 755 {} + \
 
 USER 1000
 SHELL ["/usr/bin/fakeroot", "--", "/bin/sh", "-c"]
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    scrot nodejs npm python3-pyatspi at-spi2-core \
+ && apt-get clean
 RUN apt-get update
+
+USER 0
+SHELL ["/bin/sh", "-c"]
+RUN sed -i 's/^NAME=.*/NAME="Ubuntu Desktop"/; s/^PRETTY_NAME=.*/PRETTY_NAME="Ubuntu Desktop 26.04 LTS"/' /usr/lib/os-release /etc/os-release
 
 USER 1000
 ENV SHELL=/bin/bash USER=ubuntu HOME=/home/ubuntu
