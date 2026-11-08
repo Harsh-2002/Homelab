@@ -260,6 +260,11 @@ Stack:
   launcher is a generic placeholder and does nothing.
 - Panel: Application Launcher plus Dolphin, Konsole and Google Chrome, then
   clock and tray. Seeded from `selkies/panel-appletsrc` on first start.
+- Look: Ubuntu's base ships its own theme (Ubuntu icons, orange accents, green
+  wallpaper), which is why the first boot looked unlike the previous desktop.
+  `services/plasma/run` now applies `org.kde.breezedark.desktop` once (marker
+  `~/.config/.breeze-applied`), giving Breeze Dark colours, icons, panel and
+  wallpaper from the first start.
 - Streaming: port 8080 internal, plain HTTP, WebSocket; Caddy terminates TLS
   and enforces Tinyauth. `SELKIES_ENABLE_HTTPS=false` and
   `SELKIES_ENABLE_BASIC_AUTH=false` because Caddy owns both.
