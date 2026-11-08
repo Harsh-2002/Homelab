@@ -28,6 +28,9 @@ printf '[Daemon]\nAutolock=false\nLockOnResume=false\n' > "$HOME_DIR/.config/ksc
 if [ ! -f "$HOME_DIR/.config/mimeapps.list" ]; then
   printf '[Default Applications]\nx-scheme-handler/http=chromium.desktop\nx-scheme-handler/https=chromium.desktop\ntext/html=chromium.desktop\n' > "$HOME_DIR/.config/mimeapps.list"
 fi
+if [ ! -f "$HOME_DIR/.config/plasma-org.kde.plasma.desktop-appletsrc" ]; then
+  cp /usr/share/os-desktop/panel-appletsrc "$HOME_DIR/.config/plasma-org.kde.plasma.desktop-appletsrc"
+fi
 chown -R $USER_NAME:$USER_NAME "$HOME_DIR" 2>/dev/null || true
 
 trap 'kill 0 2>/dev/null || true' TERM INT

@@ -28,8 +28,10 @@ COPY refresh-menu.sh /usr/local/bin/refresh-menu
 COPY chromium.desktop /usr/share/applications/chromium.desktop
 COPY synaptic.desktop /usr/share/applications/synaptic.desktop
 COPY refresh-menu.desktop /usr/share/applications/refresh-menu.desktop
+COPY panel-appletsrc /usr/share/os-desktop/panel-appletsrc
 
 RUN chmod 440 /etc/sudoers.d/90-os \
+ && chmod 644 /usr/share/applications/chromium.desktop /usr/share/applications/synaptic.desktop /usr/share/applications/refresh-menu.desktop \
  && chmod 755 /usr/local/bin/start-desktop /usr/local/bin/chromium-wrapper.sh /usr/local/bin/refresh-menu \
  && ln -sf /usr/local/bin/chromium-wrapper.sh /usr/local/bin/browser \
  && ln -sf /usr/bin/vim.tiny /usr/local/bin/vim \
