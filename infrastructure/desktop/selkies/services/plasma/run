@@ -14,6 +14,7 @@ if [ ! -f "${HOME}/.config/.breeze-applied" ]; then
   touch "${HOME}/.config/.breeze-applied"
 fi
 kbuildsycoca6 --noincremental >/tmp/ksycoca.log 2>&1 || true
+export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1 GTK_MODULES=gail:atk-bridge NO_AT_BRIDGE=0
 export XDG_SESSION_TYPE=x11 XDG_CURRENT_DESKTOP=KDE KDE_SESSION_VERSION=6 DESKTOP_SESSION=plasma XDG_MENU_PREFIX=plasma- KDE_FULL_SESSION=true
 echo "[plasma] manual X11 session on ${DISPLAY}"
 setsid /usr/local/bin/window-sizer >/tmp/window-sizer.log 2>&1 &

@@ -305,3 +305,15 @@ Limits:
 Backup: the previous VNC image is `registry.l3b.cc.cd/static-os:2026.11.08`
 with `Dockerfile.static-os`, `start-desktop-static-os.sh` and
 `desktop-static-os.compose.yaml`.
+
+## Agent QA skill
+
+`~/.agents/skills/os-desktop-qa/SKILL.md` teaches agents to drive this desktop:
+environment facts, the `os` helper (shot, click, type, key, wait, focus, windows,
+maximize, launch, desktop, a11y, clip, exec, sudo), a standard QA loop, app
+development notes and limits.
+
+Verified building blocks: `scrot` screenshots, `xdotool` input, `wmctrl` window
+listing, `pyatspi` accessibility tree (AT-SPI enabled in the session), Node and
+Python for test code. `os wait` uses `wmctrl -l`, because xdotool's
+`--onlyvisible` filter misses some KDE windows.
