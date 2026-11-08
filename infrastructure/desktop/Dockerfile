@@ -1,5 +1,8 @@
 FROM debian:trixie-slim
-ENV DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8
+# Hostname is a runtime setting, not an image one: Docker owns /etc/hostname and
+# writes it at start. The stack sets `hostname: os`, which is why ENV HOSTNAME
+# would be misleading here. Shell, however, belongs in the image.
+ENV DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8 SHELL=/bin/bash
 RUN apt-get update && apt-get install -y --no-install-recommends \
     dbus dbus-x11 \
     plasma-desktop plasma-workspace kwin-x11 konsole dolphin kdialog \
