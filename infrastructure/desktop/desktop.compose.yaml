@@ -24,7 +24,8 @@ services:
       SELKIES_UI_TITLE: "Ubuntu Desktop"
       SELKIES_UI_SHOW_LOGO: "false"
       SELKIES_UI_SHOW_CORE_BUTTONS: "false"
-      SELKIES_UI_SHOW_SIDEBAR: "false"
+      SELKIES_UI_SHOW_SIDEBAR: "true"
+      SELKIES_UI_LAYOUT: "default"
       SELKIES_AUDIO_ON_START: "true"
       SELKIES_MICROPHONE_ENABLED: "true"
     devices:
