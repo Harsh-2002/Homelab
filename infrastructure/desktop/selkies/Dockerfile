@@ -25,9 +25,12 @@ RUN selkies-privileged-files restore
 COPY --chown=1000:1000 services/ /etc/service/
 COPY --chown=1000:1000 seed-desktop.sh /usr/local/bin/seed-desktop
 COPY --chown=1000:1000 panel-appletsrc /usr/share/os-desktop/panel-appletsrc
+COPY --chown=1000:1000 kwin-os-size.js /usr/share/os-desktop/kwin-os-size.js
+COPY --chown=1000:1000 window-sizer.sh /usr/local/bin/window-sizer
 
 RUN find /etc/service -name run -exec chmod -f 755 {} + \
- && chmod 755 /usr/local/bin/seed-desktop
+ && rm -f /usr/share/applications/org.kde.plasma.emojier.desktop \
+ && chmod 755 /usr/local/bin/seed-desktop /usr/local/bin/window-sizer
 
 USER 1000
 SHELL ["/usr/bin/fakeroot", "--", "/bin/sh", "-c"]

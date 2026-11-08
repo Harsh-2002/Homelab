@@ -15,6 +15,10 @@ fi
 kbuildsycoca6 --noincremental >/tmp/ksycoca.log 2>&1 || true
 export XDG_SESSION_TYPE=x11 XDG_CURRENT_DESKTOP=KDE KDE_SESSION_VERSION=6 DESKTOP_SESSION=plasma XDG_MENU_PREFIX=plasma- KDE_FULL_SESSION=true
 echo "[plasma] manual X11 session on ${DISPLAY}"
+setsid /usr/local/bin/window-sizer >/tmp/window-sizer.log 2>&1 &
 kwin_x11 >/tmp/kwin.log 2>&1 &
+sleep 2
+/usr/bin/qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.loadScript /usr/share/os-desktop/kwin-os-size.js >/dev/null 2>&1 || true
+/usr/bin/qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.start >/dev/null 2>&1 || true
 sleep 2
 exec plasmashell
