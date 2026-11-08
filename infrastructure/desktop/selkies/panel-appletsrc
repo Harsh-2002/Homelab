@@ -1,22 +1,20 @@
 [ActionPlugins][0]
+MiddleButton;NoModifier=org.kde.paste
 RightButton;NoModifier=org.kde.contextmenu
 
 [ActionPlugins][1]
 RightButton;NoModifier=org.kde.contextmenu
 
 [Containments][1]
-ItemGeometries-1622x930=
+ItemGeometries-1600x900=
 ItemGeometriesHorizontal=
-activityId=a566b07b-b9b0-4ba8-bdd9-ab398567440f
+activityId=8075c6fa-2e07-45b6-9882-46e3bf096e9f
 formfactor=0
 immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.image
-
-[Containments][1][General]
-positions={"1600x900":[],"1622x930":[]}
 
 [Containments][2]
 activityId=
@@ -27,16 +25,17 @@ location=4
 plugin=org.kde.panel
 wallpaperplugin=org.kde.image
 
-[Containments][2][Applets][15]
+[Containments][2][Applets][14]
 immutability=1
 plugin=org.kde.plasma.digitalclock
-
-[Containments][2][Applets][15][Configuration][Appearance]
-fontWeight=400
 
 [Containments][2][Applets][3]
 immutability=1
 plugin=org.kde.plasma.kickoff
+
+[Containments][2][Applets][3][Configuration]
+popupHeight=513
+popupWidth=651
 
 [Containments][2][Applets][3][Configuration][General]
 favoritesPortedToKAstats=true
@@ -49,52 +48,44 @@ plugin=org.kde.plasma.icontasks
 launchers=applications:org.kde.dolphin.desktop,applications:org.kde.konsole.desktop,applications:google-chrome.desktop
 
 [Containments][2][Applets][7]
-immutability=1
-plugin=org.kde.plasma.systemtray
-
-[Containments][2][Applets][7][Configuration]
-SystrayContainmentId=8
-
-[Containments][2][General]
-AppletOrder=3;5;7;15
-
-[Containments][8]
 activityId=
-formfactor=2
+formfactor=0
 immutability=1
-lastScreen=0
-location=4
-plugin=org.kde.plasma.private.systemtray
+lastScreen=-1
+location=0
+plugin=org.kde.plasma.systemtray
 wallpaperplugin=org.kde.image
 
-[Containments][8][Applets][10]
-immutability=1
-plugin=org.kde.plasma.clipboard
-
-[Containments][8][Applets][11]
+[Containments][2][Applets][7][Applets][10]
 immutability=1
 plugin=org.kde.plasma.devicenotifier
 
-[Containments][8][Applets][12]
+[Containments][2][Applets][7][Applets][11]
 immutability=1
 plugin=org.kde.plasma.keyboardlayout
 
-[Containments][8][Applets][13]
+[Containments][2][Applets][7][Applets][12]
 immutability=1
 plugin=org.kde.plasma.manage-inputmethod
 
-[Containments][8][Applets][14]
+[Containments][2][Applets][7][Applets][13]
 immutability=1
 plugin=org.kde.plasma.notifications
 
-[Containments][8][Applets][9]
+[Containments][2][Applets][7][Applets][8]
 immutability=1
 plugin=org.kde.plasma.cameraindicator
 
-[Containments][8][General]
+[Containments][2][Applets][7][Applets][9]
+immutability=1
+plugin=org.kde.plasma.clipboard
+
+[Containments][2][Applets][7][General]
 extraItems=org.kde.plasma.cameraindicator,org.kde.plasma.clipboard,org.kde.plasma.devicenotifier,org.kde.plasma.keyboardlayout,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller,org.kde.plasma.notifications
 knownItems=org.kde.plasma.cameraindicator,org.kde.plasma.clipboard,org.kde.plasma.devicenotifier,org.kde.plasma.keyboardlayout,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller,org.kde.plasma.notifications
 
+[Containments][2][General]
+AppletOrder=3;5;7;14
+
 [ScreenMapping]
 itemsOnDisabledScreens=
-screenMapping=

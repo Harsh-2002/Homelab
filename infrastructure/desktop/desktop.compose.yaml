@@ -13,6 +13,8 @@ services:
       DISPLAY_SIZEW: "1600"
       DISPLAY_SIZEH: "900"
       SELKIES_AUDIO_ENABLED: "true"
+      SELKIES_ENABLE_HTTPS: "false"
+      SELKIES_ENABLE_BASIC_AUTH: "false"
       SELKIES_MICROPHONE_ENABLED: "true"
     devices:
       - /dev/dri:/dev/dri

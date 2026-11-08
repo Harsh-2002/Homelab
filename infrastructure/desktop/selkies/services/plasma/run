@@ -8,6 +8,9 @@ cd "${HOME}" || true
 until [ -S "/tmp/.X11-unix/X${DISPLAY#*:}" ]; do sleep 0.5; done
 export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/selkies-session-bus"
 until [ -S "${XDG_RUNTIME_DIR}/selkies-session-bus" ]; do sleep 0.5; done
-export XDG_SESSION_TYPE="x11"
-echo "[plasma] session draws on ${DISPLAY}"
-exec startplasma-x11
+kbuildsycoca6 --noincremental >/tmp/ksycoca.log 2>&1 || true
+export XDG_SESSION_TYPE=x11 XDG_CURRENT_DESKTOP=KDE KDE_SESSION_VERSION=6 DESKTOP_SESSION=plasma XDG_MENU_PREFIX=plasma- KDE_FULL_SESSION=true
+echo "[plasma] manual X11 session on ${DISPLAY}"
+kwin_x11 >/tmp/kwin.log 2>&1 &
+sleep 2
+exec plasmashell
