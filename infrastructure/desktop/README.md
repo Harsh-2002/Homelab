@@ -9,7 +9,7 @@ drive a browser or app alongside a human.
 | Item | Value |
 | --- | --- |
 | Stack | Portainer `desktop` (ID 182) |
-| Image | `localdesk:1` (built from this directory; `pull_policy: never`) |
+| Image | `registry.l3b.cc.cd/os:2026.11.08` (from the private registry; `pull_policy: always`) |
 | Base | Debian 13 slim |
 | Desktop | KDE Plasma 6 with Breeze Dark, compositing off, Baloo indexing off |
 | Remote display | TigerVNC `:1` on 5901, no VNC password: Caddy + Tinyauth is the gate |
@@ -40,14 +40,16 @@ Over a slow link, lower quality and allow compression in `start-desktop`'s URL
 
 ```bash
 cd infrastructure/desktop
-docker build --network host -t localdesk:1 .   # host networking: no default bridge
+docker build --network host -t registry.l3b.cc.cd/os:2026.11.08 .   # host networking: no default bridge
+docker push registry.l3b.cc.cd/os:2026.11.08
+# redeploy stack 182; Portainer pulls with its saved registry credentials
 python3 infrastructure/portainer/stack-update.py 182
 ```
 
 The image is built entirely from this directory on `debian:trixie-slim`; nothing
-comes from a third-party desktop image. Rebuild with the same tag, redeploy, and
-push the result to the local registry (`registry.l3b.cc.cd/localdesk:1`, blobs in
-RustFS S3) so a rebuilt host can pull it.
+comes from a third-party desktop image. It is stored only in the private
+registry (`registry.l3b.cc.cd/os`, blobs in RustFS S3), so the host does not need
+a local tag: the stack pulls it with Portainer's saved registry credentials.
 
 ## Theme
 

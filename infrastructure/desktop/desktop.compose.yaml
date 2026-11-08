@@ -1,9 +1,9 @@
 services:
   desktop:
-    image: localdesk:1
+    image: registry.l3b.cc.cd/os:2026.11.08
     container_name: desktop
     restart: unless-stopped
-    pull_policy: never
+    pull_policy: always
     shm_size: "1g"
     environment:
       TZ: Asia/Kolkata
