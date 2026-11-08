@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Refresh Application Menu
+Comment=Rebuild the application menu after installing or removing software
+Exec=/usr/local/bin/refresh-menu
+Icon=view-refresh
+Terminal=false
+Categories=System;

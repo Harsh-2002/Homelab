@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Synaptic Package Manager
+GenericName=Package Manager
+Comment=Install, remove and upgrade software packages
+Exec=/usr/sbin/synaptic
+Icon=synaptic
+Terminal=false
+Categories=System;PackageManager;
+Keywords=apt;package;software;install;remove;
+StartupNotify=true

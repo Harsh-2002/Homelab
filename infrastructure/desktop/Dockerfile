@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     at-spi2-core python3-pyatspi \
     chromium fonts-dejavu fonts-liberation fonts-noto-color-emoji \
     libva2 libva-drm2 vainfo intel-media-va-driver mesa-va-drivers libgl1-mesa-dri \
-    synaptic \
+    synaptic librsvg2-common shared-mime-info polkitd \
     git curl wget ca-certificates sudo procps iproute2 net-tools less nano jq \
     htop tree unzip zip rsync vim-tiny file lsof tmux ncdu p7zip-full xz-utils \
     iputils-ping dnsutils xdg-utils desktop-file-utils xdg-user-dirs \
@@ -26,11 +26,15 @@ RUN mkdir -p /root/.config \
 COPY chromium-wrapper.sh /usr/local/bin/chromium-wrapper.sh
 COPY start-desktop.sh /usr/local/bin/start-desktop
 COPY chromium.desktop /usr/share/applications/chromium.desktop
+COPY synaptic.desktop /usr/share/applications/synaptic.desktop
+COPY refresh-menu.desktop /usr/share/applications/refresh-menu.desktop
+COPY refresh-menu.sh /usr/local/bin/refresh-menu
 COPY chromium-policy.json /etc/chromium/policies/managed/disable-warnings.json
 
 RUN chmod 755 /usr/local/bin/start-desktop /usr/local/bin/chromium-wrapper.sh \
  && ln -sf /usr/local/bin/chromium-wrapper.sh /usr/local/bin/browser \
  && ln -sf /usr/bin/vim.tiny /usr/local/bin/vim \
+ && chmod 755 /usr/local/bin/refresh-menu \
  && update-desktop-database /usr/share/applications 2>/dev/null || true
 
 EXPOSE 6080 5901

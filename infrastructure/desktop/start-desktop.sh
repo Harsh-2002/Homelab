@@ -7,6 +7,10 @@ export GTK_MODULES=gail:atk-bridge
 export NO_AT_BRIDGE=0
 mkdir -p "$XDG_RUNTIME_DIR"; chmod 700 "$XDG_RUNTIME_DIR"
 trap 'kill 0 2>/dev/null || true' TERM INT
+# system bus and polkit so privileged GUI tools (pkexec) behave like a normal OS
+mkdir -p /run/dbus
+[ -S /run/dbus/system_bus_socket ] || dbus-daemon --system --fork 2>/dev/null || true
+pgrep -x polkitd >/dev/null 2>&1 || /usr/lib/polkit-1/polkitd --no-debug >/tmp/polkitd.log 2>&1 &
 # make the wrapped Chromium the default handler so menu and links both work as root
 if [ ! -f /root/.config/mimeapps.list ]; then
   mkdir -p /root/.config
@@ -38,6 +42,7 @@ fi
 sleep 1
 DISPLAY=:1 dbus-launch --exit-with-session /usr/bin/startplasma-x11 &
 sleep 2
+xdg-user-dirs-update >/dev/null 2>&1 || true
 DISPLAY=:1 xset s off -dpms s noblank >/dev/null 2>&1 || true
 /usr/bin/websockify --web=/usr/share/novnc 6080 localhost:5901 &
 wait -n 2>/dev/null || wait

@@ -129,6 +129,37 @@ which aborts without `--no-sandbox`. The image now ships its own desktop entry
 that calls `/usr/local/bin/chromium-wrapper.sh`, and the session seeds
 `~/.config/mimeapps.list` so http/https links also use it.
 
+## Installing and launching software
+
+Synaptic (menu: System > Synaptic Package Manager) is the store. Search, mark,
+Apply, and the package is installed with apt as root. No password prompt, no
+polkit dialog: the session already runs as root, and the image ships a
+`synaptic.desktop` that calls `/usr/sbin/synaptic` directly. The stock Debian
+entry used `synaptic-pkexec`, which failed silently because no polkit daemon was
+running.
+
+After installing, the app appears in the KDE menu. If it does not, run
+**Refresh Application Menu** (also `/usr/local/bin/refresh-menu`, which runs
+`kbuildsycoca6 --noincremental`). The image runs `polkitd` and a system D-Bus at
+session start, so privileged GUI tools that use `pkexec` work too.
+
+A package that installs but does not open can be checked the same way an agent
+would launch it:
+
+```
+kioclient exec /usr/share/applications/<app>.desktop
+```
+
+Launch failures then print to the terminal instead of vanishing. Verified on the
+deployed image: a fresh `galculator` install opened through the KDE launcher,
+and Synaptic opened with its full package list (68,907 packages) and no icon
+warnings.
+
+Every fix here lives in the image: the Chromium and Synaptic desktop entries,
+the Chromium warning policy, the refresh helper, packages, and the session
+script. Runtime-only pieces are the compose-level hostname, memory limit,
+`/dev/dri` and the `/root` volume.
+
 ## iGPU
 
 `/dev/dri` is passed into the container and the image ships Mesa plus
