@@ -5,7 +5,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     plasma-desktop plasma-workspace kwin-x11 konsole dolphin kdialog \
     tigervnc-standalone-server tigervnc-common \
     novnc websockify \
-    xdotool scrot imagemagick x11-utils x11-xserver-utils \
+    xdotool scrot imagemagick x11-utils x11-xserver-utils wmctrl xclip \
+    at-spi2-core python3-pyatspi dbus-x11 \
     chromium fonts-dejavu fonts-liberation fonts-noto-color-emoji \
     git curl ca-certificates sudo procps iproute2 net-tools less nano jq \
     python3 python3-venv python3-pip nodejs npm \

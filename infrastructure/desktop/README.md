@@ -107,6 +107,41 @@ TINYAUTH_APPS_OS_OAUTH_GROUPS=infrastructure-admins
 Both checks must pass. Adding a user means their email on the whitelist and the
 account in `infrastructure-admins`; then redeploy stack 170.
 
+## Passwordless by design
+
+There is no OS password and no lock screen. `root` has a locked password (`L` in
+`passwd -S`, `*` in shadow), there is no SSH or console login, and the session
+starts already logged in. Access to the desktop is exactly the Caddy + Tinyauth
+passkey gate at `https://os.l3b.cc.cd`; the VNC port is never published.
+
+`start-desktop.sh` writes `kscreenlockerrc` with `Autolock=false` and
+`LockOnResume=false` into both `/root/.config` and `/etc/xdg`, and runs
+`xset s off -dpms`, so the session cannot lock itself or blank the screen. An
+earlier image lacked this and could trap a user at a lock screen that root
+could not unlock. Do not re-enable locking unless a real user account with a
+password is added first.
+
+## Testing environment (human + agent)
+
+Both drive the same session, so a person can watch or take over while an agent
+works:
+
+| Need | Available |
+| --- | --- |
+| Browser and web app testing | Chromium (wrapper adds `--no-sandbox --disable-dev-shm-usage`) |
+| App launcher, files, terminal | KDE launcher, Dolphin, Konsole |
+| Agent screenshots | `scrot` via `os shot` |
+| Agent input | `xdotool` via `os click/type/key` |
+| Window control | `wmctrl`, `xdotool` |
+| Clipboard bridge | noVNC clipboard panel, plus `xclip` inside |
+| Accessibility tree for agents | `at-spi2-core`, `python3-pyatspi` |
+| Build/test runtimes | Node, npm, Python 3, pip, git, curl, jq |
+| Playwright-style browser automation | Run Playwright inside the container or use the host's `playwright-cli` against an app |
+
+Session applications must be started with the Plasma environment
+(`XDG_CURRENT_DESKTOP=KDE KDE_FULL_SESSION=true DISPLAY=:1`) or they render with
+the light fallback theme; the `os` helper does this.
+
 ## Limits
 
 - One shared desktop: every viewer and the agent see the same screen and clipboard.
