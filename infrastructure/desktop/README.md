@@ -266,7 +266,8 @@ Stack:
   `~/.config/.breeze-applied`), giving Breeze Dark colours, icons, panel and
   wallpaper from the first start.
 - Display: fixed 1920x1080 at 100% DPI, H.264 encoder (`SELKIES_ENCODER=h264enc`),
-  60 fps. Dynamic resize is off because stock KWin does not follow Selkies'
+  60 fps, CBR 40 Mbps (`SELKIES_RATE_CONTROL_MODE=cbr`, `SELKIES_VIDEO_BITRATE=40000`).
+  Lower bitrates make text soft; 40 Mbps is cheap on LAN. Dynamic resize is off because stock KWin does not follow Selkies'
   RandR changes and windows land off-screen. The browser scales the 1080p
   stream to the client window, so a MacBook and an HD monitor both work; drop
   to 1280x720 by changing DISPLAY_SIZEW/HECHT if a device struggles.
