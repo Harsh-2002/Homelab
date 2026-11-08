@@ -30,7 +30,7 @@ The unauthenticated `/v2/` response must be `401` and include `Docker-Distributi
 
 The registry stores blobs in RustFS S3 (bucket `docker-registry`, endpoint
 `http://rustfs:9000`, `rootdirectory: /registry`), so images survive a registry
-container rebuild and ride along with RustFS data. Authentication is htpasswd;
+container rebuild and ride along with RustFS data. Storage uses a scoped RustFS service-account key, not the RustFS root key (rotated 8 November 2026). Authentication is htpasswd;
 the username/password and the RustFS keys are in 1Password (`Docker Private
 Registry`, `RustFS - S3`).
 

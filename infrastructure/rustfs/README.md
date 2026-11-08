@@ -70,3 +70,36 @@ ssh s3 'dpkg -i rustfs_<version>_amd64.deb && systemctl start rustfs && systemct
 ```
 
 Validate the native health endpoint, Caddy API health route, and an authenticated `aws s3api list-buckets` request after every upgrade. CT failover and restore tests should be scheduled separately; never start two RustFS instances against the same data tree.
+
+## Root credential rotation, 8 November 2026
+
+The registry had been configured with the RustFS **root** key, and that key was
+exposed in a session while reading `config.yml`. Rotation performed:
+
+1. New root access/secret generated and written to `/data/apps/rustfs/runtime.env`
+   (`RUSTFS_ROOT_USER`, `RUSTFS_ROOT_PASSWORD`) and to stack 177's environment,
+   then the stack was redeployed.
+2. A scoped service-account key was created for the registry with the new root,
+   and `/data/apps/registry/config.yml` was switched to it, so the registry no
+   longer uses root at all. Registry push verified after the change.
+3. Old root key now returns 403; new key returns 200. The exposed service account
+   (`MTIKT070GN1UYV4VUC0I`) was deleted.
+
+Still to do by the owner: update 1Password, because this session's service
+account has read-only access to the vault. Run this on the host; it prints
+nothing and prompts for nothing:
+
+```bash
+export OP_SERVICE_ACCOUNT_TOKEN=$(cat ~/.config/op/service-account-token)
+set -a; . /data/apps/rustfs/runtime.env; set +a
+op item edit "RustFS - S3" --vault HomeLab \
+  "username=$RUSTFS_ROOT_USER" "credential=$RUSTFS_ROOT_PASSWORD"
+```
+
+Also update the `RustFS Access Key` / `RustFS Secret Key` fields of the
+`Docker Private Registry` item from `/data/apps/registry/config.yml`
+(`storage.s3.accesskey` / `secretkey`).
+
+Verification after rotation: RustFS, registry and desktop all healthy; registry
+auth 200; `docker push registry.l3b.cc.cd/os:2026.11.08` succeeds; old root key
+403, new root key 200.
