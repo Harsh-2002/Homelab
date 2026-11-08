@@ -30,6 +30,7 @@ COPY chromium-policy.json /etc/chromium/policies/managed/disable-warnings.json
 
 RUN chmod 755 /usr/local/bin/start-desktop /usr/local/bin/chromium-wrapper.sh \
  && ln -sf /usr/local/bin/chromium-wrapper.sh /usr/local/bin/browser \
+ && ln -sf /usr/bin/vim.tiny /usr/local/bin/vim \
  && update-desktop-database /usr/share/applications 2>/dev/null || true
 
 EXPOSE 6080 5901
