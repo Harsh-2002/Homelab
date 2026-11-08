@@ -20,7 +20,6 @@ drive a browser or app alongside a human.
 | Limits | 2 vCPU, 6 GB RAM, 1 GB shm |
 
 Published ports: none. Caddy reaches `desktop:6080` over the `l3b` network.
-Rollback image: `localdesk:xfce-rollback`.
 
 ## Resolution and quality
 
@@ -45,9 +44,9 @@ docker build --network host -t localdesk:1 .   # host networking: no default bri
 python3 infrastructure/portainer/stack-update.py 182
 ```
 
-The image is local only; rebuild with the same tag and redeploy. Keep the old
-tag (for example `docker tag localdesk:1 localdesk:xfce-rollback`) before a
-desktop swap.
+The image is local only and built entirely from this directory on
+`debian:trixie-slim`; nothing comes from a third-party desktop image. Rebuild
+with the same tag and redeploy.
 
 ## Theme
 
