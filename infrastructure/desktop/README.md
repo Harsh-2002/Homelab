@@ -172,7 +172,11 @@ works:
 | Window control | `wmctrl`, `xdotool` |
 | Clipboard bridge | noVNC clipboard panel, plus `xclip` inside |
 | Accessibility tree for agents | `at-spi2-core`, `python3-pyatspi` |
-| Build/test runtimes | Node, npm, Python 3, pip, git, curl, jq |
+| Build/test runtimes | Node, npm, Python 3, pip, git, curl, wget, jq |
+| Everyday CLI | nano, vim-tiny, htop, tree, tmux, ncdu, less, file, lsof |
+| Archives and sync | unzip, zip, p7zip-full, xz-utils, rsync |
+| Network checks | ping, dig, ip, ss, netstat, curl |
+| Desktop helpers | xdg-open, desktop-file-utils, xdg-user-dirs |
 | Playwright-style browser automation | Run Playwright inside the container or use the host's `playwright-cli` against an app |
 
 Session applications must be started with the Plasma environment
