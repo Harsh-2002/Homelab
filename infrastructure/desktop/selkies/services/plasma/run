@@ -1,4 +1,5 @@
 #!/bin/bash
+ulimit -c 0
 export DISPLAY="${DISPLAY:-:20}"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/runtime-ubuntu}"
 until [ -f "${XDG_RUNTIME_DIR}/container-env" ]; do sleep 0.5; done
