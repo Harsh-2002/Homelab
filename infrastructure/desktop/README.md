@@ -44,9 +44,10 @@ docker build --network host -t localdesk:1 .   # host networking: no default bri
 python3 infrastructure/portainer/stack-update.py 182
 ```
 
-The image is local only and built entirely from this directory on
-`debian:trixie-slim`; nothing comes from a third-party desktop image. Rebuild
-with the same tag and redeploy.
+The image is built entirely from this directory on `debian:trixie-slim`; nothing
+comes from a third-party desktop image. Rebuild with the same tag, redeploy, and
+push the result to the local registry (`registry.l3b.cc.cd/localdesk:1`, blobs in
+RustFS S3) so a rebuilt host can pull it.
 
 ## Theme
 

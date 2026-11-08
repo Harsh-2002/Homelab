@@ -25,3 +25,29 @@ docker pull registry.l3b.cc.cd/<repository>:<tag>
 ```
 
 The unauthenticated `/v2/` response must be `401` and include `Docker-Distribution-Api-Version: registry/2.0`. A valid Docker login must succeed before pushing or pulling.
+
+## Custom images in the registry, 8 November 2026
+
+The registry stores blobs in RustFS S3 (bucket `docker-registry`, endpoint
+`http://rustfs:9000`, `rootdirectory: /registry`), so images survive a registry
+container rebuild and ride along with RustFS data. Authentication is htpasswd;
+the username/password and the RustFS keys are in 1Password (`Docker Private
+Registry`, `RustFS - S3`).
+
+Push flow for a locally built image:
+
+```bash
+docker login registry.l3b.cc.cd          # credentials from 1Password
+docker tag localdesk:1 registry.l3b.cc.cd/localdesk:1
+docker push registry.l3b.cc.cd/localdesk:1
+```
+
+The first push of the desktop image uploaded the whole 3 GB image. Docker stores
+the login in `~/.docker/config.json`, so later pushes need no password prompt.
+Verified after the push: `/v2/localdesk/tags/list` shows `1`, the manifest is an
+OCI index with an amd64 image plus attestation, a pull reports "up to date", and
+`docker-registry/registry/docker/registry/v2/blobs/...` objects exist in RustFS.
+
+The registry route is reachable over HTTPS at `registry.l3b.cc.cd` and relies on
+the registry's own basic auth, not Tinyauth (Docker cannot complete an OAuth
+redirect).
