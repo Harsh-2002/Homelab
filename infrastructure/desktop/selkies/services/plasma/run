@@ -17,6 +17,21 @@ export XDG_SESSION_TYPE=x11 XDG_CURRENT_DESKTOP=KDE KDE_SESSION_VERSION=6 DESKTO
 echo "[plasma] manual X11 session on ${DISPLAY}"
 setsid /usr/local/bin/window-sizer >/tmp/window-sizer.log 2>&1 &
 kwin_x11 >/tmp/kwin.log 2>&1 &
+# restart the window manager when Selkies changes the display size, so kwin
+# always knows the real screen and never places windows off-screen
+(
+  last=""
+  while true; do
+    cur=$(xdotool getdisplaygeometry 2>/dev/null || true)
+    if [ -n "$last" ] && [ "$cur" != "$last" ] && [ -n "$cur" ]; then
+      kwin_x11 --replace >/tmp/kwin-resize.log 2>&1 &
+      sleep 1
+    fi
+    last="$cur"
+    sleep 2
+  done
+) &
+
 sleep 2
 /usr/bin/qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.loadScript /usr/share/os-desktop/kwin-os-size.js >/dev/null 2>&1 || true
 /usr/bin/qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.start >/dev/null 2>&1 || true

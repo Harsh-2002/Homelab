@@ -265,14 +265,15 @@ Stack:
   `services/plasma/run` now applies `org.kde.breezedark.desktop` once (marker
   `~/.config/.breeze-applied`), giving Breeze Dark colours, icons, panel and
   wallpaper from the first start.
-- Display: fixed 1920x1080 at 100% DPI, H.264 encoder (`SELKIES_ENCODER=h264enc`),
-  60 fps, CBR 40 Mbps (`SELKIES_RATE_CONTROL_MODE=cbr`, `SELKIES_VIDEO_BITRATE=40000`).
-  Lower bitrates make text soft; 40 Mbps is cheap on LAN. Dynamic resize is off because stock KWin does not follow Selkies'
-  RandR changes and windows land off-screen. The browser scales the 1080p
-  stream to the client window, so a MacBook and an HD monitor both work; drop
-  to 1280x720 by changing DISPLAY_SIZEW/HECHT if a device struggles.
-- Windows: `window-sizer` sets every normal window to 1500x850 centered, because
-  KDE apps otherwise open at their own small remembered size.
+- Display: dynamic, 1:1 with the browser window (720p window gets a 720p
+  desktop, 1080p gets 1080p), H.264 VAAPI encoder, 60 fps, CBR 60 Mbps. Dynamic
+  resize is safe because `services/plasma/run` restarts `kwin_x11` whenever the
+  display size changes; stock KWin otherwise keeps the old geometry and places
+  windows off-screen. Fixed 1:1 also removes the resampling blur of a 1080p
+  stream shown in a smaller window.
+- Windows: `window-sizer` sets every normal window to 82% of the current screen,
+  centered, so a 720p session gets 1049x590 and 1080p gets 1574x885 instead of
+  each app's own small default.
 - Streaming: port 8080 internal, plain HTTP, WebSocket; Caddy terminates TLS
   and enforces Tinyauth. `SELKIES_ENABLE_HTTPS=false` and
   `SELKIES_ENABLE_BASIC_AUTH=false` because Caddy owns both.

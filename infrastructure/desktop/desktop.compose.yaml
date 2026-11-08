@@ -10,14 +10,14 @@ services:
       - seccomp=unconfined
     environment:
       TZ: Asia/Kolkata
-      DISPLAY_SIZEW: "1920"
-      DISPLAY_SIZEH: "1080"
+      DISPLAY_SIZEW: "1600"
+      DISPLAY_SIZEH: "900"
       SELKIES_AUDIO_ENABLED: "true"
-      SELKIES_ENABLE_RESIZE: "false"
+      SELKIES_ENABLE_RESIZE: "true"
       SELKIES_SCALING_DPI: "96"
       SELKIES_ENCODER: "h264enc"
       SELKIES_RATE_CONTROL_MODE: "cbr"
-      SELKIES_VIDEO_BITRATE: "40000"
+      SELKIES_VIDEO_BITRATE: "60000"
       SELKIES_FRAMERATE: "60"
       SELKIES_ENABLE_HTTPS: "false"
       SELKIES_ENABLE_BASIC_AUTH: "false"
