@@ -109,6 +109,41 @@ TINYAUTH_APPS_OS_OAUTH_GROUPS=infrastructure-admins
 Both checks must pass. Adding a user means their email on the whitelist and the
 account in `infrastructure-admins`; then redeploy stack 170.
 
+## Applications and app store
+
+Synaptic is installed as the graphical package manager (menu: System >
+Synaptic). It is the most compatible choice in this container: it drives apt
+directly as root, needs no daemon, and can install, remove, upgrade and search
+Debian packages. `apt` in Konsole works equally.
+
+Flatpak is **not** installed on purpose. Flatpak apps need unprivileged user
+namespaces, and this container runs under Docker's default seccomp profile,
+which blocks `unshare -U` (`Operation not permitted`). Snap needs systemd, which
+the image does not run. To use Flatpak later, the stack would need
+`security_opt: [seccomp=unconfined]` (or a privileged profile), which weakens
+the container boundary; apt packages remain the recommended path.
+
+Chromium previously failed when launched from the menu because
+`/usr/share/applications/chromium.desktop` ran `/usr/bin/chromium` as root,
+which aborts without `--no-sandbox`. The image now ships its own desktop entry
+that calls `/usr/local/bin/chromium-wrapper.sh`, and the session seeds
+`~/.config/mimeapps.list` so http/https links also use it.
+
+## iGPU
+
+`/dev/dri` is passed into the container and the image ships Mesa plus
+`intel-media-va-driver`, so `vainfo` reports the Intel iHD driver with H.264
+decode/encode. The device is shared with Jellyfin, Immich and Frigate, which is
+safe for render nodes.
+
+It does **not** accelerate the remote desktop. TigerVNC presents a software
+framebuffer with no GPU-backed GLX, so KWin stays on software and Chromium's GPU
+process cannot initialise (`--use-gl=egl` fails with "requested GL
+implementation not found"). Chromium therefore runs with `--disable-gpu` for
+stability, and the iGPU is useful for headless compute inside the container
+(ffmpeg/VA-API), not for the VNC stream. Do not re-add GPU flags to the wrapper
+without testing a real browser window.
+
 ## Passwordless by design
 
 There is no OS password and no lock screen. `root` has a locked password (`L` in

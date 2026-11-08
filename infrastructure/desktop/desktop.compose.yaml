@@ -9,6 +9,8 @@ services:
     environment:
       TZ: Asia/Kolkata
       SHELL: /bin/bash
+    devices:
+      - /dev/dri:/dev/dri
     volumes:
       - /data/apps/desktop/home:/root
     networks:
