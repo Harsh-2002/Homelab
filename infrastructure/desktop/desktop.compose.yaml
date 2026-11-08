@@ -1,31 +1,33 @@
 services:
   desktop:
-    image: registry.l3b.cc.cd/os:2026.11.08
+    image: registry.l3b.cc.cd/os:selkies
     container_name: desktop
     hostname: os
     restart: unless-stopped
     pull_policy: always
-    shm_size: "1g"
+    shm_size: "2g"
     security_opt:
       - seccomp=unconfined
     environment:
       TZ: Asia/Kolkata
-      SHELL: /bin/bash
+      DISPLAY_SIZEW: "1600"
+      DISPLAY_SIZEH: "900"
+      SELKIES_AUDIO_ENABLED: "true"
+      SELKIES_MICROPHONE_ENABLED: "true"
     devices:
       - /dev/dri:/dev/dri
     volumes:
-      - /data/apps/desktop/home:/home/os
-      - /data/apps/desktop/opt:/opt
+      - /data/apps/desktop/home:/home/ubuntu
     networks:
       - l3b
-    mem_limit: 6g
-    cpus: 2.0
+    mem_limit: 10g
+    cpus: 4.0
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:6080/"]
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/"]
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 60s
+      start_period: 90s
 
 networks:
   l3b:

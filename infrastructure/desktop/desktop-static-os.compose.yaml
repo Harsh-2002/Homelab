@@ -1,0 +1,32 @@
+services:
+  desktop:
+    image: registry.l3b.cc.cd/os:2026.11.08
+    container_name: desktop
+    hostname: os
+    restart: unless-stopped
+    pull_policy: always
+    shm_size: "1g"
+    security_opt:
+      - seccomp=unconfined
+    environment:
+      TZ: Asia/Kolkata
+      SHELL: /bin/bash
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - /data/apps/desktop/home:/home/os
+      - /data/apps/desktop/opt:/opt
+    networks:
+      - l3b
+    mem_limit: 6g
+    cpus: 2.0
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:6080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+networks:
+  l3b:
+    external: true

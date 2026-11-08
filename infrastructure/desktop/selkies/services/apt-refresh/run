@@ -1,0 +1,4 @@
+#!/bin/bash
+sleep 20
+apt-get update >/tmp/apt-refresh.log 2>&1 || true
+exec sleep infinity

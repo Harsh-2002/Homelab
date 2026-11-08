@@ -240,3 +240,27 @@ the light fallback theme; the `os` helper does this.
 - One shared desktop: every viewer and the agent see the same screen and clipboard.
 - No audio and no GPU acceleration; Chromium uses software rendering.
 - Kernel is shared with the host. For untrusted code use a microsandbox, not this.
+
+## Selkies streaming (2026.11.08)
+
+The desktop moved from TigerVNC/noVNC to Selkies 2.x, streamed over WebSockets
+to a WebCodecs browser client. Why: noVNC measured 6-8 fps and carried neither
+audio nor microphone; Selkies delivers 50-60 fps at 1080p and both directions.
+
+- Image: `registry.l3b.cc.cd/os:selkies`, built in `selkies/` from the public
+  `ghcr.io/selkies-project/selkies/base:main-ubuntu26.04` with KDE Plasma,
+  Google Chrome, Synaptic and the CLI toolkit added.
+- Desktop: Plasma 6 (Ubuntu 26.04 packages), dark Breeze, compositing off,
+  passwordless, session user `ubuntu` (uid 1000).
+- Audio: PipeWire + pulse inside the base; `SELKIES_AUDIO_ENABLED=true` sends
+  desktop sound to the browser. Microphone forwarding is enabled with
+  `SELKIES_MICROPHONE_ENABLED=true`; the browser asks for permission once.
+- Ports: 8080 internal only, Caddy terminates TLS and forwards with WebSocket
+  support and Tinyauth in front. No ports published.
+- apt: the image keeps `/var/lib/apt/lists` from build time, and the s6 service
+  `apt-refresh` runs `apt-get update` in the background 20 s after start, so
+  Synaptic has a current index without blocking the session.
+- Startup: `restart: unless-stopped` plus Docker enabled at boot; the stack
+  returns after a host reboot.
+- Backup: the previous VNC image is `registry.l3b.cc.cd/static-os:2026.11.08`
+  with `Dockerfile.static-os` and `desktop-static-os.compose.yaml`.

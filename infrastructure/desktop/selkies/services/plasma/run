@@ -1,0 +1,13 @@
+#!/bin/bash
+export DISPLAY="${DISPLAY:-:20}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/runtime-ubuntu}"
+until [ -f "${XDG_RUNTIME_DIR}/container-env" ]; do sleep 0.5; done
+. "${XDG_RUNTIME_DIR}/container-env"
+cd "${HOME}" || true
+/usr/local/bin/seed-desktop
+until [ -S "/tmp/.X11-unix/X${DISPLAY#*:}" ]; do sleep 0.5; done
+export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/selkies-session-bus"
+until [ -S "${XDG_RUNTIME_DIR}/selkies-session-bus" ]; do sleep 0.5; done
+export XDG_SESSION_TYPE="x11"
+echo "[plasma] session draws on ${DISPLAY}"
+exec startplasma-x11
