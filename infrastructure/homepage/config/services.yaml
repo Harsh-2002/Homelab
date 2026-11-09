@@ -8,7 +8,7 @@
         icon: mdi-switch
         href: https://switch.l3b.cc.cd
         description: GS110TPv3 · 8× GbE + 2× SFP · mgmt 192.168.0.239
-        siteMonitor: http://10.1.3.1:8088/
+        siteMonitor: http://10.1.1.20/
     - Router:
         icon: mdi-router-wireless
         href: http://10.1.1.1

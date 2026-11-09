@@ -242,15 +242,13 @@ Keep the existing LAN, Tailscale, and explicitly trusted household WAN/hairpin s
 ## Switch UI route (2026-11-09)
 
 `https://switch.l3b.cc.cd` exposes the NETGEAR GS110TPv3 web UI behind the
-private Tinyauth gate. The switch lives at its factory-default
-`192.168.0.239` with no route back to the `l3b` Docker bridge, so the host:
+private Tinyauth gate.
 
-- keeps a second address `192.168.0.10/24` on `eno1`
-  (`/etc/systemd/network/10-eno1.network`);
-- runs `switch-proxy.socket`, a `systemd-socket-proxyd` forwarder from
-  `10.1.3.1:8088` to `192.168.0.239:80`;
-- Caddy matches `host switch.l3b.cc.cd`, applies `forward_auth tinyauth:3000`
-  and proxies to `10.1.3.1:8088`.
+The switch management address was moved off its factory `192.168.0.239` to
+**10.1.1.20/24** (gateway `10.1.1.1`), so it is a normal LAN member. Caddy
+matches `host switch.l3b.cc.cd`, applies `forward_auth tinyauth:3000` and
+proxies straight to `10.1.1.20:80`. The temporary `192.168.0.10/24` alias on
+`eno1` and the `switch-proxy` socket forwarder were removed.
 
 The deployed Caddyfile is `/data/apps/caddy/Caddyfile`; the copy in this
 directory predates the single-host rebuild and is historical.
