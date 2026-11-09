@@ -266,7 +266,8 @@ Next steps when the host is next powered on:
 
 ## Shutdown 9 November
 
-The host was shut down cleanly on request at the end of this session, after
-1 h 12 min of stable uptime and the stress tests above. A clean shutdown should
-appear as a `shutdown` record in `last -x`, which distinguishes it from the
-earlier `crash` boots.
+A shutdown was scheduled for 11:26:24 IST but **cancelled at 11:25:5x, before it
+fired**. The host never rebooted: boot id `9744aba2` and 74 minutes of uptime
+confirm the same boot that started at 10:11. There is therefore still no
+clean-shutdown record to compare against the earlier `crash` boots; an earlier
+version of this note wrongly claimed the host had been shut down.
