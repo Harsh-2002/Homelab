@@ -4,6 +4,7 @@ Primary target: dashboard-smart-plugs.yaml. Mode: Operate.
 Owner requested a dedicated sidebar dashboard like the AC dashboard, ready for
 the current gaming-PC 10A plug and two later plugs (another 10A and one 16A).
 Visible device name is **PC**; keep ratings out of titles and the dropdown.
+Use bundled `mdi:power-plug` for sidebar/socket, short labels and one-line notes.
 
 ## Direction contract
 

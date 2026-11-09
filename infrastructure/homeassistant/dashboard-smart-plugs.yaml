@@ -28,8 +28,8 @@ views:
             heading_style: title
           - type: tile
             entity: switch.pc_smart_plug
-            name: Socket power
-            icon: mdi:power-socket-in
+            name: Socket
+            icon: mdi:power-plug
             tap_action:
               action: none
             icon_tap_action:
@@ -51,7 +51,7 @@ views:
             name: Current
           - type: tile
             entity: binary_sensor.pc_smart_plug_problem
-            name: Device fault
+            name: Fault
             grid_options:
               columns: 12
       - type: grid
@@ -61,7 +61,7 @@ views:
             state: PC
         cards:
           - type: heading
-            heading: PC energy estimate
+            heading: Estimated energy
             icon: mdi:lightning-bolt
             heading_style: title
           - type: tile
@@ -72,7 +72,7 @@ views:
               columns: 12
           - type: tile
             entity: sensor.pc_smart_plug_estimated_energy_month
-            name: This month
+            name: Month
             icon: mdi:lightning-bolt
             grid_options:
               columns: 12
@@ -82,9 +82,7 @@ views:
             grid_options:
               columns: 12
           - type: markdown
-            content: >-
-              Estimated from local power readings since setup—not a device
-              counter. First day and month are partial.
+            content: Estimated from power. Starts at setup.
       - type: grid
         visibility:
           - condition: state
@@ -92,7 +90,7 @@ views:
             state: PC
         cards:
           - type: heading
-            heading: PC history · 24 hours
+            heading: History · 24h
             icon: mdi:history
             heading_style: title
           - type: history-graph
@@ -102,7 +100,7 @@ views:
               - entity: sensor.pc_smart_plug_power
                 name: PC power
           - type: markdown
-            content: Tap Voltage or Current for its recorded history.
+            content: Tap readings for history.
       - type: grid
         visibility:
           - condition: state
@@ -110,14 +108,14 @@ views:
             state: PC
         cards:
           - type: heading
-            heading: PC power
-            icon: mdi:power-socket-in
+            heading: Power controls
+            icon: mdi:power-plug
             heading_style: title
           - type: markdown
-            content: Shut down the PC safely before cutting socket power.
+            content: Shut down PC before switching off.
           - type: button
             entity: switch.pc_smart_plug
-            name: Turn socket off
+            name: Turn off
             icon: mdi:power-off
             show_state: true
             tap_action:
@@ -126,7 +124,7 @@ views:
               target:
                 entity_id: switch.pc_smart_plug
               confirmation:
-                text: Cut power to the gaming PC? Shut it down safely first.
+                text: Cut PC power? Shut down first.
             hold_action:
               action: none
             visibility:
@@ -135,7 +133,7 @@ views:
                 state: 'on'
           - type: button
             entity: switch.pc_smart_plug
-            name: Turn socket on
+            name: Turn on
             icon: mdi:power-on
             show_state: true
             tap_action:
@@ -144,7 +142,7 @@ views:
               target:
                 entity_id: switch.pc_smart_plug
               confirmation:
-                text: Supply power to the gaming PC socket?
+                text: Turn on PC socket?
             hold_action:
               action: none
             visibility:
@@ -158,19 +156,19 @@ views:
             state: PC
         cards:
           - type: heading
-            heading: PC plug settings
+            heading: Settings
             icon: mdi:cog-outline
             heading_style: title
           - type: entities
             show_header_toggle: false
             entities:
               - entity: select.pc_smart_plug_initial_state
-                name: After a power outage
+                name: Power restore
               - entity: select.pc_smart_plug_light_mode
-                name: Indicator light
+                name: Indicator
               - type: simple-entity
                 entity: time.pc_smart_plug_timer
-                name: Countdown remaining
+                name: Timer
               - type: simple-entity
                 entity: lock.pc_smart_plug_child_lock
                 name: Child lock
@@ -178,9 +176,7 @@ views:
                 entity: switch.pc_smart_plug_overcharge_protection
                 name: Overcharge protection
           - type: markdown
-            content: >-
-              Timer and protection behaviour is untested. No shutdown automation
-              is enabled.
+            content: Timer/protection untested. No auto-off.
       - type: grid
         visibility:
           - condition: state
@@ -188,7 +184,7 @@ views:
             state: PC
         cards:
           - type: heading
-            heading: PC safety controls
+            heading: Safety
             icon: mdi:shield-outline
             heading_style: title
           - type: button
@@ -201,7 +197,7 @@ views:
               target:
                 entity_id: lock.pc_smart_plug_child_lock
               confirmation:
-                text: Enable the PC plug's child lock? Behaviour is not yet physically verified.
+                text: Enable child lock? Behaviour untested.
             hold_action:
               action: none
             visibility:
@@ -218,7 +214,7 @@ views:
               target:
                 entity_id: lock.pc_smart_plug_child_lock
               confirmation:
-                text: Disable the PC plug's child lock?
+                text: Disable child lock?
             hold_action:
               action: none
             visibility:
@@ -227,7 +223,7 @@ views:
                 state: locked
           - type: button
             entity: switch.pc_smart_plug_overcharge_protection
-            name: Change overcharge protection
+            name: Toggle protection
             icon: mdi:shield-alert-outline
             show_state: true
             tap_action:
@@ -236,6 +232,6 @@ views:
               target:
                 entity_id: switch.pc_smart_plug_overcharge_protection
               confirmation:
-                text: Change overcharge protection? Its behaviour is unverified and it may cut PC power.
+                text: Toggle protection? Untested; may cut PC power.
             hold_action:
               action: none

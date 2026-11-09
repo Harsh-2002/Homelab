@@ -2,7 +2,7 @@
   "selector": {
     "name": "Smart plug",
     "options": ["PC"],
-    "icon": "mdi:power-socket-in"
+    "icon": "mdi:power-plug"
   },
   "integration": {
     "name": "PC Smart Plug Estimated Energy",

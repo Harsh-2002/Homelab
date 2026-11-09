@@ -88,10 +88,14 @@ infer 16A capability from a generic profile, or target all plugs as a group.
 
 To reproduce the native storage dashboard, parse the tracked YAML, then use
 authenticated HA WebSocket `lovelace/dashboards/create` (only if absent) with
-url_path `smart-plugs`, title Smart Plugs, icon `mdi:power-socket-in`,
+url_path `smart-plugs`, title Smart Plugs, icon `mdi:power-plug`,
 show_in_sidebar true and require_admin false. Send the parsed config through
 `lovelace/config/save` with that url_path. Read the live revision before replacing
 an existing dashboard; preserve user edits. Credentials stay in the vault.
+
+Sidebar, selector and socket use the bundled `mdi:power-plug` icon. The previous
+`mdi:power-socket-in` name did not render. Copy is deliberately short; the energy
+note remains explicit that consumption is estimated from power since setup.
 
 ## Energy estimates, not a hardware meter
 
