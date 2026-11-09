@@ -1,0 +1,41 @@
+{
+  "selector": {
+    "name": "Smart plug",
+    "options": ["PC"],
+    "icon": "mdi:power-socket-in"
+  },
+  "integration": {
+    "name": "PC Smart Plug Estimated Energy",
+    "source": "sensor.pc_smart_plug_power",
+    "unit_prefix": "k",
+    "unit_time": "h",
+    "method": "left",
+    "round": 4,
+    "max_sub_interval": {"minutes": 1},
+    "device_class": "energy"
+  },
+  "utility_meters": [
+    {
+      "name": "PC Smart Plug Estimated Energy Today",
+      "source": "sensor.pc_smart_plug_estimated_energy",
+      "cycle": "daily",
+      "offset": 0,
+      "tariffs": [],
+      "net_consumption": false,
+      "delta_values": false,
+      "periodically_resetting": false,
+      "always_available": false
+    },
+    {
+      "name": "PC Smart Plug Estimated Energy Month",
+      "source": "sensor.pc_smart_plug_estimated_energy",
+      "cycle": "monthly",
+      "offset": 0,
+      "tariffs": [],
+      "net_consumption": false,
+      "delta_values": false,
+      "periodically_resetting": false,
+      "always_available": false
+    }
+  ]
+}

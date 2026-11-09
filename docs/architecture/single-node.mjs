@@ -44,6 +44,13 @@ function layout(inv, addresses = {}) {
   ];
   groups.forEach(([id,title,body],i)=>{add(0,id,1835,170+i*185,title,body,'#edf5f1');edge(0,'docker',id);});
 
+  if (inv.localDeviceIntegrations?.some(device => device.id === 'gaming-pc-plug')) {
+    add(0,'homeassistant-local',55,920,'Home Assistant / local devices',['Shared Smart Plugs dashboard','One device filter; guarded controls']);
+    add(0,'gaming-pc-plug',500,920,'Gaming PC / 10A smart plug',['Tuya 3.5 over LAN','Reserved address; local telemetry','Energy calculated from power']);
+    edge(0,'l3b','homeassistant-local');
+    edge(0,'homeassistant-local','gaming-pc-plug');
+  }
+
   add(1,'flow-client',80,260,'DNS clients',['LAN / WireGuard / host / Docker','Host: native systemd-networkd','Internal AdGuard; no public fallback']);
   add(1,'flow-adguard',650,260,'AdGuard Home',['UDP DNS only; UI through Caddy','Internal apex / wildcard rewrites']);
   add(1,'flow-unbound',1220,260,'Unbound',['Recursion; DNSSEC validation']);
@@ -66,6 +73,11 @@ function layout(inv, addresses = {}) {
   add(1,'flow-data',1220,1240,'SATA application data',['Service-specific bind directories']);
   add(1,'flow-runtime',1790,1240,'NVMe Docker state',['Images / runtime / named volumes']);
   for (const [a,b] of [['flow-portainer','flow-docker'],['flow-docker','flow-data'],['flow-docker','flow-runtime']]) edge(1,a,b);
+  if (inv.localDeviceIntegrations?.some(device => device.id === 'gaming-pc-plug')) {
+    add(1,'flow-ha-local',80,1470,'Home Assistant / Tuya Local',['Private Smart Plugs dashboard','One filter; estimated kWh history']);
+    add(1,'flow-pc-plug',650,1470,'PC smart plug / LAN',['Tuya 3.5; TCP 6668','Local key; no routine cloud login']);
+    edge(1,'flow-ha-local','flow-pc-plug');
+  }
   return pages;
 }
 

@@ -1,0 +1,241 @@
+title: Smart Plugs
+views:
+  - title: Smart Plugs
+    path: monitor
+    icon: mdi:chart-line
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        column_span: 3
+        cards:
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: input_select.smart_plug
+                name: Plug
+            grid_options:
+              columns: full
+      - type: grid
+        visibility:
+          - condition: state
+            entity: input_select.smart_plug
+            state: PC
+        cards:
+          - type: heading
+            heading: PC
+            icon: mdi:desktop-tower-monitor
+            heading_style: title
+          - type: tile
+            entity: switch.pc_smart_plug
+            name: Socket power
+            icon: mdi:power-socket-in
+            tap_action:
+              action: none
+            icon_tap_action:
+              action: none
+            hold_action:
+              action: none
+            grid_options:
+              columns: 12
+          - type: tile
+            entity: sensor.pc_smart_plug_power
+            name: Power
+            grid_options:
+              columns: 12
+          - type: tile
+            entity: sensor.pc_smart_plug_voltage
+            name: Voltage
+          - type: tile
+            entity: sensor.pc_smart_plug_current
+            name: Current
+          - type: tile
+            entity: binary_sensor.pc_smart_plug_problem
+            name: Device fault
+            grid_options:
+              columns: 12
+      - type: grid
+        visibility:
+          - condition: state
+            entity: input_select.smart_plug
+            state: PC
+        cards:
+          - type: heading
+            heading: PC energy estimate
+            icon: mdi:lightning-bolt
+            heading_style: title
+          - type: tile
+            entity: sensor.pc_smart_plug_estimated_energy_today
+            name: Today
+            icon: mdi:lightning-bolt
+            grid_options:
+              columns: 12
+          - type: tile
+            entity: sensor.pc_smart_plug_estimated_energy_month
+            name: This month
+            icon: mdi:lightning-bolt
+            grid_options:
+              columns: 12
+          - type: tile
+            entity: sensor.pc_smart_plug_estimated_energy
+            name: Since setup
+            grid_options:
+              columns: 12
+          - type: markdown
+            content: >-
+              Estimated from local power readings since setup—not a device
+              counter. First day and month are partial.
+      - type: grid
+        visibility:
+          - condition: state
+            entity: input_select.smart_plug
+            state: PC
+        cards:
+          - type: heading
+            heading: PC history · 24 hours
+            icon: mdi:history
+            heading_style: title
+          - type: history-graph
+            title: Power
+            hours_to_show: 24
+            entities:
+              - entity: sensor.pc_smart_plug_power
+                name: PC power
+          - type: markdown
+            content: Tap Voltage or Current for its recorded history.
+      - type: grid
+        visibility:
+          - condition: state
+            entity: input_select.smart_plug
+            state: PC
+        cards:
+          - type: heading
+            heading: PC power
+            icon: mdi:power-socket-in
+            heading_style: title
+          - type: markdown
+            content: Shut down the PC safely before cutting socket power.
+          - type: button
+            entity: switch.pc_smart_plug
+            name: Turn socket off
+            icon: mdi:power-off
+            show_state: true
+            tap_action:
+              action: perform-action
+              perform_action: switch.turn_off
+              target:
+                entity_id: switch.pc_smart_plug
+              confirmation:
+                text: Cut power to the gaming PC? Shut it down safely first.
+            hold_action:
+              action: none
+            visibility:
+              - condition: state
+                entity: switch.pc_smart_plug
+                state: 'on'
+          - type: button
+            entity: switch.pc_smart_plug
+            name: Turn socket on
+            icon: mdi:power-on
+            show_state: true
+            tap_action:
+              action: perform-action
+              perform_action: switch.turn_on
+              target:
+                entity_id: switch.pc_smart_plug
+              confirmation:
+                text: Supply power to the gaming PC socket?
+            hold_action:
+              action: none
+            visibility:
+              - condition: state
+                entity: switch.pc_smart_plug
+                state: 'off'
+      - type: grid
+        visibility:
+          - condition: state
+            entity: input_select.smart_plug
+            state: PC
+        cards:
+          - type: heading
+            heading: PC plug settings
+            icon: mdi:cog-outline
+            heading_style: title
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: select.pc_smart_plug_initial_state
+                name: After a power outage
+              - entity: select.pc_smart_plug_light_mode
+                name: Indicator light
+              - type: simple-entity
+                entity: time.pc_smart_plug_timer
+                name: Countdown remaining
+              - type: simple-entity
+                entity: lock.pc_smart_plug_child_lock
+                name: Child lock
+              - type: simple-entity
+                entity: switch.pc_smart_plug_overcharge_protection
+                name: Overcharge protection
+          - type: markdown
+            content: >-
+              Timer and protection behaviour is untested. No shutdown automation
+              is enabled.
+      - type: grid
+        visibility:
+          - condition: state
+            entity: input_select.smart_plug
+            state: PC
+        cards:
+          - type: heading
+            heading: PC safety controls
+            icon: mdi:shield-outline
+            heading_style: title
+          - type: button
+            entity: lock.pc_smart_plug_child_lock
+            name: Enable child lock
+            icon: mdi:lock
+            tap_action:
+              action: perform-action
+              perform_action: lock.lock
+              target:
+                entity_id: lock.pc_smart_plug_child_lock
+              confirmation:
+                text: Enable the PC plug's child lock? Behaviour is not yet physically verified.
+            hold_action:
+              action: none
+            visibility:
+              - condition: state
+                entity: lock.pc_smart_plug_child_lock
+                state: unlocked
+          - type: button
+            entity: lock.pc_smart_plug_child_lock
+            name: Disable child lock
+            icon: mdi:lock-open
+            tap_action:
+              action: perform-action
+              perform_action: lock.unlock
+              target:
+                entity_id: lock.pc_smart_plug_child_lock
+              confirmation:
+                text: Disable the PC plug's child lock?
+            hold_action:
+              action: none
+            visibility:
+              - condition: state
+                entity: lock.pc_smart_plug_child_lock
+                state: locked
+          - type: button
+            entity: switch.pc_smart_plug_overcharge_protection
+            name: Change overcharge protection
+            icon: mdi:shield-alert-outline
+            show_state: true
+            tap_action:
+              action: perform-action
+              perform_action: switch.toggle
+              target:
+                entity_id: switch.pc_smart_plug_overcharge_protection
+              confirmation:
+                text: Change overcharge protection? Its behaviour is unverified and it may cut PC power.
+            hold_action:
+              action: none

@@ -18,6 +18,8 @@
 <path d="M1770 231.5L1835 1351.5" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1770 231.5L1835 1536.5" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1770 231.5L1835 1709" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M945 691.5L435 979" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M435 979L500 979" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <g data-node="true"><rect x="55" y="620" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="69" y="647" font-size="19" fill="#18252c">Phone / workstation</text>
 <text x="69" y="672" font-size="16" fill="#18252c">Private LAN access</text>
@@ -118,5 +120,16 @@
 <text x="1849" y="1702" font-size="16" fill="#18252c">Host-native smbd; TCP 445, LAN only</text>
 <text x="1849" y="1727" font-size="16" fill="#18252c">MEDIA + BACKUP (USB SSD, Time</text>
 <text x="1849" y="1752" font-size="16" fill="#18252c">Machine)</text>
+</g>
+<g data-node="true"><rect x="55" y="920" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
+<text x="69" y="947" font-size="19" fill="#18252c">Home Assistant / local devices</text>
+<text x="69" y="972" font-size="16" fill="#18252c">Shared Smart Plugs dashboard</text>
+<text x="69" y="997" font-size="16" fill="#18252c">One device filter; guarded controls</text>
+</g>
+<g data-node="true"><rect x="500" y="920" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
+<text x="514" y="947" font-size="19" fill="#18252c">Gaming PC / 10A smart plug</text>
+<text x="514" y="972" font-size="16" fill="#18252c">Tuya 3.5 over LAN</text>
+<text x="514" y="997" font-size="16" fill="#18252c">Reserved address; local telemetry</text>
+<text x="514" y="1022" font-size="16" fill="#18252c">Energy calculated from power</text>
 </g>
 <text x="55" y="1730" font-size="20">Existing backups preserved; passkey/OIDC and paid model acceptance require separate tests.</text></g></svg>

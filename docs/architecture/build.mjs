@@ -7,7 +7,8 @@ const out = dirname(fileURLToPath(import.meta.url));
 const inventory = JSON.parse(readFileSync(join(out, 'inventory.json'), 'utf8'));
 if (inventory.currentDeployment?.platform === 'single-node-docker') {
   // Current relationships include the dedicated l3b bridge, separate from LAN/VPN.
-  // pendingDeviceIntegrations are discovery records, not live HA/service edges.
+  // The shared layout includes verified localDeviceIntegrations (HA → PC plug).
+  // plannedDeviceIntegrations do not create live service edges.
   const {renderSingleNodeSheets} = await import('./single-node.mjs');
   renderSingleNodeSheets(out, inventory.currentDeployment, process.argv.includes('--internal'));
   process.exit(0);

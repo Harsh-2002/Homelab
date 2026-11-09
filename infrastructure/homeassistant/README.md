@@ -1,9 +1,11 @@
 # Home Assistant OS
 
-New gaming-PC smart plug (2026-11-09): candidate discovered and current address
-reserved without power interruption. Local-key/account approval and telemetry
-integration remain pending. **Never toggle/reset this plug during testing.**
-See [WIPRO-PLUG-LOCAL.md](WIPRO-PLUG-LOCAL.md).
+Smart plugs (2026-11-09): gaming-PC 10A plug authenticated through Tuya Local 3.5,
+current address reserved without power interruption. One shared **Smart Plugs**
+dashboard at `/smart-plugs/monitor` has a plug filter, live readings, clearly
+labelled local energy estimates, history and confirmation-protected controls.
+Another 10A and a 16A plug are planned, not paired. **Never toggle/reset a plug
+during testing.** See [WIPRO-PLUG-LOCAL.md](WIPRO-PLUG-LOCAL.md).
 
 > **2026-11-02:** The active deployment is the Docker/Portainer stack on l3b:
 > [`infrastructure/l3b/homeassistant.compose.yaml`](../l3b/homeassistant.compose.yaml).

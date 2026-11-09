@@ -1,5 +1,5 @@
 {
-  "sourceHash": "951bc6567cd888e41fc196e304214fa186406ced3cb3d68a734cc4e5f376e49e",
+  "sourceHash": "9999ff7b841debecb07d26813f27bcac3334eafe885b4336d305deb6b3770c56",
   "frames": [
     "tree",
     "core-flow"
@@ -23,6 +23,8 @@
     "apps",
     "hermes",
     "smb",
+    "homeassistant-local",
+    "gaming-pc-plug",
     "flow-client",
     "flow-adguard",
     "flow-unbound",
@@ -38,6 +40,8 @@
     "flow-portainer",
     "flow-docker",
     "flow-data",
-    "flow-runtime"
+    "flow-runtime",
+    "flow-ha-local",
+    "flow-pc-plug"
   ]
 }

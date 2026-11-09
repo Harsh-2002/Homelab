@@ -176,7 +176,7 @@
         "id": "homeassistant",
         "label": "Home Assistant 2026.10.4",
         "stack": "homeassistant",
-        "state": "Docker stack 179; restored config/DB/dashboards; private HTTPS; MQTT and Frigate working; Tuya/Localthings outstanding; no Supervisor/add-ons"
+        "state": "Docker stack 179; restored config/DB/dashboards; private HTTPS; MQTT and Frigate working; PC plug on local Tuya 3.5 with shared filtered Smart Plugs dashboard; no Supervisor/add-ons"
       },
       {
         "id": "mqtt",
@@ -214,16 +214,20 @@
       "ownerStep": "re-import updated MacBook/iPhone vault Documents; existing imported tunnels cannot be changed remotely",
       "evidence": "infrastructure/l3b/DNS-POLICY-VERIFICATION-2026-11-02.json"
     },
-    "pendingDeviceIntegrations": [
+    "localDeviceIntegrations": [
       {
         "id": "gaming-pc-plug",
         "verifiedOn": "2026-11-09",
-        "label": "Owner-reported Wipro gaming-PC smart plug",
-        "network": "Wi-Fi Tuya 3.5 candidate discovered; current address reserved in existing DHCP pool",
-        "relationship": "LAN candidate only; Home Assistant connection not configured",
-        "state": "awaiting account approval/local key and physical identity/telemetry verification; never toggle or reset while testing",
+        "label": "Wipro gaming-PC 10A smart plug",
+        "network": "Wi-Fi Tuya 3.5; current address reserved in existing DHCP pool",
+        "relationship": "Home Assistant Tuya Local to plug over LAN; one shared Smart Plugs dashboard with device filter",
+        "state": "account identity matched; local readings and reload verified; calculated energy labelled; power-off confirmation cancelled; no relay writes or WAN-outage acceptance",
         "evidence": "infrastructure/homeassistant/WIPRO-PLUG-LOCAL.md"
       }
+    ],
+    "plannedDeviceIntegrations": [
+      "Owner-reported additional 10A plug; identity and pairing pending",
+      "Owner-reported 16A plug; identity and pairing pending"
     ],
     "networkPlan": {
       "lan": "dedicated physical LAN subnet; unchanged",
