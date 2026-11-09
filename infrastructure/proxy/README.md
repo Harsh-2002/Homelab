@@ -238,3 +238,20 @@ For private services, use one of these paths:
 - temporarily choose **Reload and Show IP Address** for a specific site when appropriate
 
 Keep the existing LAN, Tailscale, and explicitly trusted household WAN/hairpin sources as the access boundary. Do not treat an observed Private Relay address as static.
+
+## Switch UI route (2026-11-09)
+
+`https://switch.l3b.cc.cd` exposes the NETGEAR GS110TPv3 web UI behind the
+private Tinyauth gate. The switch lives at its factory-default
+`192.168.0.239` with no route back to the `l3b` Docker bridge, so the host:
+
+- keeps a second address `192.168.0.10/24` on `eno1`
+  (`/etc/systemd/network/10-eno1.network`);
+- runs `switch-proxy.socket`, a `systemd-socket-proxyd` forwarder from
+  `10.1.3.1:8088` to `192.168.0.239:80`;
+- Caddy matches `host switch.l3b.cc.cd`, applies `forward_auth tinyauth:3000`
+  and proxies to `10.1.3.1:8088`.
+
+The deployed Caddyfile is `/data/apps/caddy/Caddyfile`; the copy in this
+directory predates the single-host rebuild and is historical.
+
