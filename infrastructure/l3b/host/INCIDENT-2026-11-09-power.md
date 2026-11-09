@@ -271,3 +271,38 @@ fired**. The host never rebooted: boot id `9744aba2` and 74 minutes of uptime
 confirm the same boot that started at 10:11. There is therefore still no
 clean-shutdown record to compare against the earlier `crash` boots; an earlier
 version of this note wrongly claimed the host had been shut down.
+
+## BIOS downgrade to 1.30.0 (11:41)
+
+The downgrade was performed from the verified `DELLBIOS` USB between 11:37 and
+11:41 and is confirmed by SMBIOS:
+
+- `bios-version` = **1.30.0**, release date **2024-03-29** (Dell's 1.30.0 build).
+- Previous version was 1.31.0; the exclusion list still applies to 1.32.0.
+
+Post-flash state, all verified:
+
+| Check | Result |
+|---|---|
+| Power limits | PL1 35 W / PL2 60 W (stock) |
+| Secure Boot | enabled, Debian booted normally |
+| Storage | `/` xfs, `/data` xfs (sda1), `/BACKUP` ext4 (UUID ade7d423) |
+| Containers | 39 running, desktop healthy |
+| Diagnostics | power-log, crash-record, powerkey-watch, journald active |
+| Boot time | 18.0 s |
+| Idle power | ~15 W package |
+
+Boot history around the flash: the 10:11 boot ended with the **first clean
+shutdown record of the day at 11:26** (the requested shutdown), a second clean
+shutdown at 11:37 (logind: "System is powering down", following two short
+power-key events - a deliberate button shutdown is clean, unlike the crashes),
+then the current boot at 11:41.
+
+The journal survived every reboot: boots -4 through 0 are readable with
+`journalctl -b -N`, and `crash-record.service` captured the previous boot tail.
+That closes the log-persistence requirement with real reboot evidence, not just
+design intent.
+
+Watch: 24 hours on 1.30.0. If a hard cut recurs, the next tests are the
+front-panel switch (phantom presses in `/var/log/powerkey-events.log`) and the
+adapter; the BIOS variable is now eliminated.
