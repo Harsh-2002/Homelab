@@ -47,3 +47,21 @@ Thirteen boots are recorded for the day. The current boot started 09:43.
    a FAT USB through F12 -> BIOS Flash Update. This needs physical presence.
 3. If power-offs continue on 1.30.0, test/replace the PSU before further
    software work. Next BIOS candidates: 1.29.0, floor 1.28.0.
+
+## Diagnostics added 9 November
+
+- `journald`: `Storage=persistent`, `SyncIntervalSec=1s`, `SystemMaxUse=2G`,
+  `SystemMaxFileSize=200M` in `/etc/systemd/journald.conf` (the drop-in was not
+  picked up by this systemd). Logs survive a power cut to within about a second.
+- `/usr/local/sbin/crash-record.sh` + `crash-record.service` run at every boot
+  and write the previous boot's last 200 journal lines, reboot history and
+  temperatures to `/var/log/crash-history/<timestamp>.txt`, mirrored to
+  `/data/apps/diagnostics/crash-history/` (persistent SATA data).
+- Verified: first run captured 33 KB including the 09:37 boot tail.
+
+Still missing (hardware):
+- No UPS is visible on USB (`lsusb` finds none), so NUT cannot read input power
+  or battery state. Connect the UPS data cable to enable it.
+- No remote syslog host yet; shipping logs off-box would survive a dead host.
+- Dell BIOS event log (F2 -> Maintenance) is the firmware-side record of a
+  power loss and should be checked after the next event.
