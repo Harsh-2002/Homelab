@@ -245,9 +245,9 @@ Keep the existing LAN, Tailscale, and explicitly trusted household WAN/hairpin s
 private Tinyauth gate.
 
 The switch management address was moved off its factory `192.168.0.239` to
-**10.1.1.20/24** (gateway `10.1.1.1`), so it is a normal LAN member. Caddy
+**10.1.1.200/24** (gateway `10.1.1.1`), so it is a normal LAN member. Caddy
 matches `host switch.l3b.cc.cd`, applies `forward_auth tinyauth:3000` and
-proxies straight to `10.1.1.20:80`. The temporary `192.168.0.10/24` alias on
+proxies straight to `10.1.1.200:80`. The temporary `192.168.0.10/24` alias on
 `eno1` and the `switch-proxy` socket forwarder were removed.
 
 The deployed Caddyfile is `/data/apps/caddy/Caddyfile`; the copy in this
