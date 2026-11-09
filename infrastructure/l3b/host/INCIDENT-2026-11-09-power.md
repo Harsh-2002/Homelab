@@ -134,3 +134,40 @@ Rest of the box adds roughly 12-18 W at peak: NVMe + SATA SSD + USB 1.7 TB HDD
 65 W brick cannot cover and a 90 W brick covers with little headroom. If the
 installed brick turns out to be 65 W, that alone explains hard cuts during boot
 storms and turbo bursts.
+
+## PL2 cap experiment (10:28 onwards)
+
+To separate "load-driven power delivery fault" from "firmware/idle fault", the
+CPU burst limit was capped at the sustained limit:
+
+- `/sys/class/powercap/intel-rapl:0/constraint_1_power_limit_uw` = 35000000
+  (PL2 = PL1 = 35 W; previously PL2 60 W). Applied at 10:28.
+- Persisted by `cpu-power-cap.service` (enabled, oneshot before
+  multi-user.target), which reapplies the cap at every boot and logs the result
+  to `/data/apps/diagnostics/power/cap.log`.
+- Revert: `sudo systemctl disable --now cpu-power-cap.service` then
+  `echo 60000000 | sudo tee /sys/class/powercap/intel-rapl:0/constraint_1_power_limit_uw`.
+
+30-minute stability run started 10:28 (`pl2-test.service`, transient unit):
+
+- heartbeat every 10 s to `/data/apps/diagnostics/pl2-test/run-*.log`, each line
+  fsynced (`sync -f`), so a cut leaves the tail on disk;
+- 45 s four-worker load pulse at ~10 min and ~20 min, logged as LOAD-START /
+  LOAD-END, to prove the rail holds under sustained PL1 load;
+- a clean run ends with a `SUMMARY` line; a cut simply stops the heartbeat.
+
+An ADAPTER of 65 W would be stressed by the 70-78 W peak; if the 30-minute run
+survives both load pulses at 35 W but cut before at 60 W bursts, power delivery
+is confirmed as the fault domain and the brick must be checked or replaced.
+
+## Log durability verification
+
+- `/var/log/journal` is persistent on the XFS root (`Storage=persistent`) with
+  `SyncIntervalSec=1s`.
+- Verified without manual sync: a `logger` marker at 10:28:24 was on disk by
+  10:28:26 (journal file mtime advanced), so the journal tail survives a cut
+  with at most ~1-2 s of loss.
+- `/data/apps/diagnostics/power/power-YYYYMMDD.csv` fsyncs every line (1 s).
+- `pl2-test` log fsyncs every heartbeat (10 s).
+- `crash-record.service` is enabled and mirrors the previous boot tail to
+  `/data/apps/diagnostics/crash-history/` on every start.
