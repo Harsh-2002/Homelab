@@ -189,3 +189,39 @@ power. This does **not** isolate the fault, because the cap also removed the
 17 minutes before the cap was applied. A deliberate 60 W burst test (cap
 removed, short duration) is the decisive next step, at the risk of another
 unclean shutdown.
+
+## Correction: the 58 W peak was a measurement artifact
+
+The only sample above 35 W in any log is one row at 10:11:34 reading 58.0 W,
+sitting between 30.2 W and 30.2 W. It is a RAPL counter glitch, not a real
+burst. The genuine envelope of this machine is:
+
+| Load | Package power |
+|---|---|
+| Idle | 3-10 W |
+| Boot / service storm | 18-31 W |
+| Six-core sustained (2.9 GHz all-core) | 27.8 W |
+| Two-second full-load bursts | 33-35 W |
+
+With the platform (NVMe, SATA SSD, USB HDD, fan, NIC) adding ~15 W, total DC
+draw is ~45-50 W. **A 65 W adapter is adequate; the 90 W is comfortable.** The
+adapter is therefore not undersized, and load capacity is not the fault.
+
+## Deliberate stress results (no cut)
+
+- 11:04-11:08: six `sha256sum /dev/zero` workers, PL1=PL2=60 W, 3.5 min:
+  package 30.4 W peak, load 8.8, 77 C, stayed up.
+- 11:09-11:12: burst mode 2 s full load / 2 s idle, PL1=PL2=60 W, 180 s:
+  package 35.1 W peak, load 17, 78 C, stayed up.
+- Total uptime by 11:13: over one hour, the longest of the day.
+
+Interpretation: the host survives every load level it is physically capable of.
+The earlier cuts happened at 16-20 W (idle) and 29-31 W (boot), i.e. **at or
+below what it now sustains without trouble**. That rules out "PSU/adapter
+overloaded by load" and points to an intermittent fault: BIOS 1.31.0 firmware
+(the family that caused the 1.32.0 power-cycling), the front-panel power switch,
+or a failing adapter.
+
+PL1/PL2 were restored to Dell defaults (35 W / 60 W) and
+`cpu-power-cap.service` disabled, so the machine is back to stock behaviour
+before the BIOS downgrade.
