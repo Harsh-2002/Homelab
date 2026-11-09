@@ -85,6 +85,41 @@ Restart with `docker restart jellyfin`, or redeploy Portainer stack 94. The
 health check needs `start_period: 60s`; Jellyfin is slow to open the port after
 a restart.
 
+## SSO plugin repository (2026-11-09)
+
+Every plugin update check logged a 404:
+
+```
+An error occurred while accessing the plugin manifest:
+https://raw.githubusercontent.com/Flowfin/jellyfin-plugin-sso/manifest-release/manifest.json
+System.Net.Http.HttpRequestException: 404 (Not Found)
+```
+
+The Flowfin fork no longer exists. The live continuation is
+`K0lin/jellyfin-plugin-sso`: same plugin GUID
+`505ce9d1-d916-42fa-86ca-673ef241d7df`, versions 5.1.x with
+`targetAbi 12.0.0.0`, matching this server line.
+
+Fix, with Jellyfin stopped so it cannot rewrite `system.xml` on exit:
+
+```sh
+docker stop jellyfin
+sudo cp -p /data/apps/jellyfin/config/config/system.xml{,.bak-20261109}
+sudo sed -i 's|Flowfin/jellyfin-plugin-sso|K0lin/jellyfin-plugin-sso|' \
+  /data/apps/jellyfin/config/config/system.xml
+docker start jellyfin
+```
+
+Result: the manifest resolves, the scheduled **Update Plugins** task installed
+**SSO Authentication 5.1.1** over 5.0.0.0, the new assembly loads
+(`Loaded plugin: SSO Authentication 5.1.1`), the single OID provider
+configuration is preserved, and no 404 appears after 12:18. The old 5.0.0.0
+directory remains disabled for rollback.
+
+That scheduled task installs available plugin updates automatically. If
+unattended plugin upgrades are unwanted, set **Dashboard -> Scheduled Tasks ->
+Update Plugins** to manual.
+
 ## History
 
 - 2026-10-05 — the container failed to start because the old SMB media mount
@@ -94,3 +129,4 @@ a restart.
   others) was retired. Jellyfin's library is no longer driven by those tools.
 - 2026-11-02 — Pocket ID SSO redirect fix, described above.
 - 2026-11-04 — media consolidated to `/data/apps/smb`; Music library removed.
+- 2026-11-09 - SSO plugin repository moved from the dead Flowfin fork to K0lin; plugin updated to 5.1.1.
