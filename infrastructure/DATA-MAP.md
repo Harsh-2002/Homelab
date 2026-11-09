@@ -13,7 +13,7 @@ per the host policy.
 | `cairn` | cairn | `/data/apps/cairn` -> `/data/cairn` |
 | `desktop` | desktop | `/data/apps/desktop/home` -> `/home/ubuntu` |
 | `frigate` | frigate | `/data/apps/frigate/config` -> `/config`; `/data/apps/frigate/media` -> `/media/frigate` |
-| `homeassistant` | homeassistant | `/data/apps/homeassistant` -> `/config`; `/data/apps/homeassistant/media` -> `/media`; `/data/apps/homeassistant/share` -> `/share`; `/data/apps/homeassistant/ssl` -> `/ssl` |
+| `homeassistant` | homeassistant | `/data/apps/homeassistant` -> `/config`; `/data/apps/homeassistant/media` -> `/media`; `/data/apps/homeassistant/share` -> `/share`; `/data/apps/homeassistant/ssl` -> `/ssl`; `/BACKUP/homeassistant` -> `/BACKUP/homeassistant` |
 | `homepage` | dashboard | `/data/apps/homepage/config` -> `/app/config` |
 | `immich` | immich | `/data/apps/immich/media` -> `/data` |
 | `immich-ml` | immich | `/data/apps/immich/model` -> `/cache` |

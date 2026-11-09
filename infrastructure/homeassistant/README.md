@@ -277,3 +277,42 @@ Still missing, needs the owner:
 Prevention: mount a host directory for Home Assistant backups and enable an
 automatic schedule; the current `backup` integration writes to `/backup`, which
 is inside the container and is lost if the container is recreated.
+
+## Local-only AC and bulb (2026-11-09)
+
+The AC and the desk bulb are back **without any cloud integration**:
+
+- **Samsung AC** - `localthings` (LocalThings, `iot_class: local_push`). The config
+  flow only needed `host: 10.1.1.238`; it completed the certificate handshake
+  itself, and the entry now holds the CA/leaf certificates and device key. All
+  35 entities returned with their original IDs, including
+  `climate.samsung_room_ac`. No SmartThings account or token was used.
+- **Wipro bulb (behind monitor)** - `tuya_local` in manual mode with
+  `device_id`, `host: 10.1.1.239` and the local key from the 1Password item
+  "Wipro Bulb - Behind Monitor". `light.behind_monitor_bulb` is back.
+- The **SmartThings cloud integration was deliberately not restored**; it
+  controlled the same AC (`0f17ce84-...`) through Samsung's cloud and is
+  redundant now that the local integration works.
+
+Remaining lost entities are only `mobile_app` (32, re-register the Companion
+app) and `upnp` (17, auto-discovered). No cloud dependency is needed for
+lighting or cooling.
+
+## Backups (2026-11-09)
+
+Home Assistant writes backups to `/config/backups`, which is not configurable in
+the Container install. It is redirected to the backup disk:
+
+```text
+/data/apps/homeassistant/backups -> /BACKUP/homeassistant   (host symlink)
+stack mount: /BACKUP/homeassistant:/BACKUP/homeassistant
+```
+
+- Schedule: **daily at 03:00**, retention **7 copies / 30 days** (set through
+  `backup/config/update`; stored in `.storage/backup`).
+- Verified with two manual backups: the tars appear in
+  `/BACKUP/homeassistant` and `/config/backups` resolves to the same files.
+- `/BACKUP` is an fstab mount with `nofail`; if the USB disk is absent the
+  symlink target falls back to the root filesystem. Check
+  `mountpoint /BACKUP` if backups look misplaced.
+
