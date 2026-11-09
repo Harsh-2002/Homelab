@@ -25,8 +25,10 @@ Icons use the official `dashboard-icons` set where one exists (`immich.png`,
 `qbittorrent.png`, `karakeep.png`, `opencode.png`, `home-assistant.png`,
 `n8n.png`, `beszel.png`, `pocket-id.png`, `portainer.png`,
 `adguard-home.png`, `netgear.png`, `asus.png`). Nivra uses its own PWA icon and
-Orva its own `/web/favicon.svg`, both copied into `config/icons` and served
+Orva its exact `/web/favicon.svg`, both copied into `config/icons` and served
 through a `/app/public/icons` mount (Homepage does not serve `config/icons`).
+Home Assistant uses `mdi-home-assistant` so the icon follows the theme; the
+white PNG is invisible on the light dashboard.
 OpenCloud, Motrix, OpenViking and Desktop have no official icon and use MDI.
 Descriptions deliberately avoid host paths.
 

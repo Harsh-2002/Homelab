@@ -85,7 +85,7 @@
         description: Coding workspace
         siteMonitor: http://opencode:4096/
     - Home Assistant:
-        icon: home-assistant.png
+        icon: mdi-home-assistant
         href: https://home.l3b.cc.cd
         description: AC, bulb and cameras
         siteMonitor: http://homeassistant:8123/
