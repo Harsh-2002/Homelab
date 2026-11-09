@@ -1,0 +1,32 @@
+title: l3b
+description: Single-node homelab · Dell OptiPlex 5060
+color: slate
+theme: dark
+headerStyle: underlined
+statusStyle: dot
+hideVersion: true
+layout:
+  Overview:
+    style: row
+    columns: 3
+    useEqualHeights: true
+  Storage:
+    style: row
+    columns: 4
+    useEqualHeights: true
+  Media:
+    style: row
+    columns: 4
+    useEqualHeights: true
+  Applications:
+    style: row
+    columns: 4
+    useEqualHeights: true
+  Control:
+    style: row
+    columns: 5
+    useEqualHeights: true
+quicklaunch:
+  searchDescriptions: true
+  hideInternetSearch: true
+  showSearchSuggestions: false

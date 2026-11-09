@@ -1,0 +1,49 @@
+- datetime:
+    text_size: md
+    locale: en-IN
+    format:
+      dateStyle: medium
+      timeStyle: short
+      hourCycle: h23
+
+- customapi:
+    url: http://10.1.3.1:8099/stats
+    label: l3b
+    icon: mdi-server
+    refreshInterval: 15000
+    mappings:
+      - field: cpu_pct
+        label: CPU
+        suffix: " %"
+      - field: mem_pct
+        label: RAM
+        suffix: " %"
+      - field: temp_c
+        label: Temp
+        suffix: " °C"
+      - field: running
+        label: Containers
+      - field: failed_units
+        label: Failed
+      - field: uptime_hours
+        label: Uptime
+        suffix: " h"
+
+- customapi:
+    url: http://10.1.3.1:8099/stats
+    label: Storage
+    icon: mdi-harddisk
+    refreshInterval: 30000
+    mappings:
+      - field: disk_root_pct
+        label: Root
+        suffix: " %"
+      - field: disk_data_pct
+        label: Data
+        suffix: " %"
+      - field: disk_backup_pct
+        label: Backup
+        suffix: " %"
+      - field: swap_pct
+        label: Swap
+        suffix: " %"
