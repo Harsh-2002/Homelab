@@ -15,7 +15,7 @@ Homepage hot-reloads YAML edits without a restart.
 | **Storage** | OpenCloud, Immich, Paperless-ngx, RustFS (S3 console), Cairn backup target (5 columns, one row) |
 | **Media** | Jellyfin, Frigate, qBittorrent, Motrix |
 | **Applications** | Karakeep, OpenViking, Nivra, Orva, OpenCode, Home Assistant, n8n, Desktop |
-| **Control** | AdGuard Home, Pocket ID, Tinyauth, Portainer, Beszel |
+| **Control** | AdGuard Home, Pocket ID, Portainer, Beszel |
 
 Top widget: date/time only. Host and disk stats were removed from the header
 at the owner's request; they live on the l3b/Beszel tiles instead.
@@ -23,9 +23,11 @@ at the owner's request; they live on the l3b/Beszel tiles instead.
 Icons use the official `dashboard-icons` set where one exists (`immich.png`,
 `paperless-ngx.png`, `rustfs.png`, `cairn.png`, `jellyfin.png`, `frigate.png`,
 `qbittorrent.png`, `karakeep.png`, `opencode.png`, `home-assistant.png`,
-`n8n.png`, `tinyauth.png`, `beszel.png`, `pocket-id.png`, `portainer.png`,
-`adguard-home.png`, `netgear.png`, `asus.png`). OpenCloud, Motrix, OpenViking,
-Orva, Desktop and the host tile have no official dashboard-icon and use MDI.
+`n8n.png`, `beszel.png`, `pocket-id.png`, `portainer.png`,
+`adguard-home.png`, `netgear.png`, `asus.png`). Nivra uses its own PWA icon and
+Orva its own `/web/favicon.svg`, both copied into `config/icons` and served
+through a `/app/public/icons` mount (Homepage does not serve `config/icons`).
+OpenCloud, Motrix, OpenViking and Desktop have no official icon and use MDI.
 Descriptions deliberately avoid host paths.
 
 ## Widgets and health checks
@@ -68,7 +70,10 @@ Backups of the previous layout: `*.bak-20261109` beside each file.
   Credentials are the PocketBase superuser from the 1Password item
   **Beszel Monitoring**, injected as `HOMEPAGE_VAR_BESZEL_USERNAME` and
   `HOMEPAGE_VAR_BESZEL_PASSWORD` in the `dashboard` stack (172).
+- **Portainer** - RUNNING / STOPPED / TOTAL for endpoint 2, using a Portainer
+  API key (`ptr_...`) generated for Homepage and stored as
+  `HOMEPAGE_VAR_PORTAINER_KEY` in the same stack.
 
-Homepage has no widget for Pocket ID or Tinyauth, so those tiles are status
-only. Portainer has one but requires a Portainer API key.
+Homepage has no widget for Pocket ID, so that tile is status only.
+Tinyauth was removed from Control at the owner's request.
 

@@ -70,12 +70,12 @@
         description: Shared agent memory
         siteMonitor: http://openviking:1933/health
     - Nivra:
-        icon: https://notes.l3b.cc.cd/icons/icon-192.png?v=5
+        icon: /icons/nivra.png
         href: https://notes.l3b.cc.cd
         description: Notes and tasks
         siteMonitor: http://nivra:3000/health
     - Orva:
-        icon: mdi-function-variant
+        icon: /icons/orva.svg
         href: https://orva.l3b.cc.cd
         description: Functions and Quick Share
         siteMonitor: http://orva:8443/api/v1/system/health
@@ -116,16 +116,16 @@
         href: https://auth.l3b.cc.cd
         description: Passkeys and identity
         siteMonitor: http://pocketid:1411/healthz
-    - Tinyauth:
-        icon: tinyauth.png
-        href: https://login.l3b.cc.cd
-        description: Access gate for every service
-        siteMonitor: http://tinyauth:3000/
     - Portainer:
         icon: portainer.png
         href: https://portainer.l3b.cc.cd
         description: Docker stacks
         siteMonitor: http://portainer:9000/api/status
+        widget:
+          type: portainer
+          url: http://portainer:9000
+          env: 2
+          key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
     - Beszel:
         icon: beszel.png
         href: https://beszel.l3b.cc.cd
