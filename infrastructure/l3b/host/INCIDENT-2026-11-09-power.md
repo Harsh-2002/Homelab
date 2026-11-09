@@ -171,3 +171,21 @@ is confirmed as the fault domain and the brick must be checked or replaced.
 - `pl2-test` log fsyncs every heartbeat (10 s).
 - `crash-record.service` is enabled and mirrors the previous boot tail to
   `/data/apps/diagnostics/crash-history/` on every start.
+
+## PL2 cap run result (10:28-10:58)
+
+- Ran 1803 s (30 min) on one boot; `boot_start == boot_end`, no reboot, no cut.
+- 1799 one-second samples: **min 2.8 W, average 7.2 W, peak 32.9 W**; zero
+  samples above the 35 W cap, so the cap was enforced for the whole run.
+- Two 45 s four-worker load pulses (10:38 and 10:48) reached 32.5-32.9 W package
+  power and 77-78 C, and the host stayed up.
+- No warning-or-worse journal entries during the window.
+- Uptime at the end: **47 minutes** (longest of the day; previous best stretch
+  was about 19 minutes).
+
+Interpretation: the cap works and the machine is stable at <= 33 W package
+power. This does **not** isolate the fault, because the cap also removed the
+58-60 W bursts that were present at the 10:07 cut, and the host had already run
+17 minutes before the cap was applied. A deliberate 60 W burst test (cap
+removed, short duration) is the decisive next step, at the risk of another
+unclean shutdown.
