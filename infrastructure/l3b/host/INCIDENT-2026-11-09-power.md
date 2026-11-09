@@ -315,3 +315,22 @@ of the database`). The LMDB data and both indexes were intact; writing
 `1.56.1` back (matching the image tag), restoring ownership 1000:1000 and
 restarting brought it back. Health is `available`, 11 documents, live search
 returns hits. Details in `infrastructure/karakeep/README.md`.
+
+## Cleanup (11:50)
+
+Removed once the experiments were finished and their results recorded here:
+
+- `cpu-power-cap.service` and `/usr/local/sbin/cpu-power-cap.sh` - the PL2 cap
+  experiment; the limits are back at Dell defaults (35 W / 60 W).
+- `/usr/local/sbin/pl2-test.sh` and `/usr/local/sbin/load-test.sh`.
+- the empty `/mnt/dellbios` mountpoint and the stale
+  `/etc/systemd/journald.conf.bak-20261109`.
+
+Kept and reorganised: the three live diagnostics services and their output under
+`/data/apps/diagnostics` (`crash-history/`, `power/`, `tests/`), described by the
+README added there. `meilisearch/VERSION.corrupt-20261109` is retained as
+evidence of the truncated version marker.
+
+The stress-test method stays reproducible without the scripts: six
+`sha256sum /dev/zero` workers, optionally toggled 2 s on / 2 s off, while
+`power-log` samples every second.

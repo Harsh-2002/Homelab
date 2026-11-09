@@ -14,10 +14,20 @@ a Docker outage run outside Docker.
 | Remote shell | `ssh.service` | Existing keys only |
 | mDNS | `avahi-daemon.service` | Advertises SMB and the Time Machine destination on `eno1` only |
 | Homepage stats | `homelab-stats.service` | Read-only JSON on `10.1.3.1:8099` with CPU, RAM, temp, disk and container totals, image count, failed systemd units and `eno1` throughput for the Homepage widget and Home Assistant REST sensors; unit and script tracked here |
-| Power-key watch | `powerkey-watch.service` | Records ACPI power-button events and exposes them to Home Assistant; see [BIOS-VERSIONS.md](BIOS-VERSIONS.md) |
+| Power-key watch | `powerkey-watch.service` | Records ACPI power-button events (append-only `/var/log/powerkey-events.log` plus count in `/var/lib/powerkey-watch/state.json`) and exposes them to Home Assistant; see [BIOS-VERSIONS.md](BIOS-VERSIONS.md) |
+| Crash evidence | `crash-record.service` | On every boot writes the previous boot's last 200 journal lines, reboot history and temperatures to `/data/apps/diagnostics/crash-history/` |
+| Power logging | `power-log.service` | One line per second with RAPL package watts, package temperature and load, fsynced to `/data/apps/diagnostics/power/power-YYYYMMDD.csv` |
 | SMB share | `smbd.service` | Native Samba; shares `MEDIA` (`/data/apps/smb`) and `BACKUP` (`/BACKUP`) on TCP **445** only; see [../smb/README.md](../smb/README.md) |
 | Coding agents | `opencode.service`, Hermes user gateway | Need host filesystem/tool access |
 | microsandbox | `/opt/microsandbox`, `/usr/local/bin/msb` | Global CLI for disposable agent microVMs (libkrun + KVM); per-user state in `~/.microsandbox`. See [../microsandbox/README.md](../microsandbox/README.md) |
+
+## Power diagnostics
+
+The crash, power and power-key services above exist because of the repeated
+hard power-offs on 9 November 2026. Their output lives off the root disk under
+`/data/apps/diagnostics`; its README describes the layout and how to read a
+crash, while [INCIDENT-2026-11-09-power.md](INCIDENT-2026-11-09-power.md) holds
+the timeline, evidence and conclusions.
 
 ## OLX MCP gateway
 
