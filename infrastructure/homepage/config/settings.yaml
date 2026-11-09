@@ -12,7 +12,7 @@ layout:
     useEqualHeights: true
   Storage:
     style: row
-    columns: 4
+    columns: 5
     useEqualHeights: true
   Media:
     style: row

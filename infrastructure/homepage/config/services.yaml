@@ -2,109 +2,108 @@
     - l3b:
         icon: mdi-server
         href: https://beszel.l3b.cc.cd
-        description: OptiPlex 5060 · i5-9400T · 32 GB · Debian 13
+        description: OptiPlex 5060 · i5-9400T · 32 GB
         siteMonitor: http://10.1.3.1:8099/stats
     - NETGEAR switch:
-        icon: mdi-switch
+        icon: netgear.png
         href: https://switch.l3b.cc.cd
-        description: GS110TPv3 · 8× GbE + 2× SFP · mgmt 192.168.0.239
+        description: GS110TPv3 · 8× GbE + 2× SFP
         siteMonitor: http://10.1.1.200/
     - Router:
-        icon: mdi-router-wireless
+        icon: asus.png
         href: http://10.1.1.1
         description: LAN gateway · DHCP · Wi-Fi
-        siteMonitor: http://10.1.1.1/
 - Storage:
     - OpenCloud:
-        icon: https://drive.l3b.cc.cd/favicon.ico
+        icon: mdi-cloud
         href: https://drive.l3b.cc.cd
-        description: Files and collaboration · /data/apps/opencloud
+        description: Files and collaboration
         siteMonitor: http://opencloud:9200/
     - Immich:
-        icon: https://photos.l3b.cc.cd/favicon.ico
+        icon: immich.png
         href: https://photos.l3b.cc.cd
-        description: Photos and video · 87 GB media
+        description: Photos and video · 87 GB
         siteMonitor: http://immich:2283/api/server/ping
     - Paperless-ngx:
-        icon: mdi-file-document-multiple
+        icon: paperless-ngx.png
         href: https://docs.l3b.cc.cd
         description: Scanned documents and OCR
         siteMonitor: http://paperless:8000/
     - RustFS:
-        icon: mdi-database
+        icon: rustfs.png
         href: https://rustfs.l3b.cc.cd
-        description: S3 object store · 54 GB · registry and Cairn buckets
+        description: S3 object store · 54 GB
     - Cairn:
-        icon: mdi-backup-restore
+        icon: cairn.png
         href: https://cairn.l3b.cc.cd
-        description: S3 backup target and console
+        description: S3 backup target
 - Media:
     - Jellyfin:
-        icon: mdi-play-circle
+        icon: jellyfin.png
         href: https://media.l3b.cc.cd
-        description: Films and shows · local library
+        description: Films and shows
         siteMonitor: http://jellyfin:8096/health
     - Frigate:
-        icon: mdi-cctv
+        icon: frigate.png
         href: https://frigate.l3b.cc.cd
         description: Camera NVR · outdoor
         siteMonitor: http://frigate:5000/api/version
     - qBittorrent:
-        icon: mdi-download
+        icon: qbittorrent.png
         href: https://downloads.l3b.cc.cd
-        description: Torrent client · /data/apps/smb/downloads
+        description: Torrent client
         siteMonitor: http://qbittorrent:8081/
     - Motrix:
-        icon: mdi-cloud-download
+        icon: mdi-download
         href: https://motrix.l3b.cc.cd
-        description: HTTP and FTP downloader
+        description: HTTP and FTP downloads
         siteMonitor: http://motrix:8080/
 - Applications:
     - Karakeep:
-        icon: https://pin.l3b.cc.cd/favicon.ico
+        icon: karakeep.png
         href: https://pin.l3b.cc.cd
         description: Bookmarks, notes and search
         siteMonitor: http://karakeep:3000/
     - OpenViking:
-        icon: https://memory.l3b.cc.cd/favicon.ico
+        icon: mdi-brain
         href: https://memory.l3b.cc.cd/studio
-        description: Persistent shared agent memory
+        description: Shared agent memory
         siteMonitor: http://openviking:1933/health
     - Nivra:
         icon: nivra.png
         href: https://notes.l3b.cc.cd
-        description: Private notes and tasks
+        description: Notes and tasks
         siteMonitor: http://nivra:3000/health
     - Orva:
-        icon: https://orva.l3b.cc.cd/favicon.ico
+        icon: mdi-function-variant
         href: https://orva.l3b.cc.cd
-        description: Serverless functions and Quick Share
+        description: Functions and Quick Share
         siteMonitor: http://orva:8443/api/v1/system/health
     - OpenCode:
-        icon: https://oc.l3b.cc.cd/favicon.ico
+        icon: opencode.png
         href: https://oc.l3b.cc.cd
-        description: Native coding workspace
+        description: Coding workspace
         siteMonitor: http://opencode:4096/
     - Home Assistant:
-        icon: mdi-home-assistant
+        icon: home-assistant.png
         href: https://home.l3b.cc.cd
-        description: Home automation · AC, bulb, cameras
+        description: AC, bulb and cameras
         siteMonitor: http://homeassistant:8123/
     - n8n:
-        icon: mdi-sitemap
+        icon: n8n.png
         href: https://n8n.l3b.cc.cd
         description: Automation workflows
         siteMonitor: http://n8n:5678/healthz
     - Desktop:
         icon: mdi-monitor
         href: https://os.l3b.cc.cd
-        description: Browser Linux desktop · Selkies
+        description: Browser Linux desktop
         siteMonitor: http://desktop:8080/
 - Control:
     - AdGuard Home:
         icon: adguard-home.png
         href: https://dns.l3b.cc.cd
-        description: DNS filtering and recursive DNSSEC
+        description: DNS filtering and DNSSEC
         siteMonitor: http://adguard:3000/
         widget:
           type: adguard
@@ -115,20 +114,27 @@
     - Pocket ID:
         icon: pocket-id.png
         href: https://auth.l3b.cc.cd
-        description: Passkeys and application identity
+        description: Passkeys and identity
         siteMonitor: http://pocketid:1411/healthz
     - Tinyauth:
-        icon: mdi-shield-lock
+        icon: tinyauth.png
         href: https://login.l3b.cc.cd
-        description: Private access gate for every service
+        description: Access gate for every service
         siteMonitor: http://tinyauth:3000/
     - Portainer:
         icon: portainer.png
         href: https://portainer.l3b.cc.cd
-        description: Docker stacks on l3b
+        description: Docker stacks
         siteMonitor: http://portainer:9000/api/status
     - Beszel:
-        icon: mdi-chart-line
+        icon: beszel.png
         href: https://beszel.l3b.cc.cd
-        description: Host history · CPU, memory, disks, SMART
+        description: CPU, memory, disks and SMART
         siteMonitor: http://beszel:8090/
+        widget:
+          type: beszel
+          url: http://beszel:8090
+          username: "{{HOMEPAGE_VAR_BESZEL_USERNAME}}"
+          password: "{{HOMEPAGE_VAR_BESZEL_PASSWORD}}"
+          systemId: l3b
+          version: 2
