@@ -225,3 +225,48 @@ or a failing adapter.
 PL1/PL2 were restored to Dell defaults (35 W / 60 W) and
 `cpu-power-cap.service` disabled, so the machine is back to stock behaviour
 before the BIOS downgrade.
+
+## Power-button correlation (decisive lead)
+
+A deliberate quick press at 11:21:46 was fully detected: logind logged
+`Power key pressed short.`, the watcher counted it (count 4) and appended to
+`/var/log/powerkey-events.log`. `HandlePowerKey=ignore` held: no shutdown job,
+no reboot, host stayed up past 1 h 12 min.
+
+The same log, cross-referenced with the 1 s power CSV, shows the earlier presses
+were followed by the deaths:
+
+| Press | Last evidence of life | Gap |
+|---|---|---|
+| 09:28:35 | journal ends immediately | ~0 s |
+| 09:58:29 | last power sample 09:58:33 | **4 s** |
+| 10:07:53 | last power sample 10:07:57 | **4 s** |
+| 11:21:46 | still running | none (ignored) |
+
+Four seconds is the EC hardware long-press cutoff, which bypasses logind and
+cuts the rail without a shutdown sequence. That explains why logind only ever
+recorded "short", never "long", and why every affected boot is marked `crash`
+with no shutdown record.
+
+**Primary suspect is now the front-panel power switch or its cable**: an
+intermittent contact that stays closed for ~4 s reproduces every symptom (hard
+cut at idle or load, green adapter LED, no logs, no thermal event). The BIOS
+1.31.0 bug and the adapter remain secondary.
+
+Next steps when the host is next powered on:
+
+1. Leave the button untouched for 24 h; any event in
+   `/var/log/powerkey-events.log` that nobody caused confirms the switch.
+2. Reseat and clean the front-panel switch connector; if events continue,
+   replace the front-panel assembly or unplug the power-switch header and power
+   on via BIOS AC-recovery / Wake-on-LAN.
+3. Flash BIOS 1.30.0 only if the cuts continue with the switch ruled out; the
+   verified stick is ready.
+4. Read the Dell BIOS event log (F2 -> Maintenance) after the next cut.
+
+## Shutdown 9 November
+
+The host was shut down cleanly on request at the end of this session, after
+1 h 12 min of stable uptime and the stress tests above. A clean shutdown should
+appear as a `shutdown` record in `last -x`, which distinguishes it from the
+earlier `crash` boots.
