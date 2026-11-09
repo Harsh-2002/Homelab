@@ -17,7 +17,8 @@ Homepage hot-reloads YAML edits without a restart.
 | **Applications** | Karakeep, OpenViking, Nivra, Orva, OpenCode, Home Assistant, n8n, Desktop |
 | **Control** | AdGuard Home, Pocket ID, Tinyauth, Portainer, Beszel |
 
-Top widgets: date/time, host stats and storage usage.
+Top widget: date/time only. Host and disk stats were removed from the header
+at the owner's request; they live on the l3b/Beszel tiles instead.
 
 Icons use the official `dashboard-icons` set where one exists (`immich.png`,
 `paperless-ngx.png`, `rustfs.png`, `cairn.png`, `jellyfin.png`, `frigate.png`,
