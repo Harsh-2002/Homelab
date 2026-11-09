@@ -38,3 +38,36 @@ Use Portainer to redeploy Stack `80`; change this tracked Compose definition bef
 As of 2026-10-03, Hermes on dev uses the official CLI 0.33.2 and a dedicated scoped API key saved in HomeLab → Karakeep → Hermes API Key. See [the Hermes runbook](../hermes/README.md#karakeep-cli-integration-2026-10-03) for protected configuration, scopes and validation.
 
 Both the app and Meilisearch services must receive the same `MEILI_MASTER_KEY` from Portainer stack environment variables. The missing app mapping caused `missing_authorization_header` search failures; it was corrected through stack 80 without changing secrets or resetting data. Bookmark indexing and full-text/tag search passed after the correction.
+
+## Meilisearch restart loop after power loss (2026-11-09)
+
+Symptom: `karakeep-meilisearch` restarting continuously; the log repeats
+`Meilisearch (v1.56.1) failed to infer the version of the database`, and
+Karakeep search is unavailable.
+
+Cause: `data.ms/VERSION` had been truncated to **0 bytes** (root:root, mtime
+09:28, matching a hard power-off during the host power-fault investigation).
+The LMDB stores and both indexes were intact - only the version marker was lost.
+
+Fix, verified 2026-11-09 11:45:
+
+```sh
+printf '1.56.1' | sudo tee /data/apps/karakeep/meilisearch/data.ms/VERSION >/dev/null
+sudo chown 1000:1000 /data/apps/karakeep/meilisearch/data.ms/VERSION
+sudo chmod 600 /data/apps/karakeep/meilisearch/data.ms/VERSION
+docker restart karakeep-meilisearch
+```
+
+The value must match the running image (`getmeili/meilisearch:v1.56.1`). The
+pre-upgrade archive in `/BACKUP/preupgrade-20261107-2318/karakeep-meilisearch.tgz`
+confirms the format: a bare version string, no trailing newline (it holds
+`1.41.0`, the version Karakeep migrated from on 2026-11-07). The truncated
+original is kept as `meilisearch/VERSION.corrupt-20261109`.
+
+Verification: `/health` returns `available`; indexes `bookmarks` and
+`bookmarks_vectors` present; 11 documents; a live `POST /indexes/bookmarks/search`
+returns hits; the Karakeep indexing worker logs no errors.
+
+Do **not** delete `data.ms` for this symptom - it is only the version marker.
+Wiping the index remains the fallback for genuine LMDB corruption, followed by
+Karakeep's *Reindex All Bookmarks*.

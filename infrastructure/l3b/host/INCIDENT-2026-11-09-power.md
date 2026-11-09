@@ -306,3 +306,12 @@ design intent.
 Watch: 24 hours on 1.30.0. If a hard cut recurs, the next tests are the
 front-panel switch (phantom presses in `/var/log/powerkey-events.log`) and the
 adapter; the BIOS variable is now eliminated.
+
+## Collateral damage: Meilisearch version marker (11:45)
+
+The power cuts truncated Karakeep's `meilisearch/data.ms/VERSION` to 0 bytes,
+which put `karakeep-meilisearch` in a restart loop (`failed to infer the version
+of the database`). The LMDB data and both indexes were intact; writing
+`1.56.1` back (matching the image tag), restoring ownership 1000:1000 and
+restarting brought it back. Health is `available`, 11 documents, live search
+returns hits. Details in `infrastructure/karakeep/README.md`.
