@@ -82,3 +82,29 @@ Verified: idle package draw 7-9 W at 63 C, lines arriving every second.
 Still needed for real mains evidence: a metering smart plug (Shelly/Tasmota) on
 the UPS output, logged through Home Assistant, and the Dell BIOS event log
 (F2 -> Maintenance) after the next event.
+
+## RAPL evidence, 10:04 and 10:07 cuts
+
+| Boot | Started | Package power at cut | Load at cut | Temp |
+|---|---|---|---|---|
+| 142ccf99 | 10:03 | 16-20 W | 0.72 | 63-66 C |
+| ac7bd081 | 10:07 | 29-31 W | 15.1 | 69-71 C |
+
+One cut happened **near idle** (20 W, load 0.7), the other during the startup
+storm (31 W, load 15). Package power never approached what a 200 W PSU would
+strain at, and there was no thermal event. That weakens the "PSU overloaded by
+load" theory and strengthens an intermittent power-rail or firmware fault.
+
+## BIOS stick prepared
+
+USB `sdb1`, FAT32 label `DELLBIOS`, contents verified by SHA-256:
+
+- `OptiPlex_5060_1.30.0.exe` — 3ee54ced...b1251 (Dell)
+- `BIOS_IMG.rcv` (1.30.0) — 7c7aa3af...0cc6 (Dell)
+- `OptiPlex_5060_1.31.0.exe` — 2efbb193...c9c31 (roll-forward)
+- `BIOS_IMG_1.31.0.rcv` — 2fc3b295...f51c01
+- `OptiPlex_5060_1.32.0.exe` removed (excluded version).
+
+Procedure: F2 -> Security -> UEFI Capsule Firmware Updates -> allow downgrade;
+F12 -> BIOS Flash Update -> select `OptiPlex_5060_1.30.0.exe`; keep UPS power;
+host reboots several times; then `sudo dmidecode -s bios-version` must read 1.30.0.
