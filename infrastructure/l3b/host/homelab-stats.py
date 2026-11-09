@@ -162,6 +162,42 @@ def temperatures():
     return round(fallback, 1) if fallback else None
 
 
+def powerkey_state():
+    """ACPI power-key events recorded by powerkey-watch.service."""
+    try:
+        with open("/var/lib/powerkey-watch/state.json") as fh:
+            data = json.load(fh)
+        return {
+            "powerkey_events": int(data.get("count", 0)),
+            "powerkey_last": data.get("last") or None,
+        }
+    except (OSError, ValueError, TypeError):
+        return {"powerkey_events": None, "powerkey_last": None}
+
+
+POCKETID_DB = "/data/apps/pocket-id/data/pocket-id.db"
+
+
+def pocketid_counts():
+    """Read-only counts from Pocket ID's SQLite database."""
+    import sqlite3
+    try:
+        con = sqlite3.connect(f"file:{POCKETID_DB}?mode=ro", uri=True, timeout=2)
+        try:
+            def count(table):
+                return con.execute(f'SELECT COUNT(*) FROM "{table}"').fetchone()[0]
+            return {
+                "users": count("users"),
+                "passkeys": count("webauthn_credentials"),
+                "clients": count("oidc_clients"),
+                "groups": count("user_groups"),
+            }
+        finally:
+            con.close()
+    except Exception:
+        return {"users": None, "passkeys": None, "clients": None, "groups": None}
+
+
 def uptime_hours():
     with open("/proc/uptime") as fh:
         return round(float(fh.read().split()[0]) / 3600.0, 1)
@@ -181,6 +217,7 @@ def payload():
         "net_down_mbs": _net_rate["rx_mbs"],
         "net_up_mbs": _net_rate["tx_mbs"],
     }
+    data.update(powerkey_state())
     data.update(meminfo())
     data.update(containers() or {"running": None, "total": None, "stopped": None,
                                  "unhealthy": None, "restarting": None, "images": None})
@@ -189,13 +226,17 @@ def payload():
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path.split("?")[0] not in ("/stats", "/"):
+        path = self.path.split("?")[0]
+        if path == "/pocketid":
+            body = json.dumps(pocketid_counts()).encode()
+        elif path in ("/stats", "/"):
+            try:
+                body = json.dumps(payload()).encode()
+            except Exception as exc:
+                body = json.dumps({"error": str(exc)}).encode()
+        else:
             self.send_error(404)
             return
-        try:
-            body = json.dumps(payload()).encode()
-        except Exception as exc:
-            body = json.dumps({"error": str(exc)}).encode()
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(body)))

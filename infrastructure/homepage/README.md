@@ -74,6 +74,10 @@ Backups of the previous layout: `*.bak-20261109` beside each file.
   API key (`ptr_...`) generated for Homepage and stored as
   `HOMEPAGE_VAR_PORTAINER_KEY` in the same stack.
 
-Homepage has no widget for Pocket ID, so that tile is status only.
+- **Pocket ID** - USERS / PASSKEYS / APPS from a small custom endpoint,
+  `http://10.1.3.1:8099/pocketid`, added to `homelab-stats.service`. It reads
+  Pocket ID's SQLite database read-only (no API key or cloud call), so the
+  numbers stay correct without touching the identity service.
+
 Tinyauth was removed from Control at the owner's request.
 
