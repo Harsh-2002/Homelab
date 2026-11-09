@@ -98,3 +98,33 @@ rest:
         device_class: data_rate
         state_class: measurement
         icon: mdi:upload-network-outline
+      - name: host_powerkey_events
+        value_template: "{{ value_json.powerkey_events }}"
+        json_attributes:
+          - powerkey_last
+        state_class: total_increasing
+        icon: mdi:power
+      - name: host_powerkey_last
+        value_template: "{{ value_json.powerkey_last }}"
+        device_class: timestamp
+        icon: mdi:clock-alert-outline
+
+automation:
+- alias: l3b power-button event
+  id: l3b_powerkey_event
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: sensor.host_powerkey_events
+  condition:
+  - condition: template
+    value_template: >-
+      {{ trigger.from_state is not none and
+         (trigger.to_state.state | int(0)) > (trigger.from_state.state | int(0)) }}
+  action:
+  - service: persistent_notification.create
+    data:
+      title: l3b power button
+      message: >-
+        Power-key event #{{ trigger.to_state.state }} recorded at
+        {{ trigger.to_state.attributes.powerkey_last | as_timestamp | timestamp_custom('%d %b %Y %H:%M:%S') if trigger.to_state.attributes.powerkey_last else 'unknown time' }}.

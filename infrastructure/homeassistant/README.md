@@ -217,3 +217,30 @@ Both files are tracked under `config/` for reproducibility; the live copies are
 `/data/apps/homeassistant/dashboards/homelab.yaml`. Verified after restart: all
 ten sensors report values (CPU 12.6 %, RAM 47.3 %, 61 °C, 39 containers, 0
 unhealthy, root 73.7 %, data 19.6 %, backup 16.1 %).
+
+## Cleanup 2026-11-09: orphaned Proxmox entities and dead notification
+
+The Overview "Favourites" showed 27 `sensor.px10_*`, `sensor.px20_*` and
+`sensor.px30_*` entities (platform `rest`) stuck as **Unavailable**. Their YAML
+had already been removed, so they survived only as orphan entries in the entity
+registry. With Home Assistant stopped:
+
+- backed up `.storage/core.entity_registry` and `.storage/core.restore_state` to
+  `*.bak-20261109`;
+- removed the 27 px entities from the registry (55 -> 28);
+- removed the dead `notify.mobile_app_anurags_iphone` action from the
+  `l3b power-button event` automation. That service no longer exists (no
+  mobile_app config entries), so every power-key event produced an error;
+  `persistent_notification.create` remains and works;
+- deleted the unused `/data/apps/homepage/config/proxmox.yaml` widget stub;
+- `PRAGMA quick_check` on `home-assistant_v2.db` returned **ok**. The recorder's
+  "was shutdown cleanly" warning is only the unclean-shutdown flag left by the
+  power cuts, not corruption.
+
+Home Assistant restarted healthy with no errors, and the px entities are gone
+from both the registry and the UI. Beszel already tracked only l3b
+(`10.1.1.10`), so no Proxmox monitoring remained there.
+
+Older design notes (`FRIGATE-AND-NODES.md`, `HOMELAB-UI.md`,
+`dashboard-direction.md`) still describe the retired px cluster; treat them as
+history, not current state.
