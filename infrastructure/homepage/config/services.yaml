@@ -56,8 +56,9 @@
         siteMonitor: http://qbittorrent:8081/
     - Motrix:
         icon: mdi-cloud-download
-        href: https://downloads.l3b.cc.cd/mdxp
+        href: https://motrix.l3b.cc.cd
         description: HTTP and FTP downloader
+        siteMonitor: http://motrix:8080/
 - Applications:
     - Karakeep:
         icon: https://pin.l3b.cc.cd/favicon.ico

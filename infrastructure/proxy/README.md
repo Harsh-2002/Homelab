@@ -255,3 +255,10 @@ private Tinyauth gate. The switch lives at its factory-default
 The deployed Caddyfile is `/data/apps/caddy/Caddyfile`; the copy in this
 directory predates the single-host rebuild and is historical.
 
+## Media download UIs (2026-11-09)
+
+`downloads.l3b.cc.cd` serves qBittorrent. Motrix's UI is on container port
+`8080`, not the MDXP bridge on `16801`, so it has its own host:
+`motrix.l3b.cc.cd` (Tinyauth app `motrix`). The old `/mdxp` path still proxies
+the bridge API and is not linked from the dashboard.
+
