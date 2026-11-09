@@ -24,7 +24,7 @@ layout:
     useEqualHeights: true
   Control:
     style: row
-    columns: 5
+    columns: 4
     useEqualHeights: true
 quicklaunch:
   searchDescriptions: true
