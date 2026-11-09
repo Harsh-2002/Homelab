@@ -1,5 +1,10 @@
 # Home Assistant OS
 
+New gaming-PC smart plug (2026-11-09): candidate discovered and current address
+reserved without power interruption. Local-key/account approval and telemetry
+integration remain pending. **Never toggle/reset this plug during testing.**
+See [WIPRO-PLUG-LOCAL.md](WIPRO-PLUG-LOCAL.md).
+
 > **2026-11-02:** The active deployment is the Docker/Portainer stack on l3b:
 > [`infrastructure/l3b/homeassistant.compose.yaml`](../l3b/homeassistant.compose.yaml).
 > Private URL: `https://home.l3b.cc.cd`; data: `/data/apps/homeassistant`.
@@ -315,4 +320,3 @@ stack mount: /BACKUP/homeassistant:/BACKUP/homeassistant
 - `/BACKUP` is an fstab mount with `nofail`; if the USB disk is absent the
   symlink target falls back to the root filesystem. Check
   `mountpoint /BACKUP` if backups look misplaced.
-

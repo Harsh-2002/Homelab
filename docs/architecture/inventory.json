@@ -214,6 +214,17 @@
       "ownerStep": "re-import updated MacBook/iPhone vault Documents; existing imported tunnels cannot be changed remotely",
       "evidence": "infrastructure/l3b/DNS-POLICY-VERIFICATION-2026-11-02.json"
     },
+    "pendingDeviceIntegrations": [
+      {
+        "id": "gaming-pc-plug",
+        "verifiedOn": "2026-11-09",
+        "label": "Owner-reported Wipro gaming-PC smart plug",
+        "network": "Wi-Fi Tuya 3.5 candidate discovered; current address reserved in existing DHCP pool",
+        "relationship": "LAN candidate only; Home Assistant connection not configured",
+        "state": "awaiting account approval/local key and physical identity/telemetry verification; never toggle or reset while testing",
+        "evidence": "infrastructure/homeassistant/WIPRO-PLUG-LOCAL.md"
+      }
+    ],
     "networkPlan": {
       "lan": "dedicated physical LAN subnet; unchanged",
       "vpn": "dedicated WireGuard peer subnet; unchanged",
