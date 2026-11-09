@@ -108,3 +108,29 @@ USB `sdb1`, FAT32 label `DELLBIOS`, contents verified by SHA-256:
 Procedure: F2 -> Security -> UEFI Capsule Firmware Updates -> allow downgrade;
 F12 -> BIOS Flash Update -> select `OptiPlex_5060_1.30.0.exe`; keep UPS power;
 host reboots several times; then `sudo dmidecode -s bios-version` must read 1.30.0.
+
+## Exact model and power envelope
+
+- Chassis: **OptiPlex 5060 Micro (MFF)**, SMBIOS SKU `085B`, chassis "Desktop".
+- **No internal PSU.** SMBIOS type 39 is absent and `/sys/class/power_supply`
+  is empty, so the whole machine runs from the external brick.
+- Dell spec for this model: **65 W or 90 W AC adapter**, 19.5 V DC
+  (65 W = 3.34 A, 90 W = 4.62 A), 4.5 x 2.9 mm barrel, input 100-240 V AC
+  50/60 Hz. Micro configs with a 35 W CPU are specified with the 90 W brick.
+- Installed brick: genuine Dell, **DP/N 0KX650**, green LED lit. The LED is on
+  the AC side only; it says nothing about DC output health.
+
+Measured envelope on this unit (RAPL):
+
+| Limit | Value |
+|---|---|
+| PL1 long term | 35 W |
+| PL2 short term | 60 W |
+| Package peak observed | 58 W |
+| Package average (this boot) | 9.3 W |
+
+Rest of the box adds roughly 12-18 W at peak: NVMe + SATA SSD + USB 1.7 TB HDD
+(spin-up 5-7 W) + fan + NIC + board. So **peak DC draw is ~70-78 W**, which a
+65 W brick cannot cover and a 90 W brick covers with little headroom. If the
+installed brick turns out to be 65 W, that alone explains hard cuts during boot
+storms and turbo bursts.
