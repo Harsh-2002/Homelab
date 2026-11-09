@@ -70,7 +70,7 @@
         description: Shared agent memory
         siteMonitor: http://openviking:1933/health
     - Nivra:
-        icon: nivra.png
+        icon: https://notes.l3b.cc.cd/icons/icon-192.png?v=5
         href: https://notes.l3b.cc.cd
         description: Notes and tasks
         siteMonitor: http://nivra:3000/health
