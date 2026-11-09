@@ -244,3 +244,36 @@ from both the registry and the UI. Beszel already tracked only l3b
 Older design notes (`FRIGATE-AND-NODES.md`, `HOMELAB-UI.md`,
 `dashboard-direction.md`) still describe the retired px cluster; treat them as
 history, not current state.
+
+## 2026-11-09 power-loss corruption and recovery
+
+The repeated hard power-offs corrupted `.storage/core.config_entries` at 08:14
+(Home Assistant kept a 0-byte `core.config_entries.corrupt.2026-11-09T02:44:01`
+marker). On restart the integration list was reset to the five defaults, the
+device registry dropped to Sun/Backup, and 198 entities moved to
+`deleted_entities` (frigate 52, localthings 35, mobile_app 32, hassio 28, upnp
+17, tuya_local 12, smartthings 11). That is why the AC, Cameras and Quick
+dashboards showed "Entity not found": their integrations no longer existed.
+
+No Home Assistant backup existed to restore (`/backup` is not mounted, `/share`
+is empty, `/BACKUP` has none).
+
+Restored so far, via the config-flow API with the existing Hermes token:
+
+- **Frigate** (`http://frigate:5000`) and **MQTT** (`mqtt:1883`, credentials
+  from Frigate's environment). The deleted registry entries matched on
+  `unique_id`, so every original entity ID came back - `camera.outdoor`,
+  `binary_sensor.outdoor_*`, `sensor.outdoor_all_count`, `switch.outdoor_*` -
+  and the Cameras dashboard works again.
+
+Still missing, needs the owner:
+
+- **SmartThings** (Samsung AC: `climate.samsung_room_ac` and the
+  `samsung_airconditioner_*` sensors) - OAuth sign-in required.
+- **Tuya Local** (12 entities) - device ID and local key per device.
+- **localthings** (35 entities) - LG device keys.
+- **mobile_app** (32 entities) - reopen the Companion app to re-register.
+
+Prevention: mount a host directory for Home Assistant backups and enable an
+automatic schedule; the current `backup` integration writes to `/backup`, which
+is inside the container and is lost if the container is recreated.
