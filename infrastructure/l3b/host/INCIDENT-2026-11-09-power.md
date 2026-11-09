@@ -65,3 +65,20 @@ Still missing (hardware):
 - No remote syslog host yet; shipping logs off-box would survive a dead host.
 - Dell BIOS event log (F2 -> Maintenance) is the firmware-side record of a
   power loss and should be checked after the next event.
+
+## RAPL power logging
+
+The UPS is a basic model with no data port, so NUT cannot read it. Added
+`/usr/local/sbin/power-log.py` + `power-log.service`, which reads Intel RAPL
+package energy, package temperature and load every second, fsyncs each line and
+writes to `/data/apps/diagnostics/power/power-YYYYMMDD.csv` (SATA data disk).
+
+Reading the last rows after a cut:
+- watts peak then silence -> load-triggered power delivery fault (PSU suspect);
+- steady low watts then cut -> BIOS/power-state fault, not load.
+
+Verified: idle package draw 7-9 W at 63 C, lines arriving every second.
+
+Still needed for real mains evidence: a metering smart plug (Shelly/Tasmota) on
+the UPS output, logged through Home Assistant, and the Dell BIOS event log
+(F2 -> Maintenance) after the next event.
