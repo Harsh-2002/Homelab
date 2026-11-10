@@ -22,6 +22,12 @@ Browser automation uses Playwright CLI plus the owner-approved Docker Browser Us
 runtime (10 November 2026) for OpenCode and Hermes. Browser Use runs through the
 `browser-use` launcher with separate agent sessions; see `infrastructure/browser`.
 Keep the official `playwright-cli` skill under `~/.agents/skills/playwright-cli`.
+Browser routing: honor the user's explicit tool choice. Prefer direct APIs/fetch
+when no browser interaction is needed. Use Playwright CLI for reproducible tests,
+precise UI debugging and scripted flows; use Browser Use for interactive browsing
+and unfamiliar forms. Delegate a whole self-contained web task with Browser Use
+`task` only when autonomous execution is useful; do not add another LLM for a
+simple click/fill. This is agent guidance, not an automatic routing service.
 Use it for navigation, form filling, UI/UX review, responsive checks,
 screenshots, console/network inspection and E2E work. Reuse the named CLI
 session; close it when done. Do not add or use Playwright MCP, Chrome DevTools

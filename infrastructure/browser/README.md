@@ -7,6 +7,18 @@ unchanged. No new MCP, cloud-browser account, public endpoint, VM or schedule.
 
 ## Components and operation
 
+Routing is agent guidance, not a dispatcher: explicit choice wins; APIs/fetch
+for plain reads, Playwright CLI for deterministic tests/debugging, Browser Use
+for interactive browsing/forms, and `task` for autonomous whole-task delegation.
+Both agents' Browser Use skills carry this rule.
+
+Cleanup audited after deployment: removed the exact three acceptance task
+workspaces, local verification uploads/downloads/screenshots and temporary
+upstream checkout. Kept the tracked verification record, reproducible source,
+runtime profiles/private credentials, and shared Docker caches/unrelated images.
+Those are intentional state, not abandoned test artifacts. Future task outputs
+are retained for delivery and require scoped cleanup after use.
+
 - Browser Use **1.0.0**, Browser Harness **0.1.13**, Chromium and Python live in
   the image, not in host Python. `requirements.lock` pins installed Python versions;
   `upstream.json` records the official skills repository revision.
