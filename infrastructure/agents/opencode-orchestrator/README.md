@@ -6,9 +6,10 @@ Status: **installed globally; Atlas is the default for new sessions.** This is a
 
 - **One primary agent** (`atlas`) is the default primary agent. It is a generalist senior/staff-level engineer, not a router with no tools.
 - **Role-based subagents** provide context isolation, independent verification and permission separation. They are not language-specific.
+- **A separate decision-maker primary agent** convenes an odd-sized jury of independent `voter` subagents and reports the majority decision. It is selected explicitly; Atlas stays the default.
 - **Skills are the first-class procedures.** Agents load the installed skill that matches the language, framework, test type or domain. No Rust/Go/Node agents.
 - **Atlas chooses the worker model per subagent call** from the approved catalog. The subagent definition also has a default model.
-- **Subagents cannot spawn more subagents.** Atlas is the only orchestrator.
+- **Subagents cannot spawn more subagents.** Only primary agents orchestrate: Atlas for engineering work, the decision maker for juries.
 - **No same-file parallel writes.** Parallelism is for independent read-only research, verification and separate modules.
 
 ## Files
@@ -22,6 +23,8 @@ opencode-orchestrator/
 ├── agents/
 │   ├── atlas.md
 │   ├── build.md          # compatibility override for existing Build sessions
+│   ├── decision-maker.md # independent jury; majority vote
+│   ├── voter.md          # one independent vote
 │   ├── explorer.md
 │   ├── implementer.md
 │   ├── verifier.md
@@ -46,13 +49,28 @@ The approved catalog has three groups. **Any approved model may be used by Atlas
 |---|---|
 | Chinese | `opencode-go/deepseek-v4.1-flash`, `opencode-go/glm-5.3-flash`, `opencode-go/minimax-m3.1-flash` |
 | OpenAI Codex | `openai/gpt-6-astra`, `openai/gpt-6.1-sol`, `openai/gpt-6.1-terra`, `openai/gpt-6-luna` |
-| Claude Agent | `claude-agent/claude-opus-5`, `claude-agent/claude-sonnet-5`, `claude-agent/claude-haiku-4-5-20251001` |
+| Claude Agent | `claude-agent/opus` (Opus 5.5), `claude-agent/sonnet` (Sonnet 5.5), `claude-agent/haiku` (Haiku 5.5), `claude-agent/fable` (Fable 5.2) |
+
+The Claude Agent entries are aliases. They intentionally track the latest model the connected Claude Code CLI exposes, so the catalog does not go stale when Anthropic ships a point release. Claude Code `2.1.322` resolves them to `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5` and `claude-fable-5-2`.
 
 Atlas defaults to DeepSeek V4.1 Flash. Subagents default to DeepSeek V4.1 Flash. If you select another approved model in the picker, Atlas uses it for that session. If Atlas passes a model to a subagent, it uses that model. If no model is passed, the subagent's default applies.
 
 Use **Claude Agent** only. The separate `anthropic/*` provider is not enabled and is removed from the picker. DeepSeek V4 Pro, Kimi, GPT-5 and older families are excluded.
 
-The `model-allowlist` plugin removes every model outside this list and falls back to DeepSeek V4.1 Flash only when an **invalid** model is passed. An unspecified model is left to the subagent default. `check-models.sh` verifies all approved IDs.
+The `model-allowlist` plugin removes every model outside this list and falls back to DeepSeek V4.1 Flash only when an **invalid** model is passed. An unspecified model is left to the subagent default. `check-models.sh` verifies all eleven approved IDs.
+
+## Decision maker
+
+`decision-maker` is a separate **primary** agent, not Atlas's default. Select it from the agent picker when you want a decision rather than implementation:
+
+```text
+/agent decision-maker
+Should we move the internal CLI from Go to Rust?
+```
+
+It frames the question, gathers facts only if needed, then spawns an odd number of independent `voter` subagents — 3 normally, 5 for high-stakes or irreversible decisions, 7 only for an exceptionally large jury. Each voter gets a different approved model and the same evidence, and never sees another vote. The majority wins. If no option has a majority, it runs a runoff between the top two; a tied runoff uses the highest-capability model's vote and says so.
+
+The final report contains the decision, the tally, confidence, the majority reasoning, the strongest dissent, assumptions, what would change the decision, and each model's vote. The decision maker does not implement the winning option; hand that back to Atlas.
 
 ## Routing
 
@@ -106,7 +124,7 @@ Project-local plugins under `.opencode/plugins/` load automatically.
 
 ## Activation
 
-New sessions start with Atlas on DeepSeek V4.1 Flash. The model selector is limited to the ten approved models by the plugin. The current session may still be an older Build session; use the agent selector once or open a new session to get Atlas.
+New sessions start with Atlas on DeepSeek V4.1 Flash. The model selector is limited to the eleven approved models by the plugin. The current session may still be an older Build session; use the agent selector once or open a new session to get Atlas.
 
 ## Guardrails
 

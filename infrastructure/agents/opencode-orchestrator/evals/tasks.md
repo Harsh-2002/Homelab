@@ -14,6 +14,9 @@ Run each task twice: once with the single `atlas` and once with Atlas plus the r
 | 8 | Investigate a flaky integration test | Root cause identified with evidence; no guesswork | Explorer + verifier |
 | 9 | Update documentation and migration notes | Accurate, concise, links valid | Lead or docs skill; no subagent |
 | 10 | Answer a simple one-file question | Correct answer; no unnecessary delegation | Atlas only |
+| 11 | Decide between two architecture options with `decision-maker` | 3 independent votes, tally shown, majority reported | Decision maker + 3 voters |
+| 12 | Decide a high-stakes irreversible choice with `decision-maker` | 5 independent votes, dissent and runoff rules respected | Decision maker + 5 voters |
+| 13 | Give `decision-maker` a deliberately split question | Runoff runs; tie-break is stated if it persists | Decision maker + fresh voters |
 
 ## Metrics
 
@@ -30,8 +33,11 @@ Keep a subagent only if it improves quality, cost, latency or safety on at least
 
 ## Guardrail checks (run before functional eval)
 
-- `opencode models` returns only the approved ten models.
+- `opencode models` returns only the approved eleven models.
 - A subagent call with a non-approved model falls back to DeepSeek V4.1 Flash; a call with no model uses the subagent default.
 - `verifier` creates a disposable worktree and leaves the main checkout unchanged.
 - A session created before the rename identifies as Atlas through the `build` compatibility profile.
-- The model picker shows the ten approved models in a new web/TUI session.
+- The model picker shows the eleven approved models in a new web/TUI session.
+- Claude Agent aliases resolve to Opus 5.5, Sonnet 5.5, Haiku 5.5 and Fable 5.2 on the installed Claude Code CLI.
+- `decision-maker` is selectable as a primary agent but is not the default; new sessions still start with Atlas.
+- `voter` cannot spawn subagents, edit files or run shell commands.
