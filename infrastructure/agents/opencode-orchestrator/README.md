@@ -5,8 +5,8 @@ Status: **installed globally; Atlas is the default for new sessions.** This is a
 ## Design
 
 - **One primary agent** (`atlas`) is the default primary agent. It is a generalist senior/staff-level engineer, not a router with no tools.
-- **Role-based subagents** provide context isolation, independent verification and permission separation. They are not language-specific.
-- **A separate decision-maker primary agent** convenes an odd-sized jury of independent `voter` subagents and reports the majority decision. It is selected explicitly; Atlas stays the default.
+- **Role-based subagents** provide context isolation, independent verification and permission separation. They are not language-specific: Scout (research), Forge (implementation), Vouch (verification), Shield (security) and Juror (one decision vote).
+- **Oracle**, a separate primary agent, convenes an odd-sized jury of independent `juror` subagents and reports the majority decision. It is selected explicitly; Atlas stays the default.
 - **Skills are the first-class procedures.** Agents load the installed skill that matches the language, framework, test type or domain. No Rust/Go/Node agents.
 - **Atlas chooses the worker model per subagent call** from the approved catalog. The subagent definition also has a default model.
 - **Subagents cannot spawn more subagents.** Only primary agents orchestrate: Atlas for engineering work, the decision maker for juries.
@@ -23,12 +23,12 @@ opencode-orchestrator/
 ├── agents/
 │   ├── atlas.md
 │   ├── build.md          # compatibility override for existing Build sessions
-│   ├── decision-maker.md # independent jury; majority vote
-│   ├── voter.md          # one independent vote
-│   ├── explorer.md
-│   ├── implementer.md
-│   ├── verifier.md
-│   └── security.md
+│   ├── oracle.md         # independent jury; majority vote
+│   ├── juror.md          # one independent vote
+│   ├── scout.md
+│   ├── forge.md
+│   ├── vouch.md
+│   └── shield.md
 ├── skills/
 │   ├── model-catalog/
 │   │   └── SKILL.md
@@ -83,18 +83,18 @@ Chinese models run at `#max` for all work, matching the owner's preference. Open
 
 Do not use Astra or Fable for routine implementation, docs, tests, research or normal verification. Use one only when the user explicitly asks, a cheaper model has already failed on the same task, or the task is genuinely exceptional and the expected value justifies the cost. State the justification in the final answer. In a decision jury, at most one seat may be premium; never make the whole jury premium.
 
-## Decision maker
+## Oracle — decision jury
 
-`decision-maker` is a separate **primary** agent, not Atlas's default. Select it from the agent picker when you want a decision rather than implementation:
+`oracle` is a separate **primary** agent, not Atlas's default. Select it from the agent picker when you want a decision rather than implementation:
 
 ```text
-/agent decision-maker
+/agent oracle
 Should we move the internal CLI from Go to Rust?
 ```
 
-It frames the question, gathers facts only if needed, then spawns an odd number of independent `voter` subagents — 3 normally, 5 for high-stakes or irreversible decisions, 7 only for an exceptionally large jury. Each voter gets a different approved model and the same evidence, and never sees another vote. The majority wins. If no option has a majority, it runs a runoff between the top two; a tied runoff uses the highest-capability model's vote and says so.
+Oracle frames the question, gathers facts only if needed, then spawns an odd number of independent `juror` subagents — 3 normally, 5 for high-stakes or irreversible decisions, 7 only for an exceptionally large jury. Each juror gets a different approved model and the same evidence, and never sees another vote. The majority wins. If no option has a majority, it runs a runoff between the top two; a tied runoff uses the highest-capability model's vote and says so.
 
-The final report contains the decision, the tally, confidence, the majority reasoning, the strongest dissent, assumptions, what would change the decision, and each model's vote. The decision maker does not implement the winning option; hand that back to Atlas.
+The final report contains the decision, the tally, confidence, the majority reasoning, the strongest dissent, assumptions, what would change the decision, and each model's vote. Oracle does not implement the winning option; hand that back to Atlas.
 
 ## Routing
 
@@ -145,9 +145,9 @@ Project-local plugins under `.opencode/plugins/` load automatically.
 
 ## Verification safety
 
-`verifier` loads `verification-worktree` and runs tests in a disposable worktree or microsandbox. It must not modify the main checkout. If it cannot create an isolated environment, it stops and asks.
+`vouch` loads `verification-worktree` and runs tests in a disposable worktree or microsandbox. It must not modify the main checkout. If it cannot create an isolated environment, it stops and asks.
 
-`security` is scope-gated and read-only. It denies `.env` files, private keys, `~/.ssh`, OpenCode auth stores and `secrets/` paths. It must not scan production or extract credentials.
+`shield` is scope-gated and read-only. It denies `.env` files, private keys, `~/.ssh`, OpenCode auth stores and `secrets/` paths. It must not scan production or extract credentials.
 
 ## Activation
 
@@ -157,7 +157,7 @@ New sessions start with Atlas on DeepSeek V4.1 Flash. The model selector is limi
 
 - The `model-allowlist` plugin enforces the approved-model list for the model picker and subagent calls, and normalizes the thinking level on every request — including a model picked directly in the session picker.
 - The global config hard-denies `provider.use` for `anthropic`. Claude Agent is the separate `claude-agent/*` provider and remains available. The Anthropic credential may stay stored; it cannot be used.
-- `security` requires explicit scope and authorization. No production scanning, DoS, destructive exploitation, credential extraction or data exfiltration.
-- `verifier` must not edit code or weaken tests; it works in a disposable worktree.
+- `shield` requires explicit scope and authorization. No production scanning, DoS, destructive exploitation, credential extraction or data exfiltration.
+- `vouch` must not edit code or weaken tests; it works in a disposable worktree.
 - Atlas must ask before destructive, production, external or credential-sensitive actions.
 - No secrets in agent files, prompts, logs or skill content.

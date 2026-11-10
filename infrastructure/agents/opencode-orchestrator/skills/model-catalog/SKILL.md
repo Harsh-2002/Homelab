@@ -97,14 +97,14 @@ Any approved model may be used for any role. For quality, the stronger everyday 
 
 ## Decision juries
 
-The `decision-maker` primary agent uses these models as independent voters. Use an odd jury size and a different model per voter, spanning at least two families:
+The `oracle` primary agent uses these models as independent jurors. Use an odd jury size and a different model per juror, spanning at least two families:
 
 - 3 voters: `deepseek-v4.1-flash`, `glm-5.3-flash`, `gpt-6.1-sol`
 - 5 voters: add `minimax-m3.1-flash` and `gpt-6.1-terra`
 - 7 voters: add `gpt-6-luna` and `claude-agent/sonnet` (or another authenticated Claude alias)
-- Claude Agent aliases can replace OpenAI voters when that provider is authenticated.
+- Claude Agent aliases can replace OpenAI jurors when that provider is authenticated.
 
-Do not reuse a model in the same jury, and do not reveal earlier votes to later voters. Astra and Fable are **not** default jury seats; use at most one premium seat, only for an exceptional decision or an explicit user request, and state why.
+Do not reuse a model in the same jury, and do not reveal earlier votes to later jurors. Astra and Fable are **not** default jury seats; use at most one premium seat, only for an exceptional decision or an explicit user request, and state why.
 
 ## Exclusions
 

@@ -6,8 +6,15 @@ target=${1:-"$HOME/.config/opencode"}
 
 mkdir -p "$target/agents" "$target/skills" "$target/plugins"
 
-# Remove the old agent name from earlier installs.
-rm -f "$target/agents/lead.md"
+# Remove obsolete agent names from earlier installs. Build stays as the
+# compatibility profile for sessions created before the Atlas rename.
+rm -f "$target/agents/lead.md" \
+      "$target/agents/decision-maker.md" \
+      "$target/agents/voter.md" \
+      "$target/agents/explorer.md" \
+      "$target/agents/implementer.md" \
+      "$target/agents/verifier.md" \
+      "$target/agents/security.md"
 
 install -m 644 "$src"/agents/*.md "$target/agents/"
 

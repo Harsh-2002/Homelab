@@ -5,7 +5,7 @@ description: Run independent verification in a disposable worktree or sandbox so
 
 # Verification worktree
 
-The verifier must not change the main checkout. Use a disposable copy for every test run.
+Vouch must not change the main checkout. Use a disposable copy for every test run.
 
 1. Create a worktree from the current `HEAD`:
 

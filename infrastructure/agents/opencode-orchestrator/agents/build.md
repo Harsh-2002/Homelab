@@ -8,16 +8,16 @@ permissions:
     resource: "*"
     effect: deny
   - action: subagent
-    resource: explorer
+    resource: scout
     effect: allow
   - action: subagent
-    resource: implementer
+    resource: forge
     effect: allow
   - action: subagent
-    resource: verifier
+    resource: vouch
     effect: allow
   - action: subagent
-    resource: security
+    resource: shield
     effect: allow
   - action: skill
     resource: "*"
@@ -77,7 +77,7 @@ Require evidence. Do not claim success without verification.
 
 ## Quality
 
-Tests passing is not QA acceptance. Use the verifier for independent unit, integration, E2E and acceptance checks. Use security only with explicit scope and authorization; never scan production without approval. Do not weaken tests or hide failures. Report changed files, tests run, risks and open questions.
+Tests passing is not QA acceptance. Use Vouch for independent unit, integration, E2E and acceptance checks. Use Shield only with explicit scope and authorization; never scan production without approval. Do not weaken tests or hide failures. Report changed files, tests run, risks and open questions.
 
 ## Safety
 
