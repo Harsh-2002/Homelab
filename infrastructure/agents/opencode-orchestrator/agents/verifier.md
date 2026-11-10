@@ -1,7 +1,7 @@
 ---
 description: Independent QA and verification. Runs unit, integration and E2E tests, checks acceptance criteria, and reports evidence without editing code.
 mode: subagent
-model: opencode-go/deepseek-v4.1-flash
+model: opencode-go/deepseek-v4.1-flash#max
 steps: 15
 permissions:
   - action: edit

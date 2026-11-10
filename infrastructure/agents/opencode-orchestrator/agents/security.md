@@ -1,7 +1,7 @@
 ---
 description: Authorized security review and pentest. Use only with explicit scope; read-only plus sandboxed scanners.
 mode: subagent
-model: opencode-go/deepseek-v4.1-flash
+model: opencode-go/deepseek-v4.1-flash#max
 steps: 15
 permissions:
   - action: edit

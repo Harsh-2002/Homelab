@@ -57,7 +57,21 @@ Atlas defaults to DeepSeek V4.1 Flash. Subagents default to DeepSeek V4.1 Flash.
 
 Use **Claude Agent** only. The separate `anthropic/*` provider is not enabled and is removed from the picker. DeepSeek V4 Pro, Kimi, GPT-5 and older families are excluded.
 
-The `model-allowlist` plugin removes every model outside this list and falls back to DeepSeek V4.1 Flash only when an **invalid** model is passed. An unspecified model is left to the subagent default. `check-models.sh` verifies all eleven approved IDs.
+The `model-allowlist` plugin removes every model outside this list, adds the model's default `#variant` when a caller passes a bare approved model, normalizes an invalid variant to that model's default, and falls back to `opencode-go/deepseek-v4.1-flash#max` only when the **model itself** is invalid. An unspecified model is left to the subagent default. `check-models.sh` verifies all eleven approved base IDs.
+
+### Thinking levels
+
+Every explicit model reference carries a `#variant`. The agent defaults already do; Atlas must pass one on every subagent call. The allowlist plugin normalizes a bare model to its default variant, but that is a safety net, not the intended style.
+
+| Family | Variants | Default | Complex work |
+|---|---|---|---|
+| DeepSeek / GLM | `low`, `high`, `max` | `max` | `max` |
+| MiniMax | `low`, `medium`, `high`, `xhigh`, `max` | `max` | `max` |
+| OpenAI Astra/Sol | `low`, `medium`, `high`, `xhigh`, `max` | `medium` | `high` |
+| OpenAI Terra/Luna | `none`, `low`, `medium`, `high`, `xhigh`, `max` | `medium` | `high` |
+| Claude Agent | `low`, `medium`, `high`, `xhigh`, `max` | `medium` | `high` |
+
+Chinese models run at `#max` for all work, matching the owner's preference. OpenAI and Claude Agent use `#medium` for routine work, `#high` for multi-file implementation, debugging, verification, security and decisions, and `#xhigh` or `#max` only for exceptional tasks. Examples: `opencode-go/deepseek-v4.1-flash#max`, `openai/gpt-6.1-sol#high`, `claude-agent/opus#high`.
 
 ## Decision maker
 

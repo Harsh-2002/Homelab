@@ -39,6 +39,31 @@ These are deliberate aliases, not versioned IDs. Claude Code resolves them to th
 
 Use the **Claude Agent** provider only. The separate `anthropic/*` provider is not enabled or allowed; it is a different provider and is removed from the picker.
 
+## Thinking levels
+
+Every model reference must include a `#variant`. Agent defaults already carry one; when you choose a model for a subagent, pass the variant explicitly. A bare model is normalized to that model's default by the allowlist plugin, but do not rely on it.
+
+| Family | Variants | Default | Routine work | Complex / review / decision | Exceptional |
+|---|---|---|---|---|---|
+| DeepSeek V4.1 Flash | `low`, `high`, `max` | `max` | `max` | `max` | `max` |
+| GLM 5.3 Flash | `low`, `high`, `max` | `max` | `max` | `max` | `max` |
+| MiniMax 3.1 Flash | `low`, `medium`, `high`, `xhigh`, `max` | `max` | `max` | `max` | `max` |
+| OpenAI Astra/Sol | `low`, `medium`, `high`, `xhigh`, `max` | `medium` | `medium` | `high` | `xhigh` or `max` |
+| OpenAI Terra/Luna | `none`, `low`, `medium`, `high`, `xhigh`, `max` | `medium` | `medium` | `high` | `xhigh` or `max` |
+| Claude Agent | `low`, `medium`, `high`, `xhigh`, `max` | `medium` | `medium` | `high` | `xhigh` or `max` |
+
+Use `#high` for multi-file implementation, debugging, verification, security review, architecture and decision juries. Use `#xhigh` only for genuinely hard or long-horizon work. Use `#max` on OpenAI/Claude only when the user explicitly asks for maximum effort or the task is exceptional. Do not use `#none` for engineering work; it is only for deliberately disabling reasoning on Terra/Luna.
+
+Examples:
+
+```text
+opencode-go/deepseek-v4.1-flash#max
+opencode-go/glm-5.3-flash#max
+openai/gpt-6.1-sol#medium
+openai/gpt-6.1-sol#high
+claude-agent/opus#high
+```
+
 ## Defaults
 
 - Atlas default: `opencode-go/deepseek-v4.1-flash`.
@@ -46,7 +71,9 @@ Use the **Claude Agent** provider only. The separate `anthropic/*` provider is n
 - If you select a different approved model in the model picker, Atlas uses it for that session.
 - If Atlas passes a model to a subagent, that model is used.
 - If no model is passed to a subagent, its configured default applies.
-- If an unapproved model is passed, the allowlist plugin falls back to DeepSeek V4.1 Flash.
+- If a bare approved model is passed, the allowlist plugin adds that model's default variant.
+- If an invalid variant is passed, the allowlist plugin uses that model's default variant.
+- If an unapproved model is passed, the allowlist plugin falls back to `opencode-go/deepseek-v4.1-flash#max`.
 
 ## Guidance
 

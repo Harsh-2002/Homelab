@@ -1,7 +1,7 @@
 ---
 description: Implements approved changes across Rust, Go, Node/TypeScript/JavaScript, Python and infrastructure. Use when Atlas wants an isolated implementation context or independent module work.
 mode: subagent
-model: opencode-go/deepseek-v4.1-flash
+model: opencode-go/deepseek-v4.1-flash#max
 steps: 20
 permissions:
   - action: subagent

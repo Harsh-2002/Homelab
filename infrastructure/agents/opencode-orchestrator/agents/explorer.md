@@ -1,7 +1,7 @@
 ---
 description: Read-only codebase and documentation research. Use for unfamiliar code, dependency tracing, or independent investigation that would bloat Atlas's context.
 mode: subagent
-model: opencode-go/deepseek-v4.1-flash
+model: opencode-go/deepseek-v4.1-flash#max
 steps: 12
 permissions:
   - action: edit

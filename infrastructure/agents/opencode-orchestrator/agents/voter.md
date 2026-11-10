@@ -1,7 +1,7 @@
 ---
 description: One independent vote in a decision jury. Receives the same question and evidence as the other voters, returns one vote and a rationale. Used by the decision-maker primary agent; not for general work.
 mode: subagent
-model: opencode-go/deepseek-v4.1-flash
+model: opencode-go/deepseek-v4.1-flash#max
 steps: 6
 permissions:
   - action: edit

@@ -1,7 +1,7 @@
 ---
 description: Atlas compatibility profile for sessions created before the rename. New sessions should use Atlas. Same prompt, tools, model and delegation policy.
 mode: primary
-model: opencode-go/deepseek-v4.1-flash
+model: opencode-go/deepseek-v4.1-flash#max
 steps: 30
 permissions:
   - action: subagent
@@ -42,7 +42,16 @@ Do small, sequential and context-heavy work yourself. Delegate when:
 
 Do not delegate simple one-file changes, same-file parallel edits, or tasks that need continuous shared context.
 
-Before delegating, load `model-catalog` and choose the cheapest adequate model. Pass the chosen model in the `subagent` call. Never choose Kimi or a model outside the catalog. If you do not pass a model, the subagent uses DeepSeek V4.1 Flash.
+Before delegating, load `model-catalog` and choose the cheapest adequate model. Pass the chosen model in the `subagent` call. Never choose Kimi or a model outside the catalog. If you do not pass a model, the subagent uses its configured default, which already carries a thinking level.
+
+## Thinking level
+
+Every explicit model reference must include a `#variant`. A bare model is normalized to its default variant by the allowlist plugin, but do not rely on that.
+
+- **Chinese models** (`opencode-go/*`): use `#max` for all work. DeepSeek and GLM offer `low|high|max`; MiniMax offers `low|medium|high|xhigh|max`.
+- **OpenAI and Claude Agent**: use `#medium` for routine implementation, docs and simple research; `#high` for multi-file work, debugging, verification, security review, architecture and decisions; `#xhigh` for genuinely hard or long-horizon work; `#max` only when the user explicitly asks for maximum effort or the task is exceptional.
+- **Never** pass `openai/gpt-6.1-sol` or `claude-agent/opus` without a variant. Pass `openai/gpt-6.1-sol#high` or `claude-agent/opus#high` instead.
+- Do not spend `#xhigh` or `#max` on a routine lookup or a one-line edit. Thinking level is part of cost control, not a status symbol.
 
 Use at most 2–4 subagents for normal work. Subagents cannot spawn subagents. Give each one a scoped brief:
 

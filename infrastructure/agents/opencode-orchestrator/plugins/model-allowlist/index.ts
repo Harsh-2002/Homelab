@@ -1,46 +1,72 @@
 import { Plugin } from "@opencode/plugin"
 
-// Approved model catalog. Any of these can run Atlas or any subagent.
-const ALLOWED = new Set([
-  // Chinese models
-  "opencode-go/deepseek-v4.1-flash",
-  "opencode-go/glm-5.3-flash",
-  "opencode-go/minimax-m3.1-flash",
-  // OpenAI Codex
-  "openai/gpt-6-astra",
-  "openai/gpt-6.1-sol",
-  "openai/gpt-6.1-terra",
-  "openai/gpt-6-luna",
-  // Claude Agent: aliases track the latest model the connected CLI exposes.
-  "claude-agent/opus",
-  "claude-agent/sonnet",
-  "claude-agent/haiku",
-  "claude-agent/fable",
-])
+type ModelSpec = {
+  variants: readonly string[]
+  defaultVariant: string
+}
 
-const FALLBACK = "opencode-go/deepseek-v4.1-flash"
+// Approved model catalog. Every entry has an explicit thinking level.
+// The default variant is used when a caller names the model without one.
+const CATALOG: Record<string, ModelSpec> = {
+  // Chinese models: max by default.
+  "opencode-go/deepseek-v4.1-flash": { variants: ["low", "high", "max"], defaultVariant: "max" },
+  "opencode-go/glm-5.3-flash": { variants: ["low", "high", "max"], defaultVariant: "max" },
+  "opencode-go/minimax-m3.1-flash": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "max" },
+  // OpenAI Codex: medium by default; high for demanding work.
+  "openai/gpt-6-astra": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
+  "openai/gpt-6.1-sol": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
+  "openai/gpt-6.1-terra": { variants: ["none", "low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
+  "openai/gpt-6-luna": { variants: ["none", "low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
+  // Claude Agent: medium by default; high for demanding work.
+  "claude-agent/opus": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
+  "claude-agent/sonnet": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
+  "claude-agent/haiku": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
+  "claude-agent/fable": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
+}
+
+const FALLBACK = "opencode-go/deepseek-v4.1-flash#max"
+const ALLOWED_BASES = new Set(Object.keys(CATALOG))
+
+function splitModel(ref: string): { base: string; variant?: string } {
+  const hash = ref.indexOf("#")
+  if (hash === -1) return { base: ref }
+  return { base: ref.slice(0, hash), variant: ref.slice(hash + 1) }
+}
+
+// Return a model reference that is guaranteed to carry a supported variant.
+// Unknown models return undefined; the caller decides the fallback.
+function normalizeModel(ref: string): string | undefined {
+  const { base, variant } = splitModel(ref)
+  const spec = CATALOG[base]
+  if (!spec) return undefined
+  if (variant === undefined || !spec.variants.includes(variant)) {
+    return `${base}#${spec.defaultVariant}`
+  }
+  return `${base}#${variant}`
+}
 
 export default Plugin.define({
   id: "model-allowlist",
   async setup(ctx) {
-    // Keep the model picker inside the approved set.
+    // Keep the model picker inside the approved set. Variants are nested in
+    // each model, so the base reference is the right key here.
     await ctx.model.transform((editor) => {
       for (const model of editor.list()) {
         const ref = `${model.providerID}/${model.id}`
-        if (!ALLOWED.has(ref)) {
+        if (!ALLOWED_BASES.has(ref)) {
           editor.remove(model.providerID, model.id)
         }
       }
     })
 
-    // Defense in depth: a stale or hand-written subagent call cannot escape
-    // the catalog by passing an unapproved model reference. An unspecified
+    // Defense in depth: a subagent call cannot escape the catalog, and every
+    // explicit model reference carries a valid thinking level. An unspecified
     // model is left alone so the subagent's configured default applies.
     await ctx.tool.hook("execute.before", (event) => {
       if (event.tool !== "subagent") return
       const input = event.input as { model?: string }
-      if (typeof input.model === "string" && !ALLOWED.has(input.model)) {
-        input.model = FALLBACK
+      if (typeof input.model === "string") {
+        input.model = normalizeModel(input.model) ?? FALLBACK
       }
     })
   },

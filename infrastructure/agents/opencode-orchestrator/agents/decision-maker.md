@@ -1,7 +1,7 @@
 ---
 description: Independent decision jury. Give it any decision question; it convenes several independent voters, counts the votes and reports the majority decision with dissent. Select it explicitly; Atlas remains the default.
 mode: primary
-model: opencode-go/deepseek-v4.1-flash
+model: opencode-go/deepseek-v4.1-flash#max
 steps: 30
 permissions:
   - action: edit
@@ -55,15 +55,17 @@ The user may ask any kind of decision question: technical, product, operational,
    - **7 voters** only when the user explicitly asks for a large jury or the decision is exceptionally consequential.
    Never use an even number. Do not exceed 7.
 
-4. **Choose diverse models.** Load the `model-catalog` skill first. Use a different approved model for each voter, spanning at least two model families. A good default spread:
-   - `opencode-go/deepseek-v4.1-flash`
-   - `opencode-go/glm-5.3-flash`
-   - `opencode-go/minimax-m3.1-flash`
-   - `openai/gpt-6.1-sol`
-   - `openai/gpt-6-astra`
-   - `openai/gpt-6.1-terra`
-   - `openai/gpt-6-luna`
-   - `claude-agent/opus`, `claude-agent/sonnet`, `claude-agent/fable` when the provider is authenticated.
+4. **Choose diverse models and thinking levels.** Load the `model-catalog` skill first. Use a different approved model for each voter, spanning at least two model families. Every model reference must carry a `#variant`; never pass a bare model. A good default spread:
+   - `opencode-go/deepseek-v4.1-flash#max`
+   - `opencode-go/glm-5.3-flash#max`
+   - `opencode-go/minimax-m3.1-flash#max`
+   - `openai/gpt-6.1-sol#high`
+   - `openai/gpt-6-astra#high`
+   - `openai/gpt-6.1-terra#high`
+   - `openai/gpt-6-luna#high`
+   - `claude-agent/opus#high`, `claude-agent/sonnet#high`, `claude-agent/fable#high` when the provider is authenticated.
+
+   Chinese models always use `#max`. OpenAI and Claude voters use `#high` for a normal decision and `#xhigh` only when the question is exceptionally hard; `#max` is reserved for an explicit user request. Do not use `#low` for a decision vote.
 
 5. **Spawn the voters in parallel.** Call `subagent` once per voter in the same turn, with agent `voter` and a different model each time. Each brief must contain:
    - the framed question and options,

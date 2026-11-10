@@ -34,10 +34,15 @@ Keep a subagent only if it improves quality, cost, latency or safety on at least
 ## Guardrail checks (run before functional eval)
 
 - `opencode models` returns only the approved eleven models.
-- A subagent call with a non-approved model falls back to DeepSeek V4.1 Flash; a call with no model uses the subagent default.
+- A subagent call with a non-approved model falls back to `opencode-go/deepseek-v4.1-flash#max`; a call with no model uses the subagent default.
 - `verifier` creates a disposable worktree and leaves the main checkout unchanged.
 - A session created before the rename identifies as Atlas through the `build` compatibility profile.
 - The model picker shows the eleven approved models in a new web/TUI session.
 - Claude Agent aliases resolve to Opus 5.5, Sonnet 5.5, Haiku 5.5 and Fable 5.2 on the installed Claude Code CLI.
 - `decision-maker` is selectable as a primary agent but is not the default; new sessions still start with Atlas.
 - `voter` cannot spawn subagents, edit files or run shell commands.
+- Every agent default carries a valid `#variant`; no agent default is a bare model.
+- A subagent call with a bare allowed model is normalized to that model's default variant, not to DeepSeek.
+- A subagent call with an invalid variant is normalized to the same model's default variant.
+
+- Chinese agent defaults use `#max`; OpenAI/Claude defaults use `#medium`.
