@@ -7,7 +7,7 @@ Status: **installed globally; Atlas is the default for new sessions.** This is a
 - **One primary agent** (`atlas`) is the default primary agent. It is a generalist senior/staff-level engineer, not a router with no tools.
 - **Role-based subagents** provide context isolation, independent verification and permission separation. They are not language-specific.
 - **Skills are the first-class procedures.** Agents load the installed skill that matches the language, framework, test type or domain. No Rust/Go/Node agents.
-- **Atlas chooses the worker model per subagent call** from a three-model catalog. The subagent definition also has a default model.
+- **Atlas chooses the worker model per subagent call** from the approved catalog. The subagent definition also has a default model.
 - **Subagents cannot spawn more subagents.** Atlas is the only orchestrator.
 - **No same-file parallel writes.** Parallelism is for independent read-only research, verification and separate modules.
 
@@ -40,19 +40,19 @@ opencode-orchestrator/
 
 ## Models
 
-Only these three models are approved:
+The approved catalog has three groups. **Any approved model may be used by Atlas or by any subagent; the defaults are just defaults.**
 
-| Model | Use |
+| Group | Models |
 |---|---|
-| `opencode-go/deepseek-v4.1-flash` | Default Atlas model and default worker; all-round |
-| `opencode-go/glm-5.3-flash` | Alternative for implementation, frontend/TS, docs |
-| `opencode-go/minimax-m3.1-flash` | Alternative for UI/frontend, independent checks |
+| Chinese | `opencode-go/deepseek-v4.1-flash`, `opencode-go/glm-5.3-flash`, `opencode-go/minimax-m3.1-flash` |
+| OpenAI Codex | `openai/gpt-6-astra`, `openai/gpt-6.1-sol`, `openai/gpt-6.1-terra`, `openai/gpt-6-luna` |
+| Claude Agent | `claude-agent/claude-opus-5`, `claude-agent/claude-sonnet-5`, `claude-agent/claude-haiku-4-5-20251001` |
 
-Atlas runs on DeepSeek V4.1 Flash by default. The user can switch Atlas to GLM 5.3 Flash or MiniMax 3.1 Flash in the model selector.
+Atlas defaults to DeepSeek V4.1 Flash. Subagents default to DeepSeek V4.1 Flash. If you select another approved model in the picker, Atlas uses it for that session. If Atlas passes a model to a subagent, it uses that model. If no model is passed, the subagent's default applies.
 
-Subagents default to DeepSeek V4.1 Flash. Atlas may override a subagent call to GLM 5.3 Flash or MiniMax 3.1 Flash. DeepSeek V4 Pro, Kimi K3.1 Pro, GPT, Qwen and GLM-5.3 non-Flash are deliberately excluded. There is no escalation model; a failed task is retried with another approved model or handled by Atlas.
+Use **Claude Agent** only. The separate `anthropic/*` provider is not enabled and is removed from the picker. DeepSeek V4 Pro, Kimi, GPT-5 and older families are excluded.
 
-The `model-allowlist` plugin removes every other model from the picker and rewrites any subagent call outside the three to DeepSeek V4.1 Flash. `check-models.sh` verifies the three IDs are present.
+The `model-allowlist` plugin removes every model outside this list and falls back to DeepSeek V4.1 Flash only when an **invalid** model is passed. An unspecified model is left to the subagent default. `check-models.sh` verifies all approved IDs.
 
 ## Routing
 
@@ -106,11 +106,11 @@ Project-local plugins under `.opencode/plugins/` load automatically.
 
 ## Activation
 
-New sessions start with Atlas on DeepSeek V4.1 Flash. The model selector is limited to the three approved models by the plugin. The current session may still be an older Build session; use the agent selector once or open a new session to get Atlas.
+New sessions start with Atlas on DeepSeek V4.1 Flash. The model selector is limited to the ten approved models by the plugin. The current session may still be an older Build session; use the agent selector once or open a new session to get Atlas.
 
 ## Guardrails
 
-- The `model-allowlist` plugin enforces the three-model rule for the model picker and subagent calls.
+- The `model-allowlist` plugin enforces the approved-model list for the model picker and subagent calls.
 - `security` requires explicit scope and authorization. No production scanning, DoS, destructive exploitation, credential extraction or data exfiltration.
 - `verifier` must not edit code or weaken tests; it works in a disposable worktree.
 - Atlas must ask before destructive, production, external or credential-sensitive actions.

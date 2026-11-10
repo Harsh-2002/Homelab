@@ -30,8 +30,8 @@ Keep a subagent only if it improves quality, cost, latency or safety on at least
 
 ## Guardrail checks (run before functional eval)
 
-- `opencode models` returns only the three approved models.
-- A subagent call with a non-approved model falls back to DeepSeek V4.1 Flash.
+- `opencode models` returns only the approved ten models.
+- A subagent call with a non-approved model falls back to DeepSeek V4.1 Flash; a call with no model uses the subagent default.
 - `verifier` creates a disposable worktree and leaves the main checkout unchanged.
 - A session created before the rename identifies as Atlas through the `build` compatibility profile.
-- The model picker shows exactly three models in a new web/TUI session.
+- The model picker shows the ten approved models in a new web/TUI session.
