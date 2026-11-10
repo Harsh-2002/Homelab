@@ -7,6 +7,7 @@ per the host policy.
 
 | Container | Stack | Host data |
 |---|---|---|
+| Native `mdx.service` (not a container) | native owner exception | `/data/apps/mdx/docs` public editable documents only |
 | `adguard` | dns | `/data/apps/adguard/conf` -> `/opt/adguardhome/conf`; `/data/apps/adguard/work` -> `/opt/adguardhome/work` |
 | `beszel` | beszel | `/data/apps/beszel/data` -> `/beszel_data` |
 | `browser` | browser | `/data/apps/browser` -> `/state` (profiles, private model config, task files; added 2026-11-10) |

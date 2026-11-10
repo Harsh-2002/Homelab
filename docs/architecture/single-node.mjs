@@ -53,6 +53,10 @@ function layout(inv, addresses = {}) {
 
   add(1,'flow-client',80,260,'DNS clients',['LAN / WireGuard / host / Docker','Host: native systemd-networkd','Internal AdGuard; no public fallback']);
   if (inv.services?.some(service => service.id === 'browser')) {
+    if (inv.services?.some(service => service.id === 'mdx')) {
+      add(1,'flow-mdx',1220,1630,'mdx / editable Markdown',['Public HTTPS; no authentication','Native CLI; dedicated shared files']);
+      edge(1,'flow-caddy','flow-mdx');
+    }
     add(0,'browser-use',55,1180,'Browser Use / Docker',['OpenCode and Hermes CLI tools','Separate local Chromium profiles','Bounded Python Agent tasks']);
     add(0,'browser-model',500,1180,'Existing model provider',['Task delegation only','No Browser Use Cloud account']);
     edge(0,'l3b','browser-use');

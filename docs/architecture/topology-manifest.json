@@ -1,5 +1,5 @@
 {
-  "sourceHash": "9fb891a65eacd171d4abc6acb454cc91d69c9d8c9ff065eeaf4b248355558f3b",
+  "sourceHash": "00e55fde26984c60147c7bba7ad87cfc2e0f9fd94e7fd3ae5bc9442f54c28fc4",
   "frames": [
     "tree",
     "core-flow"
@@ -28,6 +28,7 @@
     "browser-use",
     "browser-model",
     "flow-client",
+    "flow-mdx",
     "flow-browser-use",
     "flow-browser-model",
     "flow-adguard",

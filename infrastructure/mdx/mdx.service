@@ -1,0 +1,33 @@
+[Unit]
+Description=Public editable Markdown sharing (owner-approved anonymous access)
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+RequiresMountsFor=/data/apps/mdx/docs
+
+[Service]
+User=dev
+Group=dev
+WorkingDirectory=/data/apps/mdx/docs
+ExecStart=/usr/bin/python3 /usr/local/lib/mdx/serve.py
+Restart=on-failure
+RestartSec=5
+UMask=0022
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/data/apps/mdx/docs
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryMax=256M
+CPUQuota=50%
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

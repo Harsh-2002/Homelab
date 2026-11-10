@@ -51,6 +51,12 @@ def single_node():
             if not (root / skill / 'SKILL.md').is_file():
                 failures.append('Browser Use scoped skill missing: ' + str(root / skill))
     print('Browser Use: Docker launchers and two official skills checked for OpenCode/Hermes')
+    if not shutil.which('mdx'):
+        failures.append('Global mdx CLI missing')
+    for root in (home / '.config/opencode/skills', home / '.hermes/skills'):
+        if not (root / 'mdx-sharing' / 'SKILL.md').is_file():
+            failures.append('mdx-sharing skill missing: ' + str(root))
+    print('mdx: global CLI and scoped OpenCode/Hermes sharing skills checked')
     for path in [op_path, hermes_path]:
         if path.stat().st_mode & 0o077:
             failures.append('Credential-bearing agent config is not private')

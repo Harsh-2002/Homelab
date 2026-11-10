@@ -17,6 +17,12 @@
     },
     "services": [
       {
+        "id": "mdx",
+        "label": "mdx / public editable Markdown",
+        "placement": "native mdx.service; owner-approved 2026-11-10",
+        "state": "anonymous public read/write via Caddy; dedicated shared directory; OpenCode/Hermes skills"
+      },
+      {
         "id": "browser",
         "label": "Browser Use 1.0.0 / Chromium",
         "stack": "browser",
