@@ -37,7 +37,7 @@ These are exposed by the connected OpenAI Codex provider. The provider ID is `op
 
 These are deliberate aliases, not versioned IDs. Claude Code resolves them to the latest model in each family (verified against Claude Code `2.1.322`), so the catalog keeps working when Anthropic ships a point release. Do not replace them with the older versioned IDs that OpenCode also lists (`claude-opus-5`, `claude-sonnet-5`, `claude-haiku-4-5-20251001`, `claude-fable-5`).
 
-Use the **Claude Agent** provider only. The separate `anthropic/*` provider is not enabled or allowed; it is a different provider and is removed from the picker.
+Use the **Claude Agent** provider only. The separate `anthropic/*` provider is hard-denied by the global `provider.use` policy and removed from the picker; it is a different provider. The stored Anthropic credential is not usable.
 
 ## Premium models — escalation only
 
@@ -57,7 +57,7 @@ State the justification in the final answer when you use either model. In a deci
 
 ## Thinking levels
 
-Every model reference must include a `#variant`. Agent defaults already carry one; when you choose a model for a subagent, pass the variant explicitly. A bare model is normalized to that model's default by the allowlist plugin, but do not rely on it.
+Every model reference must include a `#variant`. Agent defaults already carry one; when you choose a model for a subagent, pass the variant explicitly. A bare model is normalized to that model's default by the allowlist plugin, including a model picked directly in the session picker. Do not rely on the safety net.
 
 | Family | Variants | Default | Routine work | Complex / review / decision | Exceptional |
 |---|---|---|---|---|---|

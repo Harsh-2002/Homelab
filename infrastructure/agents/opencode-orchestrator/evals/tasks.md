@@ -48,3 +48,5 @@ Keep a subagent only if it improves quality, cost, latency or safety on at least
 - Chinese agent defaults use `#max`; OpenAI/Claude defaults use `#medium`.
 - `openai/gpt-6-astra` and `claude-agent/fable` are not used for routine work, default workers or whole juries; any use carries a stated justification.
 - A default 3/5/7 decision jury excludes Astra and Fable unless the user explicitly requests an exceptional premium seat.
+- A bare approved model selected directly in the session picker is normalized to its default variant (e.g. OpenAI Sol → `medium`), not left bare.
+- `opencode run --model anthropic/claude-sonnet-5-5` is denied; the `anthropic/*` provider is not usable.

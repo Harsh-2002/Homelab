@@ -132,6 +132,9 @@ Global installs need the local plugin registered in `~/.config/opencode/opencode
   "default_agent": "atlas",
   "plugins": [
     "/home/dev/.config/opencode/plugins/model-allowlist"
+  ],
+  "policies": [
+    { "action": "provider.use", "resource": "anthropic", "effect": "deny" }
   ]
 }
 ```
@@ -152,7 +155,8 @@ New sessions start with Atlas on DeepSeek V4.1 Flash. The model selector is limi
 
 ## Guardrails
 
-- The `model-allowlist` plugin enforces the approved-model list for the model picker and subagent calls.
+- The `model-allowlist` plugin enforces the approved-model list for the model picker and subagent calls, and normalizes the thinking level on every request — including a model picked directly in the session picker.
+- The global config hard-denies `provider.use` for `anthropic`. Claude Agent is the separate `claude-agent/*` provider and remains available. The Anthropic credential may stay stored; it cannot be used.
 - `security` requires explicit scope and authorization. No production scanning, DoS, destructive exploitation, credential extraction or data exfiltration.
 - `verifier` must not edit code or weaken tests; it works in a disposable worktree.
 - Atlas must ask before destructive, production, external or credential-sensitive actions.

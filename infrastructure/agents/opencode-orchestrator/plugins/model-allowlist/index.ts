@@ -69,5 +69,19 @@ export default Plugin.define({
         input.model = normalizeModel(input.model) ?? FALLBACK
       }
     })
+
+    // Normalize the model on every request as well. This covers a model picked
+    // directly in the session picker, which bypasses the subagent hook.
+    // Title generation is skipped so a cheap background request does not get
+    // promoted to #max.
+    await ctx.session.hook("experimental.model.resolve", (event) => {
+      if (event.kind === "title") return
+      const ref = `${event.model.providerID}/${event.model.id}`
+      const spec = CATALOG[ref]
+      if (!spec) return
+      if (event.model.variant === undefined || !spec.variants.includes(event.model.variant)) {
+        event.model = { ...event.model, variant: spec.defaultVariant }
+      }
+    })
   },
 })
