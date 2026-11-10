@@ -43,7 +43,7 @@ opencode-orchestrator/
 
 ## Models
 
-The approved catalog has three groups. **Any approved model may be used by Atlas or by any subagent; the defaults are just defaults.**
+The approved catalog has three groups. **Any approved model may be used by Atlas or by any subagent; the defaults are just defaults, except that Astra and Fable are escalation-only because of their cost.**
 
 | Group | Models |
 |---|---|
@@ -72,6 +72,16 @@ Every explicit model reference carries a `#variant`. The agent defaults already 
 | Claude Agent | `low`, `medium`, `high`, `xhigh`, `max` | `medium` | `high` |
 
 Chinese models run at `#max` for all work, matching the owner's preference. OpenAI and Claude Agent use `#medium` for routine work, `#high` for multi-file implementation, debugging, verification, security and decisions, and `#xhigh` or `#max` only for exceptional tasks. Examples: `opencode-go/deepseek-v4.1-flash#max`, `openai/gpt-6.1-sol#high`, `claude-agent/opus#high`.
+
+### Premium models — escalation only
+
+`openai/gpt-6-astra` and `claude-agent/fable` are the two most expensive models in the catalog:
+
+- **Astra:** about $10 input / $50 output per 1M tokens; $20 / $75 above 272k context.
+- **Fable 5.2:** about $8 input / $40 output per 1M tokens.
+- **Chinese flash models:** about $0.15 input / $0.5–0.6 output — roughly 50–100× cheaper on output.
+
+Do not use Astra or Fable for routine implementation, docs, tests, research or normal verification. Use one only when the user explicitly asks, a cheaper model has already failed on the same task, or the task is genuinely exceptional and the expected value justifies the cost. State the justification in the final answer. In a decision jury, at most one seat may be premium; never make the whole jury premium.
 
 ## Decision maker
 

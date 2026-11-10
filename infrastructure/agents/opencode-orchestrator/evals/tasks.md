@@ -46,3 +46,5 @@ Keep a subagent only if it improves quality, cost, latency or safety on at least
 - A subagent call with an invalid variant is normalized to the same model's default variant.
 
 - Chinese agent defaults use `#max`; OpenAI/Claude defaults use `#medium`.
+- `openai/gpt-6-astra` and `claude-agent/fable` are not used for routine work, default workers or whole juries; any use carries a stated justification.
+- A default 3/5/7 decision jury excludes Astra and Fable unless the user explicitly requests an exceptional premium seat.

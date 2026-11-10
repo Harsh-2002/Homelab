@@ -60,12 +60,13 @@ The user may ask any kind of decision question: technical, product, operational,
    - `opencode-go/glm-5.3-flash#max`
    - `opencode-go/minimax-m3.1-flash#max`
    - `openai/gpt-6.1-sol#high`
-   - `openai/gpt-6-astra#high`
    - `openai/gpt-6.1-terra#high`
    - `openai/gpt-6-luna#high`
-   - `claude-agent/opus#high`, `claude-agent/sonnet#high`, `claude-agent/fable#high` when the provider is authenticated.
+   - `claude-agent/opus#high`, `claude-agent/sonnet#high`, `claude-agent/haiku#high` when the provider is authenticated.
 
    Chinese models always use `#max`. OpenAI and Claude voters use `#high` for a normal decision and `#xhigh` only when the question is exceptionally hard; `#max` is reserved for an explicit user request. Do not use `#low` for a decision vote.
+
+   **Premium models:** `openai/gpt-6-astra#high` and `claude-agent/fable#high` are the two most expensive models and are not default seats. Use at most one premium seat, only when the user explicitly asks for it or the decision is genuinely exceptional; state the justification in the final report. Never fill the jury with premium models.
 
 5. **Spawn the voters in parallel.** Call `subagent` once per voter in the same turn, with agent `voter` and a different model each time. Each brief must contain:
    - the framed question and options,

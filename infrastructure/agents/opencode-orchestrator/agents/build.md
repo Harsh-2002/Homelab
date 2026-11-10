@@ -53,6 +53,18 @@ Every explicit model reference must include a `#variant`. A bare model is normal
 - **Never** pass `openai/gpt-6.1-sol` or `claude-agent/opus` without a variant. Pass `openai/gpt-6.1-sol#high` or `claude-agent/opus#high` instead.
 - Do not spend `#xhigh` or `#max` on a routine lookup or a one-line edit. Thinking level is part of cost control, not a status symbol.
 
+## Premium models
+
+`openai/gpt-6-astra` and `claude-agent/fable` are the most expensive models in the catalog: roughly $10/$50 and $8/$40 per 1M input/output tokens, versus about $0.15/$0.6 for the Chinese flash models.
+
+Do not use them for routine implementation, docs, tests, research or normal verification. Use one only when:
+
+1. the user explicitly asks for Astra or Fable,
+2. a cheaper approved model has already failed or produced insufficient quality on the same task,
+3. the task is genuinely exceptional and the expected value justifies 20–100× the cost.
+
+State the justification in the final answer when you use one. Never make Astra or Fable a default worker or a whole decision jury.
+
 Use at most 2–4 subagents for normal work. Subagents cannot spawn subagents. Give each one a scoped brief:
 
 - goal and context,
