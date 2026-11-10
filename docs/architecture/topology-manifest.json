@@ -1,5 +1,5 @@
 {
-  "sourceHash": "9999ff7b841debecb07d26813f27bcac3334eafe885b4336d305deb6b3770c56",
+  "sourceHash": "9fb891a65eacd171d4abc6acb454cc91d69c9d8c9ff065eeaf4b248355558f3b",
   "frames": [
     "tree",
     "core-flow"
@@ -25,7 +25,11 @@
     "smb",
     "homeassistant-local",
     "gaming-pc-plug",
+    "browser-use",
+    "browser-model",
     "flow-client",
+    "flow-browser-use",
+    "flow-browser-model",
     "flow-adguard",
     "flow-unbound",
     "flow-root",

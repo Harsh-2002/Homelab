@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1820" viewBox="0 0 2400 1820" role="img"><title>l3b / DNS, HTTPS, identity and persistent data</title><desc>Single-node Docker restoration verified 2026-11-08; historical cluster not recreated.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#52636d"/></marker></defs><rect width="2400" height="1820" fill="#f8fafb"/><g font-family="Arial, sans-serif">
 <text x="55" y="76" font-size="36">l3b / DNS, HTTPS, identity and persistent data</text>
 <text x="55" y="120" font-size="21">2026-11-08 · Single host, no HA claim · OpenViking memory restored</text>
+<path d="M1600 1529L1790 1529" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M460 319L650 319" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1030 319L1220 319" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M1600 319L1790 319" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
@@ -21,6 +22,16 @@
 <text x="94" y="312" font-size="16" fill="#18252c">LAN / WireGuard / host / Docker</text>
 <text x="94" y="337" font-size="16" fill="#18252c">Host: native systemd-networkd</text>
 <text x="94" y="362" font-size="16" fill="#18252c">Internal AdGuard; no public fallback</text>
+</g>
+<g data-node="true"><rect x="1220" y="1470" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
+<text x="1234" y="1497" font-size="19" fill="#18252c">Browser Use / local runtime</text>
+<text x="1234" y="1522" font-size="16" fill="#18252c">Native agents invoke Docker CLI</text>
+<text x="1234" y="1547" font-size="16" fill="#18252c">No published browser/debug ports</text>
+</g>
+<g data-node="true"><rect x="1790" y="1470" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
+<text x="1804" y="1497" font-size="19" fill="#18252c">Configured remote model</text>
+<text x="1804" y="1522" font-size="16" fill="#18252c">Existing provider credential</text>
+<text x="1804" y="1547" font-size="16" fill="#18252c">Task-specific model session</text>
 </g>
 <g data-node="true"><rect x="650" y="260" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="664" y="287" font-size="19" fill="#18252c">AdGuard Home</text>

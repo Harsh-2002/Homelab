@@ -9,6 +9,7 @@ if (inventory.currentDeployment?.platform === 'single-node-docker') {
   // Current relationships include the dedicated l3b bridge, separate from LAN/VPN.
   // The shared layout includes verified localDeviceIntegrations (HA → PC plug).
   // plannedDeviceIntegrations do not create live service edges.
+  // Browser Use is a single Docker runtime used by both native agents.
   const {renderSingleNodeSheets} = await import('./single-node.mjs');
   renderSingleNodeSheets(out, inventory.currentDeployment, process.argv.includes('--internal'));
   process.exit(0);

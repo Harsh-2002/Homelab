@@ -43,6 +43,14 @@ def single_node():
     if not (home / '.agents/skills/playwright-cli/SKILL.md').is_file():
         failures.append('Playwright CLI official skill missing')
     print('Playwright CLI: installed and official skill present; browser MCPs forbidden')
+    for command in ('browser-use', 'browser-use-hermes'):
+        if not shutil.which(command):
+            failures.append('Browser Use launcher missing: ' + command)
+    for root in (home / '.config/opencode/skills', home / '.hermes/skills'):
+        for skill in ('browser-use', 'open-source'):
+            if not (root / skill / 'SKILL.md').is_file():
+                failures.append('Browser Use scoped skill missing: ' + str(root / skill))
+    print('Browser Use: Docker launchers and two official skills checked for OpenCode/Hermes')
     for path in [op_path, hermes_path]:
         if path.stat().st_mode & 0o077:
             failures.append('Credential-bearing agent config is not private')

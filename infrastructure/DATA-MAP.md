@@ -9,6 +9,7 @@ per the host policy.
 |---|---|---|
 | `adguard` | dns | `/data/apps/adguard/conf` -> `/opt/adguardhome/conf`; `/data/apps/adguard/work` -> `/opt/adguardhome/work` |
 | `beszel` | beszel | `/data/apps/beszel/data` -> `/beszel_data` |
+| `browser` | browser | `/data/apps/browser` -> `/state` (profiles, private model config, task files; added 2026-11-10) |
 | `caddy` | proxy | `/data/apps/caddy/config` -> `/config`; `/data/apps/caddy/data` -> `/data`; `/data/apps/caddy/Caddyfile` -> `/etc/caddy/Caddyfile`; `/data/apps/caddy/caddy` -> `/usr/bin/caddy` |
 | `cairn` | cairn | `/data/apps/cairn` -> `/data/cairn` |
 | `desktop` | desktop | `/data/apps/desktop/home` -> `/home/ubuntu` |
@@ -60,4 +61,3 @@ These are stateless or cache-only by design; a recreate loses nothing that matte
 - `karakeep-chrome` is a disposable browser profile.
 - `jolly_hellman` is the shared OLX MCP proxy and holds no state.
 - Old Jellyfin cache volumes and a stale SearXNG volume were pruned on 2026-11-09.
-

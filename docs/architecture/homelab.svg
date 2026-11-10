@@ -20,6 +20,8 @@
 <path d="M1770 231.5L1835 1709" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M945 691.5L435 979" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <path d="M435 979L500 979" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M945 691.5L435 1239" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M435 1239L500 1239" fill="none" stroke="#52636d" stroke-width="2" marker-end="url(#arrow)"/>
 <g data-node="true"><rect x="55" y="620" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="69" y="647" font-size="19" fill="#18252c">Phone / workstation</text>
 <text x="69" y="672" font-size="16" fill="#18252c">Private LAN access</text>
@@ -131,5 +133,16 @@
 <text x="514" y="972" font-size="16" fill="#18252c">Tuya 3.5 over LAN</text>
 <text x="514" y="997" font-size="16" fill="#18252c">Reserved address; local telemetry</text>
 <text x="514" y="1022" font-size="16" fill="#18252c">Energy calculated from power</text>
+</g>
+<g data-node="true"><rect x="55" y="1180" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
+<text x="69" y="1207" font-size="19" fill="#18252c">Browser Use / Docker</text>
+<text x="69" y="1232" font-size="16" fill="#18252c">OpenCode and Hermes CLI tools</text>
+<text x="69" y="1257" font-size="16" fill="#18252c">Separate local Chromium profiles</text>
+<text x="69" y="1282" font-size="16" fill="#18252c">Bounded Python Agent tasks</text>
+</g>
+<g data-node="true"><rect x="500" y="1180" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
+<text x="514" y="1207" font-size="19" fill="#18252c">Existing model provider</text>
+<text x="514" y="1232" font-size="16" fill="#18252c">Task delegation only</text>
+<text x="514" y="1257" font-size="16" fill="#18252c">No Browser Use Cloud account</text>
 </g>
 <text x="55" y="1730" font-size="20">Existing backups preserved; passkey/OIDC and paid model acceptance require separate tests.</text></g></svg>

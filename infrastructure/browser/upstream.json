@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/browser-use/browser-use",
+  "revision": "070be98109c03f04a95f704533e8f6e9868d0525",
+  "package": "1.0.0",
+  "skills": [
+    "browser-use",
+    "open-source"
+  ],
+  "adaptation": "Local Docker command/session routing only; official upstream instructions retained."
+}

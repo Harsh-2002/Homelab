@@ -18,8 +18,10 @@ Let Docker manage its bridge/NAT/publication firewall rules, and the existing
 WireGuard manager own VPN forwarding. Do not add manual iptables rules for
 application routing. Caddy owns HTTP source/auth gates.
 
-Browser automation is **Playwright CLI only**: `playwright-cli` plus the
-official `playwright-cli` skill under `~/.agents/skills/playwright-cli`.
+Browser automation uses Playwright CLI plus the owner-approved Docker Browser Use
+runtime (10 November 2026) for OpenCode and Hermes. Browser Use runs through the
+`browser-use` launcher with separate agent sessions; see `infrastructure/browser`.
+Keep the official `playwright-cli` skill under `~/.agents/skills/playwright-cli`.
 Use it for navigation, form filling, UI/UX review, responsive checks,
 screenshots, console/network inspection and E2E work. Reuse the named CLI
 session; close it when done. Do not add or use Playwright MCP, Chrome DevTools

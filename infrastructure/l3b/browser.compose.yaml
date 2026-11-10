@@ -1,0 +1,30 @@
+services:
+  browser:
+    image: l3b-browser:1.0.0
+    container_name: browser
+    user: 1000:1000
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      BU_CDP_URL: http://127.0.0.1:9222
+      BU_NAME: direct
+    volumes:
+      - /data/apps/browser:/state
+    shm_size: 1gb
+    mem_limit: 3g
+    cpus: 2
+    pids_limit: 768
+    healthcheck:
+      test: [CMD, python, /opt/browser/runtime.py, health]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - l3b
+    restart: unless-stopped
+networks:
+  l3b:
+    external: true

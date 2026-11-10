@@ -52,6 +52,15 @@ function layout(inv, addresses = {}) {
   }
 
   add(1,'flow-client',80,260,'DNS clients',['LAN / WireGuard / host / Docker','Host: native systemd-networkd','Internal AdGuard; no public fallback']);
+  if (inv.services?.some(service => service.id === 'browser')) {
+    add(0,'browser-use',55,1180,'Browser Use / Docker',['OpenCode and Hermes CLI tools','Separate local Chromium profiles','Bounded Python Agent tasks']);
+    add(0,'browser-model',500,1180,'Existing model provider',['Task delegation only','No Browser Use Cloud account']);
+    edge(0,'l3b','browser-use');
+    edge(0,'browser-use','browser-model');
+    add(1,'flow-browser-use',1220,1470,'Browser Use / local runtime',['Native agents invoke Docker CLI','No published browser/debug ports']);
+    add(1,'flow-browser-model',1790,1470,'Configured remote model',['Existing provider credential','Task-specific model session']);
+    edge(1,'flow-browser-use','flow-browser-model');
+  }
   add(1,'flow-adguard',650,260,'AdGuard Home',['UDP DNS only; UI through Caddy','Internal apex / wildcard rewrites']);
   add(1,'flow-unbound',1220,260,'Unbound',['Recursion; DNSSEC validation']);
   add(1,'flow-root',1790,260,'Authoritative DNS',['External recursion, not forwarding']);

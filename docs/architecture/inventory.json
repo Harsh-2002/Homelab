@@ -17,6 +17,12 @@
     },
     "services": [
       {
+        "id": "browser",
+        "label": "Browser Use 1.0.0 / Chromium",
+        "stack": "browser",
+        "state": "Portainer-managed; no published ports; OpenCode/Hermes isolated direct profiles and official scoped skills; bounded Python Agent delegation through existing model provider; persistent application bind"
+      },
+      {
         "id": "portainer",
         "label": "Portainer BE 2.45.3",
         "stack": "portainer",

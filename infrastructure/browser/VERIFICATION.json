@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-10",
+  "stack_id": 183,
+  "container": "browser",
+  "image_id": "sha256:ffbd48119cf2c40c00326f712180c8b65adcd63e2a13cf806c0de9043a6c36a5",
+  "running": true,
+  "published_ports": {},
+  "user": "1000:1000",
+  "network_names": [
+    "l3b"
+  ],
+  "memory_bytes": 3221225472,
+  "pids_limit": 768,
+  "restarts": 0,
+  "local_source_matches_image": true,
+  "form_verification": {
+    "delegated_form_received_exact_values": true,
+    "task_exit": 0,
+    "expected_receipt": "TEST-RECEIPT-OK",
+    "provider": "existing OpenCode Go",
+    "external_form_submission": false
+  },
+  "profile_separation_and_restart_recovery": true,
+  "upload_download_png_verified": true,
+  "agent_skill_discovery": [
+    "OpenCode skill load",
+    "Hermes skills list enabled"
+  ],
+  "limitations": [
+    "No host reboot acceptance",
+    "No separate full conversational agent turn in each client",
+    "Container is not hostile-code or secret isolation",
+    "Remote model provider sees task/page context"
+  ]
+}
