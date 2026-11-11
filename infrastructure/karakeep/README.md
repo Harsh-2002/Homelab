@@ -1,6 +1,6 @@
 # Karakeep
 
-Karakeep is restored on Docker VM 204 `ctr` as Portainer Stack `karakeep` (ID `80`). It is publicly available at `https://pin.l3b.cc.cd`. Pocket ID is the normal sign-in path; native Karakeep login remains as a deliberate break-glass path.
+Karakeep runs on the `l3b` Docker host as Portainer Stack `karakeep` (ID `80`). It is publicly available at `https://pin.l3b.cc.cd`. Pocket ID is the normal sign-in path; native Karakeep login remains as a deliberate break-glass path.
 
 ## Layout
 
@@ -8,11 +8,35 @@ Karakeep is restored on Docker VM 204 `ctr` as Portainer Stack `karakeep` (ID `8
 | --- | --- |
 | Application SQLite data | `/data/apps/karakeep/data` |
 | Meilisearch derived index | `/data/apps/karakeep/meilisearch` |
-| Asset store | RustFS bucket `karakeep` at `http://10.1.1.8:9000` |
+| Asset store | RustFS bucket `karakeep` at `http://rustfs:9000` |
 
-The `karakeep` bucket was migrated from MinIO to RustFS before this application restore. The dedicated RustFS IAM identity is restricted to this bucket's listing and object read/write/delete operations; it has no access to other buckets and does not use the RustFS root credential.
+The `karakeep` bucket was migrated from MinIO to RustFS before this application restore. The live RustFS container is on the external `l3b` network at `10.1.3.24:9000`; `rustfs:9000` resolves to it from Karakeep. The dedicated RustFS IAM identity is restricted to this bucket's listing and object read/write/delete operations; it has no access to other buckets and does not use the RustFS root credential.
 
-Karakeep, Chrome, and Meilisearch run on the Compose-created `karakeep_default` bridge network. No workload uses Docker host networking. Karakeep binds its web port only to `10.1.1.4:3000`; Caddy supplies TLS and the public endpoint. Its application-native authentication is the access control layer.
+Karakeep, Chrome, and Meilisearch run on the external `l3b` Docker network (`karakeep-meilisearch` and `karakeep-chrome` service names). No workload uses Docker host networking. Karakeep exposes port `3000` only on that internal network; Caddy supplies TLS and the public endpoint. Its application-native authentication is the access control layer.
+
+## Images and thumbnails missing
+
+Symptom: link banners, screenshots, avatars and bookmark images return `500`, and the Karakeep log shows:
+
+```text
+ENOENT: no such file or directory, open '/data/assets/<user>/<asset>/metadata.json'
+GET /api/assets/<id> 500
+```
+
+Cause: the live stack had no `ASSET_STORE_S3_*` environment, so Karakeep fell back to the filesystem asset store. The local tree contained only 3 assets while the database referenced 402. The missing objects were in the RustFS `karakeep` bucket (405 asset directories), which the app was not using.
+
+Fix, verified 2026-11-11: add the six asset-store variables to Portainer stack `80`, mapped in the `karakeep` service:
+
+```text
+ASSET_STORE_S3_ENDPOINT=http://rustfs:9000
+ASSET_STORE_S3_REGION=us-east-1
+ASSET_STORE_S3_BUCKET=karakeep
+ASSET_STORE_S3_ACCESS_KEY_ID=<Karakeep S3 Access Key ID>
+ASSET_STORE_S3_SECRET_ACCESS_KEY=<Karakeep S3 Secret Access Key>
+ASSET_STORE_S3_FORCE_PATH_STYLE=true
+```
+
+The credentials are the existing bucket-scoped values in the `Karakeep` 1Password item. Redeploy stack `80` without pulling a new image. Verification: startup logs list `assetstore: - S3`; `/api/assets/<id>` returns `200` with `image/png` or `image/jpeg`; the container is healthy. Do not print the keys.
 
 ## Restore and upgrade notes
 
@@ -22,7 +46,7 @@ The original stack used the legacy Hoarder product name. Karakeep is its success
 
 The restored Meilisearch index was created by v1.16 while the supported current image is v1.41.0. If v1.41 rejects its old `data.ms` directory, recreate only the derived index by moving the current `data.ms` aside, starting Meilisearch, then running **Admin Settings → Background Jobs → Reindex All Bookmarks** in Karakeep. Back up current Karakeep data before doing so; the external recovery source no longer exists.
 
-Portainer supplies runtime values through its protected Stack environment, which is never committed. The Compose definition explicitly maps only the required values into the relevant containers; it does not use `env_file`, because Portainer's API does not materialize that file. Karakeep session/search secrets and the bucket-scoped RustFS credential are stored in the existing `Karakeep` item in the HomeLab 1Password vault.
+Portainer supplies runtime values through its protected Stack environment, which is never committed. The Compose definition explicitly maps only the required values into the relevant containers; it does not use `env_file`, because Portainer's API does not materialize that file. Karakeep session/search secrets and the bucket-scoped RustFS credential are stored in the existing `Karakeep` item in the HomeLab 1Password vault. The live stack uses `L3B_KARAKEEP_*` environment names; the tracked Compose maps them into the containers.
 
 ## Identity
 

@@ -1,44 +1,44 @@
-name: karakeep
-
 services:
   karakeep:
-    image: ghcr.io/karakeep-app/karakeep:${KARAKEEP_VERSION}
+    image: ghcr.io/karakeep-app/karakeep:0.34.1
     container_name: karakeep
     labels:
       com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
+    init: false
     environment:
       DATA_DIR: /data
-      MEILI_ADDR: http://meilisearch:7700
-      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
-      BROWSER_WEB_URL: http://chrome:9222
-      NEXTAUTH_URL: ${NEXTAUTH_URL}
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-      DISABLE_SIGNUPS: ${DISABLE_SIGNUPS}
-      DB_WAL_MODE: ${DB_WAL_MODE}
-      OAUTH_WELLKNOWN_URL: ${OAUTH_WELLKNOWN_URL}
-      OAUTH_CLIENT_ID: ${OAUTH_CLIENT_ID}
-      OAUTH_CLIENT_SECRET: ${OAUTH_CLIENT_SECRET}
-      OAUTH_PROVIDER_NAME: ${OAUTH_PROVIDER_NAME}
-      OAUTH_SCOPE: ${OAUTH_SCOPE}
-      OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: ${OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING}
-      ASSET_STORE_S3_ENDPOINT: ${ASSET_STORE_S3_ENDPOINT}
-      ASSET_STORE_S3_REGION: ${ASSET_STORE_S3_REGION}
-      ASSET_STORE_S3_BUCKET: ${ASSET_STORE_S3_BUCKET}
-      ASSET_STORE_S3_ACCESS_KEY_ID: ${ASSET_STORE_S3_ACCESS_KEY_ID}
-      ASSET_STORE_S3_SECRET_ACCESS_KEY: ${ASSET_STORE_S3_SECRET_ACCESS_KEY}
-      ASSET_STORE_S3_FORCE_PATH_STYLE: ${ASSET_STORE_S3_FORCE_PATH_STYLE}
+      MEILI_ADDR: http://karakeep-meilisearch:7700
+      BROWSER_WEB_URL: http://karakeep-chrome:9222
+      ASSET_STORE_S3_ENDPOINT: ${L3B_KARAKEEP_ASSET_STORE_S3_ENDPOINT}
+      ASSET_STORE_S3_REGION: ${L3B_KARAKEEP_ASSET_STORE_S3_REGION}
+      ASSET_STORE_S3_BUCKET: ${L3B_KARAKEEP_ASSET_STORE_S3_BUCKET}
+      ASSET_STORE_S3_ACCESS_KEY_ID: ${L3B_KARAKEEP_ASSET_STORE_S3_ACCESS_KEY_ID}
+      ASSET_STORE_S3_SECRET_ACCESS_KEY: ${L3B_KARAKEEP_ASSET_STORE_S3_SECRET_ACCESS_KEY}
+      ASSET_STORE_S3_FORCE_PATH_STYLE: ${L3B_KARAKEEP_ASSET_STORE_S3_FORCE_PATH_STYLE}
+      NEXTAUTH_URL: ${L3B_KARAKEEP_NEXTAUTH_URL}
+      NEXTAUTH_SECRET: ${L3B_KARAKEEP_NEXTAUTH_SECRET}
+      MEILI_MASTER_KEY: ${L3B_KARAKEEP_MEILI_MASTER_KEY}
+      DISABLE_SIGNUPS: ${L3B_KARAKEEP_DISABLE_SIGNUPS}
+      DB_WAL_MODE: ${L3B_KARAKEEP_DB_WAL_MODE}
+      OAUTH_WELLKNOWN_URL: ${L3B_KARAKEEP_OAUTH_WELLKNOWN_URL}
+      OAUTH_CLIENT_ID: ${L3B_KARAKEEP_OAUTH_CLIENT_ID}
+      OAUTH_CLIENT_SECRET: ${L3B_KARAKEEP_OAUTH_CLIENT_SECRET}
+      OAUTH_PROVIDER_NAME: ${L3B_KARAKEEP_OAUTH_PROVIDER_NAME}
+      OAUTH_SCOPE: ${L3B_KARAKEEP_OAUTH_SCOPE}
+      OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: ${L3B_KARAKEEP_OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING}
     volumes:
-      - /data/apps/karakeep/data:/data
-    ports:
-      - 10.1.1.4:3000:3000
+    - /data/apps/karakeep/data:/data
+    expose:
+    - '3000'
     depends_on:
-      meilisearch:
+      karakeep-meilisearch:
         condition: service_started
-      chrome:
+      karakeep-chrome:
         condition: service_started
-
-  chrome:
+    networks:
+    - l3b
+  karakeep-chrome:
     image: ghcr.io/karakeep-app/karakeep-chrome:release
     container_name: karakeep-chrome
     labels:
@@ -46,20 +46,45 @@ services:
     restart: unless-stopped
     init: true
     command:
-      - --disable-gpu
-      - --disable-dev-shm-usage
-      - --hide-scrollbars
-      - --disable-blink-features=AutomationControlled
-      - --window-size=1440,900
-
-  meilisearch:
+    - --disable-gpu
+    - --disable-dev-shm-usage
+    - --hide-scrollbars
+    - --disable-blink-features=AutomationControlled
+    - --window-size=1440,900
+    healthcheck:
+      test:
+      - CMD
+      - wget
+      - -qO-
+      - http://127.0.0.1:9222/json/version
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+    - l3b
+  karakeep-meilisearch:
     image: getmeili/meilisearch:v1.56.1
     container_name: karakeep-meilisearch
     labels:
       com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
-    environment:
-      MEILI_NO_ANALYTICS: "true"
-      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+    healthcheck:
+      test:
+      - CMD
+      - wget
+      - -qO-
+      - http://127.0.0.1:7700/health
+      interval: 30s
+      timeout: 5s
+      retries: 3
     volumes:
-      - /data/apps/karakeep/meilisearch:/meili_data
+    - /data/apps/karakeep/meilisearch:/meili_data
+    networks:
+    - l3b
+    environment:
+      MEILI_MASTER_KEY: ${L3B_KARAKEEP_MEILISEARCH_MEILI_MASTER_KEY}
+      MEILI_NO_ANALYTICS: ${L3B_KARAKEEP_MEILISEARCH_MEILI_NO_ANALYTICS}
+networks:
+  l3b:
+    external: true
+    name: l3b
