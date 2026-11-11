@@ -38,14 +38,14 @@ Keep a subagent only if it improves quality, cost, latency or safety on at least
 - `vouch` creates a disposable worktree and leaves the main checkout unchanged.
 - A session created before the rename identifies as Atlas through the `build` compatibility profile.
 - The model picker shows the eleven approved models in a new web/TUI session.
-- Claude Agent aliases resolve to Opus 5.5, Sonnet 5.5, Haiku 5.5 and Fable 5.2 on the installed Claude Code CLI.
+- The explicit Claude Agent IDs `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5` and `claude-fable-5-2` are selectable; the family aliases are hidden and the original versioned names are shown.
 - `oracle` is selectable as a primary agent but is not the default; new sessions still start with Atlas.
 - `juror` cannot spawn subagents, edit files or run shell commands.
 - Every agent default carries a valid `#variant`; no agent default is a bare model.
 - A subagent call with a bare allowed model is normalized to that model's default variant, not to DeepSeek.
 - A subagent call with an invalid variant is normalized to the same model's default variant.
 - Chinese agent defaults use `#max`; OpenAI/Claude defaults use `#medium`.
-- `openai/gpt-6-astra` and `claude-agent/fable` are not used for routine work, default workers or whole juries; any use carries a stated justification.
+- `openai/gpt-6-astra` and `claude-agent/claude-fable-5-2` are not used for routine work, default workers or whole juries; any use carries a stated justification.
 - A default 3/5/7 decision jury excludes Astra and Fable unless the user explicitly requests an exceptional premium seat.
 - A bare approved model selected directly in the session picker is normalized to its default variant (e.g. OpenAI Sol → `medium`), not left bare.
 - `opencode run --model anthropic/claude-sonnet-5-5` is denied; the `anthropic/*` provider is not usable.

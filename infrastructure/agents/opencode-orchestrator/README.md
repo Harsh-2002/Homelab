@@ -18,6 +18,7 @@ Status: **installed globally; Atlas is the default for new sessions.** This is a
 opencode-orchestrator/
 ├── README.md
 ├── AGENTS.template.md
+├── opencode.json.example
 ├── install.sh
 ├── check-models.sh
 ├── agents/
@@ -49,15 +50,36 @@ The approved catalog has three groups. **Any approved model may be used by Atlas
 |---|---|
 | Chinese | `opencode-go/deepseek-v4.1-flash`, `opencode-go/glm-5.3-flash`, `opencode-go/minimax-m3.1-flash` |
 | OpenAI Codex | `openai/gpt-6-astra`, `openai/gpt-6.1-sol`, `openai/gpt-6.1-terra`, `openai/gpt-6-luna` |
-| Claude Agent | `claude-agent/opus` (Opus 5.5), `claude-agent/sonnet` (Sonnet 5.5), `claude-agent/haiku` (Haiku 5.5), `claude-agent/fable` (Fable 5.2) |
+| Claude Agent | `claude-agent/claude-opus-5-5` (Opus 5.5), `claude-agent/claude-sonnet-5-5` (Sonnet 5.5), `claude-agent/claude-haiku-5-5` (Haiku 5.5), `claude-agent/claude-fable-5-2` (Fable 5.2) |
 
-The Claude Agent entries are aliases. They intentionally track the latest model the connected Claude Code CLI exposes, so the catalog does not go stale when Anthropic ships a point release. Claude Code `2.1.322` resolves them to `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5` and `claude-fable-5-2`.
+The Claude Agent entries use the **original versioned model IDs**. The provider also exposes family aliases (`opus`, `sonnet`, `haiku`, `fable`), which the allowlist hides so the picker preserves the real model names and numbers. The versioned entries are defined under `providers.claude-agent.models` with their original names and Claude Code effort variants.
 
 Atlas defaults to DeepSeek V4.1 Flash. Subagents default to DeepSeek V4.1 Flash. If you select another approved model in the picker, Atlas uses it for that session. If Atlas passes a model to a subagent, it uses that model. If no model is passed, the subagent's default applies.
 
 Use **Claude Agent** only. The separate `anthropic/*` provider is not enabled and is removed from the picker. DeepSeek V4 Pro, Kimi, GPT-5 and older families are excluded.
 
 The `model-allowlist` plugin removes every model outside this list, adds the model's default `#variant` when a caller passes a bare approved model, normalizes an invalid variant to that model's default, and falls back to `opencode-go/deepseek-v4.1-flash#max` only when the **model itself** is invalid. An unspecified model is left to the subagent default. `check-models.sh` verifies all eleven approved base IDs.
+
+### Claude Agent versioned entries
+
+The picker shows the original model names because the global config defines explicit versioned entries and the allowlist hides the family aliases:
+
+```jsonc
+{
+  "providers": {
+    "claude-agent": {
+      "models": {
+        "claude-opus-5-5": { "modelID": "claude-opus-5-5", "name": "Opus 5.5" },
+        "claude-sonnet-5-5": { "modelID": "claude-sonnet-5-5", "name": "Sonnet 5.5" },
+        "claude-haiku-5-5": { "modelID": "claude-haiku-5-5", "name": "Haiku 5.5" },
+        "claude-fable-5-2": { "modelID": "claude-fable-5-2", "name": "Fable 5.2" }
+      }
+    }
+  }
+}
+```
+
+Each entry also carries the Claude Code effort variants (`low` through `max`) and a 1M-token context limit.
 
 ### Thinking levels
 
@@ -71,11 +93,11 @@ Every explicit model reference carries a `#variant`. The agent defaults already 
 | OpenAI Terra/Luna | `none`, `low`, `medium`, `high`, `xhigh`, `max` | `medium` | `high` |
 | Claude Agent | `low`, `medium`, `high`, `xhigh`, `max` | `medium` | `high` |
 
-Chinese models run at `#max` for all work, matching the owner's preference. OpenAI and Claude Agent use `#medium` for routine work, `#high` for multi-file implementation, debugging, verification, security and decisions, and `#xhigh` or `#max` only for exceptional tasks. Examples: `opencode-go/deepseek-v4.1-flash#max`, `openai/gpt-6.1-sol#high`, `claude-agent/opus#high`.
+Chinese models run at `#max` for all work, matching the owner's preference. OpenAI and Claude Agent use `#medium` for routine work, `#high` for multi-file implementation, debugging, verification, security and decisions, and `#xhigh` or `#max` only for exceptional tasks. Examples: `opencode-go/deepseek-v4.1-flash#max`, `openai/gpt-6.1-sol#high`, `claude-agent/claude-opus-5-5#high`.
 
 ### Premium models — escalation only
 
-`openai/gpt-6-astra` and `claude-agent/fable` are the two most expensive models in the catalog:
+`openai/gpt-6-astra` and `claude-agent/claude-fable-5-2` are the two most expensive models in the catalog:
 
 - **Astra:** about $10 input / $50 output per 1M tokens; $20 / $75 above 272k context.
 - **Fable 5.2:** about $8 input / $40 output per 1M tokens.
@@ -124,7 +146,7 @@ Project-local (overrides for one repository):
 ./install.sh .opencode
 ```
 
-Global installs need the local plugin registered in `~/.config/opencode/opencode.json`:
+Global installs need the local plugin registered in `~/.config/opencode/opencode.json`. `opencode.json.example` has the full working configuration, including the explicit Claude Agent models, effort variants, the `anthropic` provider denial and the local plugin path:
 
 ```jsonc
 {

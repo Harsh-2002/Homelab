@@ -30,18 +30,18 @@ These are exposed by the connected OpenAI Codex provider. The provider ID is `op
 
 | Model | Alias resolves to | Role |
 |---|---|---|
-| `claude-agent/opus` | Opus 5.5 (`claude-opus-5-5`) | Highest-capability Claude worker; deep reasoning and review |
-| `claude-agent/sonnet` | Sonnet 5.5 (`claude-sonnet-5-5`) | Balanced Claude worker; strong implementation |
-| `claude-agent/haiku` | Haiku 5.5 (`claude-haiku-5-5`) | Fast, low-cost Claude worker |
-| `claude-agent/fable` | Fable 5.2 (`claude-fable-5-2`) | **Premium escalation only**; ~67× DeepSeek output cost |
+| `claude-agent/claude-opus-5-5` | Opus 5.5 | Highest-capability Claude worker; deep reasoning and review |
+| `claude-agent/claude-sonnet-5-5` | Sonnet 5.5 | Balanced Claude worker; strong implementation |
+| `claude-agent/claude-haiku-5-5` | Haiku 5.5 | Fast, low-cost Claude worker |
+| `claude-agent/claude-fable-5-2` | Fable 5.2 | **Premium escalation only**; ~67× DeepSeek output cost |
 
-These are deliberate aliases, not versioned IDs. Claude Code resolves them to the latest model in each family (verified against Claude Code `2.1.322`), so the catalog keeps working when Anthropic ships a point release. Do not replace them with the older versioned IDs that OpenCode also lists (`claude-opus-5`, `claude-sonnet-5`, `claude-haiku-4-5-20251001`, `claude-fable-5`).
+These are the **original versioned model IDs**, not family aliases. The provider also exposes `opus`, `sonnet`, `haiku` and `fable`, but the allowlist hides those so the picker preserves the real model names and numbers. Claude Code `2.1.322` supports all four versioned IDs. Update them when Anthropic ships a new model version.
 
 Use the **Claude Agent** provider only. The separate `anthropic/*` provider is hard-denied by the global `provider.use` policy and removed from the picker; it is a different provider. The stored Anthropic credential is not usable.
 
 ## Premium models — escalation only
 
-`openai/gpt-6-astra` and `claude-agent/fable` are the two most expensive models in the catalog. Approximate list prices per 1M tokens from models.dev:
+`openai/gpt-6-astra` and `claude-agent/claude-fable-5-2` are the two most expensive models in the catalog. Approximate list prices per 1M tokens from models.dev:
 
 - **Astra:** $10 input / $50 output; $20 / $75 above 272k context.
 - **Fable 5.2:** $8 input / $40 output.
@@ -77,7 +77,7 @@ opencode-go/deepseek-v4.1-flash#max
 opencode-go/glm-5.3-flash#max
 openai/gpt-6.1-sol#medium
 openai/gpt-6.1-sol#high
-claude-agent/opus#high
+claude-agent/claude-opus-5-5#high
 ```
 
 ## Defaults
@@ -101,8 +101,8 @@ The `oracle` primary agent uses these models as independent jurors. Use an odd j
 
 - 3 voters: `deepseek-v4.1-flash`, `glm-5.3-flash`, `gpt-6.1-sol`
 - 5 voters: add `minimax-m3.1-flash` and `gpt-6.1-terra`
-- 7 voters: add `gpt-6-luna` and `claude-agent/sonnet` (or another authenticated Claude alias)
-- Claude Agent aliases can replace OpenAI jurors when that provider is authenticated.
+- 7 voters: add `gpt-6-luna` and `claude-agent/claude-sonnet-5-5`
+- Claude Agent versioned models can replace OpenAI jurors when that provider is authenticated.
 
 Do not reuse a model in the same jury, and do not reveal earlier votes to later jurors. Astra and Fable are **not** default jury seats; use at most one premium seat, only for an exceptional decision or an explicit user request, and state why.
 

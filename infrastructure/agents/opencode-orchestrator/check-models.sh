@@ -9,10 +9,10 @@ openai/gpt-6-astra
 openai/gpt-6.1-sol
 openai/gpt-6.1-terra
 openai/gpt-6-luna
-claude-agent/opus
-claude-agent/sonnet
-claude-agent/haiku
-claude-agent/fable
+claude-agent/claude-opus-5-5
+claude-agent/claude-sonnet-5-5
+claude-agent/claude-haiku-5-5
+claude-agent/claude-fable-5-2
 "
 
 available=$(opencode models 2>/dev/null || true)

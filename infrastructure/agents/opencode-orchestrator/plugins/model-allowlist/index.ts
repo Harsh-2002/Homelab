@@ -18,10 +18,10 @@ const CATALOG: Record<string, ModelSpec> = {
   "openai/gpt-6.1-terra": { variants: ["none", "low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
   "openai/gpt-6-luna": { variants: ["none", "low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
   // Claude Agent: medium by default; high for demanding work.
-  "claude-agent/opus": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
-  "claude-agent/sonnet": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
-  "claude-agent/haiku": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
-  "claude-agent/fable": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
+  "claude-agent/claude-opus-5-5": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
+  "claude-agent/claude-sonnet-5-5": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
+  "claude-agent/claude-haiku-5-5": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
+  "claude-agent/claude-fable-5-2": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
 }
 
 const FALLBACK = "opencode-go/deepseek-v4.1-flash#max"

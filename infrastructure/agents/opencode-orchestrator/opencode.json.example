@@ -1,0 +1,72 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "atlas",
+  "plugins": [
+    "/home/dev/.config/opencode/plugins/model-allowlist"
+  ],
+  "policies": [
+    {
+      "action": "provider.use",
+      "resource": "anthropic",
+      "effect": "deny"
+    }
+  ],
+  "providers": {
+    "claude-agent": {
+      "models": {
+        "claude-opus-5-5": {
+          "modelID": "claude-opus-5-5",
+          "name": "Opus 5.5",
+          "limit": { "context": 1000000, "output": 128000 },
+          "capabilities": { "tools": true, "input": ["text", "image", "pdf"], "output": ["text"] },
+          "variants": [
+            { "id": "low", "settings": { "effort": "low" } },
+            { "id": "medium", "settings": { "effort": "medium" } },
+            { "id": "high", "settings": { "effort": "high" } },
+            { "id": "xhigh", "settings": { "effort": "xhigh" } },
+            { "id": "max", "settings": { "effort": "max" } }
+          ]
+        },
+        "claude-sonnet-5-5": {
+          "modelID": "claude-sonnet-5-5",
+          "name": "Sonnet 5.5",
+          "limit": { "context": 1000000, "output": 128000 },
+          "capabilities": { "tools": true, "input": ["text", "image", "pdf"], "output": ["text"] },
+          "variants": [
+            { "id": "low", "settings": { "effort": "low" } },
+            { "id": "medium", "settings": { "effort": "medium" } },
+            { "id": "high", "settings": { "effort": "high" } },
+            { "id": "xhigh", "settings": { "effort": "xhigh" } },
+            { "id": "max", "settings": { "effort": "max" } }
+          ]
+        },
+        "claude-haiku-5-5": {
+          "modelID": "claude-haiku-5-5",
+          "name": "Haiku 5.5",
+          "limit": { "context": 1000000, "output": 128000 },
+          "capabilities": { "tools": true, "input": ["text", "image", "pdf"], "output": ["text"] },
+          "variants": [
+            { "id": "low", "settings": { "effort": "low" } },
+            { "id": "medium", "settings": { "effort": "medium" } },
+            { "id": "high", "settings": { "effort": "high" } },
+            { "id": "xhigh", "settings": { "effort": "xhigh" } },
+            { "id": "max", "settings": { "effort": "max" } }
+          ]
+        },
+        "claude-fable-5-2": {
+          "modelID": "claude-fable-5-2",
+          "name": "Fable 5.2",
+          "limit": { "context": 1000000, "output": 128000 },
+          "capabilities": { "tools": true, "input": ["text", "image", "pdf"], "output": ["text"] },
+          "variants": [
+            { "id": "low", "settings": { "effort": "low" } },
+            { "id": "medium", "settings": { "effort": "medium" } },
+            { "id": "high", "settings": { "effort": "high" } },
+            { "id": "xhigh", "settings": { "effort": "xhigh" } },
+            { "id": "max", "settings": { "effort": "max" } }
+          ]
+        }
+      }
+    }
+  }
+}
