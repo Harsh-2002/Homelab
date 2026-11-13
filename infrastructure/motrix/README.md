@@ -11,3 +11,47 @@ The compose project is non-root, has a read-only root filesystem, a 64 MiB `/tmp
 To recover from Git, restore this directory's Compose as a Portainer standalone stack named `motrix` on endpoint `ctr`; set stack variables `PUID=1000` and `PGID=1000` after verifying the UID/GID against `/mnt/AV/downloads`. Restore the persistent `/data/apps/motrix/motrix-data` directory, confirm `findmnt -t cifs /mnt/AV` and `stat /mnt/AV/downloads`, then deploy through Portainer. The state bind mount is absolute so Portainer stack revisions do not create a fresh empty data directory. The generated operator token is at `/data/apps/motrix/motrix-data/operator-token`; do not put it in Git or chat. Open the Web UI and paste the token into the unlock screen. The existing `Motrix` API Credential item in the HomeLab 1Password vault stores the current token; update that item if the server generates a replacement, rather than creating a duplicate.
 
 Verify with `docker compose ps`, `docker logs motrix-server --tail 100`, `curl --resolve downloads.l3b.cc.cd:443:10.1.1.3 https://downloads.l3b.cc.cd/healthz`, and a small authorized test download. Deployment validation confirmed Docker health, an HTTPS 200 Web UI, actual create/delete operations inside `/media/movies` and `/media/shows`, and matching 401 responses to an unauthenticated MDXP POST through Caddy and directly. Startup logged both allowed roots (`/downloads`, `/media`); no transfer job was submitted. A healthy container alone does not prove a completed transfer.
+
+## UI authentication and 401 JSON
+
+`motrix.l3b.cc.cd` is protected by Tinyauth. The Caddy route must redirect a 401 from `forward_auth` to the Tinyauth login page. Without the redirect, a logged-out browser receives:
+
+```json
+{"message":"Unauthorized","status":401}
+```
+
+instead of the login page, even though Motrix itself is healthy. The live route in `/data/apps/caddy/Caddyfile` must use this shape:
+
+```caddyfile
+@motrix host motrix.l3b.cc.cd
+handle @motrix {
+    route {
+        forward_auth tinyauth:3000 {
+            uri /api/auth/caddy
+            copy_headers Remote-User Remote-Email Remote-Groups
+            @login status 401
+            handle_response @login {
+                redir {rp.header.X-Tinyauth-Location} 302
+            }
+        }
+        reverse_proxy motrix:8080
+    }
+}
+```
+
+The immediate login URL is:
+
+```text
+https://login.l3b.cc.cd/login?login_for=app&redirect_uri=https%3A%2F%2Fmotrix.l3b.cc.cd%2F
+```
+
+Validate and reload after a change:
+
+```sh
+docker exec caddy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+docker exec caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+```
+
+Verified 2026-11-13: `https://motrix.l3b.cc.cd/` returns `302` to the login URL; following it returns the login page `200`; Caddy and Motrix are healthy.
+
+## Operations
