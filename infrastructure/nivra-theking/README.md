@@ -20,8 +20,9 @@ content and MCP. Cloudflare DNS-only A record is the household WAN address
 `150.129.31.154`; internal DNS resolves through the wildcard to Caddy `10.1.1.10`.
 The raw application port remains internal; no new router forwarding was added.
 
-Public exposure makes the unclaimed instance claimable by its first visitor. The
-friend should complete onboarding promptly and keep the recovery code.
+The separate data directory is populated. Current account/onboarding state has
+not been verified; earlier claims that the instance was unclaimed were not
+substantiated. Preserve all existing data; its user handles onboarding.
 
 ## Friend performs onboarding
 

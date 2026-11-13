@@ -1,9 +1,8 @@
 TYPE	NAME	CONTENT	PROXY	TTL
-A	argocd.l3b.cc.cd	150.129.31.154	no	auto
 A	auth.l3b.cc.cd	10.1.1.10	no	300
 A	beszel.l3b.cc.cd	10.1.1.10	no	300
-A	cairn-s3.l3b.cc.cd	150.129.31.154	no	auto
 A	cairn.l3b.cc.cd	10.1.1.10	no	300
+A	cairn-s3.l3b.cc.cd	150.129.31.154	no	auto
 A	dev.l3b.cc.cd	150.129.31.154	no	auto
 A	dns.l3b.cc.cd	10.1.1.10	no	300
 A	docs.l3b.cc.cd	10.1.1.10	no	300
@@ -26,9 +25,6 @@ A	n8n.l3b.cc.cd	10.1.1.10	no	300
 A	notes.l3b.cc.cd	150.129.31.154	no	auto
 A	ntfy.l3b.cc.cd	8.235.70.28	no	auto
 A	oc.l3b.cc.cd	150.129.31.154	no	300
-A	omni-api.l3b.cc.cd	10.1.1.3	no	auto
-A	omni-kube.l3b.cc.cd	10.1.1.3	no	auto
-A	omni.l3b.cc.cd	10.1.1.3	no	auto
 A	orva.l3b.cc.cd	10.1.1.10	no	300
 A	os.l3b.cc.cd	10.1.1.10	no	300
 A	photos.l3b.cc.cd	150.129.31.154	no	auto
@@ -38,7 +34,6 @@ A	registry.l3b.cc.cd	10.1.1.10	no	300
 A	rustfs.l3b.cc.cd	10.1.1.10	no	300
 A	s3.l3b.cc.cd	10.1.1.10	no	300
 A	smb.l3b.cc.cd	10.1.1.12	no	300
-A	store.l3b.cc.cd	150.129.31.154	no	auto
 A	switch.l3b.cc.cd	10.1.1.10	no	300
 A	theking.l3b.cc.cd	150.129.31.154	no	300
 A	watch.l3b.cc.cd	8.235.70.28	no	auto

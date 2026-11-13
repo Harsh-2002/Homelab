@@ -35,7 +35,12 @@ These use an exact public `A` to `150.129.31.154`, with a matching public Caddy 
 
 `notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, `oc`, `theking`.
 
-`theking` is the separate friend-owned Nivra instance. It is public by owner request; Nivra's native authentication protects it. The instance is first-visitor claimable until the friend completes onboarding.
+`theking` is the separate friend-owned Nivra instance, public by owner request.
+Its separate data directory is populated; onboarding/account state was not
+verified. Preserve its data and let its user handle onboarding.
+
+Stale DNS cleanup: see [2026-11-13 evidence](CLEANUP-2026-11-13.md).
+`dev` is retained; `argocd`, `store`, and `omni*` return NXDOMAIN on both DNS paths.
 
 `orva` is private and keeps the private gate. Do not add a public-IP record or public Caddy handler for a private service without explicit owner approval.
 

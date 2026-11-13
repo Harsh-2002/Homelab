@@ -1,4 +1,20 @@
 rewrites:
+  # Retired names bypass the wildcard, returning upstream NXDOMAIN.
+  - domain: argocd.l3b.cc.cd
+    answer: argocd.l3b.cc.cd
+    enabled: true
+  - domain: store.l3b.cc.cd
+    answer: store.l3b.cc.cd
+    enabled: true
+  - domain: omni.l3b.cc.cd
+    answer: omni.l3b.cc.cd
+    enabled: true
+  - domain: omni-api.l3b.cc.cd
+    answer: omni-api.l3b.cc.cd
+    enabled: true
+  - domain: omni-kube.l3b.cc.cd
+    answer: omni-kube.l3b.cc.cd
+    enabled: true
   - domain: l3b.cc.cd
     answer: 10.1.1.10
     enabled: true

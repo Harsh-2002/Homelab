@@ -31,7 +31,9 @@ Private HTTPS origins currently include:
 
 Approved public origins are `notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, `oc`, and `theking`.
 
-`theking` is the separate friend-owned Nivra instance. It is public by owner request; Nivra's native authentication protects it. The instance is first-visitor claimable until the friend completes onboarding, so public exposure carries that risk.
+`theking` is the separate friend-owned Nivra instance, public by owner request.
+Its separate data directory is populated; onboarding/account state was not
+verified. Preserve its data and let its user handle onboarding.
 
 `orva` is private and keeps the private Caddy gate; its public record points to the private address. Do not add a public handler or public-IP record for a private service without explicit owner approval.
 
