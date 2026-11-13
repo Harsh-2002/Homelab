@@ -198,6 +198,22 @@ Project-local plugins under `.opencode/plugins/` load automatically.
 
 ## Verification safety
 
+### Automatic subagent execution (2026-11-13)
+
+Forge, Scout, Vouch, Shield and Juror use an explicit allow baseline followed by
+their role-specific denies. Forge/Vouch/Shield shell execution is allowed instead
+of asking on every command. Agent rules override ordinary workspace permission
+rules; this is an explicit automatic profile, not parent-permission inheritance.
+Hard policies still apply. Scout/Juror cannot use shell or edit; all five cannot
+delegate; Vouch/Shield cannot use file-edit tools and Shield retains secret-read
+denies. Shell is host-authority execution, not a filesystem sandbox: isolation
+and authorized scope remain mandatory. Task ambiguity, destructive/production
+authorization and missing security scope can still require a human decision.
+
+Changes hot-reload; no server restart or authentication reset is required.
+Already pending approvals may need to be resolved or the child relaunched.
+Regression check: `python3 infrastructure/agents/opencode-orchestrator/evals/permissions.py`.
+
 `vouch` loads `verification-worktree` and runs tests in a disposable worktree or microsandbox. It must not modify the main checkout. If it cannot create an isolated environment, it stops and asks.
 
 `shield` is scope-gated and read-only. It denies `.env` files, private keys, `~/.ssh`, OpenCode auth stores and `secrets/` paths. It must not scan production or extract credentials.

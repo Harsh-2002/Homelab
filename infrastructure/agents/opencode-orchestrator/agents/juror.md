@@ -4,6 +4,9 @@ mode: subagent
 model: opencode-go/deepseek-v4.1-flash#max
 steps: 6
 permissions:
+  - action: "*"
+    resource: "*"
+    effect: allow
   - action: edit
     resource: "*"
     effect: deny
