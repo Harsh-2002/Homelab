@@ -1,0 +1,362 @@
+{
+  "applied": false,
+  "missingBefore": [],
+  "wildcardsBefore": 0,
+  "wildcardsAfter": 0,
+  "privateNames": [
+    "l3b.cc.cd",
+    "auth.l3b.cc.cd",
+    "login.l3b.cc.cd",
+    "portainer.l3b.cc.cd",
+    "dns.l3b.cc.cd",
+    "memory.l3b.cc.cd",
+    "beszel.l3b.cc.cd",
+    "cairn.l3b.cc.cd",
+    "docs.l3b.cc.cd",
+    "downloads.l3b.cc.cd",
+    "frigate.l3b.cc.cd",
+    "git.l3b.cc.cd",
+    "home.l3b.cc.cd",
+    "media.l3b.cc.cd",
+    "motrix.l3b.cc.cd",
+    "n8n.l3b.cc.cd",
+    "orva.l3b.cc.cd",
+    "os.l3b.cc.cd",
+    "registry.l3b.cc.cd",
+    "rustfs.l3b.cc.cd",
+    "s3.l3b.cc.cd",
+    "switch.l3b.cc.cd",
+    "theking.l3b.cc.cd"
+  ],
+  "publicNames": [
+    "notes.l3b.cc.cd",
+    "pin.l3b.cc.cd",
+    "photos.l3b.cc.cd",
+    "drive.l3b.cc.cd",
+    "cairn-s3.l3b.cc.cd",
+    "mdx.l3b.cc.cd",
+    "oc.l3b.cc.cd"
+  ],
+  "directNames": {
+    "smb.l3b.cc.cd": "10.1.1.12",
+    "k8s.l3b.cc.cd": "10.1.1.200",
+    "k8s-201.l3b.cc.cd": "10.1.1.201",
+    "k8s-202.l3b.cc.cd": "10.1.1.202",
+    "k8s-203.l3b.cc.cd": "10.1.1.203"
+  },
+  "publicWan": "150.129.31.154",
+  "nameServers": [
+    "harvey.ns.cloudflare.com",
+    "lara.ns.cloudflare.com"
+  ],
+  "records": [
+    {
+      "type": "A",
+      "name": "argocd.l3b.cc.cd",
+      "content": "150.129.31.154",
+      "proxied": false,
+      "ttl": 1
+    },
+    {
+      "type": "A",
+      "name": "auth.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "beszel.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "cairn.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "cairn-s3.l3b.cc.cd",
+      "content": "150.129.31.154",
+      "proxied": false,
+      "ttl": 1
+    },
+    {
+      "type": "A",
+      "name": "dev.l3b.cc.cd",
+      "content": "150.129.31.154",
+      "proxied": false,
+      "ttl": 1
+    },
+    {
+      "type": "A",
+      "name": "dns.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "docs.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "downloads.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "drive.l3b.cc.cd",
+      "content": "150.129.31.154",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "frigate.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "git.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "home.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "k8s-201.l3b.cc.cd",
+      "content": "10.1.1.201",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "k8s-202.l3b.cc.cd",
+      "content": "10.1.1.202",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "k8s-203.l3b.cc.cd",
+      "content": "10.1.1.203",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "k8s.l3b.cc.cd",
+      "content": "10.1.1.200",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 1
+    },
+    {
+      "type": "A",
+      "name": "login.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "mdx.l3b.cc.cd",
+      "content": "150.129.31.154",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "media.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "memory.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "motrix.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "n8n.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "notes.l3b.cc.cd",
+      "content": "150.129.31.154",
+      "proxied": false,
+      "ttl": 1
+    },
+    {
+      "type": "A",
+      "name": "ntfy.l3b.cc.cd",
+      "content": "8.235.70.28",
+      "proxied": false,
+      "ttl": 1
+    },
+    {
+      "type": "A",
+      "name": "oc.l3b.cc.cd",
+      "content": "150.129.31.154",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "omni-api.l3b.cc.cd",
+      "content": "10.1.1.3",
+      "proxied": false,
+      "ttl": 1
+    },
+    {
+      "type": "A",
+      "name": "omni-kube.l3b.cc.cd",
+      "content": "10.1.1.3",
+      "proxied": false,
+      "ttl": 1
+    },
+    {
+      "type": "A",
+      "name": "omni.l3b.cc.cd",
+      "content": "10.1.1.3",
+      "proxied": false,
+      "ttl": 1
+    },
+    {
+      "type": "A",
+      "name": "orva.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "os.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "photos.l3b.cc.cd",
+      "content": "150.129.31.154",
+      "proxied": false,
+      "ttl": 1
+    },
+    {
+      "type": "A",
+      "name": "pin.l3b.cc.cd",
+      "content": "150.129.31.154",
+      "proxied": false,
+      "ttl": 1
+    },
+    {
+      "type": "A",
+      "name": "portainer.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "registry.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "rustfs.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "s3.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "smb.l3b.cc.cd",
+      "content": "10.1.1.12",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "store.l3b.cc.cd",
+      "content": "150.129.31.154",
+      "proxied": false,
+      "ttl": 1
+    },
+    {
+      "type": "A",
+      "name": "switch.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "theking.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
+      "name": "watch.l3b.cc.cd",
+      "content": "8.235.70.28",
+      "proxied": false,
+      "ttl": 1
+    },
+    {
+      "type": "A",
+      "name": "wg.l3b.cc.cd",
+      "content": "150.129.31.154",
+      "proxied": false,
+      "ttl": 300
+    }
+  ]
+}

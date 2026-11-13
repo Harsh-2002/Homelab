@@ -10,10 +10,25 @@ import json
 from pathlib import Path
 import urllib.request
 
-PRIVATE_NAMES = ['l3b.cc.cd', 'auth.l3b.cc.cd', 'login.l3b.cc.cd',
-                 'portainer.l3b.cc.cd', 'dns.l3b.cc.cd', 'memory.l3b.cc.cd', 'oc.l3b.cc.cd']
-PUBLIC_NAMES = ['notes.l3b.cc.cd', 'pin.l3b.cc.cd', 'photos.l3b.cc.cd',
-                'drive.l3b.cc.cd', 'orva.l3b.cc.cd', 'cairn-s3.l3b.cc.cd']
+PRIVATE_NAMES = [
+    'l3b.cc.cd', 'auth.l3b.cc.cd', 'login.l3b.cc.cd', 'portainer.l3b.cc.cd',
+    'dns.l3b.cc.cd', 'memory.l3b.cc.cd', 'beszel.l3b.cc.cd', 'cairn.l3b.cc.cd',
+    'docs.l3b.cc.cd', 'downloads.l3b.cc.cd', 'frigate.l3b.cc.cd', 'git.l3b.cc.cd',
+    'home.l3b.cc.cd', 'media.l3b.cc.cd', 'motrix.l3b.cc.cd', 'n8n.l3b.cc.cd',
+    'orva.l3b.cc.cd', 'os.l3b.cc.cd', 'registry.l3b.cc.cd', 'rustfs.l3b.cc.cd',
+    's3.l3b.cc.cd', 'switch.l3b.cc.cd', 'theking.l3b.cc.cd',
+]
+PUBLIC_NAMES = [
+    'notes.l3b.cc.cd', 'pin.l3b.cc.cd', 'photos.l3b.cc.cd', 'drive.l3b.cc.cd',
+    'cairn-s3.l3b.cc.cd', 'mdx.l3b.cc.cd', 'oc.l3b.cc.cd',
+]
+DIRECT_NAMES = {
+    'smb.l3b.cc.cd': '10.1.1.12',
+    'k8s.l3b.cc.cd': '10.1.1.200',
+    'k8s-201.l3b.cc.cd': '10.1.1.201',
+    'k8s-202.l3b.cc.cd': '10.1.1.202',
+    'k8s-203.l3b.cc.cd': '10.1.1.203',
+}
 PUBLIC_WAN = '150.129.31.154'
 
 
@@ -77,11 +92,14 @@ def main():
     for name in PUBLIC_NAMES:
         matches = [r for r in after if r['name'] == name and r['type'] == 'A']
         assert len(matches) == 1 and matches[0]['content'] == PUBLIC_WAN and not matches[0]['proxied'], name
+    for name, content in DIRECT_NAMES.items():
+        matches = [r for r in after if r['name'] == name and r['type'] == 'A']
+        assert len(matches) == 1 and matches[0]['content'] == content and not matches[0]['proxied'], name
     address_records = [{k: r[k] for k in ['type', 'name', 'content', 'proxied', 'ttl']}
                        for r in after if r['type'] in ['A', 'AAAA', 'CNAME']]
     print(json.dumps({'applied': args.apply, 'missingBefore': missing,
                       'wildcardsBefore': len(wildcards), 'wildcardsAfter': sum('*' in r['name'] for r in after),
-                      'privateNames': PRIVATE_NAMES, 'publicNames': PUBLIC_NAMES, 'publicWan': PUBLIC_WAN,
+                      'privateNames': PRIVATE_NAMES, 'publicNames': PUBLIC_NAMES, 'directNames': DIRECT_NAMES, 'publicWan': PUBLIC_WAN,
                       'nameServers': zones[0]['name_servers'],
                       'records': address_records}, indent=2))
 

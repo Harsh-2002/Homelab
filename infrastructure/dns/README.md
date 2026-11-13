@@ -1,99 +1,84 @@
 # DNS
 
-## Current policy correction — 2 November 2026
+The authoritative policy is [`../l3b/DNS-POLICY.md`](../l3b/DNS-POLICY.md). This runbook records the current implementation.
 
-The single-node deployment uses internal AdGuard/Unbound. **Internal wildcard
-is allowed; Cloudflare has no wildcard DNS record.** Each current private HTTPS
-origin has an exact DNS-only A record to the private Caddy address. Only an
-explicitly approved public service uses an exact public-IP record and matching
-Caddy public access policy. Owner-approved public app origins are `notes`,
-`pin`, `photos` and `drive`; `orva` retains a historical public DNS record but
-remains behind the private Caddy gate. The live address inventory below is refreshed in
-`cloudflare-records.tsv`; old exact public/direct-host records are retained for
-separate cleanup, not proof their applications run. See
-[`../l3b/DNS-POLICY.md`](../l3b/DNS-POLICY.md) and
-[`../l3b/PUBLIC-DNS-VERIFICATION-2026-11-02.json`](../l3b/PUBLIC-DNS-VERIFICATION-2026-11-02.json).
-The older cluster/apex-public-wildcard design below is historical and superseded.
+## Current layout
 
-DNS LXC `10.1.1.2` runs:
+- AdGuard Home runs on the `l3b` Docker host and publishes TCP/UDP 53. LAN, WireGuard and Docker clients use **10.1.1.10**.
+- AdGuard forwards ordinary queries to the local Unbound recursive resolver. There is no public fallback.
+- AdGuard answers internal names through its private wildcard, currently to **10.1.1.10** (Caddy).
+- Cloudflare is **DNS-only** and has **no wildcard**. Every deployed hostname has an exact record.
+- Caddy is the access-control layer: private hostnames are denied unless the source is LAN, WireGuard, Docker or loopback.
 
-- AdGuard Home `v0.107.79` on TCP/UDP 53 and management port 3000.
-- Unbound `v1.26.1` on `127.0.0.1:5335` as the recursive upstream.
-- HaGeZi Multi PRO and HaGeZi TIF Medium blocklists.
+## The rule
 
-The protected active configuration is `/opt/AdGuardHome/AdGuardHome.yaml`. It is not copied into Git because it contains the administrator password hash and operational state. The safe desired DNS fragments are tracked as `adguard-rewrites.yaml`, `unbound-local.conf`, and `unbound-recursive.conf`.
+| Service type | Public DNS (Cloudflare) | Private DNS (AdGuard) | Caddy |
+|---|---|---|---|
+| **Private** | Exact DNS-only `A` → **10.1.1.10** | **10.1.1.10** | Private source gate; no public handler |
+| **Public** | Exact DNS-only `A` → **150.129.31.154** | **10.1.1.10** | Approved public handler + native auth |
+| **Private direct host** | Exact DNS-only `A` → host private IP | Same private IP | Not HTTP |
+| **Unknown** | NXDOMAIN | Internal wildcard may resolve | No route |
 
-The sanitized, shareable overview is [SHAREABLE-SETUP.md](SHAREABLE-SETUP.md) and the separate Notion page [AdGuard Home + Unbound: my DNS setup](https://app.notion.com/p/AdGuard-Home-Unbound-my-DNS-setup-3e5d3ccfb520818b8546c4dbca0ecdce). No copy is hosted in S3. On 2026-09-27, the previously missing Unbound loopback/port/cache settings caused a real restart failure: Unbound bound port 53, while AdGuard was configured to query port 5335. The tracked `unbound-recursive.conf` was installed at `/etc/unbound/unbound.conf.d/recursive.conf`; `unbound-checkconf`, a cold service restart, direct port-5335 recursion, and AdGuard port-53 queries all passed.
+A device using **public DNS while inside the LAN** must still resolve a private service to `10.1.1.10`. That is why private services have exact public records pointing to the private Caddy address. The record does not make the service internet-reachable; outside the LAN the private IP has no route, and Caddy would deny the source anyway.
 
-Proxy-managed DNS uses one apex A rewrite and one wildcard CNAME rewrite:
+Do not use public DNS as an OS resolver on infrastructure guests. Exact records are for client compatibility, not an infrastructure fallback.
 
-| Name | Type | Answer |
-| --- | --- | --- |
-| `l3b.cc.cd` | A | `10.1.1.3` |
-| `*.l3b.cc.cd` | CNAME | `l3b.cc.cd` |
+## Private HTTPS origins
 
-Adding a new Caddy hostname requires only a Caddy route; no additional AdGuard rewrite is required.
+These require an exact public `A` to `10.1.1.10`:
 
-## Public DNS exposure policy
+`l3b.cc.cd`, `auth`, `login`, `portainer`, `dns`, `memory`, `beszel`, `cairn`, `docs`, `downloads`, `frigate`, `git`, `home`, `media`, `motrix`, `n8n`, `orva`, `os`, `registry`, `rustfs`, `s3`, `switch`, `theking`.
 
-Cloudflare is intentionally private by default. Its apex A record is DNS-only and points `l3b.cc.cd` to the proxy's private address `10.1.1.3`; the existing wildcard CNAME therefore resolves all otherwise-unlisted public names to that private address. Public clients cannot use private RFC1918 addresses, so a new Caddy hostname is not internet-reachable merely because it exists.
+## Approved public origins
 
-To expose a deliberate exception, add an explicit DNS-only public A record for that hostname in Cloudflare. Current records pointing to `150.129.31.154` are `argocd`, `photos`, `pin`, `registry`, `orva`, `media`, `store`, `dev`, and `cairn-s3`. External monitoring records `ntfy` and `watch` instead point to slate at `8.235.70.28`; their exact internal exceptions match. Caddy keeps every Argo CD path private except its signed webhook, while the public application routes rely on their native authentication. Do not proxy these records through Cloudflare until Caddy is explicitly configured to trust Cloudflare client-IP headers.
+These use an exact public `A` to `150.129.31.154`, with a matching public Caddy handler and native application authentication:
 
-### Public-resolver compatibility for private direct-host services
+`notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, `oc`.
 
-On 2026-10-13 the owner requested matching direct-host answers in Cloudflare because a corporate VPN uses public DNS. Cloudflare had no exact `smb` record, so its wildcard returned the Caddy apex at `10.1.1.3` instead of Store at `10.1.1.12`. The same omission affected the Kubernetes API VIP and three node names. These five DNS-only A records now match Unbound, with TTL 300:
+`orva` is private and keeps the private gate. Do not add a public-IP record or public Caddy handler for a private service without explicit owner approval.
 
-| Name | Cloudflare and internal A answer |
-| --- | --- |
-| `smb.l3b.cc.cd` | `10.1.1.12` |
-| `k8s.l3b.cc.cd` | `10.1.1.200` |
-| `k8s-201.l3b.cc.cd` | `10.1.1.201` |
-| `k8s-202.l3b.cc.cd` | `10.1.1.202` |
-| `k8s-203.l3b.cc.cd` | `10.1.1.203` |
-
-The complete desired Cloudflare inventory is [cloudflare-records.tsv](cloudflare-records.tsv). It contains record data, not credentials; TTL `1` means Cloudflare automatic TTL. Update this inventory and the local DNS fragments together when a direct-host address changes. Audit live DNS before applying changes; this is a maintained inventory, not an unattended sync job. After the change, all 18 live Cloudflare records matched the inventory; 46 DNS checks passed across internal DNS, Cloudflare's authoritative nameserver, wildcard routing and public-resolver answers for the five corrected names.
-
-Alignment does not mean replacing public website addresses with LAN IPs. Keep public WAN records, private Caddy apex/wildcard, and intended local proxy rewrites intact. Exact direct-host records override the wildcard; private web services still use the proxy via the wildcard. The new private-IP records do not expose SMB or Kubernetes to the internet and add no router/firewall/Caddy rules. They do publish those hostnames and their LAN addresses in public DNS, explicitly requested here. Access still requires a working LAN/Tailscale route; corporate VPN routing or DNS-rebinding filters may independently prevent access. A cached old wildcard/CNAME answer may persist until its TTL expires; flushing the Mac cache cannot flush an upstream corporate resolver.
-
-Use `/usr/local/bin/cfdns` on `dev` to inspect or change Cloudflare records. It defaults to a responsive bordered table; add `--plain` to `list` or `get` for tab-separated script output. Its configuration is `/etc/caddy/cloudflare.env`, with `CF_ZONE=l3b.cc.cd`; the API token remains outside Git. The command name `cf` is reserved for the separate Cloudflare CLI.
-
-For Bash autocomplete and refreshing an already-open shell after the rename, see [DNS helper installation and shell completion](../proxy/README.md#dns-helper-installation-and-shell-completion). Completion performs no DNS/API calls.
-
-Direct-host exceptions use AdGuard CNAME-exception entries that pass through to exact local A records in Unbound:
+## Direct-host and non-HTTP records
 
 | Name | Answer |
-| --- | --- |
-| `dev.l3b.cc.cd` | `10.1.1.3` (public HTTPS development route to dev:3000) |
-| `store.l3b.cc.cd` | `10.1.1.3` (public static storefront via Caddy) |
-| `ntfy.l3b.cc.cd` | `8.235.70.28` (external ntfy on slate) |
-| `watch.l3b.cc.cd` | `8.235.70.28` (external Uptime Kuma on slate) |
+|---|---|
 | `smb.l3b.cc.cd` | `10.1.1.12` |
 | `k8s.l3b.cc.cd` | `10.1.1.200` |
 | `k8s-201.l3b.cc.cd` | `10.1.1.201` |
 | `k8s-202.l3b.cc.cd` | `10.1.1.202` |
 | `k8s-203.l3b.cc.cd` | `10.1.1.203` |
+| `wg.l3b.cc.cd` | `150.129.31.154` |
+| `ntfy.l3b.cc.cd`, `watch.l3b.cc.cd` | `8.235.70.28` |
 
-Do not replace these pass-through entries with exact A rewrites: AdGuard Home v0.107.79 gives the wildcard legacy rewrite precedence. Unbound owns the exception A records. `store.l3b.cc.cd` is the public storefront on Caddy; the storage LXC remains `10.1.1.12`, reachable by the `store` SSH alias and `smb.l3b.cc.cd` for AV, BACKUP, and ISO shares.
+AdGuard carries **self-CNAME exception rewrites** for these direct hosts (`smb`, `k8s*`, `ntfy`, `watch`) so the internal wildcard does not override Unbound's exact local-data. Keep those exceptions in sync with `adguard-rewrites.yaml`; removing them makes the wildcard return `10.1.1.10` instead of the direct-host address.
 
-Do not configure public DNS as a second resolver on split-horizon infrastructure clients. During the 2026-09-27 DNS outage, `ctr`'s `systemd-resolved` selected `1.1.1.1` and continued returning the public wildcard/proxy address for `smb.l3b.cc.cd` after AdGuard recovered. That broke its SMB automount and Motrix. DNS redundancy requires a second *internal* resolver with the same local records, not a public fallback. This is a single DNS-instance dependency until then.
+## Add a private hostname
 
-Router setting reported by the owner: primary DNS `10.1.1.2`, secondary `1.1.1.2`. It is not yet verified whether these are LAN DHCP-advertised servers, WAN DNS for the router itself, or inputs to a DNS relay. If the public address is handed to LAN clients or used by the router relay, it can bypass private records and AdGuard filtering. Recommended LAN DHCP DNS is only `10.1.1.2` until a second internal resolver exists; router-only WAN DNS can be assessed separately. No router setting was changed here.
+1. Add the Caddy route with the private source gate.
+2. Add an exact Cloudflare **DNS-only A** record → `10.1.1.10`, TTL 300.
+3. Verify internal resolution and a public resolver from inside the LAN.
+4. Do not add a public handler or weaken the source gate without owner approval.
 
-The three Proxmox hosts, all six running LXCs (`proxy`, `dns`, `auth`, `beszel`, `s3`, `store`), Debian VMs (`dev`, `orva`, `ctr`), and all three Talos nodes now use only `10.1.1.2`. LXC DNS is pinned in Proxmox guest configuration and the live `/etc/resolv.conf`; its tracked template is `lxc-resolv.conf`. The Debian VMs have both Proxmox cloud-init nameserver settings and tracked guest Netplan files (`client-netplan/` and `../ctr/50-cloud-init.yaml`). DHCPv6 and RA DNS are disabled where applicable to prevent unexpected second resolvers. Talos uses the tracked `../../talos-k8s/dns.patch.yaml` and per-node patches; CoreDNS forwards external queries through Talos node resolvers. The stopped, experimental `omarchy` VM (107) has no cloud-init DNS configuration and was not booted or modified; set its guest DNS before using it.
+## Stale records
 
-AdGuard sends ordinary DNS to local Unbound `127.0.0.1:5335`, has no fallback upstream, and uses local Unbound for its bootstrap resolver too. Caddy's Cloudflare ACME DNS-01 **propagation check only** retains `1.1.1.1` and `1.0.0.1` inside the Caddy `tls` block; Caddy's host and ordinary lookups use `10.1.1.2`. A temporary Cloudflare TXT record was created, resolved through both the public resolver and the internal stack, and removed. Do not use public DNS as an OS resolver on any guest.
+These are not current Caddy hosts and need separate owner approval before removal:
 
-Public resolver research (for devices *outside* the homelab, not an infrastructure fallback): from the DNS LXC on 2026-09-27, five sample cached A lookups took `4/4/9/4/4 ms` on Cloudflare `1.1.1.1`, `7/5/10/6/5 ms` on Cloudflare malware-filtering `1.1.1.2`, and `43/5/21/5/65 ms` on Quad9 `9.9.9.9`. This tiny point-in-time sample favors Cloudflare on this ISP, not a universal ranking. Cloudflare `1.1.1.2` is the practical speed-plus-malware-filtering choice; Quad9 `9.9.9.9` prioritizes privacy and threat blocking. Neither should replace our internal resolver for split-horizon names. See the providers' [Cloudflare setup](https://developers.cloudflare.com/1.1.1.1/setup/) and [Quad9 services](https://docs.quad9.net/services/) pages.
+- `argocd`, `dev`, `store` — historical public WAN records.
+- `omni`, `omni-api`, `omni-kube` — old `10.1.1.3` proxy records.
 
-Validation:
+The live record inventory is [`cloudflare-records.tsv`](cloudflare-records.tsv).
 
-```bash
-ssh dns 'dig @127.0.0.1 portainer.l3b.cc.cd A +noall +answer'
-ssh dns 'dig @127.0.0.1 k8s.l3b.cc.cd A +noall +answer'
-ssh dns 'systemctl is-enabled AdGuardHome unbound; systemctl is-active AdGuardHome unbound'
+## Verification
+
+```sh
+dig @1.1.1.1 motrix.l3b.cc.cd A +short          # 10.1.1.10
+dig @10.1.1.10 motrix.l3b.cc.cd A +short       # 10.1.1.10
+dig @1.1.1.1 unknown-name.l3b.cc.cd A +short   # empty / NXDOMAIN
+sudo python3 infrastructure/l3b/public-dns.py  # read-only audit
+sudo python3 infrastructure/l3b/verify-dns-policy.py
 ```
 
-Do not commit the active YAML, administrator hash, temporary reset files, or backups.
+Recursive caches may retain an old NXDOMAIN or wildcard answer until TTL expiry. Query the authoritative Cloudflare nameserver or a fresh resolver when changing records.
 
-`px.l3b.cc.cd` is the load-balanced cluster entry point. Caddy uses the `pve_lb` cookie to keep a browser session on one healthy node, selects another node and replaces the cookie if that backend becomes unavailable, actively checks `/` every 10 seconds, and also performs passive failure handling. The node-specific names remain available for deterministic maintenance access.
+## Historical note
+
+The former DNS LXC at `10.1.1.2` and the public apex/wildcard model are superseded. Internal wildcard resolution remains on AdGuard, but Cloudflare no longer has a wildcard and every current hostname has an exact record.

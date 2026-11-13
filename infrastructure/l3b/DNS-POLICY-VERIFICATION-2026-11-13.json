@@ -1,0 +1,58 @@
+{
+  "checkedOn": "2026-11-02",
+  "checks": {
+    "hostInternalResolverOnly": true,
+    "hostDnsOwnedByNetworkdAndResolved": true,
+    "ifupdownResolvconfAndNetplanAbsent": true,
+    "dockerAndWireguardLinksUnmanagedByNetworkd": true,
+    "resolvedHasNoDnsStubListener": true,
+    "dockerDaemonInternalDefault": true,
+    "allRunningContainersEmbeddedDnsInternalUpstream": true,
+    "privateWildcardAndPublicRecursion": true,
+    "adguardUnboundNoPublicFallback": true,
+    "wireguardProfilesInternalDns": true,
+    "privateOriginsDeniedFromUntrustedSource": true,
+    "forwardedHeaderCannotBypassPrivateSourceGate": true,
+    "ownerApprovedPublicOriginsReachable": true,
+    "customHtml403NoStore": true
+  },
+  "privateHosts": [
+    "l3b.cc.cd",
+    "auth.l3b.cc.cd",
+    "login.l3b.cc.cd",
+    "portainer.l3b.cc.cd",
+    "dns.l3b.cc.cd",
+    "memory.l3b.cc.cd",
+    "beszel.l3b.cc.cd",
+    "cairn.l3b.cc.cd",
+    "docs.l3b.cc.cd",
+    "downloads.l3b.cc.cd",
+    "frigate.l3b.cc.cd",
+    "git.l3b.cc.cd",
+    "home.l3b.cc.cd",
+    "media.l3b.cc.cd",
+    "motrix.l3b.cc.cd",
+    "n8n.l3b.cc.cd",
+    "orva.l3b.cc.cd",
+    "os.l3b.cc.cd",
+    "registry.l3b.cc.cd",
+    "rustfs.l3b.cc.cd",
+    "s3.l3b.cc.cd",
+    "switch.l3b.cc.cd",
+    "theking.l3b.cc.cd"
+  ],
+  "publicHosts": [
+    "notes.l3b.cc.cd",
+    "pin.l3b.cc.cd",
+    "photos.l3b.cc.cd",
+    "drive.l3b.cc.cd",
+    "cairn-s3.l3b.cc.cd",
+    "mdx.l3b.cc.cd",
+    "oc.l3b.cc.cd"
+  ],
+  "limits": [
+    "Synthetic untrusted source, not independent WAN/VPN-device acceptance",
+    "Already imported owner VPN profiles require re-import",
+    "Single internal resolver remains a dependency; no public secondary configured"
+  ]
+}

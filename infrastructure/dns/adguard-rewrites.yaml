@@ -1,12 +1,9 @@
 rewrites:
   - domain: l3b.cc.cd
-    answer: 10.1.1.3
+    answer: 10.1.1.10
     enabled: true
-  - domain: dev.l3b.cc.cd
-    answer: dev.l3b.cc.cd
-    enabled: true
-  - domain: store.l3b.cc.cd
-    answer: store.l3b.cc.cd
+  - domain: '*.l3b.cc.cd'
+    answer: l3b.cc.cd
     enabled: true
   - domain: ntfy.l3b.cc.cd
     answer: ntfy.l3b.cc.cd
@@ -28,7 +25,4 @@ rewrites:
     enabled: true
   - domain: k8s-203.l3b.cc.cd
     answer: k8s-203.l3b.cc.cd
-    enabled: true
-  - domain: '*.l3b.cc.cd'
-    answer: l3b.cc.cd
     enabled: true

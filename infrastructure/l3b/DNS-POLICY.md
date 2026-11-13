@@ -1,37 +1,84 @@
-# DNS and private/public routing — 2 November 2026
+# DNS and private/public routing — updated 13 November 2026
 
-## Owner correction — public exact records only
+## Current rule — exact records, no public wildcard
 
-This supersedes the historical public wildcard model described below.
-**AdGuard may use an internal apex/wildcard; Cloudflare must not have a wildcard.**
-Every deployed private HTTPS origin has an explicit DNS-only A record pointing
-to the private Caddy address. Only an explicitly approved public service gets an
-exact public-IP record and corresponding public Caddy route/path policy.
+This is the authoritative DNS policy. It supersedes the historical public-wildcard model below.
 
-Applied: exact `auth`, `login`, `portainer`, `dns`, and `memory` mappings added;
-apex and `oc` were already exact/correct. After verifying all seven core mappings,
-the Cloudflare apex wildcard CNAME was removed. The owner subsequently approved
-public app origins `notes`, `pin`, `photos` and `drive`, plus the Cairn S3 API
-`cairn-s3`; each has an exact DNS-only WAN A record and a narrow Caddy public
-handler. `orva` keeps its historical WAN record but remains behind the private
-Caddy gate. All other existing records,
-including `wg`, external monitoring, historical public apps and direct-host
-exceptions, were preserved unchanged. Retired-app WAN records are flagged for
-separate owner-approved cleanup, not treated as current deployment approval.
+**Cloudflare has no wildcard record.** AdGuard may use an internal apex/wildcard. Cloudflare is DNS-only, never proxied.
 
-Both authoritative nameservers must return matching private answers for the
-core/private origins, public WAN answers for the approved app origins, and
-NXDOMAIN for an unknown public name; AdGuard must still resolve internal names
-through its private wildcard. See
-[`PUBLIC-DNS-VERIFICATION-2026-11-02.json`](PUBLIC-DNS-VERIFICATION-2026-11-02.json).
-Recursive caches may retain old wildcard answers until TTL expiry.
+### Private service
 
-This is about **DNS records**, not TLS certificates: Caddy's wildcard certificate
-and hostname matcher remain valid, and its source/auth gates still apply.
-For future private deployments add an explicit Cloudflare private A record as
-well as the Caddy route; never infer a public exception from a new hostname.
-`public-dns.py` is a manual, narrowly guarded maintenance operation, not a watch
-or generic synchronization job. No service/firewall/publication rules changed.
+| Layer | Answer |
+|---|---|
+| Public DNS (Cloudflare) | Exact DNS-only `A` → **10.1.1.10** (private Caddy) |
+| Private DNS (AdGuard) | Wildcard/exact → **10.1.1.10** |
+| Caddy | Private source gate; no public handler |
+| Outside LAN/VPN | Public DNS returns the private IP; the address is not routable by design |
+
+A device using public DNS **inside the LAN** must still resolve a private service to `10.1.1.10`. This is why every private HTTPS origin needs an exact public record pointing at the private Caddy address. DNS is not access control; Caddy's LAN/VPN source gate is.
+
+Private HTTPS origins currently include:
+
+`l3b.cc.cd`, `auth`, `login`, `portainer`, `dns`, `memory`, `beszel`, `cairn`, `docs`, `downloads`, `frigate`, `git`, `home`, `media`, `motrix`, `n8n`, `orva`, `os`, `registry`, `rustfs`, `s3`, `switch`, `theking`.
+
+### Public service
+
+| Layer | Answer |
+|---|---|
+| Public DNS (Cloudflare) | Exact DNS-only `A` → **150.129.31.154** |
+| Private DNS (AdGuard) | **10.1.1.10** (split-horizon) |
+| Caddy | Approved public handler and native application authentication |
+
+Approved public origins are `notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, and `oc`. `orva` is private and keeps the private Caddy gate; its public record points to the private address. Do not add a public handler or public-IP record for a private service without explicit owner approval.
+
+### Direct-host and non-HTTP services
+
+| Name | Answer |
+|---|---|
+| `smb.l3b.cc.cd` | `10.1.1.12` |
+| `k8s.l3b.cc.cd` | `10.1.1.200` |
+| `k8s-201.l3b.cc.cd` | `10.1.1.201` |
+| `k8s-202.l3b.cc.cd` | `10.1.1.202` |
+| `k8s-203.l3b.cc.cd` | `10.1.1.203` |
+| `wg.l3b.cc.cd` | `150.129.31.154` |
+| `ntfy.l3b.cc.cd`, `watch.l3b.cc.cd` | `8.235.70.28` |
+
+AdGuard carries **self-CNAME exception rewrites** for these direct hosts (`smb`, `k8s*`, `ntfy`, `watch`) so the internal wildcard does not override Unbound's exact local-data. Keep those exceptions in sync with `adguard-rewrites.yaml`; removing them makes the wildcard return `10.1.1.10` instead of the direct-host address.
+
+### Unknown names
+
+Public DNS returns NXDOMAIN. AdGuard's internal wildcard may resolve an internal name, but no Caddy route means no service.
+
+## Add a private hostname
+
+1. Add the Caddy route with the private source gate.
+2. Add an exact Cloudflare **DNS-only A** record for the hostname → `10.1.1.10`, TTL 300.
+3. The internal AdGuard wildcard already covers the name; verify it.
+4. Test with a public resolver from inside the LAN; it must return `10.1.1.10`.
+5. Do not add a public handler or change Caddy's source gate without owner approval.
+
+## Stale records pending owner cleanup
+
+These do not have a current Caddy hostname and should not be treated as deployed services:
+
+- `argocd.l3b.cc.cd`, `dev.l3b.cc.cd`, `store.l3b.cc.cd` — historical public WAN records.
+- `omni.l3b.cc.cd`, `omni-api.l3b.cc.cd`, `omni-kube.l3b.cc.cd` — old `10.1.1.3` proxy records.
+
+Do not delete them in a routine DNS change; require explicit owner approval.
+
+## Verification
+
+```sh
+dig @1.1.1.1 motrix.l3b.cc.cd A +short          # 10.1.1.10
+dig @10.1.1.10 motrix.l3b.cc.cd A +short       # 10.1.1.10
+dig @1.1.1.1 unknown-name.l3b.cc.cd A +short   # empty / NXDOMAIN
+sudo python3 infrastructure/l3b/public-dns.py  # read-only audit
+sudo python3 infrastructure/l3b/verify-dns-policy.py
+```
+
+Recursive caches may retain an old NXDOMAIN or wildcard answer until TTL expiry. The authoritative Cloudflare nameservers and a fresh query are the source of truth.
+
+Evidence: [public DNS verification](PUBLIC-DNS-VERIFICATION-2026-11-13.json) and [policy/Caddy verification](DNS-POLICY-VERIFICATION-2026-11-13.json).
 
 ## Historical policy, confirmed against the actual backup
 

@@ -57,6 +57,18 @@ def main():
     run('wg.sh', 'verify')
     for name in ['dns-policy-check.l3b.cc.cd', 'oc.l3b.cc.cd']:
         assert '10.1.1.10' in run('dig', '@10.1.1.10', name, 'A', '+short')
+    direct_expected = {
+        'smb.l3b.cc.cd': '10.1.1.12',
+        'k8s.l3b.cc.cd': '10.1.1.200',
+        'k8s-201.l3b.cc.cd': '10.1.1.201',
+        'k8s-202.l3b.cc.cd': '10.1.1.202',
+        'k8s-203.l3b.cc.cd': '10.1.1.203',
+        'ntfy.l3b.cc.cd': '8.235.70.28',
+        'watch.l3b.cc.cd': '8.235.70.28',
+    }
+    for name, expected in direct_expected.items():
+        actual = run('dig', '@10.1.1.10', name, 'A', '+short').strip()
+        assert actual == expected, (name, actual, expected)
     assert run('dig', '@10.1.1.10', 'example.com', 'A', '+short').strip()
 
 
@@ -67,14 +79,18 @@ def main():
     addresses = json.loads(run('ip', '-j', 'address'))
     assert not any(a.get('local') == source for device in addresses for a in device['addr_info'])
     run('ip', 'address', 'add', source + '/32', 'dev', 'lo')
-    private_hosts = ['oc.l3b.cc.cd', 'dns.l3b.cc.cd', 'auth.l3b.cc.cd',
-                     'portainer.l3b.cc.cd', 'memory.l3b.cc.cd', 'l3b.cc.cd',
-                     'orva.l3b.cc.cd', 'docs.l3b.cc.cd', 'n8n.l3b.cc.cd',
-                     'downloads.l3b.cc.cd', 'media.l3b.cc.cd', 'registry.l3b.cc.cd',
-                     'git.l3b.cc.cd', 'theking.l3b.cc.cd', 'frigate.l3b.cc.cd',
-                     's3.l3b.cc.cd', 'rustfs.l3b.cc.cd', 'cairn.l3b.cc.cd']
-    public_hosts = ['notes.l3b.cc.cd', 'pin.l3b.cc.cd',
-                    'photos.l3b.cc.cd', 'drive.l3b.cc.cd']
+    private_hosts = [
+        'l3b.cc.cd', 'auth.l3b.cc.cd', 'login.l3b.cc.cd', 'portainer.l3b.cc.cd',
+        'dns.l3b.cc.cd', 'memory.l3b.cc.cd', 'beszel.l3b.cc.cd', 'cairn.l3b.cc.cd',
+        'docs.l3b.cc.cd', 'downloads.l3b.cc.cd', 'frigate.l3b.cc.cd', 'git.l3b.cc.cd',
+        'home.l3b.cc.cd', 'media.l3b.cc.cd', 'motrix.l3b.cc.cd', 'n8n.l3b.cc.cd',
+        'orva.l3b.cc.cd', 'os.l3b.cc.cd', 'registry.l3b.cc.cd', 'rustfs.l3b.cc.cd',
+        's3.l3b.cc.cd', 'switch.l3b.cc.cd', 'theking.l3b.cc.cd',
+    ]
+    public_hosts = [
+        'notes.l3b.cc.cd', 'pin.l3b.cc.cd', 'photos.l3b.cc.cd', 'drive.l3b.cc.cd',
+        'cairn-s3.l3b.cc.cd', 'mdx.l3b.cc.cd', 'oc.l3b.cc.cd',
+    ]
     try:
         for host in private_hosts + public_hosts:
             connection = socket.create_connection((target, 443), timeout=15, source_address=(source, 0))
@@ -91,8 +107,12 @@ def main():
                     assert b'cache-control: no-store' in data.lower()
                     assert b'content-type: text/html' in data.lower()
                 else:
-                    assert not status.startswith(b'HTTP/1.1 403'), (host, status)
-                    assert status.split()[1] in {b'200', b'302', b'307', b'401'}, (host, status)
+                    # Public origins may legitimately return 403 from the
+                    # application (for example an unauthenticated S3 request).
+                    # Only Caddy's custom access-denied body is a failure here.
+                    if status.startswith(b'HTTP/1.1 403'):
+                        assert b"You don't have access." not in data, (host, status)
+                    assert status.split()[1] in {b'200', b'302', b'307', b'401', b'403'}, (host, status)
     finally:
         run('ip', 'address', 'del', source + '/32', 'dev', 'lo')
     print(json.dumps({'checkedOn': '2026-11-02', 'checks': {
