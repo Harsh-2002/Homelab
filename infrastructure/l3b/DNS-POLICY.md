@@ -19,7 +19,7 @@ A device using public DNS **inside the LAN** must still resolve a private servic
 
 Private HTTPS origins currently include:
 
-`l3b.cc.cd`, `auth`, `login`, `portainer`, `dns`, `memory`, `beszel`, `cairn`, `docs`, `downloads`, `frigate`, `git`, `home`, `media`, `motrix`, `n8n`, `orva`, `os`, `registry`, `rustfs`, `s3`, `switch`, `theking`.
+`l3b.cc.cd`, `auth`, `login`, `portainer`, `dns`, `memory`, `beszel`, `cairn`, `docs`, `downloads`, `frigate`, `git`, `home`, `media`, `motrix`, `n8n`, `orva`, `os`, `registry`, `rustfs`, `s3`, `switch`.
 
 ### Public service
 
@@ -29,7 +29,11 @@ Private HTTPS origins currently include:
 | Private DNS (AdGuard) | **10.1.1.10** (split-horizon) |
 | Caddy | Approved public handler and native application authentication |
 
-Approved public origins are `notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, and `oc`. `orva` is private and keeps the private Caddy gate; its public record points to the private address. Do not add a public handler or public-IP record for a private service without explicit owner approval.
+Approved public origins are `notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, `oc`, and `theking`.
+
+`theking` is the separate friend-owned Nivra instance. It is public by owner request; Nivra's native authentication protects it. The instance is first-visitor claimable until the friend completes onboarding, so public exposure carries that risk.
+
+`orva` is private and keeps the private Caddy gate; its public record points to the private address. Do not add a public handler or public-IP record for a private service without explicit owner approval.
 
 ### Direct-host and non-HTTP services
 

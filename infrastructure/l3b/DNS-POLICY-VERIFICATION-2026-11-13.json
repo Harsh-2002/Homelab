@@ -38,8 +38,7 @@
     "registry.l3b.cc.cd",
     "rustfs.l3b.cc.cd",
     "s3.l3b.cc.cd",
-    "switch.l3b.cc.cd",
-    "theking.l3b.cc.cd"
+    "switch.l3b.cc.cd"
   ],
   "publicHosts": [
     "notes.l3b.cc.cd",
@@ -48,7 +47,8 @@
     "drive.l3b.cc.cd",
     "cairn-s3.l3b.cc.cd",
     "mdx.l3b.cc.cd",
-    "oc.l3b.cc.cd"
+    "oc.l3b.cc.cd",
+    "theking.l3b.cc.cd"
   ],
   "limits": [
     "Synthetic untrusted source, not independent WAN/VPN-device acceptance",

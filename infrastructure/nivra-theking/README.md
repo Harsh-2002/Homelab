@@ -14,11 +14,14 @@ inside the owner's Nivra and does not share its data, settings or credentials.
 | Image | ghcr.io/harsh-2002/nivra:latest |
 | Observed release | v2026.10.16, commit8a761e2 |
 
-Existing Caddy serves the hostname publicly, without Tinyauth or a private-source
-gate. Native Nivra authentication protects private content and MCP. Cloudflare
-DNS-only A record is the household WAN address150.129.31.154. Internal DNS retains
-the existing wildcard route to Caddy10.1.1.3. The raw application port remains
-bound to CTR's LAN address; no new router forwarding was added.
+The l3b Caddy public handler forwards the hostname to `theking:3000` without
+Tinyauth or a private-source gate. Native Nivra authentication protects private
+content and MCP. Cloudflare DNS-only A record is the household WAN address
+`150.129.31.154`; internal DNS resolves through the wildcard to Caddy `10.1.1.10`.
+The raw application port remains internal; no new router forwarding was added.
+
+Public exposure makes the unclaimed instance claimable by its first visitor. The
+friend should complete onboarding promptly and keep the recovery code.
 
 ## Friend performs onboarding
 

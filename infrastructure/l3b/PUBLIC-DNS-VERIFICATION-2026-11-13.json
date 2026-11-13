@@ -25,8 +25,7 @@
     "registry.l3b.cc.cd",
     "rustfs.l3b.cc.cd",
     "s3.l3b.cc.cd",
-    "switch.l3b.cc.cd",
-    "theking.l3b.cc.cd"
+    "switch.l3b.cc.cd"
   ],
   "publicNames": [
     "notes.l3b.cc.cd",
@@ -35,7 +34,8 @@
     "drive.l3b.cc.cd",
     "cairn-s3.l3b.cc.cd",
     "mdx.l3b.cc.cd",
-    "oc.l3b.cc.cd"
+    "oc.l3b.cc.cd",
+    "theking.l3b.cc.cd"
   ],
   "directNames": {
     "smb.l3b.cc.cd": "10.1.1.12",
@@ -340,7 +340,7 @@
     {
       "type": "A",
       "name": "theking.l3b.cc.cd",
-      "content": "10.1.1.10",
+      "content": "150.129.31.154",
       "proxied": false,
       "ttl": 300
     },
