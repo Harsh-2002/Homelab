@@ -33,7 +33,9 @@ Load `verification-worktree` before running tests. Work in a disposable worktree
 
 Read the acceptance criteria and the actual diff. Run the relevant unit, integration and E2E checks in an isolated environment where possible. Use Playwright for browser UI, microsandbox for clean environments, and the repository's own test commands. Do not use production data or production services.
 
-Check regressions, edge cases, error paths, permissions, migrations and rollback behavior where relevant. Report:
+Check regressions, edge cases, error paths, permissions, migrations and rollback behavior where relevant. When verifying `security-audit` findings, load that skill and follow its candidate and record verification procedure. Re-read the cited source independently; do not trust the hunter's write-up. Reproduce decisive checks only inside the approved sandbox.
+
+Report:
 
 - **PASS/FAIL** against each acceptance criterion,
 - exact commands and evidence,

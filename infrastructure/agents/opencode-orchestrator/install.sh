@@ -23,7 +23,10 @@ for skill in "$src"/skills/*; do
   name=$(basename "$skill")
   rm -rf "$target/skills/$name"
   cp -R "$skill" "$target/skills/$name"
-  chmod 644 "$target/skills/$name/SKILL.md"
+  chmod 755 "$target/skills/$name"
+  find "$target/skills/$name" -type d -exec chmod 755 {} +
+  find "$target/skills/$name" -type f ! -name '*.cjs' -exec chmod 644 {} +
+  find "$target/skills/$name" -type f -name '*.cjs' -exec chmod 755 {} +
 done
 
 rm -rf "$target/plugins/model-allowlist"

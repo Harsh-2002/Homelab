@@ -33,8 +33,9 @@ opencode-orchestrator/
 ├── skills/
 │   ├── model-catalog/
 │   │   └── SKILL.md
-│   └── verification-worktree/
-│       └── SKILL.md
+│   ├── verification-worktree/
+│   │   └── SKILL.md
+│   └── security-audit/   # Cloudflare audit workflow + validators
 ├── plugins/
 │   └── model-allowlist/
 │       └── index.ts
@@ -117,6 +118,36 @@ Should we move the internal CLI from Go to Rust?
 Oracle frames the question, gathers facts only if needed, then spawns an odd number of independent `juror` subagents — 3 normally, 5 for high-stakes or irreversible decisions, 7 only for an exceptionally large jury. Each juror gets a different approved model and the same evidence, and never sees another vote. The majority wins. If no option has a majority, it runs a runoff between the top two; a tied runoff uses the highest-capability model's vote and says so.
 
 The final report contains the decision, the tally, confidence, the majority reasoning, the strongest dissent, assumptions, what would change the decision, and each model's vote. Oracle does not implement the winning option; hand that back to Atlas.
+
+## Security audit skill
+
+The Cloudflare [`security-audit`](https://github.com/cloudflare/security-audit-skill) skill is vendored under `skills/security-audit/` at upstream commit `c1c8a8c` (MIT). It provides a source-first, coverage-led audit workflow with candidate validation, structured findings, independent record verification and reporting.
+
+**Operating modes**
+
+- **Guidance mode** — focused security questions and reviews. No full audit, no report files.
+- **Full audit mode** — explicit codebase audit or pentest requests. Six phases, coverage ledger, structured findings and reports.
+
+**OpenCode mapping**
+
+| Upstream | This installation |
+|---|---|
+| Parent | Atlas |
+| Task tool | `subagent` |
+| `research` agent | Scout |
+| `general` hunter | Shield |
+| `general` verifier | Vouch |
+
+Full audit mode must be orchestrated by Atlas. Shield is a subagent and cannot spawn hunters, so it uses the skill in guidance mode for focused reviews and hands full audits to Atlas. The skill's `OPENCODE.md` carries the full adapter.
+
+The vendored validators are included and tested:
+
+```sh
+node skills/security-audit/validate-findings.test.cjs
+node skills/security-audit/validate-coverage-ledger.test.cjs
+```
+
+Full audits require explicit authorization and a disposable worktree or microsandbox. Do not probe production, deployed endpoints, shared infrastructure or credential stores.
 
 ## Routing
 

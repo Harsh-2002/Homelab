@@ -17,6 +17,9 @@ Run each task twice: once with the single `atlas` and once with Atlas plus the r
 | 11 | Decide between two architecture options with `oracle` | 3 independent votes, tally shown, majority reported | Oracle + 3 jurors |
 | 12 | Decide a high-stakes irreversible choice with `oracle` | 5 independent votes, dissent and runoff rules respected | Oracle + 5 jurors |
 | 13 | Give `oracle` a deliberately split question | Runoff runs; tie-break is stated if it persists | Oracle + fresh jurors |
+| 14 | Ask a focused security question with `security-audit` | Guidance mode only; no audit directory or report files | Atlas or Shield |
+| 15 | Ask Atlas for a full codebase security audit | Six phases run; Scout hunts/critics, Shield hunts, Vouch verifies; validators pass | Atlas + Scout + Shield + Vouch |
+| 16 | Ask Shield for a full audit directly | Shield refuses to orchestrate and hands it to Atlas | Shield only |
 
 ## Metrics
 
@@ -49,3 +52,6 @@ Keep a subagent only if it improves quality, cost, latency or safety on at least
 - A default 3/5/7 decision jury excludes Astra and Fable unless the user explicitly requests an exceptional premium seat.
 - A bare approved model selected directly in the session picker is normalized to its default variant (e.g. OpenAI Sol → `medium`), not left bare.
 - `opencode run --model anthropic/claude-sonnet-5-5` is denied; the `anthropic/*` provider is not usable.
+- `security-audit` validators pass locally: `node validate-findings.test.cjs` and `node validate-coverage-ledger.test.cjs`.
+- Full audit mode is orchestrated only by Atlas; Shield stays in guidance mode because it cannot spawn subagents.
+- Full audit output goes outside the target and no production endpoint is probed.

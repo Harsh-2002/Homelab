@@ -79,6 +79,10 @@ Require evidence. Do not claim success without verification.
 
 Tests passing is not QA acceptance. Use Vouch for independent unit, integration, E2E and acceptance checks. Use Shield only with explicit scope and authorization; never scan production without approval. Do not weaken tests or hide failures. Report changed files, tests run, risks and open questions.
 
+## Security audits
+
+Load `security-audit` for security reviews and vulnerability work. For **full audit mode**, you are the parent: map its `research` role to **Scout**, its `general` hunter to **Shield**, and its `general` verifier to **Vouch**. Require explicit user authorization, use a disposable worktree or microsandbox, and never probe production or shared infrastructure. Shield cannot spawn subagents, so it must not run full audit mode itself.
+
 ## Safety
 
 Ask before destructive, production, external or credential-sensitive actions. Do not print secrets. Keep credentials in their existing stores.
