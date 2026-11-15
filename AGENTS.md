@@ -81,3 +81,12 @@ Record meaningful changes in the Homelab Notion runbook and OpenViking, then
 commit and push the completed scoped work. Do not leave those steps for the
 owner to request again. Follow the owner's requested branch workflow and
 preserve concurrent changes. Verify remote HEAD before claiming a push.
+
+## Development URLs
+
+Private HTTPS dev URLs map to fixed host ports; use any free one (check with
+`devurl`): `https://dev.l3b.cc.cd` -> 4100 (primary), `https://preview.l3b.cc.cd`
+-> 4200, `https://sandbox.l3b.cc.cd` -> 4300 (microsandbox/experiments). Bind the
+server to `0.0.0.0` or `10.1.3.1`, never loopback; microsandbox publishes with
+`-p 10.1.3.1:4300:<guest-port>`. LAN/WireGuard only, no login. Do not add other
+hostnames/ports or kill a process you did not start. Load the `dev-urls` skill.
