@@ -25,7 +25,10 @@
     "registry.l3b.cc.cd",
     "rustfs.l3b.cc.cd",
     "s3.l3b.cc.cd",
-    "switch.l3b.cc.cd"
+    "switch.l3b.cc.cd",
+    "dev.l3b.cc.cd",
+    "preview.l3b.cc.cd",
+    "sandbox.l3b.cc.cd"
   ],
   "publicNames": [
     "notes.l3b.cc.cd",
@@ -50,13 +53,6 @@
     "lara.ns.cloudflare.com"
   ],
   "records": [
-    {
-      "type": "A",
-      "name": "argocd.l3b.cc.cd",
-      "content": "150.129.31.154",
-      "proxied": false,
-      "ttl": 1
-    },
     {
       "type": "A",
       "name": "auth.l3b.cc.cd",
@@ -88,9 +84,9 @@
     {
       "type": "A",
       "name": "dev.l3b.cc.cd",
-      "content": "150.129.31.154",
+      "content": "10.1.1.10",
       "proxied": false,
-      "ttl": 1
+      "ttl": 300
     },
     {
       "type": "A",
@@ -241,27 +237,6 @@
     },
     {
       "type": "A",
-      "name": "omni-api.l3b.cc.cd",
-      "content": "10.1.1.3",
-      "proxied": false,
-      "ttl": 1
-    },
-    {
-      "type": "A",
-      "name": "omni-kube.l3b.cc.cd",
-      "content": "10.1.1.3",
-      "proxied": false,
-      "ttl": 1
-    },
-    {
-      "type": "A",
-      "name": "omni.l3b.cc.cd",
-      "content": "10.1.1.3",
-      "proxied": false,
-      "ttl": 1
-    },
-    {
-      "type": "A",
       "name": "orva.l3b.cc.cd",
       "content": "10.1.1.10",
       "proxied": false,
@@ -297,6 +272,13 @@
     },
     {
       "type": "A",
+      "name": "preview.l3b.cc.cd",
+      "content": "10.1.1.10",
+      "proxied": false,
+      "ttl": 300
+    },
+    {
+      "type": "A",
       "name": "registry.l3b.cc.cd",
       "content": "10.1.1.10",
       "proxied": false,
@@ -318,17 +300,17 @@
     },
     {
       "type": "A",
-      "name": "smb.l3b.cc.cd",
-      "content": "10.1.1.12",
+      "name": "sandbox.l3b.cc.cd",
+      "content": "10.1.1.10",
       "proxied": false,
       "ttl": 300
     },
     {
       "type": "A",
-      "name": "store.l3b.cc.cd",
-      "content": "150.129.31.154",
+      "name": "smb.l3b.cc.cd",
+      "content": "10.1.1.12",
       "proxied": false,
-      "ttl": 1
+      "ttl": 300
     },
     {
       "type": "A",

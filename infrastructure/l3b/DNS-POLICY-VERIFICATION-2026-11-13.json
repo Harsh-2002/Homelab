@@ -38,7 +38,10 @@
     "registry.l3b.cc.cd",
     "rustfs.l3b.cc.cd",
     "s3.l3b.cc.cd",
-    "switch.l3b.cc.cd"
+    "switch.l3b.cc.cd",
+    "dev.l3b.cc.cd",
+    "preview.l3b.cc.cd",
+    "sandbox.l3b.cc.cd"
   ],
   "publicHosts": [
     "notes.l3b.cc.cd",

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# devurl: show the three development URLs, their fixed host ports and whether
+# something is listening. Usage: devurl [status|ports]
+set -eu
+declare -A PORT=([dev]=4100 [preview]=4200 [sandbox]=4300)
+for n in dev preview sandbox; do
+  p=${PORT[$n]}
+  if line=$(ss -Hltnp "sport = :$p" 2>/dev/null | head -1) && [ -n "$line" ]; then
+    state="IN USE   $(awk '{print $4}' <<<"$line")"
+  else
+    state="free"
+  fi
+  printf '%-8s https://%s.l3b.cc.cd  -> host port %s  %s\n' "$n" "$n" "$p" "$state"
+done

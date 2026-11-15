@@ -27,7 +27,7 @@ Do not use public DNS as an OS resolver on infrastructure guests. Exact records 
 
 These require an exact public `A` to `10.1.1.10`:
 
-`l3b.cc.cd`, `auth`, `login`, `portainer`, `dns`, `memory`, `beszel`, `cairn`, `docs`, `downloads`, `frigate`, `git`, `home`, `media`, `motrix`, `n8n`, `orva`, `os`, `registry`, `rustfs`, `s3`, `switch`.
+`l3b.cc.cd`, `auth`, `login`, `portainer`, `dns`, `memory`, `beszel`, `cairn`, `docs`, `downloads`, `frigate`, `git`, `home`, `media`, `motrix`, `n8n`, `orva`, `os`, `registry`, `rustfs`, `s3`, `switch`, `dev`, `preview`, `sandbox`.
 
 ## Approved public origins
 

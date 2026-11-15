@@ -86,6 +86,7 @@ def main():
         'home.l3b.cc.cd', 'media.l3b.cc.cd', 'motrix.l3b.cc.cd', 'n8n.l3b.cc.cd',
         'orva.l3b.cc.cd', 'os.l3b.cc.cd', 'registry.l3b.cc.cd', 'rustfs.l3b.cc.cd',
         's3.l3b.cc.cd', 'switch.l3b.cc.cd',
+        'dev.l3b.cc.cd', 'preview.l3b.cc.cd', 'sandbox.l3b.cc.cd',
     ]
     public_hosts = [
         'notes.l3b.cc.cd', 'pin.l3b.cc.cd', 'photos.l3b.cc.cd', 'drive.l3b.cc.cd',
