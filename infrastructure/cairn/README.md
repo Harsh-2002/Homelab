@@ -1,73 +1,52 @@
 # Cairn
 
-Cairn is a fresh native deployment on the `s3` LXC at `10.1.1.8`, alongside RustFS. It runs as a static Rust binary under systemd; it is not a Docker or Portainer workload.
+Cairn runs as the Docker container `cairn` from the Portainer stack `cairn` (ID 176, [stack file](../l3b/cairn.compose.yaml)) on the single Debian Docker host. It is a pinned CalVer image, `ghcr.io/harsh-2002/cairn:v2026.11.16`, on the `l3b` bridge network, running as `1000:1000`. It publishes no host ports. (It was a native LXC install on the retired `s3` host before the move to Docker; that layout no longer exists.)
 
 ## Topology
 
-| Service | Listener | URL | Exposure |
+| Service | Listener (on `l3b`) | URL | Exposure |
 | --- | --- | --- | --- |
-| Cairn S3/API | `10.1.1.8:7373` | `https://cairn-s3.l3b.cc.cd` | Public; S3 auth/policies apply |
-| Cairn console | `10.1.1.8:7374` | `https://cairn.l3b.cc.cd` | LAN/Tailscale only |
-| RustFS S3/API | `10.1.1.8:9000` | `https://s3.l3b.cc.cd` | LAN/Tailscale only |
-| RustFS console | `10.1.1.8:9001` | `https://rustfs.l3b.cc.cd` | LAN/Tailscale only |
+| Cairn S3/API | `cairn:7373` | `https://cairn-s3.l3b.cc.cd` | Public through Caddy (`import public`); S3 auth and bucket policies apply |
+| Cairn console | `cairn:7374` | `https://cairn.l3b.cc.cd` | Caddy without the public route; keep it LAN/Tailscale only |
+| RustFS (separate container, 1.0.4) | `rustfs` | `https://s3.l3b.cc.cd` | LAN/Tailscale only |
 
-Caddy at `10.1.1.3` terminates TLS. Cairn binds only the LXC LAN address and trusts only `10.1.1.3/32` as its reverse proxy.
+Caddy terminates TLS. Cairn trusts only the Docker network (`CAIRN_TRUSTED_PROXIES=10.1.3.0/24`) as its reverse proxy, which is what makes it treat forwarded requests as HTTPS (cookie `Secure`, HSTS).
 
-The API hostname has an explicit DNS-only Cloudflare A record to `150.129.31.154`, and Caddy does not apply its LAN/Tailscale source filter to that API route. The console retains the source filter and has no public DNS exception. The existing `public` Cairn bucket is currently empty and has no anonymous-read policy: the temporary DNS-guide object and policy were removed when the guide moved to Notion. Do not assume a bucket name alone makes objects public. Public API clients must use valid S3 credentials unless a specific bucket/object policy is deliberately added.
+Public API clients must use valid S3 credentials. A new bucket has no anonymous-read policy (an unauthenticated GET returned 403 on 2026-11-16); add one deliberately if an object must be public.
 
-## Installation
+## State and secrets
 
-The installed version is `v2026.09.13`, deployed with Cairn's official verified host installer:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/Harsh-2002/Cairn/main/install.sh -o /tmp/cairn-install.sh
-sudo sh /tmp/cairn-install.sh \
-  --host --yes --version v2026.09.13 \
-  --data-dir /data/cairn \
-  --expose-api --expose-console --acknowledge-public-http \
-  --api-public-url https://cairn-s3.l3b.cc.cd \
-  --console-public-url https://cairn.l3b.cc.cd
-```
-
-After installation, both listeners are restricted from `0.0.0.0` to `10.1.1.8` in `/etc/cairn/cairn.env`. The file also sets:
-
-```text
-CAIRN_TRUSTED_PROXIES=10.1.1.3/32
-CAIRN_LOG_FORMAT=json
-```
-
-## Persistent state and secrets
-
-- Binary: `/usr/local/bin/cairn`
-- Service: `/etc/systemd/system/cairn.service`
-- Environment and keys: `/etc/cairn/cairn.env`, mode `0600`
-- Data, staging, and SQLite metadata: `/data/cairn`
-- Database: `/data/cairn/cairn.db`
-
-The database, staging tree, and object blobs must stay on the same filesystem because Cairn's durability protocol relies on atomic rename. The service runs as the dedicated `cairn` user and is enabled at boot.
-
-The canonical `Cairn S3` item in the `HomeLab` 1Password vault contains the root access key, root secret key, console URL, and master key. These three secret values were recovered together from the latest historical Portainer Compose revision (`146/v6`) so the native service retains the original Cairn identity. The console username/access key is `iam.anuragvishwakarma@gmail.com`; Cairn uses the S3-style access key rather than a separate username. Do not change or lose the master key after data or sealed credentials exist.
+- Data, staging tree and SQLite database: `/data/apps/cairn` (bind-mounted at `/data/cairn`), database `cairn.db`. The database, staging tree and object blobs must stay on the same filesystem because the durability protocol relies on atomic rename.
+- Environment file: `/data/apps/cairn/runtime.env` (mode `0600`): `CAIRN_ROOT_ACCESS_KEY`, `CAIRN_ROOT_SECRET_KEY`, `CAIRN_MASTER_KEY`, plus addresses, public URLs, `CAIRN_TRUSTED_PROXIES` and `CAIRN_LOG_FORMAT=json`. Never print it.
+- The canonical `Cairn S3` item in the `HomeLab` 1Password vault holds the root keys and master key. Do not change or lose the master key once data or sealed credentials exist.
+- Content today: one bucket, `artifact` (used by Quick Share), and two users.
 
 ## Validation
 
 ```bash
-ssh s3 'systemctl is-enabled cairn; systemctl is-active cairn'
-ssh s3 'curl -fsS http://10.1.1.8:7373/healthz'
-ssh s3 'curl -fsS http://10.1.1.8:7373/readyz'
-ssh s3 'set -a; . /etc/cairn/cairn.env; set +a; cairn validate-config'
+docker ps --filter name=^cairn$                      # healthy, expected image tag
+docker exec cairn /usr/local/bin/cairn --version
+IP=$(docker inspect cairn --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}')
+curl -fsS http://$IP:7373/healthz; curl -fsS http://$IP:7373/readyz
+curl -fsS https://cairn-s3.l3b.cc.cd/readyz           # through Caddy
+docker logs cairn 2>&1 | grep -i 'migration\|error'   # migration complete, no errors
 ```
 
-The initial deployment was validated with an authenticated AWS CLI create/upload/download/delete round trip. The temporary validation bucket was removed afterward.
+An authenticated S3 round trip (create a temporary bucket, upload, download, compare, delete everything including versions and delete markers) reads the keys from `runtime.env` inside a subshell and exports them only for the AWS CLI; never echo them. Also check the console sign-in with the public console origin and a Quick Share (`qs`) upload and download.
 
 ## Upgrade
 
-Read the release notes and Cairn upgrade/rollback guide first. Keep `/etc/cairn/cairn.env` and `/data/cairn` together with the required offline backup, then use the official updater:
+Releases are calendar-versioned and the release workflow retires older releases, so the image is pinned and upgrades are manual (Watchtower only refreshes the same tag). Read the release notes and the upgrade/rollback guide first. **Schema migrations are one-way**: a newer database is refused by the older binary, so keep a cold copy first.
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/Harsh-2002/Cairn/main/install.sh -o /tmp/cairn-install.sh
-sudo sh /tmp/cairn-install.sh --host --update --yes
-```
+1. Stop the container and copy the whole data directory (root-only destination; `/data/apps` is not writable by `dev`):
+   `docker stop cairn && sudo cp -a /data/apps/cairn /BACKUP/cairn-preupgrade-YYYYMMDD && sudo chmod 700 /BACKUP/cairn-preupgrade-YYYYMMDD`, then compare checksums of the two trees. The copy contains `runtime.env`, so it is secret material.
+2. Redeploy the stack through Portainer with the helper (needs the temporary API key from 1Password; delete `~/.cache/ptn` afterwards):
+   `python3 infrastructure/portainer/stack-update.py 176 --sub "cairn:OLD=cairn:NEW"`, and set the same tag in `infrastructure/l3b/cairn.compose.yaml`.
+3. Confirm the migration log, `/readyz`, the S3 round trip, console sign-in and Quick Share, then remove the temporary helper files.
 
-Confirm the listener remains bound to `10.1.1.8`, then repeat configuration, readiness, S3 round-trip, and public TLS checks.
+### History
 
-References: [Cairn documentation](https://harsh-2002.github.io/Cairn/), [operations guide](https://github.com/Harsh-2002/Cairn/blob/main/docs/operations.md), and [upgrade/rollback guide](https://github.com/Harsh-2002/Cairn/blob/main/docs/upgrade-rollback.md).
+- **2026-11-16: `v2026.09.13` to `v2026.11.16`.** Cold copy taken first (kept at `/BACKUP/cairn-preupgrade-20261116`, root-only; delete after about a week of clean running). Schema 39 to 45 applied in 9 ms on a 557 KB database; integrity check ok, no foreign-key violations, protocol 3, bucket and both users unchanged. Verified: byte-exact PUT/GET and 12 MiB multipart, `?partNumber`, tagging, versioning with delete markers and listing counts, presigned URL, anonymous GET denied (403), public `healthz`/`readyz`, console sign-in with `Secure; HttpOnly; SameSite=Strict` cookie and foreign-origin refusal, the new security headers, and a Quick Share upload and download. The previous image `v2026.09.13` was still present locally and in GHCR at that time.
+- **2026-11-02: restored `v2026.09.13`** into this container from the former deployment, with its bucket and users (verified by a Quick Share round trip).
+
+References: [Cairn documentation](https://harsh-2002.github.io/Cairn/), [operations guide](https://github.com/Harsh-2002/Cairn/blob/main/docs/operations.md), [upgrade/rollback guide](https://github.com/Harsh-2002/Cairn/blob/main/docs/upgrade-rollback.md).

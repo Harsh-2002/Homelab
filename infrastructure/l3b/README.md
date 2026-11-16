@@ -85,7 +85,7 @@ are applied and tested; see [DNS policy](DNS-POLICY.md) and
 | Forgejo 14 | Portainer `forgejo`, ID135; [stack](forgejo.compose.yaml) | Restored SQLite/repositories; `https://git.l3b.cc.cd` |
 | Nivra The King latest | Portainer `theking`, ID178; [stack](theking.compose.yaml) | Secondary Nivra; `https://theking.l3b.cc.cd` |
 | RustFS 1.0.4 | Portainer `rustfs`, ID177; [stack](rustfs.compose.yaml) | Restored buckets; `https://s3.l3b.cc.cd` private, console `rustfs` |
-| Cairn v2026.09.13 | Portainer `cairn`, ID176; [stack](cairn.compose.yaml) | Restored bucket/user and Quick Share round trip; `https://cairn-s3.l3b.cc.cd` |
+| Cairn v2026.11.16 | Portainer `cairn`, ID176; [stack](cairn.compose.yaml) | Upgraded from v2026.09.13 on 2026-11-16 (schema v39 to v45, data preserved, S3/console/Quick Share verified); `https://cairn-s3.l3b.cc.cd`; see [../cairn/README.md](../cairn/README.md) |
 | Frigate 0.18.2 | Portainer `frigate`, ID137; [stack](frigate.compose.yaml) | Restored data/config; outdoor camera live at 5 fps; `https://frigate.l3b.cc.cd` behind Tinyauth with an HA proxy-auth bypass |
 | Beszel 0.21.1 | Portainer `beszel`, ID181; [stack](beszel.compose.yaml) | Docker hub only; native `beszel-agent.service` on `10.1.1.10:45876` with daily auto-update; monitors `/` (NVMe) and `/data` (SATA), fan RPM, iGPU usage and SMART; private `https://beszel.l3b.cc.cd` behind Tinyauth |
 | Mosquitto 2.1.2 | Portainer `mqtt`, ID180; [stack](mqtt.compose.yaml) | Internal `mqtt:1883`; Frigate and Home Assistant authenticated with the existing `frigate` credential |

@@ -1,6 +1,6 @@
 services:
   cairn:
-    image: ghcr.io/harsh-2002/cairn:v2026.09.13
+    image: ghcr.io/harsh-2002/cairn:v2026.11.16
     container_name: cairn
     labels:
       com.centurylinklabs.watchtower.enable: "true"
