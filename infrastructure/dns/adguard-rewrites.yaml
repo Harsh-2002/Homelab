@@ -1,44 +1,14 @@
+# AdGuard Home rewrites, as live on 2026-11-16 after the owner's cleanup.
+# The owner removed the k8s*, ntfy, watch, argocd, store and omni* exceptions.
+# smb keeps a self-CNAME exception so it answers as a direct A record (10.1.1.10)
+# instead of through the wildcard. Keep this file in sync with the live config.
 rewrites:
-  # Retired names bypass the wildcard, returning upstream NXDOMAIN.
-  - domain: argocd.l3b.cc.cd
-    answer: argocd.l3b.cc.cd
-    enabled: true
-  - domain: store.l3b.cc.cd
-    answer: store.l3b.cc.cd
-    enabled: true
-  - domain: omni.l3b.cc.cd
-    answer: omni.l3b.cc.cd
-    enabled: true
-  - domain: omni-api.l3b.cc.cd
-    answer: omni-api.l3b.cc.cd
-    enabled: true
-  - domain: omni-kube.l3b.cc.cd
-    answer: omni-kube.l3b.cc.cd
-    enabled: true
   - domain: l3b.cc.cd
     answer: 10.1.1.10
     enabled: true
   - domain: '*.l3b.cc.cd'
     answer: l3b.cc.cd
     enabled: true
-  - domain: ntfy.l3b.cc.cd
-    answer: ntfy.l3b.cc.cd
-    enabled: true
-  - domain: watch.l3b.cc.cd
-    answer: watch.l3b.cc.cd
-    enabled: true
   - domain: smb.l3b.cc.cd
     answer: smb.l3b.cc.cd
-    enabled: true
-  - domain: k8s.l3b.cc.cd
-    answer: k8s.l3b.cc.cd
-    enabled: true
-  - domain: k8s-201.l3b.cc.cd
-    answer: k8s-201.l3b.cc.cd
-    enabled: true
-  - domain: k8s-202.l3b.cc.cd
-    answer: k8s-202.l3b.cc.cd
-    enabled: true
-  - domain: k8s-203.l3b.cc.cd
-    answer: k8s-203.l3b.cc.cd
     enabled: true

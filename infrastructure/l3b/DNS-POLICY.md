@@ -49,7 +49,7 @@ verified. Preserve its data and let its user handle onboarding.
 | `wg.l3b.cc.cd` | `150.129.31.154` |
 | `ntfy.l3b.cc.cd`, `watch.l3b.cc.cd` | `8.235.70.28` |
 
-AdGuard carries **self-CNAME exception rewrites** for these direct hosts (`smb`, `k8s*`, `ntfy`, `watch`) so the internal wildcard does not override Unbound's exact local-data. Keep those exceptions in sync with `adguard-rewrites.yaml`; removing them makes the wildcard return `10.1.1.10` instead of the direct-host address.
+AdGuard carries one **self-CNAME exception rewrite**, for `smb`, so it answers as a direct A record. On 2026-11-16 the owner removed the `k8s*`, `ntfy`, `watch`, `argocd`, `store` and `omni*` exceptions. Without them the internal wildcard answers `10.1.1.10` for those names. Keep `adguard-rewrites.yaml` in sync with the live config.
 
 ### Unknown names
 
