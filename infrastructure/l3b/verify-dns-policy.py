@@ -59,10 +59,6 @@ def main():
         assert '10.1.1.10' in run('dig', '@10.1.1.10', name, 'A', '+short')
     direct_expected = {
         'smb.l3b.cc.cd': '10.1.1.10',
-        'k8s.l3b.cc.cd': '10.1.1.200',
-        'k8s-201.l3b.cc.cd': '10.1.1.201',
-        'k8s-202.l3b.cc.cd': '10.1.1.202',
-        'k8s-203.l3b.cc.cd': '10.1.1.203',
         'ntfy.l3b.cc.cd': '8.235.70.28',
         'watch.l3b.cc.cd': '8.235.70.28',
     }

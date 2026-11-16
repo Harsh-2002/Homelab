@@ -41,11 +41,7 @@
     "theking.l3b.cc.cd"
   ],
   "directNames": {
-    "smb.l3b.cc.cd": "10.1.1.10",
-    "k8s.l3b.cc.cd": "10.1.1.200",
-    "k8s-201.l3b.cc.cd": "10.1.1.201",
-    "k8s-202.l3b.cc.cd": "10.1.1.202",
-    "k8s-203.l3b.cc.cd": "10.1.1.203"
+    "smb.l3b.cc.cd": "10.1.1.10"
   },
   "publicWan": "150.129.31.154",
   "nameServers": [
@@ -134,34 +130,6 @@
       "type": "A",
       "name": "home.l3b.cc.cd",
       "content": "10.1.1.10",
-      "proxied": false,
-      "ttl": 300
-    },
-    {
-      "type": "A",
-      "name": "k8s-201.l3b.cc.cd",
-      "content": "10.1.1.201",
-      "proxied": false,
-      "ttl": 300
-    },
-    {
-      "type": "A",
-      "name": "k8s-202.l3b.cc.cd",
-      "content": "10.1.1.202",
-      "proxied": false,
-      "ttl": 300
-    },
-    {
-      "type": "A",
-      "name": "k8s-203.l3b.cc.cd",
-      "content": "10.1.1.203",
-      "proxied": false,
-      "ttl": 300
-    },
-    {
-      "type": "A",
-      "name": "k8s.l3b.cc.cd",
-      "content": "10.1.1.200",
       "proxied": false,
       "ttl": 300
     },

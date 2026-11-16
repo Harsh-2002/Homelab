@@ -11,10 +11,6 @@ A	drive.l3b.cc.cd	150.129.31.154	no	300
 A	frigate.l3b.cc.cd	10.1.1.10	no	300
 A	git.l3b.cc.cd	10.1.1.10	no	300
 A	home.l3b.cc.cd	10.1.1.10	no	300
-A	k8s-201.l3b.cc.cd	10.1.1.201	no	300
-A	k8s-202.l3b.cc.cd	10.1.1.202	no	300
-A	k8s-203.l3b.cc.cd	10.1.1.203	no	300
-A	k8s.l3b.cc.cd	10.1.1.200	no	300
 A	l3b.cc.cd	10.1.1.10	no	auto
 A	login.l3b.cc.cd	10.1.1.10	no	300
 A	mdx.l3b.cc.cd	150.129.31.154	no	300

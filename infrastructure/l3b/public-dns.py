@@ -25,10 +25,6 @@ PUBLIC_NAMES = [
 ]
 DIRECT_NAMES = {
     'smb.l3b.cc.cd': '10.1.1.10',
-    'k8s.l3b.cc.cd': '10.1.1.200',
-    'k8s-201.l3b.cc.cd': '10.1.1.201',
-    'k8s-202.l3b.cc.cd': '10.1.1.202',
-    'k8s-203.l3b.cc.cd': '10.1.1.203',
 }
 PUBLIC_WAN = '150.129.31.154'
 
