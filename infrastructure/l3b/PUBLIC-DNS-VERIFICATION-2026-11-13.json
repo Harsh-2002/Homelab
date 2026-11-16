@@ -41,7 +41,7 @@
     "theking.l3b.cc.cd"
   ],
   "directNames": {
-    "smb.l3b.cc.cd": "10.1.1.12",
+    "smb.l3b.cc.cd": "10.1.1.10",
     "k8s.l3b.cc.cd": "10.1.1.200",
     "k8s-201.l3b.cc.cd": "10.1.1.201",
     "k8s-202.l3b.cc.cd": "10.1.1.202",
@@ -308,7 +308,7 @@
     {
       "type": "A",
       "name": "smb.l3b.cc.cd",
-      "content": "10.1.1.12",
+      "content": "10.1.1.10",
       "proxied": false,
       "ttl": 300
     },

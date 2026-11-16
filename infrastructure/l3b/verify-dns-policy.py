@@ -58,7 +58,7 @@ def main():
     for name in ['dns-policy-check.l3b.cc.cd', 'oc.l3b.cc.cd']:
         assert '10.1.1.10' in run('dig', '@10.1.1.10', name, 'A', '+short')
     direct_expected = {
-        'smb.l3b.cc.cd': '10.1.1.12',
+        'smb.l3b.cc.cd': '10.1.1.10',
         'k8s.l3b.cc.cd': '10.1.1.200',
         'k8s-201.l3b.cc.cd': '10.1.1.201',
         'k8s-202.l3b.cc.cd': '10.1.1.202',

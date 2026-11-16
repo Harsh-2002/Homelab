@@ -48,7 +48,7 @@ Stale DNS cleanup: see [2026-11-13 evidence](CLEANUP-2026-11-13.md).
 
 | Name | Answer |
 |---|---|
-| `smb.l3b.cc.cd` | `10.1.1.12` |
+| `smb.l3b.cc.cd` | `10.1.1.10` |
 | `k8s.l3b.cc.cd` | `10.1.1.200` |
 | `k8s-201.l3b.cc.cd` | `10.1.1.201` |
 | `k8s-202.l3b.cc.cd` | `10.1.1.202` |
