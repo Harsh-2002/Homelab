@@ -5,9 +5,18 @@ network on the single Debian host. The image is the official
 `jellyfin/jellyfin:12.4` pinned by digest in [compose.yaml](compose.yaml).
 
 There is no host port: Jellyfin listens on `8096` inside `l3b` and Caddy
-reverse-proxies `https://media.l3b.cc.cd` to it. Caddy's source gate keeps the
-service LAN/WireGuard-only; Jellyfin's own login stays enabled as a break-glass
-path.
+reverse-proxies `https://media.l3b.cc.cd` to it.
+
+**Public since 2026-11-18 (owner request).** The Cloudflare record is an exact
+DNS-only `A` to the WAN address `150.129.31.154`; Caddy serves the hostname through
+`import public media.l3b.cc.cd jellyfin:8096 media`, outside the private source gate.
+Internal DNS still resolves it to Caddy (`10.1.1.10`). Jellyfin's own login is the only
+access control, with Pocket ID OIDC as an option. Unauthenticated endpoints such as
+`/health` and `/System/Info/Public` (server name and version) are reachable by anyone.
+Before 2026-11-18 it was LAN/WireGuard-only. To make it private again, restore the
+`@media` handler inside the private gate, point the Cloudflare record back to `10.1.1.10`,
+and move `media` back to the private lists in `public-dns.py` and `verify-dns-policy.py`.
+Caddy backup: `/BACKUP/caddy-Caddyfile-pre-jellyfin-public-*`.
 
 ## Runtime
 

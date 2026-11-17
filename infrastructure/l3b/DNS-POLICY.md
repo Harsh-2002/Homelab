@@ -19,7 +19,7 @@ A device using public DNS **inside the LAN** must still resolve a private servic
 
 Private HTTPS origins currently include:
 
-`l3b.cc.cd`, `auth`, `login`, `portainer`, `dns`, `memory`, `beszel`, `cairn`, `docs`, `downloads`, `frigate`, `git`, `home`, `media`, `motrix`, `n8n`, `orva`, `os`, `registry`, `rustfs`, `s3`, `switch`, `dev`, `preview`, `sandbox`.
+`l3b.cc.cd`, `auth`, `login`, `portainer`, `dns`, `memory`, `beszel`, `cairn`, `docs`, `downloads`, `frigate`, `git`, `home`, `motrix`, `n8n`, `orva`, `os`, `registry`, `rustfs`, `s3`, `switch`, `dev`, `preview`, `sandbox`.
 
 ### Public service
 
@@ -29,7 +29,7 @@ Private HTTPS origins currently include:
 | Private DNS (AdGuard) | **10.1.1.10** (split-horizon) |
 | Caddy | Approved public handler and native application authentication |
 
-Approved public origins are `notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, `oc`, and `theking`.
+Approved public origins are `notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, `oc`, `theking`, and `media` (Jellyfin).
 
 `theking` is the separate friend-owned Nivra instance, public by owner request.
 Its separate data directory is populated; onboarding/account state was not

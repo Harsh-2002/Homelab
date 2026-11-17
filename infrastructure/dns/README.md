@@ -27,13 +27,13 @@ Do not use public DNS as an OS resolver on infrastructure guests. Exact records 
 
 These require an exact public `A` to `10.1.1.10`:
 
-`l3b.cc.cd`, `auth`, `login`, `portainer`, `dns`, `memory`, `beszel`, `cairn`, `docs`, `downloads`, `frigate`, `git`, `home`, `media`, `motrix`, `n8n`, `orva`, `os`, `registry`, `rustfs`, `s3`, `switch`, `dev`, `preview`, `sandbox`.
+`l3b.cc.cd`, `auth`, `login`, `portainer`, `dns`, `memory`, `beszel`, `cairn`, `docs`, `downloads`, `frigate`, `git`, `home`, `motrix`, `n8n`, `orva`, `os`, `registry`, `rustfs`, `s3`, `switch`, `dev`, `preview`, `sandbox`.
 
 ## Approved public origins
 
 These use an exact public `A` to `150.129.31.154`, with a matching public Caddy handler and native application authentication:
 
-`notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, `oc`, `theking`.
+`notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, `oc`, `theking`, `media`.
 
 `theking` is the separate friend-owned Nivra instance, public by owner request.
 Its separate data directory is populated; onboarding/account state was not

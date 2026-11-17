@@ -17,7 +17,6 @@
     "frigate.l3b.cc.cd",
     "git.l3b.cc.cd",
     "home.l3b.cc.cd",
-    "media.l3b.cc.cd",
     "motrix.l3b.cc.cd",
     "n8n.l3b.cc.cd",
     "orva.l3b.cc.cd",
@@ -38,7 +37,8 @@
     "cairn-s3.l3b.cc.cd",
     "mdx.l3b.cc.cd",
     "oc.l3b.cc.cd",
-    "theking.l3b.cc.cd"
+    "theking.l3b.cc.cd",
+    "media.l3b.cc.cd"
   ],
   "directNames": {
     "smb.l3b.cc.cd": "10.1.1.10"
@@ -157,7 +157,7 @@
     {
       "type": "A",
       "name": "media.l3b.cc.cd",
-      "content": "10.1.1.10",
+      "content": "150.129.31.154",
       "proxied": false,
       "ttl": 300
     },
