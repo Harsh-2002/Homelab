@@ -57,13 +57,13 @@ def main():
     run('wg.sh', 'verify')
     for name in ['dns-policy-check.l3b.cc.cd', 'oc.l3b.cc.cd']:
         assert '10.1.1.10' in run('dig', '@10.1.1.10', name, 'A', '+short')
+    # smb is the only direct host. AdGuard may answer through its wildcard CNAME, so
+    # compare the final address. 0.0.0.0 means a filter list blocked the name.
     direct_expected = {
         'smb.l3b.cc.cd': '10.1.1.10',
-        'ntfy.l3b.cc.cd': '8.235.70.28',
-        'watch.l3b.cc.cd': '8.235.70.28',
     }
     for name, expected in direct_expected.items():
-        actual = run('dig', '@10.1.1.10', name, 'A', '+short').strip()
+        actual = run('dig', '@10.1.1.10', name, 'A', '+short').strip().splitlines()[-1]
         assert actual == expected, (name, actual, expected)
     assert run('dig', '@10.1.1.10', 'example.com', 'A', '+short').strip()
 

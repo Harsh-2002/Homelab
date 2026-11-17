@@ -193,3 +193,5 @@ once the fix was confirmed.
 Rule: never install tooling into `/tmp` with an installer that edits dotfiles. If
 uv is wanted later, install it to `~/.local/bin` (`UV_INSTALL_DIR`) so the sourced
 path survives reboots.
+
+- [Performance tuning, 17 November 2026](PERFORMANCE-TUNING-2026-11-17.md): network sysctls and zram swap, measured baseline, verification and rollback.

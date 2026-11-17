@@ -46,6 +46,24 @@
       "snapshotSha256": "0567bda9df711b7f87cbd416dabbb10ec719569c104f3f03feaa06fa2bebe875"
     },
     {
+      "source": "/etc/sysctl.d/91-homelab-network.conf",
+      "snapshot": "config/etc/sysctl.d/91-homelab-network.conf",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "824ed3b1f6d53e3fec25afeb1e50d163579c48abbec59014fa4fe3f2c6e313c3"
+    },
+    {
+      "source": "/etc/sysctl.d/92-homelab-zram.conf",
+      "snapshot": "config/etc/sysctl.d/92-homelab-zram.conf",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "a524599c97f39d9ca636da86f1a30596455caf71896172f5d7d2561e9a9223f6"
+    },
+    {
+      "source": "/etc/systemd/zram-generator.conf",
+      "snapshot": "config/etc/systemd/zram-generator.conf",
+      "sourcePermissions": "644 root:root",
+      "snapshotSha256": "0a0852628253472f088984c291b43838818baceadb89d2fe1228af96def9aae1"
+    },
+    {
       "source": "/etc/systemd/system/homelab-performance.service",
       "snapshot": "config/etc/systemd/system/homelab-performance.service",
       "sourcePermissions": "644 root:root",

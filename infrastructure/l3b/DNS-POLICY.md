@@ -45,7 +45,7 @@ verified. Preserve its data and let its user handle onboarding.
 | `wg.l3b.cc.cd` | `150.129.31.154` |
 | `ntfy.l3b.cc.cd`, `watch.l3b.cc.cd` | `8.235.70.28` |
 
-AdGuard carries one **self-CNAME exception rewrite**, for `smb`, so it answers as a direct A record. On 2026-11-16 the owner removed the `k8s*`, `ntfy`, `watch`, `argocd`, `store` and `omni*` exceptions. Without them the internal wildcard answers `10.1.1.10` for those names. Keep `adguard-rewrites.yaml` in sync with the live config.
+AdGuard carries one exact rewrite, `smb.l3b.cc.cd` -> `10.1.1.10`. On 2026-11-16 the owner removed the `k8s*`, `ntfy`, `watch`, `argocd`, `store` and `omni*` entries. Without them the internal wildcard answers `10.1.1.10` for those names. **Do not make `smb` a pass-through (self-CNAME) rule again:** the filter lists include `||cc.cd^` (HaGeZi, refreshed 2026-11-17), so a pass-through query is blocked and returns `0.0.0.0`. Rewrites are answered before filtering. Keep `adguard-rewrites.yaml` in sync with the live config.
 
 ### Unknown names
 

@@ -1,7 +1,8 @@
-# AdGuard Home rewrites, as live on 2026-11-16 after the owner's cleanup.
-# The owner removed the k8s*, ntfy, watch, argocd, store and omni* exceptions.
-# smb keeps a self-CNAME exception so it answers as a direct A record (10.1.1.10)
-# instead of through the wildcard. Keep this file in sync with the live config.
+# AdGuard Home rewrites, as live on 2026-11-17.
+# smb is an exact A rewrite to the SMB host. A pass-through (self-CNAME) rule would
+# send the query through the filter lists, and HaGeZi's list contains ||cc.cd^, which
+# blocks the whole cc.cd domain and answers 0.0.0.0. Rewrites answer before filtering.
+# Keep this file in sync with the live config.
 rewrites:
   - domain: l3b.cc.cd
     answer: 10.1.1.10
@@ -10,5 +11,5 @@ rewrites:
     answer: l3b.cc.cd
     enabled: true
   - domain: smb.l3b.cc.cd
-    answer: smb.l3b.cc.cd
+    answer: 10.1.1.10
     enabled: true
