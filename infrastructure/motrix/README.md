@@ -55,3 +55,26 @@ docker exec caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
 Verified 2026-11-13: `https://motrix.l3b.cc.cd/` returns `302` to the login URL; following it returns the login page `200`; Caddy and Motrix are healthy.
 
 ## Operations
+
+## Live-update "access address mismatch", 17 November 2026
+
+Opening Motrix at `https://motrix.l3b.cc.cd` showed "The server access address does
+not match. Real-time updates are unavailable." Motrix's log reported
+`origin-mismatch`: it accepts its event WebSocket only from `MOTRIX_PUBLIC_URL`
+(`https://downloads.l3b.cc.cd`), but the browser presented `https://motrix.l3b.cc.cd`.
+It was not a Caddy header fault. The `motrix` route in the live Caddyfile now rewrites
+only that exact Origin to the expected one:
+
+```
+reverse_proxy motrix:8080 {
+    header_up Origin "^https://motrix\.l3b\.cc\.cd$" https://downloads.l3b.cc.cd
+}
+```
+
+Applied with a graceful reload while a download was running; the container was not
+restarted. Backup: `/BACKUP/caddy-Caddyfile-pre-motrix-origin-*`. Validated config and
+reload; **not yet confirmed from a browser**, because the paired browser was
+disconnected. Alternative if this proves insufficient: set `MOTRIX_PUBLIC_URL` to
+`https://motrix.l3b.cc.cd` and redeploy the stack, which restarts aria2 and interrupts
+active downloads. The tracked `infrastructure/l3b/Caddyfile` copy lags the live file
+and does not yet contain this block.
