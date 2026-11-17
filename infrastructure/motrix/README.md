@@ -56,25 +56,36 @@ Verified 2026-11-13: `https://motrix.l3b.cc.cd/` returns `302` to the login URL;
 
 ## Operations
 
-## Live-update "access address mismatch", 17 November 2026
+## Live-update "access address mismatch", 17-18 November 2026
 
 Opening Motrix at `https://motrix.l3b.cc.cd` showed "The server access address does
 not match. Real-time updates are unavailable." Motrix's log reported
 `origin-mismatch`: it accepts its event WebSocket only from `MOTRIX_PUBLIC_URL`
 (`https://downloads.l3b.cc.cd`), but the browser presented `https://motrix.l3b.cc.cd`.
-It was not a Caddy header fault. The `motrix` route in the live Caddyfile now rewrites
-only that exact Origin to the expected one:
+
+**First fix (17 Nov) was too broad and broke the Downloads page.** It rewrote the
+`Origin` header on every request. Motrix also rejects any non-GET request whose
+`Origin` host differs from `Host` (`403 cross-origin forbidden`), so every POST from the
+Downloads page failed ("server unreachable", "could not run engine diagnostics")
+while the read-only Dashboard still worked.
+
+**Current fix (18 Nov):** rewrite the Origin for WebSocket upgrades only; everything
+else keeps its real Origin:
 
 ```
-reverse_proxy motrix:8080 {
+@motrixws header Upgrade websocket
+reverse_proxy @motrixws motrix:8080 {
     header_up Origin "^https://motrix\.l3b\.cc\.cd$" https://downloads.l3b.cc.cd
 }
+reverse_proxy motrix:8080
 ```
 
-Applied with a graceful reload while a download was running; the container was not
-restarted. Backup: `/BACKUP/caddy-Caddyfile-pre-motrix-origin-*`. Validated config and
-reload; **not yet confirmed from a browser**, because the paired browser was
-disconnected. Alternative if this proves insufficient: set `MOTRIX_PUBLIC_URL` to
-`https://motrix.l3b.cc.cd` and redeploy the stack, which restarts aria2 and interrupts
-active downloads. The tracked `infrastructure/l3b/Caddyfile` copy lags the live file
-and does not yet contain this block.
+Applied with a graceful reload; the container was not restarted. Backups:
+`/BACKUP/caddy-Caddyfile-pre-motrix-origin-*` and `...-pre-motrix-ws-only-*`.
+Verified: config validates and reloads; with the operator token the server returns 200
+for `/rpc/auth/status` and `/api/diagnostics` (engine ready, aria2 1.37.0). **Not
+verified in a browser**: the Tinyauth sign-in uses a Pocket ID passkey, which cannot be
+automated, and the paired Browse extension was disconnected. Alternative if the
+WebSocket still fails: set `MOTRIX_PUBLIC_URL` to `https://motrix.l3b.cc.cd` and
+redeploy the stack, which restarts aria2 and interrupts active downloads. The tracked
+`infrastructure/l3b/Caddyfile` copy lags the live file and lacks this block.
