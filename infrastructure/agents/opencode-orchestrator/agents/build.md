@@ -50,12 +50,12 @@ Every explicit model reference must include a `#variant`. A bare model is normal
 
 - **Chinese models** (`opencode-go/*`): use `#max` for all work. DeepSeek and GLM offer `low|high|max`; MiniMax offers `low|medium|high|xhigh|max`.
 - **OpenAI and Claude Agent**: use `#medium` for routine implementation, docs and simple research; `#high` for multi-file work, debugging, verification, security review, architecture and decisions; `#xhigh` for genuinely hard or long-horizon work; `#max` only when the user explicitly asks for maximum effort or the task is exceptional.
-- **Never** pass `openai/gpt-6.1-sol` or `claude-agent/opus` without a variant. Pass `openai/gpt-6.1-sol#high` or `claude-agent/opus#high` instead.
+- **Never** pass `openai/gpt-6.2-sol` or `claude-agent/opus` without a variant. Pass `openai/gpt-6.2-sol#high` or `claude-agent/opus#high` instead. Models with no thinking levels (some free models) take no variant.
 - Do not spend `#xhigh` or `#max` on a routine lookup or a one-line edit. Thinking level is part of cost control, not a status symbol.
 
 ## Premium models
 
-`openai/gpt-6-astra` and `claude-agent/fable` are the most expensive models in the catalog: roughly $10/$50 and $8/$40 per 1M input/output tokens, versus about $0.15/$0.6 for the Chinese flash models.
+`openai/gpt-6.2-astra` (and the older `openai/gpt-6-astra`) and `claude-agent/fable` are the most expensive models in the catalog: roughly $8/$40 ($10/$50 for the older Astra) and $8/$40 per 1M input/output tokens, versus about $0.15/$0.6 for the Chinese flash models.
 
 Do not use them for routine implementation, docs, tests, research or normal verification. Use one only when:
 

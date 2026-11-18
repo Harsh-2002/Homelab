@@ -45,13 +45,16 @@ opencode-orchestrator/
 
 ## Models
 
-The approved catalog has three groups. **Any approved model may be used by Atlas or by any subagent; the defaults are just defaults, except that Astra and Fable are escalation-only because of their cost.**
+The approved catalog has four groups, 26 models in total (reconciled with the live server on 2026-11-18). **Any approved model may be used by Atlas or by any subagent; the defaults are just defaults, except that Astra and Fable are escalation-only because of their cost and the free models follow the privacy rules in `skills/model-catalog/SKILL.md`.**
 
 | Group | Models |
 |---|---|
-| Chinese | `opencode-go/deepseek-v4.1-flash`, `opencode-go/glm-5.3-flash`, `opencode-go/minimax-m3.1-flash` |
-| OpenAI Codex | `openai/gpt-6-astra`, `openai/gpt-6.1-sol`, `openai/gpt-6.1-terra`, `openai/gpt-6-luna` |
+| Chinese (Go plan) | `opencode-go/deepseek-v4.1-flash`, `opencode-go/glm-5.3-flash`, `opencode-go/minimax-m3.1-flash`, `opencode-go/qwen4-max` |
+| OpenAI Codex | `openai/gpt-6.2-astra`, `openai/gpt-6.2-sol`, `openai/gpt-6-astra`, `openai/gpt-6.1-sol`, `openai/gpt-6.1-terra`, `openai/gpt-6-luna` |
 | Claude Agent | `claude-agent/claude-opus-5-5` (Opus 5.5), `claude-agent/claude-sonnet-5-5` (Sonnet 5.5), `claude-agent/claude-haiku-5-5` (Haiku 5.5), `claude-agent/claude-fable-5-2` (Fable 5.2) |
+| OpenCode free (provider `opencode`) | `glm-5.3-flash-free`, `deepseek-v4.1-flash-free`, `hy4-flash-free`, `beam-free`, `longcat-2.5-free`, `mimo-v2.6-flash-free`, `big-pickle`, `iceman-free`, `inkling-2-small-free`, `flint-40b-free`, `nemotron-3.5-lightning-free`, `nemotron-3.5-super-vl-free` |
+
+The free models are time-limited and rotate, so they are optional in `check-models.sh`. **They are blocked until the OpenCode Console privacy setting "Allow free endpoints that train on request data" is turned on** (tested 2026-11-18 on three of them; the owner has not enabled it). Only the first three retain nothing and do not train; the others have retention, training or location limits and must not see private work. The class table is in `skills/model-catalog/SKILL.md`. The plugin keeps them in the picker; before 2026-11-18 it hid every free model because the catalog listed only paid models.
 
 The Claude Agent entries use the **original versioned model IDs**. The provider also exposes family aliases (`opus`, `sonnet`, `haiku`, `fable`), which the allowlist hides so the picker preserves the real model names and numbers. The versioned entries are defined under `providers.claude-agent.models` with their original names and Claude Code effort variants.
 
@@ -59,7 +62,7 @@ Atlas defaults to DeepSeek V4.1 Flash. Subagents default to DeepSeek V4.1 Flash.
 
 Use **Claude Agent** only. The separate `anthropic/*` provider is not enabled and is removed from the picker. DeepSeek V4 Pro, Kimi, GPT-5 and older families are excluded.
 
-The `model-allowlist` plugin removes every model outside this list, adds the model's default `#variant` when a caller passes a bare approved model, normalizes an invalid variant to that model's default, and falls back to `opencode-go/deepseek-v4.1-flash#max` only when the **model itself** is invalid. An unspecified model is left to the subagent default. `check-models.sh` verifies all eleven approved base IDs.
+The `model-allowlist` plugin removes every model outside this list, adds the model's default `#variant` when a caller passes a bare approved model, normalizes an invalid variant to that model's default, and falls back to `opencode-go/deepseek-v4.1-flash#max` only when the **model itself** is invalid. An unspecified model is left to the subagent default. `check-models.sh` verifies the 14 required base IDs and warns about any of the 12 free models that disappeared. Models with no thinking levels (five of the free ones) take no `#variant`.
 
 ### Claude Agent versioned entries
 
@@ -94,13 +97,14 @@ Every explicit model reference carries a `#variant`. The agent defaults already 
 | OpenAI Terra/Luna | `none`, `low`, `medium`, `high`, `xhigh`, `max` | `medium` | `high` |
 | Claude Agent | `low`, `medium`, `high`, `xhigh`, `max` | `medium` | `high` |
 
-Chinese models run at `#max` for all work, matching the owner's preference. OpenAI and Claude Agent use `#medium` for routine work, `#high` for multi-file implementation, debugging, verification, security and decisions, and `#xhigh` or `#max` only for exceptional tasks. Examples: `opencode-go/deepseek-v4.1-flash#max`, `openai/gpt-6.1-sol#high`, `claude-agent/claude-opus-5-5#high`.
+Chinese models run at `#max` for all work, matching the owner's preference. OpenAI and Claude Agent use `#medium` for routine work, `#high` for multi-file implementation, debugging, verification, security and decisions, and `#xhigh` or `#max` only for exceptional tasks. `opencode-go/qwen4-max` tops out at `#xhigh`. Free models use their highest level. Examples: `opencode-go/deepseek-v4.1-flash#max`, `openai/gpt-6.2-sol#high`, `claude-agent/claude-opus-5-5#high`.
 
 ### Premium models — escalation only
 
-`openai/gpt-6-astra` and `claude-agent/claude-fable-5-2` are the two most expensive models in the catalog:
+`openai/gpt-6.2-astra`, `openai/gpt-6-astra` and `claude-agent/claude-fable-5-2` are the most expensive models in the catalog:
 
-- **Astra:** about $10 input / $50 output per 1M tokens; $20 / $75 above 272k context.
+- **GPT-6.2 Astra:** about $8 input / $40 output per 1M tokens; $16 / $60 above 272k context.
+- **GPT-6 Astra:** about $10 input / $50 output per 1M tokens; $20 / $75 above 272k context.
 - **Fable 5.2:** about $8 input / $40 output per 1M tokens.
 - **Chinese flash models:** about $0.15 input / $0.5–0.6 output — roughly 50–100× cheaper on output.
 
@@ -220,7 +224,7 @@ Regression check: `python3 infrastructure/agents/opencode-orchestrator/evals/per
 
 ## Activation
 
-New sessions start with Atlas on DeepSeek V4.1 Flash. The model selector is limited to the eleven approved models by the plugin. The current session may still be an older Build session; use the agent selector once or open a new session to get Atlas.
+New sessions start with Atlas on DeepSeek V4.1 Flash. The model selector is limited to the 26 approved models by the plugin. The current session may still be an older Build session; use the agent selector once or open a new session to get Atlas.
 
 ## Guardrails
 

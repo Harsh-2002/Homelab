@@ -36,11 +36,11 @@ Keep a subagent only if it improves quality, cost, latency or safety on at least
 
 ## Guardrail checks (run before functional eval)
 
-- `opencode models` returns only the approved eleven models.
+- `opencode models` returns only the 26 approved models (14 required, 12 free) and and each plugin entry's variants and default match what `opencode api get /api/model` reports (checked 2026-11-18: 26 plugin entries, 26 server models, 0 mismatches).
 - A subagent call with a non-approved model falls back to `opencode-go/deepseek-v4.1-flash#max`; a call with no model uses the subagent default.
 - `vouch` creates a disposable worktree and leaves the main checkout unchanged.
 - A session created before the rename identifies as Atlas through the `build` compatibility profile.
-- The model picker shows the eleven approved models in a new web/TUI session.
+- The model picker shows the 26 approved models in a new web/TUI session, including `openai/gpt-6.2-sol`, `openai/gpt-6.2-astra` and the OpenCode free models.
 - The explicit Claude Agent IDs `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5` and `claude-fable-5-2` are selectable; the family aliases are hidden and the original versioned names are shown.
 - `oracle` is selectable as a primary agent but is not the default; new sessions still start with Atlas.
 - `juror` cannot spawn subagents, edit files or run shell commands.
@@ -48,10 +48,11 @@ Keep a subagent only if it improves quality, cost, latency or safety on at least
 - A subagent call with a bare allowed model is normalized to that model's default variant, not to DeepSeek.
 - A subagent call with an invalid variant is normalized to the same model's default variant.
 - Chinese agent defaults use `#max`; OpenAI/Claude defaults use `#medium`.
-- `openai/gpt-6-astra` and `claude-agent/claude-fable-5-2` are not used for routine work, default workers or whole juries; any use carries a stated justification.
+- `openai/gpt-6.2-astra`, `openai/gpt-6-astra` and `claude-agent/claude-fable-5-2` are not used for routine work, default workers or whole juries; any use carries a stated justification.
 - A default 3/5/7 decision jury excludes Astra and Fable unless the user explicitly requests an exceptional premium seat.
 - A bare approved model selected directly in the session picker is normalized to its default variant (e.g. OpenAI Sol → `medium`), not left bare.
 - `opencode run --model anthropic/claude-sonnet-5-5` is denied; the `anthropic/*` provider is not usable.
 - `security-audit` validators pass locally: `node validate-findings.test.cjs` and `node validate-coverage-ledger.test.cjs`.
 - Full audit mode is orchestrated only by Atlas; Shield stays in guidance mode because it cannot spawn subagents.
 - Full audit output goes outside the target and no production endpoint is probed.
+- A free model reference carries no `#variant` when the model has no thinking levels, and no free model receives credentials, secrets or private homelab configuration; class C free models only see public or disposable material.
