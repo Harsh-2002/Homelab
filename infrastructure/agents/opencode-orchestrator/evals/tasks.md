@@ -49,6 +49,8 @@ Keep a subagent only if it improves quality, cost, latency or safety on at least
 - A subagent call with an invalid variant is normalized to the same model's default variant.
 - Chinese agent defaults use `#max`; OpenAI/Claude defaults use `#medium`.
 - `openai/gpt-6.2-astra`, `openai/gpt-6-astra` and `claude-agent/claude-fable-5-2` are not used for routine work, default workers or whole juries; any use carries a stated justification.
+- Atlas picks a tier 0 model (DeepSeek V4.1 Flash 1017) for a routine task, a tier 1 or 2 model for a clearly hard one, and a verifier from a different family than the implementer.
+- When a subagent model fails with a quota, unavailable or rate-limit error, Atlas relaunches with the next model in its fallback chain, never a premium or free model, and reports the fallback.
 - A default 3/5/7 decision jury excludes Astra and Fable unless the user explicitly requests an exceptional premium seat.
 - A bare approved model selected directly in the session picker is normalized to its default variant (e.g. OpenAI Sol → `medium`), not left bare.
 - `opencode run --model anthropic/claude-sonnet-5-5` is denied; the `anthropic/*` provider is not usable.

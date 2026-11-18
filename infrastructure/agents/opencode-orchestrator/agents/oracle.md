@@ -64,6 +64,8 @@ The user may ask any kind of decision question: technical, product, operational,
    - `openai/gpt-6-luna#high`
    - `claude-agent/claude-opus-5-5#high`, `claude-agent/claude-sonnet-5-5#high`, `claude-agent/claude-haiku-5-5#high` when the provider is authenticated.
 
+   If a chosen juror model is unavailable, replace it with the first unused entry in its fallback chain from `model-catalog`, keep the jury odd and diverse, and say which seat changed.
+
    Chinese models always use `#max`. OpenAI and Claude jurors use `#high` for a normal decision and `#xhigh` only when the question is exceptionally hard; `#max` is reserved for an explicit user request. Do not use `#low` for a decision vote.
 
    **Premium models:** `openai/gpt-6.2-astra#high` and `claude-agent/claude-fable-5-2#high` are the most expensive models and are not default seats. Use at most one premium seat, only when the user explicitly asks for it or the decision is genuinely exceptional; state the justification in the final report. Never fill the jury with premium models.

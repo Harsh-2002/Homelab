@@ -99,9 +99,59 @@ claude-agent/claude-opus-5-5#high
 - If an invalid variant is passed, the allowlist plugin uses that model's default variant.
 - If an unapproved model is passed, the allowlist plugin falls back to `opencode-go/deepseek-v4.1-flash#max`.
 
-## Guidance
+## Choosing a model
 
-Any approved model may be used for any role. For quality, the stronger everyday models are OpenAI Sol (use 6.2) and Terra and Claude Agent Opus and Sonnet. Astra and Fable are premium escalation only. DeepSeek V4.1 Flash and GLM-5.3-Flash are the cheap worker defaults; GLM-5.3 is the stronger Go option for harder work while its higher limit lasts. This is advice, not a permission restriction, except that Astra/Fable need the justification above.
+Pick the cheapest model that is adequate for the task, then use the fallback chain below if it is unavailable. The owner's preferred models, by tier:
+
+| Tier | Models | Use for |
+|---|---|---|
+| **0: low cost** | `opencode-go/deepseek-v4.1-flash`, `opencode-go/glm-5.3-flash`, `openai/gpt-6-luna`, `claude-agent/claude-haiku-5-5` | Research, lookups, reading logs, docs, formatting, simple edits, tests, routine single-file and small multi-file changes, scouting |
+| **1: strong everyday** | `openai/gpt-6.2-sol`, `claude-agent/claude-sonnet-5-5`, `openai/gpt-6.1-terra` | Multi-file features, hard debugging, security review, migrations, architecture, independent verification, anything tier 0 got wrong |
+| **2: top** | `claude-agent/claude-opus-5-5` (and `openai/gpt-6.2-sol#xhigh`) | The hardest reasoning, final review of a high-stakes change, contested or irreversible decisions |
+| **3: premium escalation** | `openai/gpt-6.2-astra`, `openai/gpt-6-astra`, `claude-agent/claude-fable-5-2` | Only under the rules in "Premium models". Never a fallback target |
+
+`opencode-go/glm-5.3` is a tier 0/1 option for long sessions while its higher limit lasts (to 22 Nov 2026); it is not the default. `openai/gpt-6.1-sol` is a legacy equivalent of 6.2 Sol.
+
+Rules of thumb, based on the benchmarks in the 2026-11-18 research (vendor and third-party figures, not a test on the owner's code):
+
+- **Start at tier 0 with DeepSeek V4.1 Flash 1017.** It led GLM-5.3 and GLM-5.3-Flash on coding and agent benchmarks at a fraction of the cost.
+- **Move up one tier, not sideways, when quality is the problem.** If a model produced a wrong or weak result, retry at the next tier rather than another tier 0 model.
+- **Use tier 1 or 2 directly** when the task is clearly hard: several interacting files, concurrency or data-integrity risk, security, a decision that is expensive to undo, or work the owner calls critical.
+- **Keep the verifier independent.** Vouch and any reviewer should use a different model family than the implementer where possible, for example DeepSeek implements and Sol or Sonnet verifies.
+- **Use `glm-5.3-flash` for video input** (the only approved model that takes video) and as a second family when independence matters. DeepSeek, GLM-5.3-Flash, GPT and Claude models accept images; GLM-5.3 is text only.
+- **Match thinking level to the tier:** Go models `#max`; OpenAI and Claude `#medium` for routine, `#high` for complex, `#xhigh` only when genuinely hard.
+- **Mention a fallback** in the final answer when one happened (see below).
+
+## Fallback when a model is unavailable
+
+A subagent call that fails returns the error to the parent; nothing falls back automatically except an unapproved model reference, which the plugin turns into `opencode-go/deepseek-v4.1-flash#max`. The parent (Atlas) must pick the replacement.
+
+**When to fall back.** An error that says the model is unavailable, the usage or quota limit is reached (Go: "usage limit reached", resets monthly or per window), rate limited (429), authentication or provider failure, or a provider 5xx. Retry the same model at most once for a transient error. A quality failure is not a fallback: escalate one tier instead.
+
+**Where to fall back.** Take the first available entry in the chain for the failed model, keep the same role, and set the variant for the replacement's family (Go `#max`; OpenAI and Claude by the tier rules above).
+
+| Failed model | Replacement chain |
+|---|---|
+| `opencode-go/deepseek-v4.1-flash` | `glm-5.3-flash` → `openai/gpt-6-luna` → `claude-agent/claude-haiku-5-5` → `openai/gpt-6.2-sol` |
+| `opencode-go/glm-5.3-flash` | `deepseek-v4.1-flash` → `gpt-6-luna` → `claude-haiku-5-5` |
+| `opencode-go/glm-5.3` | `deepseek-v4.1-flash` → `glm-5.3-flash` → `gpt-6.2-sol` |
+| `openai/gpt-6.2-sol` | `claude-sonnet-5-5` → `gpt-6.1-terra` → `claude-opus-5-5` (hard work only) → `deepseek-v4.1-flash` |
+| `claude-agent/claude-sonnet-5-5` | `gpt-6.2-sol` → `gpt-6.1-terra` → `deepseek-v4.1-flash` |
+| `openai/gpt-6.1-terra` | `gpt-6.2-sol` → `claude-sonnet-5-5` → `deepseek-v4.1-flash` |
+| `claude-agent/claude-opus-5-5` | `gpt-6.2-sol#high` (or `#xhigh`) → `claude-sonnet-5-5#high` → `gpt-6.1-terra#high` |
+| `openai/gpt-6-luna` | `claude-haiku-5-5` → `deepseek-v4.1-flash` → `glm-5.3-flash` |
+| `claude-agent/claude-haiku-5-5` | `gpt-6-luna` → `deepseek-v4.1-flash` → `glm-5.3-flash` |
+| Astra or Fable | `gpt-6.2-sol#xhigh` or `claude-opus-5-5#xhigh`. Never replace a failed premium model with the other premium model without the justification rules |
+
+**Whole-provider outages.**
+
+- **OpenCode Go quota exhausted** (every `opencode-go/*` call fails): two OpenCode Console profiles are saved. Ask the owner or run `opencode auth switch "OpenCode Console" <label>` only when told to; until then use `gpt-6-luna` or `claude-haiku-5-5` for tier 0 work and Sol or Sonnet for tier 1. Do not switch accounts on your own.
+- **Claude Agent unavailable:** use the OpenAI chain for the same tier; **OpenAI unavailable:** use the Claude Agent chain. Two OpenAI accounts are saved; switching them is likewise the owner's call.
+- **Everything at one tier is down:** use the next tier down only if the task is not hard, otherwise stop and tell the user rather than silently weakening the work.
+
+**Never fall back to** a premium model, a model outside the 13 approved ones, or a free model. If no approved model works, report that and stop.
+
+## Guidance
 
 ## Decision juries
 
@@ -111,6 +161,7 @@ The `oracle` primary agent uses these models as independent jurors. Use an odd j
 - 5 voters: add `glm-5.3` and `gpt-6.1-terra`
 - 7 voters: add `gpt-6-luna` and `claude-agent/claude-sonnet-5-5`
 - Claude Agent versioned models can replace OpenAI jurors when that provider is authenticated.
+- If a juror's model is unavailable, replace it with the first unused model from its fallback chain above. Keep the jury odd and spanning at least two families; if that is not possible, shrink to 3 jurors rather than reuse a model. Say which seat was replaced.
 
 Do not reuse a model in the same jury, and do not reveal earlier votes to later jurors. Astra and Fable are **not** default jury seats; use at most one premium seat, only for an exceptional decision or an explicit user request, and state why.
 

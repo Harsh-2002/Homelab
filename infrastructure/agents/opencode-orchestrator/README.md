@@ -96,6 +96,10 @@ Every explicit model reference carries a `#variant`. The agent defaults already 
 
 Chinese models run at `#max` for all work, matching the owner's preference. OpenAI and Claude Agent use `#medium` for routine work, `#high` for multi-file implementation, debugging, verification, security and decisions, and `#xhigh` or `#max` only for exceptional tasks. Examples: `opencode-go/deepseek-v4.1-flash#max`, `openai/gpt-6.2-sol#high`, `claude-agent/claude-opus-5-5#high`.
 
+### Choosing a model and falling back
+
+`skills/model-catalog/SKILL.md` is the single source. Models are grouped in four tiers: 0 low cost (DeepSeek V4.1 Flash 1017, GLM-5.3-Flash, GPT-6 Luna, Haiku 5.5), 1 strong everyday (GPT-6.2 Sol, Sonnet 5.5, GPT-6.1 Terra), 2 top (Opus 5.5) and 3 premium escalation (Astra, Fable). Atlas starts at the cheapest adequate tier, goes straight up for clearly hard work, escalates one tier when quality is the problem and keeps the verifier a different model family from the implementer. Each model has a fallback chain for quota, unavailable, rate-limit and provider errors; fallbacks are chosen by the parent agent (only an unapproved model is replaced automatically, by the plugin), never reach a premium or free model, and never switch OpenCode or OpenAI accounts on their own. Oracle replaces an unavailable juror from the same chains. Verified 2026-11-18 by asking Atlas four scenarios; it chose correctly, but real fallback under a live outage was not exercised.
+
 ### Premium models — escalation only
 
 `openai/gpt-6.2-astra`, `openai/gpt-6-astra` and `claude-agent/claude-fable-5-2` are the most expensive models in the catalog:

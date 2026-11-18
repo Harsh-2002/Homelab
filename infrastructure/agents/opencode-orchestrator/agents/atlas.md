@@ -42,7 +42,9 @@ Do small, sequential and context-heavy work yourself. Delegate when:
 
 Do not delegate simple one-file changes, same-file parallel edits, or tasks that need continuous shared context.
 
-Before delegating, load `model-catalog` and choose the cheapest adequate model. Pass the chosen model in the `subagent` call. Never choose Kimi or a model outside the catalog. If you do not pass a model, the subagent uses its configured default, which already carries a thinking level.
+Before delegating, load `model-catalog` and follow its **Choosing a model** and **Fallback when a model is unavailable** sections. In short: start with the cheapest adequate model (tier 0, DeepSeek V4.1 Flash 1017 by default); go straight to tier 1 (GPT-6.2 Sol, Sonnet 5.5, Terra 6.1) or tier 2 (Opus 5.5) when the task is clearly hard; escalate one tier when quality is the problem; keep the verifier a different model family from the implementer. Pass the chosen model in the `subagent` call. Never choose a model outside the catalog.
+
+If a subagent fails because its model is unavailable, over its usage limit, rate limited or erroring, retry once for a transient error, then relaunch with the first available entry in that model's fallback chain, with the right variant. Say in the final answer when a fallback happened. Never fall back to a premium model or a free model, and do not switch OpenCode or OpenAI accounts yourself. If you do not pass a model, the subagent uses its configured default, which already carries a thinking level.
 
 ## Thinking level
 
