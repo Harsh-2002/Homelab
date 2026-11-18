@@ -376,6 +376,16 @@ restart, location reload or binary upgrade. Native Claude Agent requires2.2.3+;
 current server2.1.4 cannot activate it. Loaded plugin/package files remain until
 a safe restart/upgrade window. See [research and migration gates](OPENCODE-CLAUDE.md).
 
+## OpenCode 2.3.2 upgrade, 18 November 2026
+
+CLI upgraded 2.3.0 -> 2.3.2 with `opencode upgrade --method curl 2.3.2` (V2 line; GitHub's
+"latest" tag points at V1, so read the release list). 2.3.1 adds background compaction (on
+by default), timed-out shell commands moving to the background, and GPT-6.2 in the ChatGPT
+picker; 2.3.2 fixes GPT-6.2 prompt caching (the system prompt was re-billed as uncached input
+on every step). The running service stays on 2.3.0 until it is restarted; at upgrade time
+three sessions were busy, so the restart is deferred to a quiet moment. Rollback:
+`/BACKUP/opencode-2.3.0.bak` (root-only) or `opencode upgrade --method curl 2.3.0`, then restart.
+
 ## Native Claude Agent migration completed, 2026-10-31
 
 Owner authorized the upgrade/restart. CLI and live OpenCode server now run2.2.5;
