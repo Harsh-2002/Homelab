@@ -16,7 +16,7 @@ access control, with Pocket ID OIDC as an option. Unauthenticated endpoints such
 Before 2026-11-18 it was LAN/WireGuard-only. To make it private again, restore the
 `@media` handler inside the private gate, point the Cloudflare record back to `10.1.1.10`,
 and move `media` back to the private lists in `public-dns.py` and `verify-dns-policy.py`.
-Caddy backup: `/BACKUP/caddy-Caddyfile-pre-jellyfin-public-*`.
+The Caddyfile backup was deleted on 2026-11-18 after verification; revert by hand using the steps above.
 
 ## Runtime
 

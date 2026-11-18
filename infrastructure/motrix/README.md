@@ -81,7 +81,7 @@ reverse_proxy motrix:8080
 ```
 
 Applied with a graceful reload; the container was not restarted. Backups:
-`/BACKUP/caddy-Caddyfile-pre-motrix-origin-*` and `...-pre-motrix-ws-only-*`.
+(The Caddyfile backups were deleted on 2026-11-18; the fix is small, so revert by hand if needed.)
 Verified: config validates and reloads; with the operator token the server returns 200
 for `/rpc/auth/status` and `/api/diagnostics` (engine ready, aria2 1.37.0). **Not
 verified in a browser**: the Tinyauth sign-in uses a Pocket ID passkey, which cannot be

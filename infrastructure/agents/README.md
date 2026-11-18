@@ -383,7 +383,7 @@ CLI upgraded 2.3.0 -> 2.3.2 with `opencode upgrade --method curl 2.3.2` (V2 line
 by default), timed-out shell commands moving to the background, and GPT-6.2 in the ChatGPT
 picker; 2.3.2 fixes GPT-6.2 prompt caching (the system prompt was re-billed as uncached input
 on every step). **The service was restarted at 17:34 IST the same day** by a transient systemd-run timer outside the service. Verified directly afterwards: live server 2.3.2, unit active with 0 restarts and 0 journal errors, `oc.l3b.cc.cd` 200, 13 models, Browse/OpenViking/Orva/Nivra/OLX/REA/shadcn/context7 connected. (The helper script's own report was incomplete and printed a wrong 'before' version, so it was not used as evidence; Kite shows 'no bearer token' and needs its daily owner login.) Rollback:
-`/BACKUP/opencode-2.3.0.bak` (root-only) or `opencode upgrade --method curl 2.3.0`, then restart.
+`opencode upgrade --method curl 2.3.0`, then restart. (The saved 2.3.0 binary was deleted on 2026-11-18 after the 2.3.2 upgrade was verified.)
 
 ## Native Claude Agent migration completed, 2026-10-31
 

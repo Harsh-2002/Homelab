@@ -78,5 +78,5 @@ sudo rm /etc/systemd/zram-generator.conf /etc/sysctl.d/91-homelab-network.conf /
 sudo sysctl --system
 ```
 
-Pre-change values: `/BACKUP/sysctl-before-net-tuning-20261117-174541.txt`.
+Pre-change values are the "Before" column in the table above (the backup file was deleted on 2026-11-18).
 Config snapshots: [../config/manifest.json](../config/manifest.json).
