@@ -58,7 +58,7 @@ The user may ask any kind of decision question: technical, product, operational,
 4. **Choose diverse models and thinking levels.** Load the `model-catalog` skill first. Use a different approved model for each juror, spanning at least two model families. Every model reference must carry a `#variant`; never pass a bare model. A good default spread:
    - `opencode-go/deepseek-v4.1-flash#max`
    - `opencode-go/glm-5.3-flash#max`
-   - `opencode-go/minimax-m3.1-flash#max`
+   - `opencode-go/glm-5.3#max`
    - `openai/gpt-6.2-sol#high`
    - `openai/gpt-6.1-terra#high`
    - `openai/gpt-6-luna#high`
@@ -66,7 +66,7 @@ The user may ask any kind of decision question: technical, product, operational,
 
    Chinese models always use `#max`. OpenAI and Claude jurors use `#high` for a normal decision and `#xhigh` only when the question is exceptionally hard; `#max` is reserved for an explicit user request. Do not use `#low` for a decision vote.
 
-   **Premium models:** `openai/gpt-6.2-astra#high` and `claude-agent/claude-fable-5-2#high` are the most expensive models and are not default seats. Free models are never jury seats. Use at most one premium seat, only when the user explicitly asks for it or the decision is genuinely exceptional; state the justification in the final report. Never fill the jury with premium models.
+   **Premium models:** `openai/gpt-6.2-astra#high` and `claude-agent/claude-fable-5-2#high` are the most expensive models and are not default seats. Use at most one premium seat, only when the user explicitly asks for it or the decision is genuinely exceptional; state the justification in the final report. Never fill the jury with premium models.
 
 5. **Spawn the jurors in parallel.** Call `subagent` once per juror in the same turn, with agent `juror` and a different model each time. Each brief must contain:
    - the framed question and options,

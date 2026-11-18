@@ -5,15 +5,14 @@ type ModelSpec = {
   defaultVariant: string
 }
 
-// Approved model catalog. Models with thinking levels carry an explicit default
-// variant, used when a caller names the model without one. Models that expose no
-// thinking levels (the OpenCode free models) have an empty variants list.
+// Approved model catalog. Every entry has an explicit thinking level; the default
+// variant is used when a caller names the model without one. OpenCode free models
+// and the other Go models are deliberately not listed (owner decision, 2026-11-18).
 const CATALOG: Record<string, ModelSpec> = {
-  // Chinese models: max by default.
+  // OpenCode Go models: DeepSeek V4.1 Flash 1017 and the two GLM-5.3 models. Max by default.
   "opencode-go/deepseek-v4.1-flash": { variants: ["low", "high", "max"], defaultVariant: "max" },
   "opencode-go/glm-5.3-flash": { variants: ["low", "high", "max"], defaultVariant: "max" },
-  "opencode-go/minimax-m3.1-flash": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "max" },
-  "opencode-go/qwen4-max": { variants: ["none", "low", "high", "xhigh"], defaultVariant: "xhigh" },
+  "opencode-go/glm-5.3": { variants: ["low", "high", "max"], defaultVariant: "max" },
   // OpenAI Codex: medium by default; high for demanding work.
   "openai/gpt-6.2-astra": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
   "openai/gpt-6.2-sol": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
@@ -26,23 +25,6 @@ const CATALOG: Record<string, ModelSpec> = {
   "claude-agent/claude-sonnet-5-5": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
   "claude-agent/claude-haiku-5-5": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
   "claude-agent/claude-fable-5-2": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "medium" },
-  // OpenCode free models (provider `opencode`, no credits needed, time-limited and
-  // rotating). Variants below were read from the live server on 2026-11-18; some
-  // models (big-pickle, iceman, longcat, mimo, nemotron-lightning) have none and
-  // take no #variant. Privacy classes are in skills/model-catalog/SKILL.md: only the
-  // zero-retention ones may see private homelab work.
-  "opencode/glm-5.3-flash-free": { variants: ["low", "high", "max"], defaultVariant: "max" },
-  "opencode/deepseek-v4.1-flash-free": { variants: ["low", "high", "max"], defaultVariant: "max" },
-  "opencode/hy4-flash-free": { variants: ["none", "high"], defaultVariant: "high" },
-  "opencode/beam-free": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "max" },
-  "opencode/longcat-2.5-free": { variants: [], defaultVariant: "" },
-  "opencode/mimo-v2.6-flash-free": { variants: [], defaultVariant: "" },
-  "opencode/big-pickle": { variants: [], defaultVariant: "" },
-  "opencode/iceman-free": { variants: [], defaultVariant: "" },
-  "opencode/inkling-2-small-free": { variants: ["none", "minimal", "low", "medium", "high", "max"], defaultVariant: "max" },
-  "opencode/flint-40b-free": { variants: ["low", "medium", "high", "xhigh", "max"], defaultVariant: "max" },
-  "opencode/nemotron-3.5-lightning-free": { variants: [], defaultVariant: "" },
-  "opencode/nemotron-3.5-super-vl-free": { variants: ["none", "minimal", "low", "medium", "high", "xhigh"], defaultVariant: "xhigh" },
 }
 
 const FALLBACK = "opencode-go/deepseek-v4.1-flash#max"

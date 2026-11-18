@@ -36,11 +36,11 @@ Keep a subagent only if it improves quality, cost, latency or safety on at least
 
 ## Guardrail checks (run before functional eval)
 
-- `opencode models` returns only the 26 approved models (14 required, 12 free) and and each plugin entry's variants and default match what `opencode api get /api/model` reports (checked 2026-11-18: 26 plugin entries, 26 server models, 0 mismatches).
+- `opencode models` returns only the 13 approved models and each plugin entry's variants and default match what `opencode api get /api/model` reports (checked 2026-11-18 on the previous 25-model catalog: 0 mismatches; re-check after this change).
 - A subagent call with a non-approved model falls back to `opencode-go/deepseek-v4.1-flash#max`; a call with no model uses the subagent default.
 - `vouch` creates a disposable worktree and leaves the main checkout unchanged.
 - A session created before the rename identifies as Atlas through the `build` compatibility profile.
-- The model picker shows the 26 approved models in a new web/TUI session, including `openai/gpt-6.2-sol`, `openai/gpt-6.2-astra` and the OpenCode free models.
+- The model picker shows the 13 approved models in a new web/TUI session: the three Go models (`deepseek-v4.1-flash`, `glm-5.3`, `glm-5.3-flash`), six OpenAI and four Claude Agent. No OpenCode free model and no other Go model appears.
 - The explicit Claude Agent IDs `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5` and `claude-fable-5-2` are selectable; the family aliases are hidden and the original versioned names are shown.
 - `oracle` is selectable as a primary agent but is not the default; new sessions still start with Atlas.
 - `juror` cannot spawn subagents, edit files or run shell commands.
@@ -55,4 +55,3 @@ Keep a subagent only if it improves quality, cost, latency or safety on at least
 - `security-audit` validators pass locally: `node validate-findings.test.cjs` and `node validate-coverage-ledger.test.cjs`.
 - Full audit mode is orchestrated only by Atlas; Shield stays in guidance mode because it cannot spawn subagents.
 - Full audit output goes outside the target and no production endpoint is probed.
-- A free model reference carries no `#variant` when the model has no thinking levels, and no free model receives credentials, secrets or private homelab configuration; class C free models only see public or disposable material.
