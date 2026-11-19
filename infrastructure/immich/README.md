@@ -102,3 +102,28 @@ returns `0.0.0.0`, a container resolves it to `::`, and the container reports
 `ORT_DISABLE_TELEMETRY=1`. Note that `10.1.1.1` is the **router**, not AdGuard —
 testing against it bypasses the homelab filters entirely; the resolver is
 `10.1.1.10`.
+
+## Upgrade to v3.4.2, 19 November 2026
+
+Upgraded v3.3.6 -> v3.4.2 (crossing 3.4.0). Release notes: 3.4.0 adds workflow filters and
+triggers, JPEG XL, many security fixes and a CSP change (no `unsafe-inline`); 3.4.1 and 3.4.2
+are bug fixes (3.4.1 also bundles FUTO Backups 1.16.0). No manual migration steps were listed.
+
+Procedure used (Immich cannot be downgraded): `pg_dump` of the `immich` database
+(`docker exec immich-postgres pg_dump -U postgres -d immich`, gzip, root-only mode 0600,
+integrity-checked, 73 tables), pre-pulled both images, then
+`infrastructure/portainer/stack-update.py 147 --sub 'immich-server:v3.3.6=immich-server:v3.4.2'
+--sub 'immich-machine-learning:v3.3.6=immich-machine-learning:v3.4.2'
+--env L3B_IMMICH_IMMICH_VERSION=v3.4.2`.
+
+Verified: all four containers healthy, server and `photos.l3b.cc.cd` report 3.4.2 and return
+200, migrations ran with no error, row counts equal the pre-upgrade dump (9,594 assets, 2 users),
+media folders and the `backups/.immich` marker intact, `/dev/dri/renderD128` still mapped. The new
+FUTO Backups ("Yucca") state generated a master key under `/data/backups/yucca` on first start;
+it is a log WARN, not an error. Not tested: an actual upload, a video encode with Quick Sync,
+OIDC login, or the mobile app.
+
+**The live Portainer stack pins the image tags in its compose text** and has the `L3B_IMMICH_*`
+variables, so it differs from the tracked `compose.yaml` (which uses `${IMMICH_VERSION}`). Bump
+the tags in the live stack. The paths in the older sections above (`/data/immich/...`, VM 204)
+are from the retired layout; the host paths are `/data/apps/immich/{media,postgres}`.
