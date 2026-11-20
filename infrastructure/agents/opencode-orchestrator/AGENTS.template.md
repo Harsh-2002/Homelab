@@ -1,4 +1,4 @@
-# Project instructions for Atlas
+# Project instructions
 
 Copy this file to the project root as `AGENTS.md` and add repository-specific rules. Keep it short; language and framework procedures belong in skills.
 
@@ -16,12 +16,13 @@ Copy this file to the project root as `AGENTS.md` and add repository-specific ru
 - Use a disposable worktree or microsandbox for independent verification.
 - Report exact commands and results. Do not claim a check passed without evidence.
 
-## Delegation
+## Subagents
 
-- Atlas may delegate independent research, verification or isolated implementation.
-- Subagents cannot spawn subagents.
-- Do not parallelize writes to the same files.
-- The final answer belongs to Atlas; subagent output is evidence, not a conclusion.
+- Do not delegate on your own initiative. Start a subagent only when the user asks for one.
+- When asked, use OpenCode's built-in subagents (`general`, `explore`) and the model the user names, as `provider/model#variant`. If no model is named, leave it unset so the subagent uses the session's model.
+- Approved models are listed in the `model-catalog` skill; load it when choosing one.
+- Subagents cannot spawn subagents. Do not parallelize writes to the same files.
+- The parent session owns the final answer; subagent output is evidence to check, not a conclusion.
 
 ## Development URLs
 

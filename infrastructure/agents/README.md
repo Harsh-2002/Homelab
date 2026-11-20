@@ -1,5 +1,9 @@
 # Shared coding-agent tools on dev
 
+## Custom OpenCode agents removed, 20 November 2026
+
+The Atlas agent family (Atlas, Forge, Scout, Vouch, Shield, Juror, Oracle and a `build` override) was removed at the owner's request after its automatic delegation mishandled a project. OpenCode runs with its built-in agents; a subagent starts only when the user asks for one in chat, on the model the user names. The model-allowlist plugin, the `model-catalog` skill and the other skills stay. A default model (`opencode-go/deepseek-v4.1-flash#max`) is now set in `opencode.json`, because without an agent supplying one new sessions defaulted to `openai/gpt-6.2-astra`. Details, rollback (tag `pre-agent-removal-20261120`) and the config backup path: [opencode-orchestrator/README.md](opencode-orchestrator/README.md).
+
 ## Browse exception, 16 November 2026
 
 The owner approved OpenCode Browse (extension 0.0.17, Anomaly) so agents on l3b can drive the owner's real signed-in Chrome on a Mac. This overrides the 8 Nov decision and the Playwright-CLI-only rule for that use; Playwright CLI and Browser Use stay for tests and server-side browsing. The relay (`browse-relay.service`, systemd user, port 19988) listens on `0.0.0.0` by owner choice, unencrypted and unrestricted, so Docker bridges can reach it. Use the hostname `l3b.cc.cd:19988` or `10.1.1.10`. Paired browser: `chromium-10-1-1-232`. Manage with `browse pair --list`, `browse pair --revoke <id>`, `browse uninstall`. Verified: Hacker News top story read through the paired Mac browser.

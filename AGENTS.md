@@ -90,3 +90,7 @@ Private HTTPS dev URLs map to fixed host ports; use any free one (check with
 server to `0.0.0.0` or `10.1.3.1`, never loopback; microsandbox publishes with
 `-p 10.1.3.1:4300:<guest-port>`. LAN/WireGuard only, no login. Do not add other
 hostnames/ports or kill a process you did not start. Load the `dev-urls` skill.
+
+## Subagents
+
+Do not delegate on your own initiative. Start a subagent only when the user asks for one in chat, using OpenCode's built-in `general` or `explore` and the model the user names, as `provider/model#variant` (leave the model unset if none is named). Approved models are in the `model-catalog` skill. Subagents cannot spawn subagents, never write the same files in parallel, and the parent session owns and verifies the final answer. The custom Atlas agent family was removed on 2026-11-20 after it mishandled a project.

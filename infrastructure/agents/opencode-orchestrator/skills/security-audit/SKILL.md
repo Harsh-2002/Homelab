@@ -30,7 +30,7 @@ Use equivalent platform capabilities while preserving role, write-isolation, pro
 
 ### OpenCode adapter
 
-In this installation, read [OPENCODE.md](OPENCODE.md) for the platform mapping. **Atlas** is the parent, `subagent` is the Task tool, **Scout** is the `research` agent, **Shield** is the `general` hunter, and **Vouch** is the `general` verifier. Full audit mode must be orchestrated by Atlas; Shield cannot spawn subagents and may use this skill only in guidance mode for focused reviews.
+In this installation, read [OPENCODE.md](OPENCODE.md) for the platform mapping. The current session is the parent, `subagent` is the Task tool, and the built-in `explore` and `general` subagents fill the `research`, hunter and verifier roles. Run full audit mode only when the user explicitly asks for it.
 
 ## Universal execution safety
 

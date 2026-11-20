@@ -4,19 +4,12 @@ set -eu
 src=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 target=${1:-"$HOME/.config/opencode"}
 
-mkdir -p "$target/agents" "$target/skills" "$target/plugins"
+mkdir -p "$target/skills" "$target/plugins"
 
-# Remove obsolete agent names from earlier installs. Build stays as the
-# compatibility profile for sessions created before the Atlas rename.
-rm -f "$target/agents/lead.md" \
-      "$target/agents/decision-maker.md" \
-      "$target/agents/voter.md" \
-      "$target/agents/explorer.md" \
-      "$target/agents/implementer.md" \
-      "$target/agents/verifier.md" \
-      "$target/agents/security.md"
-
-install -m 644 "$src"/agents/*.md "$target/agents/"
+for agent in atlas build forge juror oracle scout shield vouch lead decision-maker voter explorer implementer verifier security; do
+  rm -f "$target/agents/$agent.md"
+done
+rmdir "$target/agents" 2>/dev/null || true
 
 for skill in "$src"/skills/*; do
   [ -d "$skill" ] || continue
@@ -35,10 +28,10 @@ chmod 644 "$target/plugins/model-allowlist/index.ts"
 
 if command -v opencode >/dev/null 2>&1; then
   "$src/check-models.sh" || {
-    echo "Model check failed; fix the catalog before using the agents." >&2
+    echo "Model check failed; fix the catalog before relying on the picker." >&2
     exit 1
   }
 fi
 
-echo "Installed agents, skills and model-allowlist plugin into: $target"
-echo "Ensure \"default_agent\": \"atlas\" is set in the corresponding opencode.json, then reload."
+echo "Installed skills and the model-allowlist plugin into: $target"
+echo "Custom agents are not installed. OpenCode's built-in agents are used."

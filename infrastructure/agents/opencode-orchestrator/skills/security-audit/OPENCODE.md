@@ -1,24 +1,23 @@
 # OpenCode adapter
 
-This is the Cloudflare `security-audit` skill, vendored for the Atlas OpenCode V2 team. The upstream workflow is platform-neutral; this file maps its terms to this installation.
+This is the Cloudflare `security-audit` skill, vendored for OpenCode V2. The upstream workflow is platform-neutral; this file maps its terms to this installation. No custom agents are installed, so the built-in ones are used.
 
 | Upstream term | OpenCode mapping |
 |---|---|
-| Parent | **Atlas** (primary agent) |
+| Parent | The current session (the agent the user is talking to) |
 | Task tool | `subagent` tool |
-| `research` agent | **Scout** (`scout`) — read-only source exploration and critics |
-| `general` hunter | **Shield** (`shield`) — authorized security review, read-only with sandboxed shell |
-| `general` verifier | **Vouch** (`vouch`) — independent verification, read-only with sandboxed shell |
+| `research` agent | built-in `explore` subagent, read-only source exploration and critics |
+| `general` hunter | built-in `general` subagent, instructed to stay read-only against the target |
+| `general` verifier | built-in `general` subagent, a separate one from the hunter, instructed to re-read the source independently |
 | `subagent_type:` | the `agent` argument of a `subagent` call |
 
 ## Full audit mode
 
-- **Atlas is the only parent.** It is the primary agent with the required subagent permissions. It must follow the upstream write-isolation, coverage-ledger, candidate-validation and reporting rules.
-- **Shield cannot run full audit mode itself.** It is a subagent and cannot spawn hunters or verifiers. It may load this skill in guidance mode for focused reviews; hand a full codebase audit to Atlas.
-- **Scout** is the `research` role: source-only reconnaissance and coverage critics. It does not run target code.
-- **Shield** is the `general` hunter role. It stays read-only against the target and uses a disposable microsandbox for any bounded local check.
-- **Vouch** is the `general` verifier role. It independently re-reads source and reproduces decisive checks where safe.
-- Full audit mode requires explicit user authorization. Do not probe production, deployed endpoints, shared infrastructure or credentials. Use a disposable worktree or microsandbox; if the required isolation is unavailable, keep the lead as `needs_validation`.
+- Full audit mode needs subagents, so **run it only when the user explicitly asks for a full audit** and authorizes the scope. Otherwise use guidance mode for a focused review.
+- The parent session is the only parent. It must follow the upstream write-isolation, coverage-ledger, candidate-validation and reporting rules.
+- Subagents cannot spawn subagents. A hunter or verifier may load this skill in guidance mode only.
+- Built-in subagents have normal tool permissions, so the read-only and no-production rules are **instructions in the brief, not enforced limits**. State them explicitly in every brief: stay read-only against the target, use a disposable microsandbox for any bounded local check, never read credentials, `.env` files or auth stores.
+- Do not probe production, deployed endpoints, shared infrastructure or credentials. Use a disposable worktree or microsandbox; if the required isolation is unavailable, keep the lead as `needs_validation`.
 
 ## Output
 
