@@ -1,5 +1,32 @@
 # Hermes Agent on dev
 
+## Current inference and upgrade — 21 November 2026
+
+Native Hermes was upgraded from v0.23.0 to stable **v0.23.3** (`caafe5389ae5`).
+Its sole configured chat provider is the direct Anthropic API, with
+`claude-haiku-5-5` and `agent.reasoning_effort: high`, no model fallback.
+The Anthropic Models API confirmed Haiku 5.5 supports adaptive thinking and
+high effort; a direct API call and a Hermes chat smoke test passed.
+
+The key source is HomeLab → **Anthropic API Key** → `credential`, installed only
+in the protected Hermes `.env`. The Hermes-only OpenCode Go key and cached login,
+Codex login and fallback, and inactive Copilot inference pool entry were removed.
+OpenCode Go and Codex are explicitly disabled in Hermes runtime configuration,
+and the bundled Codex image-generation plugin is disabled. Upstream bundled
+provider code remains intact for update compatibility; it is not a live login.
+The GitHub tool credential was retained. Web search now uses Tavily instead of
+Codex-backed OpenAI Native; Groq transcription and OpenViking memory are
+unchanged. The gateway restarted on the new release, and OpenViking memory
+reported available. OpenCode's accounts and model policy were not changed.
+
+Rollback references: the mode-0700 `/BACKUP/hermes-before-anthropic-20261121.gA8vbn`
+contains the prior `.env`, `config.yaml`, `auth.json`, and install commit.
+The official updater also wrote a full pre-update archive in
+`~/.hermes/backups/pre-update-2026-11-21-121056.zip`. Treat both as credential
+material. Restore the three profile files and restart the gateway for a provider
+rollback; restore the prior stable code and its matching dependencies separately
+if the release itself must be rolled back.
+
 ## Current state — native restore, 2 November 2026
 
 Hermes **0.22.5** is installed natively for the `dev` host user under

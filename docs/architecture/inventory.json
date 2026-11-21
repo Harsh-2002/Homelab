@@ -84,9 +84,9 @@
       },
       {
         "id": "hermes",
-        "label": "Hermes 0.22.5 (native)",
+        "label": "Hermes 0.23.3 (native)",
         "stack": "hermes",
-        "state": "native /home/dev/.hermes; hermes-gateway.service active and enabled; API server, Telegram, Photon/iMessage and Home Assistant platforms connected; OpenViking memory provider active; OLX MCP enabled; browser MCPs removed; Playwright CLI only"
+        "state": "native /home/dev/.hermes; hermes-gateway.service active; Anthropic API with Haiku 5.5 at high effort and no inference fallback; OpenViking memory available; Playwright CLI only"
       },
       {
         "id": "nivra",
@@ -305,14 +305,11 @@
   },
   "agentInference": {
     "hermesPrimary": {
-      "provider": "opencode-go",
-      "model": "deepseek-v4.1-flash"
+      "provider": "anthropic",
+      "model": "claude-haiku-5-5"
     },
-    "hermesFallback": {
-      "provider": "openai-codex",
-      "model": "gpt-6-luna"
-    },
-    "reasoning": "medium",
+    "hermesFallback": null,
+    "reasoning": "high",
     "opencodePrimary": {
       "provider": "session-selected",
       "model": "No global Claude override",

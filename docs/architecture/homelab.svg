@@ -112,8 +112,8 @@
 </g>
 <g data-node="true"><rect x="1835" y="1465" width="380" height="143" rx="10" fill="#edf5f1" stroke="#aebfc7"/>
 <text x="1849" y="1492" font-size="19" fill="#18252c">Hermes / native</text>
-<text x="1849" y="1517" font-size="16" fill="#18252c">Telegram, Photon/iMessage and API</text>
-<text x="1849" y="1542" font-size="16" fill="#18252c">server connected</text>
+<text x="1849" y="1517" font-size="16" fill="#18252c">Anthropic API / Haiku 5.5 at high</text>
+<text x="1849" y="1542" font-size="16" fill="#18252c">effort</text>
 <text x="1849" y="1567" font-size="16" fill="#18252c">OpenViking provider; Playwright CLI</text>
 <text x="1849" y="1592" font-size="16" fill="#18252c">only</text>
 </g>

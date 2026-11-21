@@ -39,7 +39,7 @@ function layout(inv, addresses = {}) {
     ['homepage','dashboard / Homepage',['Private apex; Tinyauth forward-auth','Only current core service cards']],
     ['memory','memory / OpenViking and Ollama',['Restored context; local embeddings','OpenCode plugin and memory skills']],
     ['apps','apps / Portainer restores',['16 running app stacks; Forgejo retained stopped','media, docs, automation, HA, git, registry and S3']],
-    ['hermes','Hermes / native',['Telegram, Photon/iMessage and API server connected','OpenViking provider; Playwright CLI only']],
+    ['hermes','Hermes / native',['Anthropic API / Haiku 5.5 at high effort','OpenViking provider; Playwright CLI only']],
     ['smb','smb / Samba shares',['Host-native smbd; TCP 445, LAN only','MEDIA + BACKUP (USB SSD, Time Machine)']]
   ];
   groups.forEach(([id,title,body],i)=>{add(0,id,1835,170+i*185,title,body,'#edf5f1');edge(0,'docker',id);});
