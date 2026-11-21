@@ -1,0 +1,160 @@
+#!/usr/bin/env python3
+"""Small Hermes frontend for the existing OpenCode V2 service."""
+
+import argparse
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import sys
+from urllib.parse import urlencode
+
+
+def session_id(value):
+    if not re.fullmatch(r"ses[A-Za-z0-9_-]+", value):
+        raise argparse.ArgumentTypeError("an exact OpenCode session ID is required")
+    return value
+
+
+def cli(arguments, cwd=None, timeout=20):
+    binary = Path.home() / ".opencode/bin/opencode"
+    binary = str(binary) if binary.is_file() else shutil.which("opencode")
+    if not binary:
+        raise ValueError("OpenCode CLI not found")
+    names = ("HOME", "PATH", "LANG", "LC_ALL", "XDG_CONFIG_HOME", "XDG_DATA_HOME",
+             "XDG_STATE_HOME", "XDG_RUNTIME_DIR", "TMPDIR")
+    env = {k: os.environ[k] for k in names if k in os.environ}
+    proc = subprocess.run([binary, *arguments], cwd=cwd, env=env, stdin=subprocess.DEVNULL,
+                          capture_output=True, text=True, timeout=timeout)
+    if proc.returncode:
+        raise ValueError(f"OpenCode rejected the request (CLI exit {proc.returncode}); see OpenCode UI")
+    return proc.stdout
+
+
+def api(method, path, body=None, cwd=None):
+    args = ["api", method, path]
+    if body is not None:
+        args += ["--data", json.dumps(body)]
+    out = cli(args, cwd)
+    if not out.strip():
+        return None
+    result = json.loads(out)
+    return result.get("data", result)
+
+
+def model_ref(value, directory):
+    provider, slash, rest = value.partition("/")
+    model, hashmark, variant = rest.partition("#")
+    available = api("get", "/api/model", cwd=directory)
+    for row in available:
+        if slash and provider == row["providerID"] and model == row["id"]:
+            ref = {"providerID": provider, "id": model}
+            if hashmark:
+                if variant not in {v["id"] for v in row.get("variants", [])}:
+                    raise ValueError("model variant is not available")
+                ref["variant"] = variant
+            return ref
+    raise ValueError("model is not available in the OpenCode catalog")
+
+
+def session_info(row):
+    return {key: row.get(key) for key in ("id", "title", "location", "agent", "model", "outcome")}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    subs = parser.add_subparsers(dest="action", required=True)
+    recent = subs.add_parser("list")
+    recent.add_argument("--search")
+    for action in ("status", "result", "followup", "stop"):
+        sub = subs.add_parser(action)
+        sub.add_argument("session", type=session_id)
+        if action == "followup":
+            sub.add_argument("--prompt", required=True)
+    for action in ("start", "one-shot"):
+        sub = subs.add_parser(action)
+        sub.add_argument("directory", type=Path)
+        sub.add_argument("--title")
+        sub.add_argument("--agent", choices=("plan", "build"))
+        sub.add_argument("--model")
+        sub.add_argument("--prompt", required=True)
+    args = parser.parse_args()
+    action = args.action
+    sid = getattr(args, "session", None)
+    try:
+        # Use the registered local service, never `serve`, `--standalone`, or a new port.
+        if not cli(["service", "status"]).strip().startswith(("https://", "http://")):
+            raise ValueError("the existing local OpenCode service is not ready")
+        if action == "list":
+            query = {"limit": 20, "archived": "false"}
+            if args.search:
+                query["search"] = args.search
+            rows = api("get", "/api/session?" + urlencode(query))
+            active = api("get", "/api/session/active")
+            return [{**session_info(row), "activity": active.get(row["id"])} for row in rows]
+        if action in ("start", "one-shot"):
+            directory = args.directory.resolve(strict=True)
+            if not directory.is_dir():
+                raise ValueError("task directory must exist")
+            model = model_ref(args.model, directory) if args.model else None
+            opts = {"title": args.title, "agent": args.agent, "model": model}
+            if action == "one-shot":
+                cmd = ["run", "--format", "json"]
+                for key in opts:
+                    value = args.model if key == "model" else opts[key]
+                    if value:
+                        cmd += ["--" + key, value]
+                output = cli([*cmd, "--", args.prompt], directory, timeout=180)
+                events = []
+                for line in output.splitlines():
+                    try:
+                        event = json.loads(line)
+                    except ValueError:
+                        continue
+                    if isinstance(event, dict):
+                        events.append(event)
+                sessions = [e["sessionID"] for e in events if "sessionID" in e]
+                texts = [e.get("part", {}).get("text", "") for e in events if e.get("type") == "text"]
+                return {"session": sessions[-1] if sessions else None,
+                        "assistant_text": "\n".join(texts)[:5000] or None,
+                        "error_seen": any(e.get("type") == "error" for e in events)}
+            payload = {k: v for k, v in opts.items() if v is not None}
+            payload["location"] = {"directory": str(directory)}
+            sid = api("post", "/api/session", payload, directory)["id"]
+        base = "/api/session/" + sid
+        row = api("get", base)
+        if action in ("start", "followup"):
+            accepted = api("post", base + "/prompt", {"text": args.prompt})
+            return {"session": sid, "state": "accepted", "message": accepted.get("id")}
+        if action == "stop":
+            return {"session": sid, **api("post", base + "/interrupt")}
+        if action == "result":
+            messages = api("get", base + "/message?limit=12&order=desc")
+            for message in messages:
+                if message["type"] in ("user", "synthetic"):
+                    break
+                if message["type"] != "assistant":
+                    continue
+                texts = [p["text"] for p in message.get("content", []) if p.get("type") == "text"]
+                if texts:
+                    return {"session": sid, "assistant_text": "\n".join(texts)[:5000]}
+            return {"session": sid, "assistant_text": None}
+        active = api("get", "/api/session/active")
+        inbox = api("get", base + "/inbox")
+        forms = api("get", base + "/form")
+        permissions = api("get", "/api/permission/request", cwd=row["location"]["directory"])
+        return {**session_info(row), "activity": active.get(sid), "queued": len(inbox),
+                "pending_forms": len(forms),
+                "pending_permissions": sum(p.get("sessionID") == sid for p in permissions)}
+    except (OSError, ValueError, KeyError, TypeError, subprocess.TimeoutExpired) as error:
+        message = str(error) if type(error) is ValueError else type(error).__name__
+        print(json.dumps({"error": message, "session": sid,
+                          "note": "Check the existing session before retrying any write request."}),
+              file=sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    print(json.dumps(main(), ensure_ascii=False))

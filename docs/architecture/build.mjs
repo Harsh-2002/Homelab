@@ -154,7 +154,7 @@ node(1684, 777, 652, 122, 'Tools & integrations', ['Orva · Nivra · Supabase ·
 path('M484 838H558', C.muted, false, true);
 path('M1046 838H1120', C.muted, false, true);
 path('M274 899V929H2010V901', C.teal, true, true);
-text(560, 961, 'Hermes: Anthropic API / Haiku 5.5, no fallback. OpenCode: Claude Agent SDK. Telegram / iMessage → Hermes.', 22, C.muted);
+text(560, 961, 'Hermes: Haiku 5.5; explicit coding handoff → local OpenCode V2 sessions. Telegram / iMessage → Hermes.', 22, C.muted);
 path('M64 1003H2336');
 
 text(64, 1054, 'Media & object storage', 28, C.ink, 600);

@@ -86,7 +86,7 @@
         "id": "hermes",
         "label": "Hermes 0.23.3 (native)",
         "stack": "hermes",
-        "state": "native /home/dev/.hermes; hermes-gateway.service active; Anthropic API with Haiku 5.5 at high effort and no inference fallback; OpenViking memory available; Playwright CLI only"
+        "state": "native /home/dev/.hermes; hermes-gateway.service active; Anthropic API with Haiku 5.5 at high effort and no inference fallback; OpenViking memory available; explicit OpenCode handoff via local V2 session CLI; Playwright CLI only"
       },
       {
         "id": "nivra",

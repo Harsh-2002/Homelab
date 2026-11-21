@@ -1,5 +1,30 @@
 # Hermes Agent on dev
 
+## OpenCode handoff from Hermes
+
+Hermes has the local `opencode-bridge` skill, backed by
+[`hermes-opencode`](skills/opencode-bridge/hermes-opencode). The wrapper calls
+the installed OpenCode V2 CLI against the existing managed server. It offers
+`list`, `status`, and `result` for read-only checks; `start`, `followup`, and
+`stop` for explicitly requested session operations; and `one-shot` for
+explicit short tasks using `opencode run`. It does not retry a submission
+through the other mode. OpenCode continues to own the workspace, models,
+accounts, and permissions; Hermes stays on Anthropic.
+
+On `dev`, the skill directory is linked from `~/.hermes/skills/opencode-bridge`
+and the executable from `~/.local/bin/hermes-opencode`. Both point into this
+repository. To roll back, unlink those two entries only. The official `opencode`
+skill is retained. No new server, MCP, third-party plugin, or custom agent is
+needed. The community plugin is oriented toward oh-my-openagent and uses
+`serve` and older `--attach`/`--variant` options not suitable for this setup.
+
+Verified against OpenCode v2.3.2: Hermes loaded the skill and queried existing
+sessions; an isolated no-edit session accepted a chosen model, returned a
+result, and answered a follow-up; interrupting an idle session was a no-op.
+The CLI one-shot path also returned the requested marker. Temporary OpenCode
+sessions were removed. Live Telegram and interruption of an actively running
+task were not tested.
+
 ## Current inference and upgrade — 21 November 2026
 
 Native Hermes was upgraded from v0.23.0 to stable **v0.23.3** (`caafe5389ae5`).
