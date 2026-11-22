@@ -188,7 +188,7 @@
         "id": "homeassistant",
         "label": "Home Assistant 2026.10.4",
         "stack": "homeassistant",
-        "state": "Docker stack 179; restored config/DB/dashboards; private HTTPS; MQTT and Frigate working; PC plug on local Tuya 3.5 with shared filtered Smart Plugs dashboard; no Supervisor/add-ons"
+        "state": "Docker stack 179; public HTTPS via Caddy with native login; internal app port; MQTT and Frigate working; PC plug on local Tuya 3.5 with shared filtered Smart Plugs dashboard; no Supervisor/add-ons"
       },
       {
         "id": "mqtt",

@@ -48,6 +48,8 @@
 		import public photos.l3b.cc.cd immich:2283 photos
 		import public drive.l3b.cc.cd opencloud:9200 drive
 		import public cairn-s3.l3b.cc.cd cairn:7373 cairn
+		# Owner-approved public Home Assistant; native login.
+		import public home.l3b.cc.cd homeassistant:8123 homeassistant
 
 		# Preserve source denial before host routing and forward-auth.
 		# oc.l3b.cc.cd is public but keeps its dedicated streaming handler
@@ -168,11 +170,6 @@
 					header_up Remote-Groups infrastructure-admins
 				}
 			}
-		}
-
-		@homeassistant host home.l3b.cc.cd
-		handle @homeassistant {
-			reverse_proxy homeassistant:8123
 		}
 
 		@rustfs_api host s3.l3b.cc.cd

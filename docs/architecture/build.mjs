@@ -171,8 +171,8 @@ text(64, 1307, 'Proxmox nodes use Store BACKUP / ISO over SMB directly. App data
 path('M64 1348H2336');
 
 text(64, 1399, 'Home automation & visibility', 28, C.ink, 600);
-node(64, 1425, 420, 124, 'Hermes / user', ['Home Assistant API / app', 'Existing authenticated access']);
-node(560, 1425, 486, 124, 'Home Assistant · haos', ['Wipro bulb → Tuya LAN', 'Samsung AC → local DTLS / CoAP']);
+node(64, 1425, 420, 124, 'Hermes / user', ['Public HTTPS via Caddy', 'Home Assistant native login']);
+node(560, 1425, 486, 124, 'Home Assistant · Docker', ['Wipro bulb → Tuya LAN', 'Samsung AC → local DTLS / CoAP']);
 node(1122, 1425, 486, 124, 'Frigate · ctr / Intel iGPU', ['Camera ingest / recording', 'RTSP restream + MQTT → HA']);
 node(1684, 1425, 652, 124, 'Metrics · observability LXC', ['Exporters + Kubernetes vmagent → VictoriaMetrics', 'Grafana / HA node views; Beszel / Kuma monitoring']);
 path('M484 1487H558', C.muted, false, true);

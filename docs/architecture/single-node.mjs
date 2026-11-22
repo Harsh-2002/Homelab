@@ -45,7 +45,7 @@ function layout(inv, addresses = {}) {
   groups.forEach(([id,title,body],i)=>{add(0,id,1835,170+i*185,title,body,'#edf5f1');edge(0,'docker',id);});
 
   if (inv.localDeviceIntegrations?.some(device => device.id === 'gaming-pc-plug')) {
-    add(0,'homeassistant-local',55,920,'Home Assistant / local devices',['Shared Smart Plugs dashboard','One device filter; guarded controls']);
+    add(0,'homeassistant-local',55,920,'Home Assistant / local devices',['Public HTTPS via Caddy; native login','Local device control']);
     add(0,'gaming-pc-plug',500,920,'Gaming PC / 10A smart plug',['Tuya 3.5 over LAN','Reserved address; local telemetry','Energy calculated from power']);
     edge(0,'l3b','homeassistant-local');
     edge(0,'homeassistant-local','gaming-pc-plug');

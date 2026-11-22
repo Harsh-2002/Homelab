@@ -89,7 +89,7 @@ are applied and tested; see [DNS policy](DNS-POLICY.md) and
 | Frigate 0.18.2 | Portainer `frigate`, ID137; [stack](frigate.compose.yaml) | Restored data/config; outdoor camera live at 5 fps; `https://frigate.l3b.cc.cd` behind Tinyauth with an HA proxy-auth bypass |
 | Beszel 0.21.1 | Portainer `beszel`, ID181; [stack](beszel.compose.yaml) | Docker hub only; native `beszel-agent.service` on `10.1.1.10:45876` with daily auto-update; monitors `/` (NVMe) and `/data` (SATA), fan RPM, iGPU usage and SMART; private `https://beszel.l3b.cc.cd` behind Tinyauth |
 | Mosquitto 2.1.2 | Portainer `mqtt`, ID180; [stack](mqtt.compose.yaml) | Internal `mqtt:1883`; Frigate and Home Assistant authenticated with the existing `frigate` credential |
-| Home Assistant 2026.10.4 | Portainer `homeassistant`, ID179; [stack](homeassistant.compose.yaml) | Restored config/DB/dashboards; internal `homeassistant:8123`; `https://home.l3b.cc.cd` private; MQTT and Frigate camera/sensors working; HAOS add-ons not restored |
+| Home Assistant 2026.10.4 | Portainer `homeassistant`, ID179; [stack](homeassistant.compose.yaml) | Restored config/DB/dashboards; internal `homeassistant:8123`; `https://home.l3b.cc.cd` public with native login; MQTT and Frigate camera/sensors working; HAOS add-ons not restored |
 
 On 2 November the safe in-place upgrades were completed and verified healthy:
 Homepage 2.7.0, Paperless 3.4.1 (28 documents preserved across the SQLite

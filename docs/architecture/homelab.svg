@@ -125,8 +125,8 @@
 </g>
 <g data-node="true"><rect x="55" y="920" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="69" y="947" font-size="19" fill="#18252c">Home Assistant / local devices</text>
-<text x="69" y="972" font-size="16" fill="#18252c">Shared Smart Plugs dashboard</text>
-<text x="69" y="997" font-size="16" fill="#18252c">One device filter; guarded controls</text>
+<text x="69" y="972" font-size="16" fill="#18252c">Public HTTPS via Caddy; native login</text>
+<text x="69" y="997" font-size="16" fill="#18252c">Local device control</text>
 </g>
 <g data-node="true"><rect x="500" y="920" width="380" height="118" rx="10" fill="#edf4f8" stroke="#aebfc7"/>
 <text x="514" y="947" font-size="19" fill="#18252c">Gaming PC / 10A smart plug</text>

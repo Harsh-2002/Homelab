@@ -33,7 +33,7 @@ These require an exact public `A` to `10.1.1.10`:
 
 These use an exact public `A` to `150.129.31.154`, with a matching public Caddy handler and native application authentication:
 
-`notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, `oc`, `theking`, `media`.
+`notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, `oc`, `theking`, `media`, `home`.
 
 `theking` is the separate friend-owned Nivra instance, public by owner request.
 Its separate data directory is populated; onboarding/account state was not

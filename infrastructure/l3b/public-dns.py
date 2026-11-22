@@ -14,7 +14,7 @@ PRIVATE_NAMES = [
     'l3b.cc.cd', 'auth.l3b.cc.cd', 'login.l3b.cc.cd', 'portainer.l3b.cc.cd',
     'dns.l3b.cc.cd', 'memory.l3b.cc.cd', 'beszel.l3b.cc.cd', 'cairn.l3b.cc.cd',
     'docs.l3b.cc.cd', 'downloads.l3b.cc.cd', 'frigate.l3b.cc.cd', 'git.l3b.cc.cd',
-    'home.l3b.cc.cd', 'motrix.l3b.cc.cd', 'n8n.l3b.cc.cd',
+    'motrix.l3b.cc.cd', 'n8n.l3b.cc.cd',
     'orva.l3b.cc.cd', 'os.l3b.cc.cd', 'registry.l3b.cc.cd', 'rustfs.l3b.cc.cd',
     's3.l3b.cc.cd', 'switch.l3b.cc.cd',
     'dev.l3b.cc.cd', 'preview.l3b.cc.cd', 'sandbox.l3b.cc.cd',
@@ -22,6 +22,7 @@ PRIVATE_NAMES = [
 PUBLIC_NAMES = [
     'notes.l3b.cc.cd', 'pin.l3b.cc.cd', 'photos.l3b.cc.cd', 'drive.l3b.cc.cd',
     'cairn-s3.l3b.cc.cd', 'mdx.l3b.cc.cd', 'oc.l3b.cc.cd', 'theking.l3b.cc.cd', 'media.l3b.cc.cd',
+    'home.l3b.cc.cd',
 ]
 DIRECT_NAMES = {
     'smb.l3b.cc.cd': '10.1.1.10',

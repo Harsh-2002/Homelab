@@ -19,7 +19,7 @@ A device using public DNS **inside the LAN** must still resolve a private servic
 
 Private HTTPS origins currently include:
 
-`l3b.cc.cd`, `auth`, `login`, `portainer`, `dns`, `memory`, `beszel`, `cairn`, `docs`, `downloads`, `frigate`, `git`, `home`, `motrix`, `n8n`, `orva`, `os`, `registry`, `rustfs`, `s3`, `switch`, `dev`, `preview`, `sandbox`.
+`l3b.cc.cd`, `auth`, `login`, `portainer`, `dns`, `memory`, `beszel`, `cairn`, `docs`, `downloads`, `frigate`, `git`, `motrix`, `n8n`, `orva`, `os`, `registry`, `rustfs`, `s3`, `switch`, `dev`, `preview`, `sandbox`.
 
 ### Public service
 
@@ -29,7 +29,16 @@ Private HTTPS origins currently include:
 | Private DNS (AdGuard) | **10.1.1.10** (split-horizon) |
 | Caddy | Approved public handler and native application authentication |
 
-Approved public origins are `notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, `oc`, `theking`, and `media` (Jellyfin).
+Approved public origins are `notes`, `pin`, `photos`, `drive`, `cairn-s3`, `mdx`, `oc`, `theking`, `media` (Jellyfin), and `home` (Home Assistant, native login).
+
+On 2026-11-22 `home` was published through Caddy; the container port `8123`
+remains internal. Public resolvers returned the WAN IP, AdGuard returned the
+LAN IP, and HTTPS via the WAN address returned 200 at `/` and 401 at `/api/`
+without credentials. The DNS and Caddy source-gate audits passed. No
+independent off-LAN sign-in was tested. To revert, restore the private Caddy
+handler and reload, then set the exact DNS-only `home` A record back to
+`10.1.1.10`. The pre-change Caddyfile is retained under
+`/BACKUP/caddy-before-public-home-20261122.nqmo4gu6/`.
 
 `theking` is the separate friend-owned Nivra instance, public by owner request.
 Its separate data directory is populated; onboarding/account state was not
