@@ -380,6 +380,20 @@ restart, location reload or binary upgrade. Native Claude Agent requires2.2.3+;
 current server2.1.4 cannot activate it. Loaded plugin/package files remain until
 a safe restart/upgrade window. See [research and migration gates](OPENCODE-CLAUDE.md).
 
+## OpenCode 2.4.1 upgrade, 23 November 2026
+
+Installed the SHA-256-verified upstream Linux V2 binary and activated it via
+an independent user systemd timer after active sessions cleared. Fresh checks
+confirmed CLI and server 2.4.1, session history, HTTPS 200, 13 models, and eight
+connected MCPs. Kite still requires authorization (HTTP 401). No service
+restarts beyond the planned handover or journal errors were observed; the
+cross-agent integration checker still did not pass.
+
+No schedules were created or browser data imported. Protected rollback copies
+of the 2.3.2 binary, config, and final pre-handover database are in
+`/BACKUP/opencode-before-2.4.1.FYAm80/`. Do not restore the database over new
+session data without separate review.
+
 ## OpenCode 2.3.2 upgrade, 18 November 2026
 
 CLI upgraded 2.3.0 -> 2.3.2 with `opencode upgrade --method curl 2.3.2` (V2 line; GitHub's
