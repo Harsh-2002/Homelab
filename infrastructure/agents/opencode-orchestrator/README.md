@@ -13,7 +13,7 @@ git checkout pre-agent-removal-20261120 -- infrastructure/agents/opencode-orches
 infrastructure/agents/opencode-orchestrator/install.sh
 ```
 
-then set `"default_agent": "atlas"` in `~/.config/opencode/opencode.json`. The tag `pre-agent-removal-20261120` is pushed. A copy of the installed config (agents, skills, plugins, `opencode.json`, `AGENTS.md`) was saved to `/BACKUP/opencode-config-before-agent-removal-20261120-162141` (root-only, may contain secrets). The directory name `opencode-orchestrator` is kept so existing links and history still work.
+then set `"default_agent": "atlas"` in `~/.config/opencode/opencode.json`. The tag `pre-agent-removal-20261120` remains as Git history. The separate installed-config backup was removed at the owner's request on 2026-11-23. The directory name `opencode-orchestrator` is kept so existing links and history still work.
 
 ## What is here
 
