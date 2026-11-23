@@ -389,10 +389,10 @@ connected MCPs. Kite still requires authorization (HTTP 401). No service
 restarts beyond the planned handover or journal errors were observed; the
 cross-agent integration checker still did not pass.
 
-No schedules were created or browser data imported. Protected rollback copies
-of the 2.3.2 binary, config, and final pre-handover database are in
-`/BACKUP/opencode-before-2.4.1.FYAm80/`. Do not restore the database over new
-session data without separate review.
+No schedules were created or browser data imported. After verification, the
+owner requested removal of the upgrade rollback set. The saved 2.3.2 binary,
+config copy, and pre-upgrade database snapshot were removed; the live
+configuration and session database were not touched.
 
 ## OpenCode 2.3.2 upgrade, 18 November 2026
 
