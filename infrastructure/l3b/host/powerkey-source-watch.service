@@ -1,0 +1,16 @@
+[Unit]
+Description=Record ACPI power-button event sources
+After=systemd-udevd.service
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/local/sbin/powerkey-source-watch
+Restart=on-failure
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateNetwork=yes
+LogRateLimitIntervalSec=30s
+LogRateLimitBurst=3000
+
+[Install]
+WantedBy=multi-user.target
